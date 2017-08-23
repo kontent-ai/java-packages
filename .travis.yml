@@ -1,0 +1,11 @@
+language: java
+
+before_cache:
+  # remove all the artifacts (JAR, ZIP) that are installed in local repo because of gradle deploy
+  - rm -f  $HOME/.gradle/caches/modules-2/modules2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper
