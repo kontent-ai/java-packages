@@ -36,30 +36,49 @@ import org.apache.http.impl.client.HttpClients;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
+/**
+ * Executes requests against the Kentico Cloud Delivery API.
+ */
 public class DeliveryClient {
 
     static final String ITEMS = "items";
     static final String TYPES = "types";
     static final String ELEMENTS = "elements";
 
-    private String baseUrl;
-    private String apiKey;
-
-    private String projectId;
     private ObjectMapper objectMapper = new ObjectMapper();
     private HttpClient httpClient;
+    private DeliveryOptions deliveryOptions;
 
-    public DeliveryClient(String url, String projectId) {
-        this.baseUrl = url;
-        this.projectId = projectId;
-
+    /**
+     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
+     * @throws IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are invalid.
+     * @param deliveryOptions The settings of the Kentico Cloud project.
+     */
+    public DeliveryClient(DeliveryOptions deliveryOptions) {
+        if (deliveryOptions == null) {
+            throw new IllegalArgumentException("The Delivery options object is not specified.");
+        }
+        if (deliveryOptions.getProjectId() == null || deliveryOptions.getProjectId().isEmpty()) {
+            throw new IllegalArgumentException("Kentico Cloud project identifier is not specified.");
+        }
+        try {
+            UUID.fromString(deliveryOptions.getProjectId());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Provided string is not a valid project identifier (%s).  Have you accidentally passed the Preview API key instead of the project identifier?",
+                            deliveryOptions.getProjectId()),
+                    e);
+        }
+        if (deliveryOptions.isUsePreviewApi()) {
+            if (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty()) {
+                throw new IllegalArgumentException("The Preview API key is not specified.");
+            }
+        }
+        this.deliveryOptions = deliveryOptions;
         httpClient = HttpClients.createDefault();
-    }
-
-    public DeliveryClient(String url, String projectId, String apiKey) {
-        this (url, projectId);
-        setApiKey(apiKey);
     }
 
     public ContentItemsListingResponse getItems() throws IOException {
@@ -67,7 +86,7 @@ public class DeliveryClient {
     }
 
     public ContentItemsListingResponse getItems(List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s", projectId, ITEMS), params);
+        HttpUriRequest request = buildGetRequest(ITEMS, params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -81,7 +100,7 @@ public class DeliveryClient {
     }
 
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s/%s", projectId, ITEMS, contentItemCodename), params);
+        HttpUriRequest request = buildGetRequest(String.format("%s/%s", ITEMS, contentItemCodename), params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -95,7 +114,7 @@ public class DeliveryClient {
     }
 
     public ContentTypesListingResponse getTypes(List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s", projectId, TYPES), params);
+        HttpUriRequest request = buildGetRequest(TYPES, params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -109,7 +128,7 @@ public class DeliveryClient {
     }
 
     public ContentType getType(String contentTypeCodeName, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s/%s", projectId, TYPES, contentTypeCodeName), params);
+        HttpUriRequest request = buildGetRequest(String.format("%s/%s", TYPES, contentTypeCodeName), params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -123,7 +142,7 @@ public class DeliveryClient {
     }
 
     public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s/%s/%s/%s", projectId, TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
+        HttpUriRequest request = buildGetRequest(String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -132,32 +151,26 @@ public class DeliveryClient {
         return objectMapper.readValue(response.getEntity().getContent(), Element.class);
     }
 
-    public String getBaseUrl() {
-        return baseUrl;
-    }
-
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getApiKey() {
-        return apiKey;
-    }
-
-    public void setApiKey(String apiKey) {
-        this.apiKey = apiKey;
-    }
-
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
-        RequestBuilder requestBuilder = RequestBuilder.get(String.format("%s/%s", baseUrl, apiCall));
-        if (apiKey != null) {
-            requestBuilder.setHeader(HttpHeaders.AUTHORIZATION, String.format("Bearer %s", apiKey));
+        RequestBuilder requestBuilder = RequestBuilder.get(String.format("%s/%s", getBaseUrl(), apiCall));
+        if (deliveryOptions.isUsePreviewApi()) {
+            requestBuilder.setHeader(
+                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
+            );
         }
         requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
         for (NameValuePair nameValuePair : nameValuePairs) {
             requestBuilder.addParameter(nameValuePair);
         }
         return requestBuilder.build();
+    }
+
+    private String getBaseUrl() {
+        if (deliveryOptions.isUsePreviewApi()) {
+            return String.format(deliveryOptions.getPreviewEndpoint(), deliveryOptions.getProjectId());
+        } else {
+            return String.format(deliveryOptions.getProductionEndpoint(), deliveryOptions.getProjectId());
+        }
     }
 
     private void handleErrorIfNecessary(HttpResponse response) throws IOException {
