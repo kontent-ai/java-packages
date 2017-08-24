@@ -46,8 +46,9 @@ public class DeliveryOptions {
     }
 
     /**
-     * Sets the Production endpoint address.
-     * @param productionEndpoint
+     * Sets the Production endpoint address.  Defaults to "https://deliver.kenticocloud.com/%s"
+     * @see java.util.Formatter
+     * @param productionEndpoint A Java format String containing the base URL.
      */
     public void setProductionEndpoint(String productionEndpoint) {
         this.productionEndpoint = productionEndpoint;
@@ -62,8 +63,9 @@ public class DeliveryOptions {
     }
 
     /**
-     * Sets the Preview endpoint address.
-     * @param previewEndpoint
+     * Sets the Preview endpoint address.  Defaults to "https://preview-deliver.kenticocloud.com/%s".
+     * @see java.util.Formatter
+     * @param previewEndpoint A Java format String containing the base URL.
      */
     public void setPreviewEndpoint(String previewEndpoint) {
         this.previewEndpoint = previewEndpoint;
@@ -79,7 +81,7 @@ public class DeliveryOptions {
 
     /**
      * Sets the Project identifier.
-     * @param projectId
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an {@link java.util.UUID}.
      */
     public void setProjectId(String projectId) {
         this.projectId = projectId;
@@ -95,7 +97,7 @@ public class DeliveryOptions {
 
     /**
      * Sets the Preview API key.
-     * @param previewApiKey
+     * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
      */
     public void setPreviewApiKey(String previewApiKey) {
         this.previewApiKey = previewApiKey;
@@ -112,7 +114,7 @@ public class DeliveryOptions {
     /**
      * Sets whether the Preview API should be used.  If TRUE, the Preview API needs to be set as well.
      * @see #setPreviewApiKey(String)
-     * @param usePreviewApi
+     * @param usePreviewApi Whether the API should be used.  Defaults to false.
      */
     public void setUsePreviewApi(boolean usePreviewApi) {
         this.usePreviewApi = usePreviewApi;
@@ -128,7 +130,7 @@ public class DeliveryOptions {
 
     /**
      * Set to TRUE if you want to wait for updated content.  It should be used when you are acting upon a webhook call.
-     * @param waitForLoadingNewContent
+     * @param waitForLoadingNewContent Whether to wait for new content.  Defaults to false.
      */
     public void setWaitForLoadingNewContent(boolean waitForLoadingNewContent) {
         this.waitForLoadingNewContent = waitForLoadingNewContent;
