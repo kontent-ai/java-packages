@@ -104,7 +104,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
     @Test
     public void testExceptionWhenDeliveryOptionsIsNull() {
         try {
-            DeliveryClient client = new DeliveryClient(null);
+            DeliveryOptions deliveryOptions = null;
+            DeliveryClient client = new DeliveryClient(deliveryOptions);
             Assert.fail("Expected IllegalArgumentException due to null Delivery options");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("The Delivery options object is not specified.", e.getMessage());

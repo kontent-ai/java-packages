@@ -68,7 +68,8 @@ public class DeliveryClient {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(
                     String.format(
-                            "Provided string is not a valid project identifier (%s).  Have you accidentally passed the Preview API key instead of the project identifier?",
+                            "Provided string is not a valid project identifier (%s).  Have you accidentally passed " +
+                                    "the Preview API key instead of the project identifier?",
                             deliveryOptions.getProjectId()),
                     e);
         }
@@ -79,6 +80,28 @@ public class DeliveryClient {
         }
         this.deliveryOptions = deliveryOptions;
         httpClient = HttpClients.createDefault();
+    }
+
+    /**
+     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
+     * @throws IllegalArgumentException Thrown if the Project id is invalid.
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     * {@link java.util.UUID}.
+     */
+    public DeliveryClient(String projectId) {
+        this(new DeliveryOptions(projectId));
+    }
+
+    /**
+     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project,
+     * and configures the preview API.
+     * @throws IllegalArgumentException Thrown if the Project id is invalid.
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     * {@link java.util.UUID}.
+     * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
+     */
+    public DeliveryClient(String projectId, String previewApiKey) {
+        this(new DeliveryOptions(projectId, previewApiKey));
     }
 
     public ContentItemsListingResponse getItems() throws IOException {
@@ -141,8 +164,10 @@ public class DeliveryClient {
         return getContentTypeElement(contentTypeCodeName, elementCodeName, new ArrayList<>());
     }
 
-    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
+    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName, List<NameValuePair> params)
+            throws IOException {
+        HttpUriRequest request = buildGetRequest(
+                String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
 
         HttpResponse response = httpClient.execute(request);
 

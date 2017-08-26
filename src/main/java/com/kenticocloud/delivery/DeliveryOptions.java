@@ -38,6 +38,35 @@ public class DeliveryOptions {
     boolean waitForLoadingNewContent = false;
 
     /**
+     * Constructs an empty settings instance of {@link DeliveryOptions}.
+     */
+    public DeliveryOptions() {
+        //Default constructor
+    }
+
+    /**
+     * Constructs a setting instance of {@link DeliveryOptions} using your Kentico Cloud Project identifier.
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     * {@link java.util.UUID}.
+     */
+    public DeliveryOptions(String projectId) {
+        this.setProjectId(projectId);
+    }
+
+    /**
+     * Constructs a settings instance of {@link DeliveryOptions} using your Kentico Cloud Project identifier and using
+     * the preview API.
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     * {@link java.util.UUID}.
+     * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
+     */
+    public DeliveryOptions(String projectId, String previewApiKey) {
+        this(projectId);
+        this.setPreviewApiKey(previewApiKey);
+        this.setUsePreviewApi(true);
+    }
+
+    /**
      * Gets the Production endpoint address.
      * @return The Production endpoint address set in this options instance.
      */
@@ -81,7 +110,8 @@ public class DeliveryOptions {
 
     /**
      * Sets the Project identifier.
-     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an {@link java.util.UUID}.
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     * {@link java.util.UUID}.
      */
     public void setProjectId(String projectId) {
         this.projectId = projectId;
