@@ -24,7 +24,9 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -50,6 +52,9 @@ public class DeliveryClient {
     private ObjectMapper objectMapper = new ObjectMapper();
     private HttpClient httpClient;
     private DeliveryOptions deliveryOptions;
+
+    private ContentLinkUrlResolver contentLinkUrlResolver;
+    private BrokenLinkUrlResolver brokenLinkUrlResolver;
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
@@ -176,6 +181,24 @@ public class DeliveryClient {
         return objectMapper.readValue(response.getEntity().getContent(), Element.class);
     }
 
+    public ContentLinkUrlResolver getContentLinkUrlResolver() {
+        return contentLinkUrlResolver;
+    }
+
+    public void setContentLinkUrlResolver(ContentLinkUrlResolver contentLinkUrlResolver) {
+        this.contentLinkUrlResolver = contentLinkUrlResolver;
+        reconfigureDeserializer();
+    }
+
+    public BrokenLinkUrlResolver getBrokenLinkUrlResolver() {
+        return brokenLinkUrlResolver;
+    }
+
+    public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
+        this.brokenLinkUrlResolver = brokenLinkUrlResolver;
+        reconfigureDeserializer();
+    }
+
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
         RequestBuilder requestBuilder = RequestBuilder.get(String.format("%s/%s", getBaseUrl(), apiCall));
         if (deliveryOptions.isUsePreviewApi()) {
@@ -205,5 +228,21 @@ public class DeliveryClient {
         } else if (response.getStatusLine().getStatusCode() >= 500) {
             throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
         }
+    }
+
+    private void reconfigureDeserializer() {
+        objectMapper = new ObjectMapper();
+
+        SimpleModule module = new SimpleModule();
+        module.setDeserializerModifier(new BeanDeserializerModifier() {
+            @Override
+            public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
+                if (beanDesc.getBeanClass() == RichTextElement.class)
+                    return new RichTextElementConverter(contentLinkUrlResolver, brokenLinkUrlResolver, deserializer);
+                return deserializer;
+            }
+        });
+
+        objectMapper.registerModule(module);
     }
 }

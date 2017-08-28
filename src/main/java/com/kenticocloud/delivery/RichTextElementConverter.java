@@ -24,15 +24,22 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.databind.util.StdConverter;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RichTextElementConverter extends StdConverter<RichTextElement, RichTextElement> {
+public class RichTextElementConverter extends StdDeserializer<RichTextElement> implements ResolvableDeserializer {
 
     ContentLinkUrlResolver contentLinkUrlResolver;
     BrokenLinkUrlResolver brokenLinkUrlResolver;
+    private final JsonDeserializer<?> defaultDeserializer;
 
     /*
     <a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*> regex prior to Java \ escapes
@@ -56,21 +63,37 @@ public class RichTextElementConverter extends StdConverter<RichTextElement, Rich
     */
     Pattern pattern = Pattern.compile("<a[^>]+?data-item-id=\\\"(?<id>[^\\\"]+)\\\"[^>]*>");
 
-    public RichTextElementConverter(ContentLinkUrlResolver contentLinkUrlResolver, BrokenLinkUrlResolver brokenLinkUrlResolver) {
+    public RichTextElementConverter(
+            ContentLinkUrlResolver contentLinkUrlResolver,
+            BrokenLinkUrlResolver brokenLinkUrlResolver,
+            JsonDeserializer<?> defaultDeserializer) {
+        super(RichTextElement.class);
+        this.defaultDeserializer = defaultDeserializer;
         this.contentLinkUrlResolver = contentLinkUrlResolver;
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
+
     }
 
     @Override
+    public RichTextElement deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        RichTextElement orig = (RichTextElement) defaultDeserializer.deserialize(p, ctxt);
+        return convert(orig);
+    }
+
+    @Override
+    public void resolve(DeserializationContext ctxt) throws JsonMappingException {
+        ((ResolvableDeserializer) defaultDeserializer).resolve(ctxt);
+    }
+
     public RichTextElement convert(RichTextElement orig) {
         Matcher matcher = pattern.matcher(orig.getValue());
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
             Link link = orig.links.get(matcher.group("id"));
-            String url;
-            if (link != null) {
+            String url = "";
+            if (link != null  && contentLinkUrlResolver != null) {
                 url = contentLinkUrlResolver.resolveLinkUrl(link);
-            } else {
+            } else if (brokenLinkUrlResolver != null){
                 url = brokenLinkUrlResolver.resolveBrokenLinkUrl();
             }
             matcher.appendReplacement(buffer, resolveMatch(matcher.group(0), url));

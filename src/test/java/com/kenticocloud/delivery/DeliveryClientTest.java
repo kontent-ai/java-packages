@@ -71,11 +71,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         deliveryOptions.setProductionEndpoint(testServerUri);
 
         DeliveryClient client = new DeliveryClient(deliveryOptions);
+        client.setContentLinkUrlResolver(link -> link.getUrlSlug());
 
         List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemsListingResponse items = client.getItems(urlPattern);
 
         Assert.assertNotNull(items);
+        Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("href=\"/on roasts\""));
     }
 
     @Test

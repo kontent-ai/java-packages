@@ -33,7 +33,7 @@ public class RichTextElementConverterTest {
 
     @Test
     public void testLinkReplacement() {
-        RichTextElementConverter converter = new RichTextElementConverter(link -> link.getUrlSlug(), () -> "/404");
+        RichTextElementConverter converter = new RichTextElementConverter(link -> link.getUrlSlug(), () -> "/404", null);
         RichTextElement original = new RichTextElement();
         original.setValue("<p>Each AeroPress comes with a <a href=\"\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"\" data-item-id=\"not-found\">box</a>.</p>");
         Link link = new Link();
