@@ -1,6 +1,8 @@
 .gradle
 /build/
 /out/
+signing.gpg
+gradle.properties.local
 
 # Compiled class file
 *.class
