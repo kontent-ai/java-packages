@@ -4,6 +4,17 @@ env:
   global:
     secure: KF4o6QO95xqTL1bwBOQQBP6bgJp7vaBRSZ4o8CrIK/8vSc6RAE+VGg4Q21UGjiyPJ+V3HR07qpOe9u/32ZtXIejTOg4UWjvOALw7IBczBF1xlUatVuKX3GGZOdSvnVaaNaxeM8rCJg80ixQ5/HZq+K8QiFCVYEkw0v6WEzJ7jMNb52e/Aptf7k2KvbZT+1loYXHMcqC37cm1SA3Ni4kdaBHkjs4YgOYnI3zCTwXDcZRYDNuqORS6VyMOA7sgiOyjMDhgYcgq6ypwHYj+JGpfKNrmdYAYFbHrBxzDdRWI9aKtRRN9/Al64/RpLjNucf3V+OaMI2zo9qMosdEsGe9posRnWA/Fsg1iiOYzGCZPTbziBkmFaF7AbB+Fyd0uXIJertVaB0hjEo7Mw72CGK75CZAbeorGtPG9Wk19GPWkj8L1BE1glB+FLwy5Qn6oCKaJsYhEp3mm+vBF/KHKIA1qGGTZH3HWYh9brOZgJYKrsBvwEcGQhtlPUd9yMVcbEw1sFLA77TffG+JgtTUQ062XjZEqOkpfOqoRUSq2KQU1eTismAkfwkFk1+bUgRaTYEyHlHsy9Tz7oRhYoGPtQ8r9TDPtmWuzQNzL6CGGxidaPOO1f+v6RTyQ0QLHhLvSXl2pTulNhM1ZlegcbXI9qPWjPg3MeNq/eaKWbrGiH+RzUGc=
 
+install: true
+
+addons:
+  sonarcloud:
+    organization: "kentico-github"
+    token:
+      secure: "j2lyZTrsGvCSHJefMQLqKrQ5iicdUaJY0/7RLD2jMCpeXMhJa8fTvus3QPvjelw/uNeIUBAAPWrBjtkpgUDVlTxc+iz3+an6TvMBuabas81J7CSCEG7XBA27MHRCKtlmYa5hXL+FQcTDIYzNObM8722RPxuNT7Yx+Oq+GMNF2m2DCTzal4Fez7Ql2tDJIsxXmcfFQJeX0huBiEpCu/oDxf04IkleQE0Z56U+EnuGIvrffDkGYaCU/41WA5ZDfDqVBazE1fueaZs0yCPLLrAZX6Lm0uEykw0nvi6HjbOVTw2P0IKEsgKqJQn3m5K7f/nCprHB9kCjtFIyOPqv681OUvatXhbZ+/NE8BPxXhzZw0KIaDFIieQFdKd1KyxR3wFAIfNoLYZCRi0uUsxFIIgzrBrL5v9i2SvIPxaxxtwxsVQnEKHXLwJzbwhj6HIxWwI1WwaGXLB6+qCATTvacCRtDoZrG47/06haiVKWoLeO6epTEkb1GiEw0H84XFspZHVIGiUBrwTv6j0t4UPtXzipjQHofLpswAj+3KQbZ3NjfPlqcTI6KNgpiJMR3fBm141GihdNgVldMU42IG0kfbztlqGONVdU1udPQF/lNGHFuNStvJs1AWA1MM2wjT2ope6Q7l3l90ZcsmfiU1bjafE7RrU/rDX9+5FSId7Qj0/kS1c="
+
+script:
+  - ./gradlew sonarqube
+
 before_cache:
   # remove all the artifacts (JAR, ZIP) that are installed in local repo because of gradle deploy
   - rm -f  $HOME/.gradle/caches/modules-2/modules2.lock
@@ -11,6 +22,7 @@ before_cache:
 
 cache:
   directories:
+  - $HOME/.sonar/cache
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper
 
