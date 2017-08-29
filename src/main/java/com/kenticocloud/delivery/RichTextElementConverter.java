@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 
 public class RichTextElementConverter extends StdDeserializer<RichTextElement> implements ResolvableDeserializer {
 
-    ContentLinkUrlResolver contentLinkUrlResolver;
-    BrokenLinkUrlResolver brokenLinkUrlResolver;
-    private final JsonDeserializer<?> defaultDeserializer;
+    transient ContentLinkUrlResolver contentLinkUrlResolver;
+    transient BrokenLinkUrlResolver brokenLinkUrlResolver;
+    private final transient JsonDeserializer<?> defaultDeserializer;
 
     /*
     <a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*> regex prior to Java \ escapes

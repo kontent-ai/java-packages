@@ -28,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DateTimeElement extends Element {
 
-    //TOOD: make this a java Date
+    //TODO: make this a java Date
     @JsonProperty("value")
     String value;
 

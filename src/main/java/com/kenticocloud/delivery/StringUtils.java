@@ -25,6 +25,11 @@
 package com.kenticocloud.delivery;
 
 public class StringUtils {
+
+    private StringUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String escapeHtml(String s) {
         StringBuilder out = new StringBuilder(Math.max(16, s.length()));
         for (int i = 0; i < s.length(); i++) {

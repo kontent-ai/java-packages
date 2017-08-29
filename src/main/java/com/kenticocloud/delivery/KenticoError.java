@@ -26,7 +26,11 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class KenticoError {
+import java.io.Serializable;
+
+public class KenticoError implements Serializable {
+
+    static final long serialVersionUID = 42L;
 
     @JsonProperty("message")
     String message;

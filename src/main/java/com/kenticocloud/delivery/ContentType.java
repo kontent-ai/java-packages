@@ -26,7 +26,6 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.lang.System;
 import java.util.Map;
 
 public class ContentType {

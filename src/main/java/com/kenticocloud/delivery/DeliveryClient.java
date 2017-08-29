@@ -49,6 +49,8 @@ public class DeliveryClient {
     static final String TYPES = "types";
     static final String ELEMENTS = "elements";
 
+    private static final String URL_CONCAT = "%s/%s";
+
     private ObjectMapper objectMapper = new ObjectMapper();
     private HttpClient httpClient;
     private DeliveryOptions deliveryOptions;
@@ -78,10 +80,9 @@ public class DeliveryClient {
                             deliveryOptions.getProjectId()),
                     e);
         }
-        if (deliveryOptions.isUsePreviewApi()) {
-            if (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty()) {
-                throw new IllegalArgumentException("The Preview API key is not specified.");
-            }
+        if (deliveryOptions.isUsePreviewApi() &&
+                (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty())) {
+            throw new IllegalArgumentException("The Preview API key is not specified.");
         }
         this.deliveryOptions = deliveryOptions;
         httpClient = HttpClients.createDefault();
@@ -128,7 +129,7 @@ public class DeliveryClient {
     }
 
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s", ITEMS, contentItemCodename), params);
+        HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, ITEMS, contentItemCodename), params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -156,7 +157,7 @@ public class DeliveryClient {
     }
 
     public ContentType getType(String contentTypeCodeName, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format("%s/%s", TYPES, contentTypeCodeName), params);
+        HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, TYPES, contentTypeCodeName), params);
 
         HttpResponse response = httpClient.execute(request);
 
@@ -200,7 +201,7 @@ public class DeliveryClient {
     }
 
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
-        RequestBuilder requestBuilder = RequestBuilder.get(String.format("%s/%s", getBaseUrl(), apiCall));
+        RequestBuilder requestBuilder = RequestBuilder.get(String.format(URL_CONCAT, getBaseUrl(), apiCall));
         if (deliveryOptions.isUsePreviewApi()) {
             requestBuilder.setHeader(
                     HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
