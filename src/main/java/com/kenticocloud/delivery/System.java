@@ -26,6 +26,7 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class System {
@@ -48,9 +49,8 @@ public class System {
     @JsonProperty("sitemap_locations")
     List<String> sitemapLocations;
 
-    //TODO: auto convert to date
     @JsonProperty("last_modified")
-    String lastModified;
+    ZonedDateTime lastModified;
 
     public String getId() {
         return id;
@@ -100,11 +100,11 @@ public class System {
         this.sitemapLocations = sitemapLocations;
     }
 
-    public String getLastModified() {
+    public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(String lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 }

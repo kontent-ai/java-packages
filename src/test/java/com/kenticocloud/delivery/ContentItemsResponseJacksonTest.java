@@ -25,16 +25,22 @@
 package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.TimeZone;
 
 public class ContentItemsResponseJacksonTest {
 
     @Test
     public void testContentDeserializationFromKenticoExampleJson() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JSR310Module());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         ContentItemsListingResponse response = objectMapper.readValue(this.getClass().getResource("SampleContentList.json"), ContentItemsListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
     }

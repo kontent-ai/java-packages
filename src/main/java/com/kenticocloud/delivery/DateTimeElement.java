@@ -26,17 +26,18 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.ZonedDateTime;
+
 public class DateTimeElement extends Element {
 
-    //TODO: make this a java Date
     @JsonProperty("value")
-    String value;
+    ZonedDateTime value;
 
-    public String getValue() {
+    public ZonedDateTime getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(ZonedDateTime value) {
         this.value = value;
     }
 }

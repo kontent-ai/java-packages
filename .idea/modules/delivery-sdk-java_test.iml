@@ -12,6 +12,7 @@
     <orderEntry type="module" module-name="delivery-sdk-java_main" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.8.9" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.9" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpclient:tests:4.5.3" level="project" />
     <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
