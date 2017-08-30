@@ -86,6 +86,9 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
     }
 
     public RichTextElement convert(RichTextElement orig) {
+        if (orig.getValue() == null) {
+            return orig;
+        }
         Matcher matcher = pattern.matcher(orig.getValue());
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {

@@ -24,7 +24,6 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
@@ -91,9 +90,6 @@ public class JacksonBindingsTest {
 
     @Test
     public void testContentTypeListDeserialization() throws IOException {
-        //TODO: #9 remove this line when the comment relating to this github issue is resolved
-        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
-
         ContentTypesListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentTypeList.json"), ContentTypesListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);

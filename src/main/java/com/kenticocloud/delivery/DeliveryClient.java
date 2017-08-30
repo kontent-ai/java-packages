@@ -87,6 +87,7 @@ public class DeliveryClient {
         }
         this.deliveryOptions = deliveryOptions;
         httpClient = HttpClients.createDefault();
+        reconfigureDeserializer();
     }
 
     /**
@@ -224,11 +225,11 @@ public class DeliveryClient {
     }
 
     private void handleErrorIfNecessary(HttpResponse response) throws IOException {
-        if (response.getStatusLine().getStatusCode() >= 400) {
+        if (response.getStatusLine().getStatusCode() >= 500) {
+            throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
+        } else if (response.getStatusLine().getStatusCode() >= 400) {
             KenticoError kenticoError = objectMapper.readValue(response.getEntity().getContent(), KenticoError.class);
             throw new KenticoErrorException(kenticoError);
-        } else if (response.getStatusLine().getStatusCode() >= 500) {
-            throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
         }
     }
 

@@ -28,14 +28,11 @@ import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.localserver.LocalServerTestBase;
-import org.apache.http.protocol.HttpContext;
-import org.apache.http.protocol.HttpRequestHandler;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
@@ -78,6 +75,354 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         Assert.assertNotNull(items);
         Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("href=\"/on roasts\""));
+    }
+
+    @Test
+    public void testGetAllItems() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItemList.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ContentItemsListingResponse items = client.getItems();
+        Assert.assertNotNull(items);
+    }
+
+    @Test
+    public void testGetItemWithParams() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+                    Assert.assertEquals(1, params.size());
+                    Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+        client.setContentLinkUrlResolver(Link::getUrlSlug);
+
+        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        ContentItemResponse item = client.getItem("on_roasts", urlPattern);
+
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testGetItem() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItem.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testGetPreviewItem() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String previewApiKey = "preview_api_key";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    Assert.assertEquals(
+                            "Bearer preview_api_key",
+                            request.getHeaders("Authorization")[0].getValue());
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setPreviewEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testKenticoException() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roatst"),
+                (request, response, context) -> {
+                    response.setStatusCode(404);
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleKenticoError.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        try {
+            ContentItemResponse item = client.getItem("on_roatst");
+            Assert.fail("Expected KenticoErrorException");
+        } catch (KenticoErrorException e) {
+            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getMessage());
+            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getKenticoError().getMessage());
+        }
+    }
+
+    @Test
+    public void testKentico500Exception() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roatst"),
+                (request, response, context) -> response.setStatusCode(500));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        try {
+            ContentItemResponse item = client.getItem("on_roatst");
+            Assert.fail("Expected IOException");
+        } catch (IOException e) {
+            Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testGetTypesWithParams() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+                    Assert.assertEquals(1, params.size());
+                    Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentTypeList.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+        client.setContentLinkUrlResolver(Link::getUrlSlug);
+
+        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        ContentTypesListingResponse types = client.getTypes(urlPattern);
+
+        Assert.assertNotNull(types);
+    }
+
+    @Test
+    public void testGetTypes() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentTypeList.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ContentTypesListingResponse types = client.getTypes();
+        Assert.assertNotNull(types);
+    }
+
+    @Test
+    public void testGetTypeWithParams() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types/coffee"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+                    Assert.assertEquals(1, params.size());
+                    Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentType.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+        client.setContentLinkUrlResolver(Link::getUrlSlug);
+
+        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        ContentType type = client.getType("coffee", urlPattern);
+
+        Assert.assertNotNull(type);
+    }
+
+    @Test
+    public void testGetType() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types/coffee"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentType.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ContentType type = client.getType("coffee");
+        Assert.assertNotNull(type);
+    }
+
+    @Test
+    public void testGetTypeElementWithParams() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types/coffee/elements/processing"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+                    Assert.assertEquals(1, params.size());
+                    Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleMultipleChoiceElement.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+        client.setContentLinkUrlResolver(Link::getUrlSlug);
+
+        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        Element element = client.getContentTypeElement("coffee", "processing", urlPattern);
+
+        Assert.assertNotNull(element);
+        Assert.assertTrue(element instanceof MultipleChoiceElement);
+    }
+
+    @Test
+    public void testGetTypeElement() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "types/coffee/elements/processing"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleMultipleChoiceElement.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        Element element = client.getContentTypeElement("coffee", "processing");
+        Assert.assertNotNull(element);
+        Assert.assertTrue(element instanceof MultipleChoiceElement);
     }
 
     @Test
