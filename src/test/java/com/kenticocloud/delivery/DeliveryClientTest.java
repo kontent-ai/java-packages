@@ -60,7 +60,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
                     response.setEntity(
                             new InputStreamEntity(
-                                    this.getClass().getResourceAsStream("SampleContentList.json")
+                                    this.getClass().getResourceAsStream("SampleContentItemList.json")
                             )
                     );
                 });
@@ -71,7 +71,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         deliveryOptions.setProductionEndpoint(testServerUri);
 
         DeliveryClient client = new DeliveryClient(deliveryOptions);
-        client.setContentLinkUrlResolver(link -> link.getUrlSlug());
+        client.setContentLinkUrlResolver(Link::getUrlSlug);
 
         List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemsListingResponse items = client.getItems(urlPattern);

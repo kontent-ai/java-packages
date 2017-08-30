@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
@@ -44,9 +45,9 @@ public class JacksonBindingsTest {
     }
 
     @Test
-    public void testContentDeserializationFromKenticoExampleJson() throws IOException {
+    public void testContentListDeserialization() throws IOException {
         ContentItemsListingResponse response = objectMapper.readValue(
-                this.getClass().getResource("SampleContentList.json"), ContentItemsListingResponse.class);
+                this.getClass().getResource("SampleContentItemList.json"), ContentItemsListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
         Assert.assertEquals(0, response.getModularContent().size());
         Pagination pagination = response.getPagination();
@@ -57,6 +58,77 @@ public class JacksonBindingsTest {
         Assert.assertEquals(
                 "https://deliver.kenticocloud.com/975bf280-fd91-488c-994c-2f04416e5ee3/items?system.type=article&elements=title%2csummary%2cpost_date%2cteaser_image&order=elements.post_date%5bdesc%5d&depth=0&limit=3&skip=3",
                 pagination.getNextPage());
+    }
+
+    @Test
+    public void testContentItemDeserialization() throws IOException {
+        ContentItemResponse response = objectMapper.readValue(
+                this.getClass().getResource("SampleContentItem.json"), ContentItemResponse.class);
+        Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertEquals(0, response.getModularContent().size());
+
+        ContentItem contentItem = response.getItem();
+        Assert.assertNotNull(contentItem);
+
+        System system = contentItem.getSystem();
+        Assert.assertNotNull(system);
+        Assert.assertEquals("f4b3fc05-e988-4dae-9ac1-a94aba566474", system.getId());
+        Assert.assertEquals("On Roasts", system.getName());
+        Assert.assertEquals("on_roasts", system.getCodename());
+        Assert.assertEquals("default", system.getLanguage());
+        Assert.assertEquals("article", system.getType());
+        Assert.assertEquals(2016, system.getLastModified().getYear());
+        Assert.assertEquals(1, system.getSitemapLocations().size());
+        Assert.assertEquals("articles", system.getSitemapLocations().get(0));
+
+        Assert.assertEquals(5, contentItem.elements.size());
+        Element title = contentItem.elements.get("title");
+        Assert.assertNotNull(title);
+        //TODO: #11 populate the type and codeName fields after deserialization
+        //Assert.assertEquals("text", title.getType());
+        //Assert.assertEquals("title", title.getCodeName());
+    }
+
+    @Test
+    public void testContentTypeListDeserialization() throws IOException {
+        //TODO: #9 remove this line when the comment relating to this github issue is resolved
+        objectMapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
+
+        ContentTypesListingResponse response = objectMapper.readValue(
+                this.getClass().getResource("SampleContentTypeList.json"), ContentTypesListingResponse.class);
+        Assert.assertNotNull("object failed deserialization", response);
+
+        Assert.assertEquals(2, response.getTypes().size());
+        ContentType contentType = response.getTypes().get(0);
+        Assert.assertNotNull(contentType);
+
+        Pagination pagination = response.getPagination();
+        Assert.assertNotNull(pagination);
+    }
+
+    @Test
+    public void testContentTypeDeserialization() throws IOException {
+        ContentType contentType = objectMapper.readValue(
+                this.getClass().getResource("SampleContentType.json"), ContentType.class);
+        Assert.assertNotNull("object failed deserialization", contentType);
+
+        System system = contentType.getSystem();
+        Assert.assertNotNull(system);
+        Assert.assertEquals("929985ac-4aa5-436b-85a2-94c2d4fbbebd", system.getId());
+        Assert.assertEquals("Coffee", system.getName());
+        Assert.assertEquals("coffee", system.getCodename());
+        Assert.assertEquals(2017, system.getLastModified().getYear());
+
+        Assert.assertEquals(11, contentType.getElements().size());
+        Element element = contentType.getElements().get("processing");
+        Assert.assertNotNull(element);
+        Assert.assertTrue(element instanceof MultipleChoiceElement);
+        MultipleChoiceElement multipleChoiceElement = (MultipleChoiceElement) element;
+        Assert.assertEquals("Processing", multipleChoiceElement.getName());
+        Assert.assertEquals(3, multipleChoiceElement.getOptions().size());
+        Option option = multipleChoiceElement.getOptions().get(0);
+        Assert.assertEquals("Semi-dry", option.getName());
+        Assert.assertEquals("semi_dry", option.getCodename());
     }
 
     @Test
