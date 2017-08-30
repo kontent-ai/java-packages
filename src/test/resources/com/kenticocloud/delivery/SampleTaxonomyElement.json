@@ -1,0 +1,11 @@
+{
+  "type": "taxonomy",
+  "name": "Personas",
+  "taxonomy_group": "personas",
+  "value": [
+    {
+      "name": "Coffee lover",
+      "codename": "coffee_lover"
+    }
+  ]
+}

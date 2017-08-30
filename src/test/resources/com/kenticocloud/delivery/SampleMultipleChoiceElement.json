@@ -1,0 +1,10 @@
+{
+  "type": "multiple_choice",
+  "name": "Processing",
+  "value": [
+    {
+      "name": "Dry (Natural)",
+      "codename": "dry__natural_"
+    }
+  ]
+}

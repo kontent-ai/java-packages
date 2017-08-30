@@ -29,13 +29,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class NumberElement extends Element {
 
     @JsonProperty("value")
-    Long value;
+    Double value;
 
-    public Long getValue() {
+    public Double getValue() {
         return value;
     }
 
-    public void setValue(Long value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 }
