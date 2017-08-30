@@ -30,8 +30,14 @@ import java.util.List;
 
 public class ModularContentElement extends Element {
 
+    static final String TYPE_VALUE = "modular_content";
+
     @JsonProperty("value")
     List<String> value;
+
+    public ModularContentElement() {
+        setType(TYPE_VALUE);
+    }
 
     public List<String> getValue() {
         return value;

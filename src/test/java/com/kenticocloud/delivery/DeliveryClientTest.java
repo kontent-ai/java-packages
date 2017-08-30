@@ -69,6 +69,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         DeliveryClient client = new DeliveryClient(deliveryOptions);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
+        client.setBrokenLinkUrlResolver(() -> "/404");
 
         List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemsListingResponse items = client.getItems(urlPattern);
@@ -380,7 +381,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
                     response.setEntity(
                             new InputStreamEntity(
-                                    this.getClass().getResourceAsStream("SampleMultipleChoiceElement.json")
+                                    this.getClass().getResourceAsStream("SampleContentTypeElementResponse.json")
                             )
                     );
                 });
@@ -397,6 +398,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Element element = client.getContentTypeElement("coffee", "processing", urlPattern);
 
         Assert.assertNotNull(element);
+        Assert.assertEquals("processing", element.getCodeName());
         Assert.assertTrue(element instanceof MultipleChoiceElement);
     }
 
@@ -408,7 +410,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 String.format("/%s/%s", projectId, "types/coffee/elements/processing"),
                 (request, response, context) -> response.setEntity(
                         new InputStreamEntity(
-                                this.getClass().getResourceAsStream("SampleMultipleChoiceElement.json")
+                                this.getClass().getResourceAsStream("SampleContentTypeElementResponse.json")
                         )
                 ));
         HttpHost httpHost = this.start();
@@ -422,6 +424,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         Element element = client.getContentTypeElement("coffee", "processing");
         Assert.assertNotNull(element);
+        Assert.assertEquals("processing", element.getCodeName());
         Assert.assertTrue(element instanceof MultipleChoiceElement);
     }
 

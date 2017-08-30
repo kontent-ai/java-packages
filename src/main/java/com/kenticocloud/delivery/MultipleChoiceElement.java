@@ -30,11 +30,17 @@ import java.util.List;
 
 public class MultipleChoiceElement extends Element {
 
+    static final String TYPE_VALUE = "multiple_choice";
+
     @JsonProperty("value")
     List<Option> value;
 
     @JsonProperty("options")
     List<Option> options;
+
+    public MultipleChoiceElement() {
+        setType(TYPE_VALUE);
+    }
 
     public List<Option> getValue() {
         return value;

@@ -30,15 +30,15 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
-    @JsonSubTypes.Type(value = TextElement.class, name = "text"),
-    @JsonSubTypes.Type(value = RichTextElement.class, name = "rich_text"),
-    @JsonSubTypes.Type(value = MultipleChoiceElement.class, name = "multiple_choice"),
-    @JsonSubTypes.Type(value = NumberElement.class, name = "number"),
-    @JsonSubTypes.Type(value = DateTimeElement.class, name = "date_time"),
-    @JsonSubTypes.Type(value = AssetsElement.class, name = "asset"),
-    @JsonSubTypes.Type(value = ModularContentElement.class, name = "modular_content"),
-    @JsonSubTypes.Type(value = TaxonomyElement.class, name = "taxonomy"),
-    @JsonSubTypes.Type(value = UrlSlugElement.class, name = "url_slug")
+    @JsonSubTypes.Type(value = TextElement.class, name = TextElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = RichTextElement.class, name = RichTextElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = MultipleChoiceElement.class, name = MultipleChoiceElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = NumberElement.class, name = NumberElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = DateTimeElement.class, name = DateTimeElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = AssetsElement.class, name = AssetsElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = ModularContentElement.class, name = ModularContentElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = TaxonomyElement.class, name = TaxonomyElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE)
 })
 public abstract class Element {
 

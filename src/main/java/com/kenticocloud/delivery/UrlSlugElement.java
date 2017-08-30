@@ -28,8 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class UrlSlugElement extends Element {
 
+    static final String TYPE_VALUE = "url_slug";
+
     @JsonProperty("value")
     String value;
+
+    public UrlSlugElement() {
+        setType(TYPE_VALUE);
+    }
 
     public String getValue() {
         return value;

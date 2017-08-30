@@ -28,8 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TextElement extends Element {
 
+    static final String TYPE_VALUE = "text";
+
     @JsonProperty("value")
     String value;
+
+    public TextElement() {
+        setType(TYPE_VALUE);
+    }
 
     public String getValue() {
         return value;

@@ -83,9 +83,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(5, contentItem.elements.size());
         Element title = contentItem.elements.get("title");
         Assert.assertNotNull(title);
-        //TODO: #11 populate the type and codeName fields after deserialization
-        //Assert.assertEquals("text", title.getType());
-        //Assert.assertEquals("title", title.getCodeName());
+        Assert.assertEquals("text", title.getType());
     }
 
     @Test

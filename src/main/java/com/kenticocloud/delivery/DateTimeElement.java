@@ -30,8 +30,14 @@ import java.time.ZonedDateTime;
 
 public class DateTimeElement extends Element {
 
+    static final String TYPE_VALUE = "date_time";
+
     @JsonProperty("value")
     ZonedDateTime value;
+
+    public DateTimeElement() {
+        setType(TYPE_VALUE);
+    }
 
     public ZonedDateTime getValue() {
         return value;

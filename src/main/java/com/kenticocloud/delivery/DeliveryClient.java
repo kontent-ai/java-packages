@@ -243,7 +243,7 @@ public class DeliveryClient {
             @Override
             public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
                 if (beanDesc.getBeanClass() == RichTextElement.class)
-                    return new RichTextElementConverter(contentLinkUrlResolver, brokenLinkUrlResolver, deserializer);
+                    return new RichTextElementConverter(getContentLinkUrlResolver(), getBrokenLinkUrlResolver(), deserializer);
                 return deserializer;
             }
         });

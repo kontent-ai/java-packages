@@ -30,8 +30,14 @@ import java.util.List;
 
 public class AssetsElement extends Element {
 
+    static final String TYPE_VALUE = "asset";
+
     @JsonProperty("value")
     List<Asset> value;
+
+    public AssetsElement() {
+        setType(TYPE_VALUE);
+    }
 
     public List<Asset> getValue() {
         return value;

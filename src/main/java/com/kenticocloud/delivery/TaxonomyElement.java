@@ -30,11 +30,17 @@ import java.util.List;
 
 public class TaxonomyElement extends Element {
 
+    static final String TYPE_VALUE = "taxonomy";
+
     @JsonProperty("taxonomy_group")
     String taxonomyGroup;
 
     @JsonProperty("value")
     List<Taxonomy> value;
+
+    public TaxonomyElement() {
+        setType(TYPE_VALUE);
+    }
 
     public String getTaxonomyGroup() {
         return taxonomyGroup;

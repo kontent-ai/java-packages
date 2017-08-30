@@ -28,8 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class NumberElement extends Element {
 
+    static final String TYPE_VALUE = "number";
+
     @JsonProperty("value")
     Double value;
+
+    public NumberElement() {
+        setType(TYPE_VALUE);
+    }
 
     public Double getValue() {
         return value;

@@ -31,6 +31,8 @@ import java.util.Map;
 
 public class RichTextElement extends Element {
 
+    static final String TYPE_VALUE = "rich_text";
+
     @JsonProperty("value")
     String value;
 
@@ -42,6 +44,10 @@ public class RichTextElement extends Element {
 
     @JsonProperty("modular_content")
     List<String> modularContent;
+
+    public RichTextElement() {
+        setType(TYPE_VALUE);
+    }
 
     public String getValue() {
         return value;
