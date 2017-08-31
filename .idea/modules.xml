@@ -2,6 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/cloud-sample-app-springboot/cloud-sample-app-springboot.iml" filepath="$PROJECT_DIR$/cloud-sample-app-springboot/cloud-sample-app-springboot.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cloud-sample-app-springboot_main.iml" filepath="$PROJECT_DIR$/.idea/modules/cloud-sample-app-springboot_main.iml" group="cloud-sample-app-springboot" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cloud-sample-app-springboot_test.iml" filepath="$PROJECT_DIR$/.idea/modules/cloud-sample-app-springboot_test.iml" group="cloud-sample-app-springboot" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java_main.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java_main.iml" group="delivery-sdk-java" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java_test.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java_test.iml" group="delivery-sdk-java" />
