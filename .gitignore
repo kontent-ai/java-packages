@@ -2,6 +2,8 @@
 /build/
 /out/
 signing.gpg
+deploy_key
+deploy_key.pub
 gradle.properties.local
 
 # Compiled class file
