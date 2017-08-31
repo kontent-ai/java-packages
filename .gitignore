@@ -4,6 +4,7 @@
 signing.gpg
 deploy_key
 deploy_key.pub
+secrets.tar
 gradle.properties.local
 
 # Compiled class file
