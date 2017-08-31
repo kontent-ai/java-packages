@@ -28,6 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.util.List;
+
+/**
+ * Parent object model of individual elements
+ * <p>
+ * When retrieving content items or content types, you get an elements collection as a part of the retrieved item or
+ * type.
+ */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TextElement.class, name = TextElement.TYPE_VALUE),
@@ -51,27 +59,49 @@ public abstract class Element {
     @JsonProperty("codename")
     String codeName;
 
+    Element() {
+        //Default constructor
+    }
+
+    /**
+     * Type of the element
+     * <p>
+     * Valid values: text, rich_text, number, multiple_choice, date_time, asset, modular_content, taxonomy, url_slug.
+     * @return the codename for this element type
+     */
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Display name of the element
+     * @return the display name of this element
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * The codename for this element
+     * <p>
+     * Note: This is only populated when querying an individual content type element.
+     * @return codename for this content type element as defined in a content type
+     * @see DeliveryClient#getContentTypeElement(String, String)
+     * @see DeliveryClient#getContentTypeElement(String, String, List)
+     */
     public String getCodeName() {
         return codeName;
     }
 
-    public void setCodeName(String codeName) {
+    void setCodeName(String codeName) {
         this.codeName = codeName;
     }
 }

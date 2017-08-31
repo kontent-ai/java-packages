@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for option values in a {@link MultipleChoiceElement}
+ */
 public class Option {
 
     @JsonProperty("name")
@@ -34,19 +37,31 @@ public class Option {
     @JsonProperty("codename")
     String codename;
 
+    Option() {
+        //Default constructor
+    }
+
+    /**
+     * The display name of the option
+     * @return the name of the option
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * The codename of the option
+     * @return the codename of the option
+     */
     public String getCodename() {
         return codename;
     }
 
-    public void setCodename(String codename) {
+    void setCodename(String codename) {
         this.codename = codename;
     }
 }

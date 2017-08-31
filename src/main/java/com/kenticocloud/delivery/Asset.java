@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for Asset elements
+ */
 public class Asset {
 
     @JsonProperty("name")
@@ -43,43 +46,67 @@ public class Asset {
     @JsonProperty("url")
     String url;
 
+    Asset() {
+        //Default constructor
+    }
+
+    /**
+     * File name of the asset
+     * @return file name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * MIME type of the asset
+     * @return MIME type
+     */
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Size of the asset in bytes
+     * @return number of bytes
+     */
     public Integer getSize() {
         return size;
     }
 
-    public void setSize(Integer size) {
+    void setSize(Integer size) {
         this.size = size;
     }
 
+    /**
+     * Description of the asset
+     * @return asset description
+     */
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Absolute URL for the asset
+     * @return URL for the asset, hosted by Kentico
+     */
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 }

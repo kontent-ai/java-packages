@@ -29,6 +29,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+/**
+ * Content item system attributes
+ * <p>
+ * Every {@link ContentItem} and {@link ContentType} in a JSON response from the Delivery API contains a system
+ * attribute. This attribute represents the System object with information about the retrieved content item
+ */
 public class System {
 
     @JsonProperty("id")
@@ -52,59 +58,93 @@ public class System {
     @JsonProperty("last_modified")
     ZonedDateTime lastModified;
 
+    System() {
+        //Default constructor
+    }
+
+    /**
+     * Unique identifier of the content item
+     * @return identifier
+     */
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Display name of the content item
+     * @return display name
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * Codename of the content item
+     * <p>
+     * Generated from the content item's display name.
+     * @return codename
+     */
     public String getCodename() {
         return codename;
     }
 
-    public void setCodename(String codename) {
+    void setCodename(String codename) {
         this.codename = codename;
     }
 
+    /**
+     * Codename of the language variant
+     * @return language variant
+     */
     public String getLanguage() {
         return language;
     }
 
-    public void setLanguage(String language) {
+    void setLanguage(String language) {
         this.language = language;
     }
 
+    /**
+     * Codename of the content type
+     * @return the content type codename
+     */
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * A list of sitemap locations the content item is in
+     * @return sitemap location strings
+     */
     public List<String> getSitemapLocations() {
         return sitemapLocations;
     }
 
-    public void setSitemapLocations(List<String> sitemapLocations) {
+    void setSitemapLocations(List<String> sitemapLocations) {
         this.sitemapLocations = sitemapLocations;
     }
 
+    /**
+     * When was the content item last modified
+     * @return Zoned DateTime generated from ISO 8601 formatted string
+     */
     public ZonedDateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(ZonedDateTime lastModified) {
+    void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 }

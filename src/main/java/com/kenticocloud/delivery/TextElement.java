@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for text elements
+ */
 public class TextElement extends Element {
 
     static final String TYPE_VALUE = "text";
@@ -33,15 +36,19 @@ public class TextElement extends Element {
     @JsonProperty("value")
     String value;
 
-    public TextElement() {
+    TextElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The value of a Text element is a string.
+     * @return element value
+     */
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    void setValue(String value) {
         this.value = value;
     }
 }

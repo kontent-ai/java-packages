@@ -26,6 +26,12 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for Link elements
+ * <p>
+ * Links associated with rich text elements
+ * @see RichTextElement
+ */
 public class Link {
 
     @JsonProperty("type")
@@ -37,27 +43,45 @@ public class Link {
     @JsonProperty("url_slug")
     String urlSlug;
 
+    Link() {
+        //Default constructor
+    }
+
+    /**
+     * Content type of the content item
+     * @return the content item type codename
+     */
     public String getType() {
         return type;
     }
 
-    public void setType(String type) {
+    void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * Display name of the element
+     * @return the codename of the link element
+     */
     public String getCodename() {
         return codename;
     }
 
-    public void setCodename(String codename) {
+    void setCodename(String codename) {
         this.codename = codename;
     }
 
+    /**
+     * URL slug of the content item
+     * <p>
+     * Empty string if the content item's type does not use a URL slug element
+     * @return URL slug of the content item
+     */
     public String getUrlSlug() {
         return urlSlug;
     }
 
-    public void setUrlSlug(String urlSlug) {
+    void setUrlSlug(String urlSlug) {
         this.urlSlug = urlSlug;
     }
 }

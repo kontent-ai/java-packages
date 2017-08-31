@@ -26,6 +26,12 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for Image elements
+ * <p>
+ * Images associated with rich text elements
+ * @see RichTextElement
+ */
 public class Image {
 
     @JsonProperty("image_id")
@@ -37,27 +43,45 @@ public class Image {
     @JsonProperty("url")
     String url;
 
+    Image() {
+        //Default constructor
+    }
+
+    /**
+     * ID of the image
+     * @return image ID
+     */
     public String getImageId() {
         return imageId;
     }
 
-    public void setImageId(String imageId) {
+    void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
+    /**
+     * Description of the image
+     * <p>
+     * Used for the alt attribute of an &lt;img&gt; tag.
+     * @return the image description
+     */
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
+    void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Absolute URL for the image
+     * @return An absolute URL image hosted by Kentico
+     */
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
+    void setUrl(String url) {
         this.url = url;
     }
 }

@@ -22,33 +22,15 @@
  * SOFTWARE.
  */
 
-package com.kenticocloud.delivery;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 /**
- * Object model for Number elements
+ * The Kentico Cloud Delivery API is read-only. You can retrieve content but not add or modify it.
+ * <p>
+ * Production vs Preview
+ * You can work with the Delivery API in two ways. Either retrieve published versions of content items or preview their
+ * yet unpublished versions. In both cases, you use the same methods to request data with the
+ * {@link com.kenticocloud.delivery.DeliveryClient}.
+ * <p>
+ * If you want to preview unpublished content in your project, you need to include the Preview API key in your
+ * construction of the {@link com.kenticocloud.delivery.DeliveryClient}.
  */
-public class NumberElement extends Element {
-
-    static final String TYPE_VALUE = "number";
-
-    @JsonProperty("value")
-    Double value;
-
-    NumberElement() {
-        setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of a Number element is a decimal number. If empty, the value is null.
-     * @return the value of the number
-     */
-    public Double getValue() {
-        return value;
-    }
-
-    void setValue(Double value) {
-        this.value = value;
-    }
-}
+package com.kenticocloud.delivery;

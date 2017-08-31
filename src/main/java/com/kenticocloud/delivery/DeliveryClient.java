@@ -103,6 +103,10 @@ public class DeliveryClient {
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project,
      * and configures the preview API.
+     * <p>
+     * An API key (which comes in the form of a verified <a href="https://jwt.io/">JSON Web Token</a>) provides
+     * read-only access to a single project.  You can find the API keys for your project in the API keys section in the
+     * <a href="https://app.kenticocloud.com/">Kentico Cloud</a> app.
      * @throws IllegalArgumentException Thrown if the Project id is invalid.
      * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
      * {@link java.util.UUID}.

@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for URL slug elements
+ */
 public class UrlSlugElement extends Element {
 
     static final String TYPE_VALUE = "url_slug";
@@ -33,15 +36,19 @@ public class UrlSlugElement extends Element {
     @JsonProperty("value")
     String value;
 
-    public UrlSlugElement() {
+    UrlSlugElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The value of URL slug elements is a string.
+     * @return a URL slug string
+     */
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    void setValue(String value) {
         this.value = value;
     }
 }

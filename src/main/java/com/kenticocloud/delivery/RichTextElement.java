@@ -29,6 +29,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Object model for Rich text elements
+ */
 public class RichTextElement extends Element {
 
     static final String TYPE_VALUE = "rich_text";
@@ -45,39 +48,64 @@ public class RichTextElement extends Element {
     @JsonProperty("modular_content")
     List<String> modularContent;
 
-    public RichTextElement() {
+    RichTextElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The value of a Rich text element is formatted text.
+     * <p>
+     * Besides formatted text in the element's value attribute, Rich text elements can contain inline images and links
+     * to other content items.
+     * @return formatted text
+     */
     public String getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    void setValue(String value) {
         this.value = value;
     }
 
+    /**
+     * Images associated with this rich text element.
+     * @return a map of {@link Image} objects
+     * @see Image
+     */
     public Map<String, Image> getImages() {
         return images;
     }
 
-    public void setImages(Map<String, Image> images) {
+    void setImages(Map<String, Image> images) {
         this.images = images;
     }
 
+    /**
+     * Links associated with this rich text element.
+     * <p>
+     * Each object in the links collection represents a content item ID in the GUID format,
+     * e.g., f4b3fc05-e988-4dae-9ac1-a94aba566474.
+     * @return a map of {@link Link} objects
+     */
     public Map<String, Link> getLinks() {
         return links;
     }
 
-    public void setLinks(Map<String, Link> links) {
+    void setLinks(Map<String, Link> links) {
         this.links = links;
     }
 
+    /**
+     * A list of {@link ContentItem} objects inserted into rich text as modules.
+     * <p>
+     * The list is represented as an array of strings, each string being a codename of a content item.
+     * @return a list of {@link ContentItem} codenames
+     */
     public List<String> getModularContent() {
         return modularContent;
     }
 
-    public void setModularContent(List<String> modularContent) {
+    void setModularContent(List<String> modularContent) {
         this.modularContent = modularContent;
     }
 }

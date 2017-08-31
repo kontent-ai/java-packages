@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Object model for Assets elements.
+ */
 public class AssetsElement extends Element {
 
     static final String TYPE_VALUE = "asset";
@@ -35,15 +38,20 @@ public class AssetsElement extends Element {
     @JsonProperty("value")
     List<Asset> value;
 
-    public AssetsElement() {
+    AssetsElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * When used in content items, Asset elements can contain multiple assets. The value in the JSON response for an
+     * Asset element consists of a list of {@link Asset} objects.
+     * @return list of assets
+     */
     public List<Asset> getValue() {
         return value;
     }
 
-    public void setValue(List<Asset> value) {
+    void setValue(List<Asset> value) {
         this.value = value;
     }
 }

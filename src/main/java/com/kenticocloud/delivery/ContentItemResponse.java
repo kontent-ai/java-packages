@@ -26,8 +26,16 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.List;
 import java.util.Map;
 
+/**
+ * Content item listing response
+ * <p>
+ * When retrieving a single content item, the Delivery API returns a {@link ContentItemResponse}
+ * @see DeliveryClient#getItem(String)
+ * @see DeliveryClient#getItem(String, List)
+ */
 public class ContentItemResponse {
 
     @JsonProperty("item")
@@ -36,19 +44,31 @@ public class ContentItemResponse {
     @JsonProperty("modular_content")
     Map<String, ContentItem> modularContent;
 
+    ContentItemResponse() {
+        //Default constructor
+    }
+
+    /**
+     * The {@link ContentItem} response
+     * @return the {@link ContentItem} requested
+     */
     public ContentItem getItem() {
         return item;
     }
 
-    public void setItem(ContentItem item) {
+    void setItem(ContentItem item) {
         this.item = item;
     }
 
+    /**
+     * A map of content items used in Modular content and Rich text elements
+     * @return map of {@link ContentItem} objects
+     */
     public Map<String, ContentItem> getModularContent() {
         return modularContent;
     }
 
-    public void setModularContent(Map<String, ContentItem> modularContent) {
+    void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
     }
 }

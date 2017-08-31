@@ -24,15 +24,28 @@
 
 package com.kenticocloud.delivery;
 
+/**
+ * Thrown to indicate failure of a Kentico request.
+ * @see KenticoError
+ */
 public class KenticoErrorException extends RuntimeException {
 
     private final KenticoError kenticoError;
 
+    /**
+     * Thrown to indicate failure of a Kentico request
+     * @param kenticoError The original KenticoError
+     */
     public KenticoErrorException(KenticoError kenticoError) {
         super(kenticoError.getMessage());
         this.kenticoError = kenticoError;
     }
 
+    /**
+     * Returns the original error provided by Kentico.  Useful for debugging.
+     * @return The original KenticoError
+     * @see KenticoError
+     */
     public KenticoError getKenticoError() {
         return kenticoError;
     }

@@ -28,6 +28,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Content types listing response
+ * <p>
+ * When you retrieve a list of content items or content types from your project, the Delivery API returns a
+ * {@link ContentTypesListingResponse}
+ * @see DeliveryClient#getTypes()
+ * @see DeliveryClient#getTypes(List)
+ */
 public class ContentTypesListingResponse {
 
     @JsonProperty("types")
@@ -36,19 +44,31 @@ public class ContentTypesListingResponse {
     @JsonProperty("pagination")
     Pagination pagination;
 
+    ContentTypesListingResponse() {
+        //Default constructor
+    }
+
+    /**
+     * A list of content types
+     * @return list of {@link ContentType} objects
+     */
     public List<ContentType> getTypes() {
         return types;
     }
 
-    public void setTypes(List<ContentType> types) {
+    void setTypes(List<ContentType> types) {
         this.types = types;
     }
 
+    /**
+     * Information about the retrieved page
+     * @return the {@link Pagination} object identifying the current page
+     */
     public Pagination getPagination() {
         return pagination;
     }
 
-    public void setPagination(Pagination pagination) {
+    void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 }

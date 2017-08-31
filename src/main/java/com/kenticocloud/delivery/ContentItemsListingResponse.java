@@ -29,6 +29,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Content items listing response
+ * <p>
+ * When you retrieve a list of content items from your project, the Delivery API returns a
+ * {@link ContentItemsListingResponse}
+ * @see DeliveryClient#getItems()
+ * @see DeliveryClient#getItems(List)
+ */
 public class ContentItemsListingResponse {
 
     @JsonProperty("items")
@@ -40,27 +48,43 @@ public class ContentItemsListingResponse {
     @JsonProperty("pagination")
     Pagination pagination;
 
+    ContentItemsListingResponse() {
+        //Default constructor
+    }
+
+    /**
+     * A list of content items
+     * @return list of {@link ContentItem} objects
+     */
     public List<ContentItem> getItems() {
         return items;
     }
 
-    public void setItems(List<ContentItem> items) {
+    void setItems(List<ContentItem> items) {
         this.items = items;
     }
 
+    /**
+     * A map of content items used in Modular content and Rich text elements
+     * @return map of {@link ContentItem} objects
+     */
     public Map<String, ContentItem> getModularContent() {
         return modularContent;
     }
 
-    public void setModularContent(Map<String, ContentItem> modularContent) {
+    void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
     }
 
+    /**
+     * Information about the retrieved page
+     * @return the {@link Pagination} object identifying the current page
+     */
     public Pagination getPagination() {
         return pagination;
     }
 
-    public void setPagination(Pagination pagination) {
+    void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 }

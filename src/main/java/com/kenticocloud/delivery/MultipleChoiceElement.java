@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Object model for Multiple choice elements
+ */
 public class MultipleChoiceElement extends Element {
 
     static final String TYPE_VALUE = "multiple_choice";
@@ -38,23 +41,41 @@ public class MultipleChoiceElement extends Element {
     @JsonProperty("options")
     List<Option> options;
 
-    public MultipleChoiceElement() {
+    MultipleChoiceElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The value of the selected elements.
+     * <p>
+     * The value of a Multiple choice element is a list of option objects. Each option object has a name and codename.
+     * <p>
+     * Note, this is not returned when querying for the element by type.
+     * @return a list of selected elements
+     * @see Option
+     */
     public List<Option> getValue() {
         return value;
     }
 
-    public void setValue(List<Option> value) {
+    void setValue(List<Option> value) {
         this.value = value;
     }
 
+    /**
+     * The available option elements on this content type element.
+     * <p>
+     * The value of a Multiple choice element is a list of option objects. Each option object has a name and codename.
+     * <p>
+     * Note, this is only returned when querying for the element by type.
+     * @return a list of option elements
+     * @see Option
+     */
     public List<Option> getOptions() {
         return options;
     }
 
-    public void setOptions(List<Option> options) {
+    void setOptions(List<Option> options) {
         this.options = options;
     }
 }

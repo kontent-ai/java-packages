@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.ZonedDateTime;
 
+/**
+ * Object model for Date &amp; time elements
+ */
 public class DateTimeElement extends Element {
 
     static final String TYPE_VALUE = "date_time";
@@ -35,15 +38,19 @@ public class DateTimeElement extends Element {
     @JsonProperty("value")
     ZonedDateTime value;
 
-    public DateTimeElement() {
+    DateTimeElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
+     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
+     */
     public ZonedDateTime getValue() {
         return value;
     }
 
-    public void setValue(ZonedDateTime value) {
+    void setValue(ZonedDateTime value) {
         this.value = value;
     }
 }

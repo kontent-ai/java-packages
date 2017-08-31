@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Map;
 
+/**
+ * Object model description of a single content item object.
+ */
 public class ContentItem {
 
     @JsonProperty("system")
@@ -36,19 +39,31 @@ public class ContentItem {
     @JsonProperty("elements")
     Map<String, Element> elements;
 
+    ContentItem() {
+        //Default constructor
+    }
+
+    /**
+     * {@link System} attributes of the content item
+     * @return {@link System} attributes of the content item
+     */
     public System getSystem() {
         return system;
     }
 
-    public void setSystem(System system) {
+    void setSystem(System system) {
         this.system = system;
     }
 
+    /**
+     * Content type elements in the content item
+     * @return map of {@link Element} objects
+     */
     public Map<String, Element> getElements() {
         return elements;
     }
 
-    public void setElements(Map<String, Element> elements) {
+    void setElements(Map<String, Element> elements) {
         this.elements = elements;
     }
 }

@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Object model for Modular content elements
+ */
 public class ModularContentElement extends Element {
 
     static final String TYPE_VALUE = "modular_content";
@@ -35,15 +38,23 @@ public class ModularContentElement extends Element {
     @JsonProperty("value")
     List<String> value;
 
-    public ModularContentElement() {
+    ModularContentElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * A list of {@link ContentItem} codenames
+     * <p>
+     *
+     * The relations to content items saved in a Modular content element are represented as a list of strings. Each
+     * string being a codename of a content item.
+     * @return a list of codenames referencing {@link ContentItem}
+     */
     public List<String> getValue() {
         return value;
     }
 
-    public void setValue(List<String> value) {
+    void setValue(List<String> value) {
         this.value = value;
     }
 }

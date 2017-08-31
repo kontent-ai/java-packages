@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Pagination object
+ */
 public class Pagination {
 
     @JsonProperty("skip")
@@ -40,6 +43,10 @@ public class Pagination {
     @JsonProperty("next_page")
     String nextPage;
 
+    /**
+     * Number of content items skipped from the response
+     * @return Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query parameter
+     */
     public Integer getSkip() {
         return skip;
     }
@@ -48,6 +55,10 @@ public class Pagination {
         this.skip = skip;
     }
 
+    /**
+     * Number of content items returned from the response
+     * @return Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query parameter
+     */
     public Integer getLimit() {
         return limit;
     }
@@ -56,6 +67,13 @@ public class Pagination {
         this.limit = limit;
     }
 
+    /**
+     * Number of retrieved content items
+     * <p>
+     * If the limit and skip query parameters ({@link DeliveryParameterBuilder#page(Integer, Integer)}) aren't set, the
+     * count attribute will contain the total number of content items matching the specified filtering parameters.
+     * @return Number of retrieved content items
+     */
     public Integer getCount() {
         return count;
     }
@@ -64,6 +82,10 @@ public class Pagination {
         this.count = count;
     }
 
+    /**
+     * URL to the next page of results.
+     * @return URL to the next page of results (note, support for this in the API is still WIP)
+     */
     public String getNextPage() {
         return nextPage;
     }

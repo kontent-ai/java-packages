@@ -28,6 +28,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Object model for a Taxonomy group element
+ */
 public class TaxonomyElement extends Element {
 
     static final String TYPE_VALUE = "taxonomy";
@@ -38,23 +41,31 @@ public class TaxonomyElement extends Element {
     @JsonProperty("value")
     List<Taxonomy> value;
 
-    public TaxonomyElement() {
+    TaxonomyElement() {
         setType(TYPE_VALUE);
     }
 
+    /**
+     * The name of the taxonomy group
+     * @return taxonomy group name
+     */
     public String getTaxonomyGroup() {
         return taxonomyGroup;
     }
 
-    public void setTaxonomyGroup(String taxonomyGroup) {
+    void setTaxonomyGroup(String taxonomyGroup) {
         this.taxonomyGroup = taxonomyGroup;
     }
 
+    /**
+     * The value of Taxonomy elements is a list of {@link Taxonomy} item objects.
+     * @return list of {@link Taxonomy} objects
+     */
     public List<Taxonomy> getValue() {
         return value;
     }
 
-    public void setValue(List<Taxonomy> value) {
+    void setValue(List<Taxonomy> value) {
         this.value = value;
     }
 }

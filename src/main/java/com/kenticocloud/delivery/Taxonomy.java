@@ -26,6 +26,9 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Object model for a Taxonomy element
+ */
 public class Taxonomy {
 
     @JsonProperty("name")
@@ -34,19 +37,31 @@ public class Taxonomy {
     @JsonProperty("codename")
     String codename;
 
+    Taxonomy() {
+        //Default constructor
+    }
+
+    /**
+     * The display name of the taxonomy
+     * @return the name of the taxonomy
+     */
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    void setName(String name) {
         this.name = name;
     }
 
+    /**
+     * The codename of the taxonomy
+     * @return the codename of the taxonomy
+     */
     public String getCodename() {
         return codename;
     }
 
-    public void setCodename(String codename) {
+    void setCodename(String codename) {
         this.codename = codename;
     }
 }
