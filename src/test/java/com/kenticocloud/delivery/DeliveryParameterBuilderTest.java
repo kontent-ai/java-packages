@@ -42,11 +42,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testEqualsNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterEquals(null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testLessThan() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterLessThan("foo", "bar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[lt]", params.get(0).getName());
         Assert.assertEquals("bar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testLessThanNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterLessThan(null, null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -58,11 +70,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testLessThanEqualsNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterLessThanEquals(null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testGreaterThan() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterGreaterThan("foo", "bar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[gt]", params.get(0).getName());
         Assert.assertEquals("bar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testGreaterThanNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterGreaterThan(null, null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -74,11 +98,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testGreaterEqualsThanNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterGreaterThanEquals(null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testRange() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterRange("foo", "bar", "foobar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[range]", params.get(0).getName());
         Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testRangeNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterRange(null, null, null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -90,11 +126,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testInNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterIn(null, null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testContains() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterContains("foo", "bar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[contains]", params.get(0).getName());
         Assert.assertEquals("bar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testContainsNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterContains(null, null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -106,11 +154,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testAnyNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterAny(null, null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testAll() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterAll("foo", "bar", "foobar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[all]", params.get(0).getName());
         Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testAllNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterAll(null, null, null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -122,11 +182,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testOrderAscNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().orderByAsc(null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testOrderDesc() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().orderByDesc("foobar").build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("order", params.get(0).getName());
         Assert.assertEquals("foobar[desc]", params.get(0).getValue());
+    }
+
+    @Test
+    public void testOrderDescNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().orderByDesc(null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -164,11 +236,23 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testProjectionNull() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().projection(null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
     public void testModularContentDepth() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().modularContentDepth(3).build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("depth", params.get(0).getName());
         Assert.assertEquals("3", params.get(0).getValue());
+    }
+
+    @Test
+    public void testModularContentDepthNull() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().modularContentDepth(null).build();
+        Assert.assertEquals(0, params.size());
     }
 
     @Test
@@ -185,5 +269,11 @@ public class DeliveryParameterBuilderTest {
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("language", params.get(0).getName());
         Assert.assertEquals("en-US", params.get(0).getValue());
+    }
+
+    @Test
+    public void testLanguageNull() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().language(null).build();
+        Assert.assertEquals(0, params.size());
     }
 }
