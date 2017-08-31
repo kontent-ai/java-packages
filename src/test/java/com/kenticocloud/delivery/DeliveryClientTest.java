@@ -192,6 +192,34 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    public void testWaitForLoadingNewContentHeader() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    Assert.assertEquals(
+                            "true",
+                            request.getHeaders("X-KC-Wait-For-Loading-New-Content")[0].getValue());
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+        deliveryOptions.setWaitForLoadingNewContent(true);
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+    }
+
+    @Test
     public void testKenticoException() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 

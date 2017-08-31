@@ -209,6 +209,11 @@ public class DeliveryClient {
                     HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
             );
         }
+        if (deliveryOptions.isWaitForLoadingNewContent()) {
+            requestBuilder.setHeader(
+                "X-KC-Wait-For-Loading-New-Content", "true"
+            );
+        }
         requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
         for (NameValuePair nameValuePair : nameValuePairs) {
             requestBuilder.addParameter(nameValuePair);
