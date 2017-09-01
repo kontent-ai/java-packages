@@ -173,3 +173,8 @@ Prerequisites:
 
 **Required:**
 Java 8 SDK (Oracle & OpenJDK both tested and supported)
+
+Ensure your `JAVA_HOME` environment is set.  Then build the project via the provided Gradle wrapper.
+```
+./gradlew clean build
+```
