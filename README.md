@@ -178,3 +178,6 @@ Ensure your `JAVA_HOME` environment is set.  Then build the project via the prov
 ```
 ./gradlew clean build
 ```
+
+Optional:
+[JetBrains IntelliJ Idea](https://www.jetbrains.com/idea/) project files are included.  Open up the project and Import the Gradle project to sync up dependencies.
