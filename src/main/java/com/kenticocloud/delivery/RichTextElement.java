@@ -32,12 +32,9 @@ import java.util.Map;
 /**
  * Object model for Rich text elements
  */
-public class RichTextElement extends Element {
+public class RichTextElement extends TextElement {
 
     static final String TYPE_VALUE = "rich_text";
-
-    @JsonProperty("value")
-    String value;
 
     @JsonProperty("images")
     Map<String, Image> images;
@@ -59,12 +56,9 @@ public class RichTextElement extends Element {
      * to other content items.
      * @return formatted text
      */
+    @Override
     public String getValue() {
         return value;
-    }
-
-    void setValue(String value) {
-        this.value = value;
     }
 
     /**

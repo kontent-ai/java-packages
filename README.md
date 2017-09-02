@@ -143,6 +143,7 @@ The `ContentItem` class provides the following:
 
 * `getSystem()` returna a `System` object with metadata such as code name, display name, type, or sitemap location.
 * `getElements()` returns a Map containing all the elements included in the response keyed by code names.
+* Methods for easier access to certain types of content elements such as modular content, or assets.
 
 ## Getting content item properties
 
@@ -162,6 +163,61 @@ articleItem.getSystem().getType()
 ## Getting element values
 
 The SDK provides methods for retrieving content from content elements such as Asset, Text, Rich Text, Multiple choice, etc.
+
+### Text and Rich text
+
+For text elements, you can use the `getString` method.
+
+```java
+// Retrieves an article text from the 'body_copy' Text element
+articleItem.getString("body_copy")
+```
+
+The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/delivery-sdk-net/wiki/Resolving-Links-to-Content-Items) for more details.
+
+### Asset
+
+```java
+// Retrieves a teaser image URL
+articleItem.getAssets("teaser_image").get(0).getUrl()
+```
+
+### Multiple choice
+
+To get a list of options defined in a Multiple choice content element, you first need to retrieve the content element itself. For this purpose, you can use the `getContentTypeElement` method, which takes the codename of a content type and the codename of a content element.
+
+```java
+// Retrieves the 'processing' element of the 'coffee' content type
+MultipleChoiceElement element = (MultipleChoiceElement) client.getContentTypeElement("coffee", "processing");
+```
+
+After you retrieve the Multiple choice element, you can work with its list of options. Each option has the following methods:
+
+
+Method | Description | Example
+---------|----------|---------
+ getName() | The display name of the option. | `Dry (Natural)`
+ getCodename() | The codename of the option. | `dry__natural_`
+
+To put the element's options in a list, you can use the following code:
+
+```java
+List<SelectListItem> items = new List<>();
+
+for (Option option : element.getOptions()) {
+    SelectListItem item = new SelectListItem();
+    item.setText(option.getName());
+    item.setValue(option.getCodename());
+    item.setSelected("semi_dry".equals(option.getCodename()));
+}
+```
+
+### Modular content
+
+```java
+// Retrieves related articles
+articleItem.getModularContent("related_articles")
+```
 
 ## Further information
 

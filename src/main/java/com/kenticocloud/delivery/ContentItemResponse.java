@@ -36,7 +36,7 @@ import java.util.Map;
  * @see DeliveryClient#getItem(String)
  * @see DeliveryClient#getItem(String, List)
  */
-public class ContentItemResponse {
+public class ContentItemResponse implements ModularContentProvider {
 
     @JsonProperty("item")
     ContentItem item;
@@ -58,12 +58,14 @@ public class ContentItemResponse {
 
     void setItem(ContentItem item) {
         this.item = item;
+        item.setModularContentProvider(this);
     }
 
     /**
      * A map of content items used in Modular content and Rich text elements
      * @return map of {@link ContentItem} objects
      */
+    @Override
     public Map<String, ContentItem> getModularContent() {
         return modularContent;
     }

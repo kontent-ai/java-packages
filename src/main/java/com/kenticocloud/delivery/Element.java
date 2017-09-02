@@ -59,6 +59,8 @@ public abstract class Element {
     @JsonProperty("codename")
     String codeName;
 
+    ContentItem parent;
+
     Element() {
         //Default constructor
     }
@@ -103,5 +105,9 @@ public abstract class Element {
 
     void setCodeName(String codeName) {
         this.codeName = codeName;
+    }
+
+    void setParent(ContentItem parent) {
+        this.parent = parent;
     }
 }

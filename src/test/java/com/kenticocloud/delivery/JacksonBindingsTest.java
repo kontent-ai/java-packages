@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 public class JacksonBindingsTest {
 
@@ -48,7 +49,7 @@ public class JacksonBindingsTest {
         ContentItemsListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentItemList.json"), ContentItemsListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
-        Assert.assertEquals(0, response.getModularContent().size());
+        Assert.assertEquals(2, response.getModularContent().size());
         Pagination pagination = response.getPagination();
         Assert.assertNotNull(pagination);
         Assert.assertEquals(0, pagination.getSkip().intValue());
@@ -64,7 +65,7 @@ public class JacksonBindingsTest {
         ContentItemResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentItem.json"), ContentItemResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
-        Assert.assertEquals(0, response.getModularContent().size());
+        Assert.assertEquals(2, response.getModularContent().size());
 
         ContentItem contentItem = response.getItem();
         Assert.assertNotNull(contentItem);
@@ -84,6 +85,19 @@ public class JacksonBindingsTest {
         Element title = contentItem.elements.get("title");
         Assert.assertNotNull(title);
         Assert.assertEquals("text", title.getType());
+
+        Assert.assertEquals("On Roasts", contentItem.getString("title"));
+        Assert.assertNull(contentItem.getString("non_existent"));
+        Assert.assertNull(contentItem.getString("post_date"));
+
+        List<Asset> assets = contentItem.getAssets("teaser_image");
+        Assert.assertEquals(1, assets.size());
+        Assert.assertEquals("on-roasts-1080px.jpg", assets.get(0).getName());
+        Assert.assertEquals(0, contentItem.getAssets("non_existent").size());
+        Assert.assertEquals(0, contentItem.getAssets("post_date").size());
+
+        Assert.assertNotNull(contentItem.getModularContent("coffee_processing_techniques"));
+        Assert.assertNull(contentItem.getModularContent("non_existent"));
     }
 
     @Test

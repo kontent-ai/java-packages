@@ -26,6 +26,8 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +40,8 @@ public class ContentItem {
 
     @JsonProperty("elements")
     Map<String, Element> elements;
+
+    ModularContentProvider modularContentProvider;
 
     ContentItem() {
         //Default constructor
@@ -65,5 +69,58 @@ public class ContentItem {
 
     void setElements(Map<String, Element> elements) {
         this.elements = elements;
+        elements.forEach((s, element) -> element.setParent(this));
+    }
+
+    /**
+     * Convenience method to get the value of a Text or Rich text element without traversing the Elements map.
+     * @param codeName the element codeName to get the value of
+     * @return The value of the element.  Returns null if the element does not exist, or if it is not a
+     * {@link TextElement} or {@link RichTextElement}
+     */
+    public String getString(String codeName) {
+        Element element = elements.get(codeName);
+        if (element == null) {
+            return null;
+        }
+        if (!(element instanceof TextElement)) {
+            return null;
+        }
+        return ((TextElement) element).getValue();
+    }
+
+    /**
+     * Convenience method to get the value of an Assets element without traversing the Elements map.
+     * @param codeName the element codeName to get the Asset list of
+     * @return A list of {@link Asset} objects.  Returns an empty collection if the element does not exist, or if it is
+     * not an {@link AssetsElement}
+     */
+    public List<Asset> getAssets(String codeName) {
+        Element element = elements.get(codeName);
+        if (element == null) {
+            return Collections.emptyList();
+        }
+        if (!(element instanceof AssetsElement)) {
+            return Collections.emptyList();
+        }
+        return ((AssetsElement) element).getValue();
+    }
+
+    /**
+     * Convenience method to retrieve the ContentItem of modular content.
+     * @param codeName the {@link ContentItem} codeName
+     * @return The {@link ContentItem}.  Returns null if it was not included in the response.
+     */
+    public ContentItem getModularContent(String codeName) {
+        //This shouldn't happen if this is deserialized from Jackson, but protecting against the NPE for unexpected
+        //usages.
+        if (modularContentProvider == null) {
+            return null;
+        }
+        return modularContentProvider.getModularContent().get(codeName);
+    }
+
+    void setModularContentProvider(ModularContentProvider modularContentProvider) {
+        this.modularContentProvider = modularContentProvider;
     }
 }
