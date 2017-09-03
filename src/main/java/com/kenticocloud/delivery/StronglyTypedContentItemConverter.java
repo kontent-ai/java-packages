@@ -32,44 +32,27 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.UndeclaredThrowableException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 
 public class StronglyTypedContentItemConverter {
-
-    private static final WeakHashMap<Class, Field[]> CACHE = new WeakHashMap<>();
 
     private StronglyTypedContentItemConverter() {
         throw new IllegalStateException("Utility class");
     }
 
-    static <T> T convert(ContentItem item, Class<T> tClass) {
+    //TODO: All of the reflection that happens in here should be stored in a plan object and cached in a WeakHashMap to avoid doing this over and over for performance
+    static <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
         try {
             //Invoke the default constructor
             T bean = ConstructorUtils.invokeConstructor(tClass, null);
 
             //Get the bean properties
-            Field[] fields = CACHE.get(tClass);
-            if (fields == null) {
-                fields = tClass.getDeclaredFields();
-                CACHE.put(tClass, fields);
-            }
+            Field[] fields = tClass.getDeclaredFields();
 
-            //Extract mappings
-            Map<String, String> codenameToFieldName = new HashMap<>();
+            //Inject mappings
             for (Field field : fields) {
-                ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
-                if (elementMapping != null) {
-                    codenameToFieldName.put(elementMapping.value(), field.getName());
-                } else {
-                    codenameToFieldName.put(fromCamelCase(field.getName()), field.getName());
-                }
-            }
-
-            //Inject properties
-            Map<String, Element> elements = item.getElements();
-            for(Map.Entry<String, String> entry : codenameToFieldName.entrySet()){
-                if (elements.containsKey(entry.getKey())) {
-                    BeanUtils.setProperty(bean, entry.getValue(), elements.get(entry.getKey()).getValue());
+                Object value = getValueForField(item, modularContent, field);
+                if (value != null) {
+                    BeanUtils.setProperty(bean, field.getName(), value);
                 }
             }
 
@@ -80,6 +63,45 @@ public class StronglyTypedContentItemConverter {
                 InvocationTargetException |
                 InstantiationException e) {
             handleReflectionException(e);
+        }
+        return null;
+    }
+
+    private static Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Field field) {
+        //Explicit checks
+        //Check to see if this is an explicitly mapped Element
+        ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
+        if (elementMapping != null && item.getElements().containsKey(elementMapping.value())) {
+            return item.getElements().get(elementMapping.value()).getValue();
+        }
+        //Check to see if this is an explicitly mapped ContentItem
+        ContentItemMapping contentItemMapping = field.getAnnotation(ContentItemMapping.class);
+        if (contentItemMapping != null && modularContent.containsKey(contentItemMapping.value())) {
+            return getCastedModularContentForField(field.getType(), modularContent.get(contentItemMapping.value()));
+        }
+
+        //Implicit checks
+        String candidateCodename = fromCamelCase(field.getName());
+        //Check to see if this is an implicitly mapped Element
+        if (item.getElements().containsKey(candidateCodename)){
+            return item.getElements().get(candidateCodename).getValue();
+        }
+        //Check to see if this is an implicitly mapped ContentItem
+        if (modularContent.containsKey(candidateCodename)) {
+            return getCastedModularContentForField(field.getType(), modularContent.get(candidateCodename));
+        }
+        return null;
+    }
+
+    private static Object getCastedModularContentForField(Class<?> clazz, ContentItem modularContentItem) {
+        //TODO: Detect if they want a collection filled
+        if (clazz == ContentItem.class) {
+            return modularContentItem;
+        }
+        ContentItemMapping clazzContentItemMapping = clazz.getAnnotation(ContentItemMapping.class);
+        if (clazzContentItemMapping != null) {
+            //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
+            return convert(modularContentItem, new HashMap<>(), clazz);
         }
         return null;
     }

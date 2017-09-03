@@ -102,7 +102,7 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     public <T> List<T> castTo(Class<T> tClass) {
         ArrayList<T> tItems = new ArrayList<>();
         for (ContentItem item : getItems()) {
-            tItems.add(StronglyTypedContentItemConverter.convert(item, tClass));
+            tItems.add(StronglyTypedContentItemConverter.convert(item, getModularContent(),tClass));
         }
         return tItems;
     }

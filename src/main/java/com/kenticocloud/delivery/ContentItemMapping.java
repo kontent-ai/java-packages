@@ -29,18 +29,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Can be placed on fields of POJOs to indicate that it should be mapped to an element in a {@link ContentItem}.
- * @see ContentItemResponse#castTo(Class)
- * @see ContentItemsListingResponse#castTo(Class)
- */
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ElementMapping {
-
-    /**
-     * The codename of a {@link Element} to map this field onto.
-     * @return an {@link Element} codename
-     */
+public @interface ContentItemMapping {
     String value();
 }

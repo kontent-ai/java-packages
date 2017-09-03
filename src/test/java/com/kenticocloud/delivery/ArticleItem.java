@@ -27,6 +27,7 @@ package com.kenticocloud.delivery;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+@ContentItemMapping("article")
 public class ArticleItem {
 
     String title;
@@ -39,6 +40,11 @@ public class ArticleItem {
     ZonedDateTime postDate;
 
     List<Asset> teaserImage;
+
+    ArticleItem coffeeProcessingTechniques;
+
+    @ContentItemMapping("origins_of_arabica_bourbon")
+    ContentItem arabicaBourbonOrigin;
 
     public String getTitle() {
         return title;
@@ -78,5 +84,21 @@ public class ArticleItem {
 
     public void setTeaserImage(List<Asset> teaserImage) {
         this.teaserImage = teaserImage;
+    }
+
+    public ArticleItem getCoffeeProcessingTechniques() {
+        return coffeeProcessingTechniques;
+    }
+
+    public void setCoffeeProcessingTechniques(ArticleItem coffeeProcessingTechniques) {
+        this.coffeeProcessingTechniques = coffeeProcessingTechniques;
+    }
+
+    public ContentItem getArabicaBourbonOrigin() {
+        return arabicaBourbonOrigin;
+    }
+
+    public void setArabicaBourbonOrigin(ContentItem arabicaBourbonOrigin) {
+        this.arabicaBourbonOrigin = arabicaBourbonOrigin;
     }
 }

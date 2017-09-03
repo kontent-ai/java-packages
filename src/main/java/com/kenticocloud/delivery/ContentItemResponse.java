@@ -83,6 +83,6 @@ public class ContentItemResponse implements ModularContentProvider {
      * @return An instance of T with data mapped from the {@link ContentItem} in this response.
      */
     public <T> T castTo(Class<T> tClass) {
-        return StronglyTypedContentItemConverter.convert(item, tClass);
+        return StronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
     }
 }
