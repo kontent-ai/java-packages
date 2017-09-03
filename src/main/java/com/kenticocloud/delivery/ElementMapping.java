@@ -24,32 +24,23 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Object model for text elements
+ * Can be placed on fields of POJOs to indicate that it should be mapped to an element in a {@link ContentItem}.
+ * @see ContentItemResponse#castTo(Class)
+ * @see ContentItemsListingResponse#castTo(Class)
  */
-public class TextElement extends Element {
-
-    static final String TYPE_VALUE = "text";
-
-    @JsonProperty("value")
-    String value;
-
-    TextElement() {
-        setType(TYPE_VALUE);
-    }
+@Target({ElementType.FIELD})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ElementMapping {
 
     /**
-     * The value of a Text element is a string.
-     * @return element value
+     * The codename of a {@link Element} to map this field onto.
+     * @return an {@link Element} codename
      */
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    void setValue(String value) {
-        this.value = value;
-    }
+    String value() default "";
 }

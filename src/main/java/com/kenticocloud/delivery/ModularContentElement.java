@@ -50,6 +50,7 @@ public class ModularContentElement extends Element {
      * string being a codename of a content item.
      * @return a list of codenames referencing {@link ContentItem}
      */
+    @Override
     public List<String> getValue() {
         return value;
     }

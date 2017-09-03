@@ -54,6 +54,7 @@ public class MultipleChoiceElement extends Element {
      * @return a list of selected elements
      * @see Option
      */
+    @Override
     public List<Option> getValue() {
         return value;
     }

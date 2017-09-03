@@ -44,6 +44,7 @@ public class UrlSlugElement extends Element {
      * The value of URL slug elements is a string.
      * @return a URL slug string
      */
+    @Override
     public String getValue() {
         return value;
     }

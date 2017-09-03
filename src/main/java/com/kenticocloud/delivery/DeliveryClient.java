@@ -130,8 +130,21 @@ public class DeliveryClient {
         return objectMapper.readValue(response.getEntity().getContent(), ContentItemsListingResponse.class);
     }
 
+    public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
+        ContentItemsListingResponse contentItemsListingResponse = getItems(params);
+        return contentItemsListingResponse.castTo(tClass);
+    }
+
     public ContentItemResponse getItem(String contentItemCodename) throws IOException {
         return getItem(contentItemCodename, new ArrayList<>());
+    }
+
+    public <T> List<T> getItems(Class<T> tClass) throws IOException {
+        return getItems(tClass, new ArrayList<>());
+    }
+
+    public <T> T getItem(String contentItemCodename, Class<T> tClass) throws IOException {
+        return getItem(contentItemCodename, tClass, new ArrayList<>());
     }
 
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) throws IOException {
@@ -142,6 +155,11 @@ public class DeliveryClient {
         handleErrorIfNecessary(response);
 
         return objectMapper.readValue(response.getEntity().getContent(), ContentItemResponse.class);
+    }
+
+    public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) throws IOException {
+        ContentItemResponse contentItemResponse = getItem(contentItemCodename, params);
+        return contentItemResponse.castTo(tClass);
     }
 
     public ContentTypesListingResponse getTypes() throws IOException {

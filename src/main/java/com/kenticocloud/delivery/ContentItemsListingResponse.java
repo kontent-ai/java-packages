@@ -26,6 +26,7 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -89,4 +90,21 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
+
+    /**
+     * Returns a new instance of List&lt;T&gt; by mapping fields to elements in this content item.  Element fields are
+     * mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by an
+     * {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     * @param tClass The class which a new instance should be returned from
+     * @param <T> The type of class
+     * @return An instance of List&lt;T&gt; with data mapped from the {@link ContentItem} list in this response.
+     */
+    public <T> List<T> castTo(Class<T> tClass) {
+        ArrayList<T> tItems = new ArrayList<>();
+        for (ContentItem item : getItems()) {
+            tItems.add(StronglyTypedContentItemConverter.convert(item, tClass));
+        }
+        return tItems;
+    }
+
 }

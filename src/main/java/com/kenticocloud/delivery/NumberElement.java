@@ -44,6 +44,7 @@ public class NumberElement extends Element {
      * The value of a Number element is a decimal number. If empty, the value is null.
      * @return the value of the number
      */
+    @Override
     public Double getValue() {
         return value;
     }

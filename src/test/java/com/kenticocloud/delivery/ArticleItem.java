@@ -24,32 +24,59 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.time.ZonedDateTime;
+import java.util.List;
 
-/**
- * Object model for text elements
- */
-public class TextElement extends Element {
+public class ArticleItem {
 
-    static final String TYPE_VALUE = "text";
+    String title;
 
-    @JsonProperty("value")
-    String value;
+    @ElementMapping("summary")
+    String articleSummary;
 
-    TextElement() {
-        setType(TYPE_VALUE);
+    String randomValue;
+
+    ZonedDateTime postDate;
+
+    List<Asset> teaserImage;
+
+    public String getTitle() {
+        return title;
     }
 
-    /**
-     * The value of a Text element is a string.
-     * @return element value
-     */
-    @Override
-    public String getValue() {
-        return value;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    void setValue(String value) {
-        this.value = value;
+    public String getArticleSummary() {
+        return articleSummary;
+    }
+
+    public void setArticleSummary(String articleSummary) {
+        this.articleSummary = articleSummary;
+    }
+
+    public String getRandomValue() {
+        return randomValue;
+    }
+
+    public void setRandomValue(String randomValue) {
+        this.randomValue = randomValue;
+    }
+
+    public ZonedDateTime getPostDate() {
+        return postDate;
+    }
+
+    public void setPostDate(ZonedDateTime postDate) {
+        this.postDate = postDate;
+    }
+
+    public List<Asset> getTeaserImage() {
+        return teaserImage;
+    }
+
+    public void setTeaserImage(List<Asset> teaserImage) {
+        this.teaserImage = teaserImage;
     }
 }

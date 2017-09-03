@@ -61,6 +61,7 @@ public class TaxonomyElement extends Element {
      * The value of Taxonomy elements is a list of {@link Taxonomy} item objects.
      * @return list of {@link Taxonomy} objects
      */
+    @Override
     public List<Taxonomy> getValue() {
         return value;
     }

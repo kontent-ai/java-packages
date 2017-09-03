@@ -47,6 +47,7 @@ public class AssetsElement extends Element {
      * Asset element consists of a list of {@link Asset} objects.
      * @return list of assets
      */
+    @Override
     public List<Asset> getValue() {
         return value;
     }

@@ -110,4 +110,6 @@ public abstract class Element {
     void setParent(ContentItem parent) {
         this.parent = parent;
     }
+
+    abstract <T> T getValue();
 }

@@ -73,4 +73,16 @@ public class ContentItemResponse implements ModularContentProvider {
     void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
     }
+
+    /**
+     * Returns a new instance of T by mapping fields to elements in this content item.  Element fields are mapped
+     * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
+     * annotation.  T must have a default constructor and have standard setter methods.
+     * @param tClass The class which a new instance should be returned from
+     * @param <T> The type of class
+     * @return An instance of T with data mapped from the {@link ContentItem} in this response.
+     */
+    public <T> T castTo(Class<T> tClass) {
+        return StronglyTypedContentItemConverter.convert(item, tClass);
+    }
 }
