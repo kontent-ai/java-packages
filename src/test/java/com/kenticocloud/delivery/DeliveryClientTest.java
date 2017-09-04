@@ -183,7 +183,51 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ArticleItem item = client.getItem("on_roasts", ArticleItem.class);
         Assert.assertNotNull(item);
+        Assert.assertNull(item.getRandomValue());
+        Assert.assertNull(item.getRandomStringList());
+        Assert.assertNull(item.getRandomStringMap());
+        Assert.assertNull(item.randomStringListWithNoAccessors);
+        Assert.assertNull(item.getRandomStringListWithNoSetter());
+        Assert.assertNotNull(item.getPostDate());
+        Assert.assertEquals(2014, item.getPostDate().getYear());
+        Assert.assertNotNull(item.getTeaserImage());
+        Assert.assertEquals(1, item.getTeaserImage().size());
+        Assert.assertNotNull(item.getCoffeeProcessingTechniques());
+        Assert.assertEquals("Coffee processing techniques", item.getCoffeeProcessingTechniques().getTitle());
+        Assert.assertNotNull(item.getArabicaBourbonOrigin());
+        Assert.assertEquals("Origins of Arabica Bourbon", item.getArabicaBourbonOrigin().getSystem().getName());
+        Assert.assertNotNull(item.getArticleItems());
+        Assert.assertEquals(2, item.getArticleItems().size());
+        Assert.assertNotNull(item.getAllModularContent());
+        Assert.assertEquals(2, item.getAllModularContent().size());
+        Assert.assertNotNull(item.getAllModularContentMap());
+        Assert.assertEquals(2, item.getAllModularContentMap().size());
     }
+
+    @Test
+    public void testGetStronglyTypedItems() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItemList.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        List<ArticleItem> items = client.getItems(ArticleItem.class);
+        Assert.assertNotNull(items);
+    }
+
 
     @Test
     public void testGetPreviewItem() throws Exception {

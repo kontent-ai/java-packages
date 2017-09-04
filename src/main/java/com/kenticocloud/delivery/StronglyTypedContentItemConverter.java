@@ -25,13 +25,13 @@
 package com.kenticocloud.delivery;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.beanutils.PropertyUtilsBean;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.UndeclaredThrowableException;
-import java.util.HashMap;
-import java.util.Map;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.*;
+import java.util.*;
 
 public class StronglyTypedContentItemConverter {
 
@@ -41,33 +41,32 @@ public class StronglyTypedContentItemConverter {
 
     //TODO: All of the reflection that happens in here should be stored in a plan object and cached in a WeakHashMap to avoid doing this over and over for performance
     static <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
+        T bean = null;
         try {
             //Invoke the default constructor
-            T bean = ConstructorUtils.invokeConstructor(tClass, null);
+            bean = ConstructorUtils.invokeConstructor(tClass, null);
 
             //Get the bean properties
             Field[] fields = tClass.getDeclaredFields();
 
             //Inject mappings
             for (Field field : fields) {
-                Object value = getValueForField(item, modularContent, field);
+                Object value = getValueForField(item, modularContent, bean, field);
                 if (value != null) {
                     BeanUtils.setProperty(bean, field.getName(), value);
                 }
             }
-
-            //Return bean
-            return bean;
         } catch (NoSuchMethodException |
                 IllegalAccessException |
                 InvocationTargetException |
                 InstantiationException e) {
             handleReflectionException(e);
         }
-        return null;
+        //Return bean
+        return bean;
     }
 
-    private static Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Field field) {
+    private static Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
         //Explicit checks
         //Check to see if this is an explicitly mapped Element
         ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
@@ -90,18 +89,42 @@ public class StronglyTypedContentItemConverter {
         if (modularContent.containsKey(candidateCodename)) {
             return getCastedModularContentForField(field.getType(), modularContent.get(candidateCodename));
         }
+
+        //Check to see if this is a collection of implicitly mapped ContentItem
+        if (isListOrMap(field.getType())){
+            return getCastedModularContentForListOrMap(bean, field, modularContent);
+        }
         return null;
     }
 
     private static Object getCastedModularContentForField(Class<?> clazz, ContentItem modularContentItem) {
-        //TODO: Detect if they want a collection filled
         if (clazz == ContentItem.class) {
             return modularContentItem;
         }
-        ContentItemMapping clazzContentItemMapping = clazz.getAnnotation(ContentItemMapping.class);
+        //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
+        return convert(modularContentItem, new HashMap<>(), clazz);
+    }
+
+    private static Object getCastedModularContentForListOrMap(Object bean, Field field, Map<String, ContentItem> modularContent) {
+        Type type = getType(bean, field);
+        if (type == null) {
+            //We have failed to get the type, probably due to a missing setter, skip this field
+            return null;
+        }
+        if (type == ContentItem.class) {
+            return castCollection(field.getType(), modularContent);
+        }
+        Class<?> listClass = (Class<?>) type;
+        ContentItemMapping clazzContentItemMapping = listClass.getAnnotation(ContentItemMapping.class);
         if (clazzContentItemMapping != null) {
-            //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
-            return convert(modularContentItem, new HashMap<>(), clazz);
+            HashMap convertedModularContent = new HashMap<>();
+            for (Map.Entry<String, ContentItem> entry : modularContent.entrySet()) {
+                if (clazzContentItemMapping.value().equals(entry.getValue().getSystem().getType())) {
+                    //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
+                    convertedModularContent.put(entry.getKey(), convert(entry.getValue(), new HashMap<>(), listClass));
+                }
+            }
+            return castCollection(field.getType(), convertedModularContent);
         }
         return null;
     }
@@ -110,6 +133,47 @@ public class StronglyTypedContentItemConverter {
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
         return s.replaceAll(regex, replacement).toLowerCase();
+    }
+
+    private static boolean isListOrMap(Class<?> type) {
+        return List.class.isAssignableFrom(type) || Map.class.isAssignableFrom(type);
+    }
+
+    private static Object castCollection(Class<?> type, Map<String, ?> items) {
+        if (List.class.isAssignableFrom(type)) {
+            return new ArrayList(items.values());
+        }
+        if (Map.class.isAssignableFrom(type)){
+            return items;
+        }
+        return items;
+    }
+
+    private static Type getType(Object bean, Field field) {
+        //Because of type erasure, we will find the setter method and get the generic types off it's arguments
+        PropertyUtilsBean propertyUtils = BeanUtilsBean.getInstance().getPropertyUtils();
+        PropertyDescriptor propertyDescriptor = null;
+        try {
+            propertyDescriptor = propertyUtils.getPropertyDescriptor(bean, field.getName());
+        } catch (IllegalAccessException |
+                InvocationTargetException |
+                NoSuchMethodException e) {
+            handleReflectionException(e);
+        }
+        if (propertyDescriptor == null) {
+            //Likely no accessors
+            return null;
+        }
+        Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
+        if (writeMethod == null) {
+            return null;
+        }
+        Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0]).getActualTypeArguments();
+        if (Map.class.isAssignableFrom(field.getType())) {
+            return actualTypeArguments[1];
+        }
+        return actualTypeArguments[0];
+
     }
 
     private static void handleReflectionException(Exception ex) {

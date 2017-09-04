@@ -26,6 +26,7 @@ package com.kenticocloud.delivery;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 @ContentItemMapping("article")
 public class ArticleItem {
@@ -45,6 +46,22 @@ public class ArticleItem {
 
     @ContentItemMapping("origins_of_arabica_bourbon")
     ContentItem arabicaBourbonOrigin;
+
+    List<ArticleItem> articleItems;
+
+    List<ContentItem> allModularContent;
+
+    Map<String, ArticleItem> articleItemMap;
+
+    Map<String, ContentItem> allModularContentMap;
+
+    List<String> randomStringList;
+
+    List<String> randomStringListWithNoAccessors;
+
+    List<String> randomStringListWithNoSetter;
+
+    Map<String, String> randomStringMap;
 
     public String getTitle() {
         return title;
@@ -100,5 +117,57 @@ public class ArticleItem {
 
     public void setArabicaBourbonOrigin(ContentItem arabicaBourbonOrigin) {
         this.arabicaBourbonOrigin = arabicaBourbonOrigin;
+    }
+
+    public List<ArticleItem> getArticleItems() {
+        return articleItems;
+    }
+
+    public void setArticleItems(List<ArticleItem> articleItems) {
+        this.articleItems = articleItems;
+    }
+
+    public List<ContentItem> getAllModularContent() {
+        return allModularContent;
+    }
+
+    public void setAllModularContent(List<ContentItem> allModularContent) {
+        this.allModularContent = allModularContent;
+    }
+
+    public Map<String, ArticleItem> getArticleItemMap() {
+        return articleItemMap;
+    }
+
+    public void setArticleItemMap(Map<String, ArticleItem> articleItemMap) {
+        this.articleItemMap = articleItemMap;
+    }
+
+    public Map<String, ContentItem> getAllModularContentMap() {
+        return allModularContentMap;
+    }
+
+    public void setAllModularContentMap(Map<String, ContentItem> allModularContentMap) {
+        this.allModularContentMap = allModularContentMap;
+    }
+
+    public List<String> getRandomStringList() {
+        return randomStringList;
+    }
+
+    public void setRandomStringList(List<String> randomStringList) {
+        this.randomStringList = randomStringList;
+    }
+
+    public List<String> getRandomStringListWithNoSetter() {
+        return randomStringListWithNoSetter;
+    }
+
+    public Map<String, String> getRandomStringMap() {
+        return randomStringMap;
+    }
+
+    public void setRandomStringMap(Map<String, String> randomStringMap) {
+        this.randomStringMap = randomStringMap;
     }
 }
