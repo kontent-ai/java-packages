@@ -37,7 +37,7 @@ import java.util.*;
 public class StronglyTypedContentItemConverter {
 
     private HashMap<String, Class<?>> contentTypeToClassMapping = new HashMap<>();
-    private HashMap<Class<?>, String> classToCodenameMapping = new HashMap<>();
+    private HashMap<Class<?>, String> classToContentTypeMapping = new HashMap<>();
     private HashMap<Type, InlineContentItemsResolver> typeToInlineResolverMapping = new HashMap<>();
 
     protected StronglyTypedContentItemConverter() {
@@ -46,7 +46,7 @@ public class StronglyTypedContentItemConverter {
 
     protected void registerType(String contentType, Class<?> clazz) {
         contentTypeToClassMapping.put(contentType, clazz);
-        classToCodenameMapping.put(clazz, contentType);
+        classToContentTypeMapping.put(clazz, contentType);
     }
 
     protected void registerType(Class<?> clazz) {
@@ -178,11 +178,18 @@ public class StronglyTypedContentItemConverter {
             return castCollection(field.getType(), modularContent);
         }
         Class<?> listClass = (Class<?>) type;
+        String contentType = null;
         ContentItemMapping clazzContentItemMapping = listClass.getAnnotation(ContentItemMapping.class);
         if (clazzContentItemMapping != null) {
+            contentType = clazzContentItemMapping.value();
+        }
+        if (contentType == null && classToContentTypeMapping.containsKey(listClass)) {
+            contentType = classToContentTypeMapping.get(listClass);
+        }
+        if (contentType != null) {
             HashMap convertedModularContent = new HashMap<>();
             for (Map.Entry<String, ContentItem> entry : modularContent.entrySet()) {
-                if (clazzContentItemMapping.value().equals(entry.getValue().getSystem().getType())) {
+                if (contentType.equals(entry.getValue().getSystem().getType())) {
                     //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
                     convertedModularContent.put(entry.getKey(), convert(entry.getValue(), new HashMap<>(), listClass));
                 }
