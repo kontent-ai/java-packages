@@ -131,15 +131,11 @@ public class ContentItem {
      * @return An instance of T with data mapped from the {@link ContentItem} in this response.
      */
     public <T> T castTo(Class<T> tClass) {
-        return StronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
+        return stronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
     }
 
     void setModularContentProvider(ModularContentProvider modularContentProvider) {
         this.modularContentProvider = modularContentProvider;
-    }
-
-    StronglyTypedContentItemConverter getStronglyTypedContentItemConverter() {
-        return stronglyTypedContentItemConverter;
     }
 
     void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {

@@ -129,7 +129,10 @@ public class DeliveryClient {
 
         handleErrorIfNecessary(response);
 
-        return objectMapper.readValue(response.getEntity().getContent(), ContentItemsListingResponse.class);
+        ContentItemsListingResponse contentItemsListingResponse =
+                objectMapper.readValue(response.getEntity().getContent(), ContentItemsListingResponse.class);
+        contentItemsListingResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        return contentItemsListingResponse;
     }
 
     public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
@@ -156,7 +159,10 @@ public class DeliveryClient {
 
         handleErrorIfNecessary(response);
 
-        return objectMapper.readValue(response.getEntity().getContent(), ContentItemResponse.class);
+        ContentItemResponse contentItemResponse =
+                objectMapper.readValue(response.getEntity().getContent(), ContentItemResponse.class);
+        contentItemResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        return contentItemResponse;
     }
 
     public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) throws IOException {
@@ -224,6 +230,22 @@ public class DeliveryClient {
     public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
         reconfigureDeserializer();
+    }
+
+    public void registerType(String contentType, Class<?> clazz) {
+        stronglyTypedContentItemConverter.registerType(contentType, clazz);
+    }
+
+    public void registerType(Class<?> clazz) {
+        stronglyTypedContentItemConverter.registerType(clazz);
+    }
+
+    public void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
+    }
+
+    public void scanClasspathForMappings(String basePackage) {
+        stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
     }
 
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {

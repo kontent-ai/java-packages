@@ -81,10 +81,12 @@ public class RichTextElementConverterTest {
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
             donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             HashMap<String, ContentItem> modularContent = new HashMap<>();
             modularContent.put("donate_with_us", donateWithUs);
             return modularContent;
         });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
                 "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");

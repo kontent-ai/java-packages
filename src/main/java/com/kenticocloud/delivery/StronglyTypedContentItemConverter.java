@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
@@ -43,9 +44,9 @@ public class StronglyTypedContentItemConverter {
         //protected constructor
     }
 
-    protected void registerType(String codename, Class<?> clazz) {
-        contentTypeToClassMapping.put(codename, clazz);
-        classToCodenameMapping.put(clazz, codename);
+    protected void registerType(String contentType, Class<?> clazz) {
+        contentTypeToClassMapping.put(contentType, clazz);
+        classToCodenameMapping.put(clazz, contentType);
     }
 
     protected void registerType(Class<?> clazz) {
@@ -77,8 +78,32 @@ public class StronglyTypedContentItemConverter {
         return null;
     }
 
+    protected void scanClasspathForMappings(String basePackage) {
+        FastClasspathScanner scanner = new FastClasspathScanner(basePackage);
+        scanner.matchClassesWithAnnotation(ContentItemMapping.class, classWithAnnotation -> {
+            ContentItemMapping contentItemMapping = classWithAnnotation.getAnnotation(ContentItemMapping.class);
+            registerType(contentItemMapping.value(), classWithAnnotation);
+        }).matchSubclassesOf(InlineContentItemsResolver.class, subclass -> {
+            try {
+                registerInlineContentItemsResolver(ConstructorUtils.invokeConstructor(subclass, null));
+            } catch (NoSuchMethodException |
+                    IllegalAccessException |
+                    InvocationTargetException |
+                    InstantiationException e) {
+                // No default constructor, no InlineContentItemsResolver.
+            }
+        }).scan();
+    }
+
     //TODO: All of the reflection that happens in here should be stored in a plan object and cached in a WeakHashMap to avoid doing this over and over for performance
-    static <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
+    <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
+        if (tClass == Object.class) {
+            Class<?> mappingClass = contentTypeToClassMapping.get(item.getSystem().getType());
+            if (mappingClass == null) {
+                return (T) item;
+            }
+            return (T) convert(item, modularContent, mappingClass);
+        }
         T bean = null;
         try {
             //Invoke the default constructor
@@ -104,7 +129,7 @@ public class StronglyTypedContentItemConverter {
         return bean;
     }
 
-    private static Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
+    private Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
         //Explicit checks
         //Check to see if this is an explicitly mapped Element
         ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
@@ -135,7 +160,7 @@ public class StronglyTypedContentItemConverter {
         return null;
     }
 
-    private static Object getCastedModularContentForField(Class<?> clazz, ContentItem modularContentItem) {
+    private Object getCastedModularContentForField(Class<?> clazz, ContentItem modularContentItem) {
         if (clazz == ContentItem.class) {
             return modularContentItem;
         }
@@ -143,7 +168,7 @@ public class StronglyTypedContentItemConverter {
         return convert(modularContentItem, new HashMap<>(), clazz);
     }
 
-    private static Object getCastedModularContentForListOrMap(Object bean, Field field, Map<String, ContentItem> modularContent) {
+    private Object getCastedModularContentForListOrMap(Object bean, Field field, Map<String, ContentItem> modularContent) {
         Type type = getType(bean, field);
         if (type == null) {
             //We have failed to get the type, probably due to a missing setter, skip this field

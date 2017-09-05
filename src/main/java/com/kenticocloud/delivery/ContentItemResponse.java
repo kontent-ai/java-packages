@@ -44,6 +44,8 @@ public class ContentItemResponse implements ModularContentProvider {
     @JsonProperty("modular_content")
     Map<String, ContentItem> modularContent;
 
+    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
+
     ContentItemResponse() {
         //Default constructor
     }
@@ -83,6 +85,16 @@ public class ContentItemResponse implements ModularContentProvider {
      * @return An instance of T with data mapped from the {@link ContentItem} in this response.
      */
     public <T> T castTo(Class<T> tClass) {
-        return StronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
+        return stronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
+    }
+
+    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+        this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
+        item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        if (modularContent != null) {
+            for (ContentItem modularContentItem : modularContent.values()) {
+                modularContentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+            }
+        }
     }
 }

@@ -49,6 +49,8 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     @JsonProperty("pagination")
     Pagination pagination;
 
+    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
+
     ContentItemsListingResponse() {
         //Default constructor
     }
@@ -102,9 +104,20 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     public <T> List<T> castTo(Class<T> tClass) {
         ArrayList<T> tItems = new ArrayList<>();
         for (ContentItem item : getItems()) {
-            tItems.add(StronglyTypedContentItemConverter.convert(item, getModularContent(),tClass));
+            tItems.add(stronglyTypedContentItemConverter.convert(item, getModularContent(),tClass));
         }
         return tItems;
     }
 
+    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+        this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
+        for (ContentItem item : getItems()) {
+            item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        }
+        if (modularContent != null) {
+            for (ContentItem modularContentItem : modularContent.values()) {
+                modularContentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+            }
+        }
+    }
 }
