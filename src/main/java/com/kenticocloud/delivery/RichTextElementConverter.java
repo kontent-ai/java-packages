@@ -39,10 +39,14 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
 
     transient ContentLinkUrlResolver contentLinkUrlResolver;
     transient BrokenLinkUrlResolver brokenLinkUrlResolver;
+    transient StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
     private final transient JsonDeserializer<?> defaultDeserializer;
 
     /*
-    <a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*> regex prior to Java \ escapes
+    Regex prior to the Java \ escapes:
+    <a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*>
+
+    Regex explanation:
     <a matches the characters <a literally (case sensitive)
         Match a single character not present in the list below [^>]+?
             +? Quantifier — Matches between one and unlimited times, as few times as possible, expanding as needed (lazy)
@@ -61,17 +65,51 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
         Global pattern flags
             g modifier: global. All matches (don't return after first match)
     */
-    Pattern pattern = Pattern.compile("<a[^>]+?data-item-id=\\\"(?<id>[^\\\"]+)\\\"[^>]*>");
+    private Pattern linkPattern = Pattern.compile("<a[^>]+?data-item-id=\\\"(?<id>[^\\\"]+)\\\"[^>]*>");
+
+    /*
+    Regex prior to the Java \ escapes:
+    <object type=\"application\/kenticocloud" data-type=\"(?<type>[^\"]+\") data-codename=\"(?<codename>[^\"]+\")><\/object>
+
+    Regex explanation:
+    <object type= matches the characters <object type= literally (case sensitive)
+    \" matches the character " literally (case sensitive)
+    application matches the characters application literally (case sensitive)
+    \/ matches the character / literally (case sensitive)
+    kenticocloud" data-type= matches the characters kenticocloud" data-type= literally (case sensitive)
+    \" matches the character " literally (case sensitive)
+        Named Capture Group type (?<type>[^\"]+\")
+            Match a single character not present in the list below [^\"]+
+                + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
+                \" matches the character " literally (case sensitive)
+    \" matches the character " literally (case sensitive)
+     data-codename= matches the characters  data-codename= literally (case sensitive)
+    \" matches the character " literally (case sensitive)
+        Named Capture Group codename (?<codename>[^\"]+\")
+            Match a single character not present in the list below [^\"]+
+                + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
+                \" matches the character " literally (case sensitive)
+    \" matches the character " literally (case sensitive)
+    >< matches the characters >< literally (case sensitive)\/ matches the character / literally (case sensitive)
+    object> matches the characters object> literally (case sensitive)
+        Global pattern flags
+            g modifier: global. All matches (don't return after first match)
+     */
+    private Pattern modularContentPattern = Pattern.compile(
+            "<object type=\\\"application\\/kenticocloud\" data-type=\\\"" +
+                    "(?<type>[^\\\"]+)\\\" data-codename=\\\"" +
+                    "(?<codename>[^\\\"]+)\\\"><\\/object>");
 
     public RichTextElementConverter(
             ContentLinkUrlResolver contentLinkUrlResolver,
             BrokenLinkUrlResolver brokenLinkUrlResolver,
+            StronglyTypedContentItemConverter stronglyTypedContentItemConverter,
             JsonDeserializer<?> defaultDeserializer) {
         super(RichTextElement.class);
         this.defaultDeserializer = defaultDeserializer;
         this.contentLinkUrlResolver = contentLinkUrlResolver;
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
-
+        this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
     }
 
     @Override
@@ -89,10 +127,16 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
         if (orig.getValue() == null) {
             return orig;
         }
-        Matcher matcher = pattern.matcher(orig.getValue());
+        orig.setValue(resolveLinks(orig));
+        orig.setValue(resolveModularContent(orig));
+        return orig;
+    }
+
+    private String resolveLinks(RichTextElement element) {
+        Matcher matcher = linkPattern.matcher(element.getValue());
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            Link link = orig.links.get(matcher.group("id"));
+            Link link = element.links.get(matcher.group("id"));
             String url = "";
             if (link != null  && contentLinkUrlResolver != null) {
                 url = contentLinkUrlResolver.resolveLinkUrl(link);
@@ -102,8 +146,34 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
             matcher.appendReplacement(buffer, resolveMatch(matcher.group(0), url));
         }
         matcher.appendTail(buffer);
-        orig.setValue(buffer.toString());
-        return orig;
+        return buffer.toString();
+    }
+
+    private String resolveModularContent(RichTextElement element) {
+        if (element.getModularContent() == null || element.getParent() == null) {
+            return element.getValue();
+        }
+        Matcher matcher = modularContentPattern.matcher(element.getValue());
+        StringBuffer buffer = new StringBuffer();
+        while (matcher.find()) {
+            ContentItem modularContent = element.getParent().getModularContent(matcher.group("codename"));
+            if (modularContent != null) {
+                InlineContentItemsResolver resolverForType =
+                        stronglyTypedContentItemConverter.getResolverForType(modularContent);
+                if (resolverForType == null) {
+                    // The modular content doesn't have a resolver, preserve the <object> tag
+                    matcher.appendReplacement(buffer, matcher.group(0));
+                } else {
+                    Object convertedModularContent = modularContent.castTo((Class) resolverForType.getType());
+                    matcher.appendReplacement(buffer, resolverForType.resolve(convertedModularContent));
+                }
+            } else {
+                // The modular content isn't fetched or doesn't exist, preserve the <object> tag
+                matcher.appendReplacement(buffer, matcher.group(0));
+            }
+        }
+        matcher.appendTail(buffer);
+        return buffer.toString();
     }
 
     private String resolveMatch(String match, String url) {

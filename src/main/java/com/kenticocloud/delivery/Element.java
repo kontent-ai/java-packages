@@ -107,6 +107,10 @@ public abstract class Element {
         this.codeName = codeName;
     }
 
+    public ContentItem getParent() {
+        return parent;
+    }
+
     void setParent(ContentItem parent) {
         this.parent = parent;
     }

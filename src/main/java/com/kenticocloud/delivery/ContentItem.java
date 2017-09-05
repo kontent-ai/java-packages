@@ -43,6 +43,8 @@ public class ContentItem {
 
     ModularContentProvider modularContentProvider;
 
+    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
+
     ContentItem() {
         //Default constructor
     }
@@ -120,7 +122,27 @@ public class ContentItem {
         return modularContentProvider.getModularContent().get(codeName);
     }
 
+    /**
+     * Returns a new instance of T by mapping fields to elements in this content item.  Element fields are mapped
+     * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
+     * annotation.  T must have a default constructor and have standard setter methods.
+     * @param tClass The class which a new instance should be returned from
+     * @param <T> The type of class
+     * @return An instance of T with data mapped from the {@link ContentItem} in this response.
+     */
+    public <T> T castTo(Class<T> tClass) {
+        return StronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
+    }
+
     void setModularContentProvider(ModularContentProvider modularContentProvider) {
         this.modularContentProvider = modularContentProvider;
+    }
+
+    StronglyTypedContentItemConverter getStronglyTypedContentItemConverter() {
+        return stronglyTypedContentItemConverter;
+    }
+
+    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+        this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
     }
 }

@@ -58,6 +58,8 @@ public class DeliveryClient {
 
     private ContentLinkUrlResolver contentLinkUrlResolver;
     private BrokenLinkUrlResolver brokenLinkUrlResolver;
+    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
+            new StronglyTypedContentItemConverter();
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
@@ -270,7 +272,11 @@ public class DeliveryClient {
             @Override
             public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
                 if (beanDesc.getBeanClass() == RichTextElement.class)
-                    return new RichTextElementConverter(getContentLinkUrlResolver(), getBrokenLinkUrlResolver(), deserializer);
+                    return new RichTextElementConverter(
+                            getContentLinkUrlResolver(),
+                            getBrokenLinkUrlResolver(),
+                            stronglyTypedContentItemConverter,
+                            deserializer);
                 return deserializer;
             }
         });

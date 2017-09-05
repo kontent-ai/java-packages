@@ -35,8 +35,46 @@ import java.util.*;
 
 public class StronglyTypedContentItemConverter {
 
-    private StronglyTypedContentItemConverter() {
-        throw new IllegalStateException("Utility class");
+    private HashMap<String, Class<?>> contentTypeToClassMapping = new HashMap<>();
+    private HashMap<Class<?>, String> classToCodenameMapping = new HashMap<>();
+    private HashMap<Type, InlineContentItemsResolver> typeToInlineResolverMapping = new HashMap<>();
+
+    protected StronglyTypedContentItemConverter() {
+        //protected constructor
+    }
+
+    protected void registerType(String codename, Class<?> clazz) {
+        contentTypeToClassMapping.put(codename, clazz);
+        classToCodenameMapping.put(clazz, codename);
+    }
+
+    protected void registerType(Class<?> clazz) {
+        ContentItemMapping clazzContentItemMapping = clazz.getAnnotation(ContentItemMapping.class);
+        if (clazzContentItemMapping == null) {
+            throw new IllegalArgumentException("Passed in class must be annotated with @ContentItemMapping, " +
+                    "if this is not possible, please use registerType(String, Class)");
+        }
+        registerType(clazzContentItemMapping.value(), clazz);
+    }
+
+    protected void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
+        typeToInlineResolverMapping.put(resolver.getType(), resolver);
+    }
+
+    protected InlineContentItemsResolver getResolverForType(String contentType) {
+        if (contentTypeToClassMapping.containsKey(contentType) &&
+                typeToInlineResolverMapping.containsKey(contentTypeToClassMapping.get(contentType))) {
+            return typeToInlineResolverMapping.get(contentTypeToClassMapping.get(contentType));
+        }
+        return null;
+    }
+
+    protected InlineContentItemsResolver getResolverForType(ContentItem contentItem) {
+        System system = contentItem.getSystem();
+        if (system != null) {
+            return getResolverForType(system.getType());
+        }
+        return null;
     }
 
     //TODO: All of the reflection that happens in here should be stored in a plan object and cached in a WeakHashMap to avoid doing this over and over for performance
