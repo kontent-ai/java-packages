@@ -61,6 +61,8 @@ public class DeliveryClient {
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
             new StronglyTypedContentItemConverter();
 
+    private CacheManager cacheManager = (requestUri, executor) -> executor.execute();
+
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
      * @throws IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are invalid.
@@ -124,13 +126,8 @@ public class DeliveryClient {
 
     public ContentItemsListingResponse getItems(List<NameValuePair> params) throws IOException {
         HttpUriRequest request = buildGetRequest(ITEMS, params);
-
-        HttpResponse response = httpClient.execute(request);
-
-        handleErrorIfNecessary(response);
-
         ContentItemsListingResponse contentItemsListingResponse =
-                objectMapper.readValue(response.getEntity().getContent(), ContentItemsListingResponse.class);
+                executeRequest(request, ContentItemsListingResponse.class);
         contentItemsListingResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         return contentItemsListingResponse;
     }
@@ -154,13 +151,7 @@ public class DeliveryClient {
 
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) throws IOException {
         HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, ITEMS, contentItemCodename), params);
-
-        HttpResponse response = httpClient.execute(request);
-
-        handleErrorIfNecessary(response);
-
-        ContentItemResponse contentItemResponse =
-                objectMapper.readValue(response.getEntity().getContent(), ContentItemResponse.class);
+        ContentItemResponse contentItemResponse = executeRequest(request, ContentItemResponse.class);
         contentItemResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         return contentItemResponse;
     }
@@ -176,12 +167,7 @@ public class DeliveryClient {
 
     public ContentTypesListingResponse getTypes(List<NameValuePair> params) throws IOException {
         HttpUriRequest request = buildGetRequest(TYPES, params);
-
-        HttpResponse response = httpClient.execute(request);
-
-        handleErrorIfNecessary(response);
-
-        return objectMapper.readValue(response.getEntity().getContent(), ContentTypesListingResponse.class);
+        return executeRequest(request, ContentTypesListingResponse.class);
     }
 
     public ContentType getType(String contentTypeCodeName) throws IOException {
@@ -190,12 +176,7 @@ public class DeliveryClient {
 
     public ContentType getType(String contentTypeCodeName, List<NameValuePair> params) throws IOException {
         HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, TYPES, contentTypeCodeName), params);
-
-        HttpResponse response = httpClient.execute(request);
-
-        handleErrorIfNecessary(response);
-
-        return objectMapper.readValue(response.getEntity().getContent(), ContentType.class);
+        return executeRequest(request, ContentType.class);
     }
 
     public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) throws IOException {
@@ -206,12 +187,7 @@ public class DeliveryClient {
             throws IOException {
         HttpUriRequest request = buildGetRequest(
                 String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
-
-        HttpResponse response = httpClient.execute(request);
-
-        handleErrorIfNecessary(response);
-
-        return objectMapper.readValue(response.getEntity().getContent(), Element.class);
+        return executeRequest(request, Element.class);
     }
 
     public ContentLinkUrlResolver getContentLinkUrlResolver() {
@@ -248,6 +224,10 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
     }
 
+    public void setCacheManager(CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
+    }
+
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
         RequestBuilder requestBuilder = RequestBuilder.get(String.format(URL_CONCAT, getBaseUrl(), apiCall));
         if (deliveryOptions.isUsePreviewApi()) {
@@ -273,6 +253,15 @@ public class DeliveryClient {
         } else {
             return String.format(deliveryOptions.getProductionEndpoint(), deliveryOptions.getProjectId());
         }
+    }
+
+    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) throws IOException {
+        JsonNode jsonNode = cacheManager.resolveRequest(request.getURI().toString(), () -> {
+            HttpResponse response = httpClient.execute(request);
+            handleErrorIfNecessary(response);
+            return objectMapper.readValue(response.getEntity().getContent(), JsonNode.class);
+        });
+        return objectMapper.treeToValue(jsonNode, tClass);
     }
 
     private void handleErrorIfNecessary(HttpResponse response) throws IOException {

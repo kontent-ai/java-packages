@@ -24,6 +24,10 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.InputStreamEntity;
@@ -159,6 +163,27 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testCache() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        DeliveryClient client = new DeliveryClient(projectId);
+        final boolean[] cacheHit = {false};
+        client.setCacheManager(new CacheManager() {
+            @Override
+            public JsonNode resolveRequest(String requestUri, HttpRequestExecutor executor) throws IOException {
+                Assert.assertEquals("https://deliver.kenticocloud.com/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", requestUri);
+                cacheHit[0] = true;
+                ObjectMapper objectMapper = new ObjectMapper();
+                objectMapper.registerModule(new JSR310Module());
+                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                return objectMapper.readValue(this.getClass().getResourceAsStream("SampleContentItem.json"), JsonNode.class);
+            }
+        });
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+        Assert.assertTrue(cacheHit[0]);
     }
 
     @Test
