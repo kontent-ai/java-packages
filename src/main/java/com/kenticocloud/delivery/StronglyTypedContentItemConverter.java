@@ -129,7 +129,8 @@ public class StronglyTypedContentItemConverter {
         return bean;
     }
 
-    private Object getValueForField(ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
+    private Object getValueForField(
+            ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
         //Explicit checks
         //Check to see if this is an explicitly mapped Element
         ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
@@ -139,7 +140,7 @@ public class StronglyTypedContentItemConverter {
         //Check to see if this is an explicitly mapped ContentItem
         ContentItemMapping contentItemMapping = field.getAnnotation(ContentItemMapping.class);
         if (contentItemMapping != null && modularContent.containsKey(contentItemMapping.value())) {
-            return getCastedModularContentForField(field.getType(), modularContent.get(contentItemMapping.value()));
+            return getCastedModularContentForField(field.getType(), contentItemMapping.value(), modularContent);
         }
 
         //Implicit checks
@@ -150,7 +151,7 @@ public class StronglyTypedContentItemConverter {
         }
         //Check to see if this is an implicitly mapped ContentItem
         if (modularContent.containsKey(candidateCodename)) {
-            return getCastedModularContentForField(field.getType(), modularContent.get(candidateCodename));
+            return getCastedModularContentForField(field.getType(), candidateCodename, modularContent);
         }
 
         //Check to see if this is a collection of implicitly mapped ContentItem
@@ -160,15 +161,19 @@ public class StronglyTypedContentItemConverter {
         return null;
     }
 
-    private Object getCastedModularContentForField(Class<?> clazz, ContentItem modularContentItem) {
+    private Object getCastedModularContentForField(
+            Class<?> clazz, String codename, Map<String, ContentItem> modularContent) {
+        ContentItem modularContentItem = modularContent.get(codename);
         if (clazz == ContentItem.class) {
             return modularContentItem;
         }
-        //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
-        return convert(modularContentItem, new HashMap<>(), clazz);
+        Map<String, ContentItem> modularContentForRecursion =
+                copyModularContentWithExclusion(modularContent, codename);
+        return convert(modularContentItem, modularContentForRecursion, clazz);
     }
 
-    private Object getCastedModularContentForListOrMap(Object bean, Field field, Map<String, ContentItem> modularContent) {
+    private Object getCastedModularContentForListOrMap(
+            Object bean, Field field, Map<String, ContentItem> modularContent) {
         Type type = getType(bean, field);
         if (type == null) {
             //We have failed to get the type, probably due to a missing setter, skip this field
@@ -190,8 +195,10 @@ public class StronglyTypedContentItemConverter {
             HashMap convertedModularContent = new HashMap<>();
             for (Map.Entry<String, ContentItem> entry : modularContent.entrySet()) {
                 if (contentType.equals(entry.getValue().getSystem().getType())) {
-                    //TODO: Should pass in a modified list of modular content instead of empty map.  Passing empty map now to avoid infinite recursion when types are nested
-                    convertedModularContent.put(entry.getKey(), convert(entry.getValue(), new HashMap<>(), listClass));
+                    Map<String, ContentItem> modularContentForRecursion =
+                            copyModularContentWithExclusion(modularContent, entry.getKey());
+                    convertedModularContent.put(entry.getKey(),
+                            convert(entry.getValue(), modularContentForRecursion, listClass));
                 }
             }
             return castCollection(field.getType(), convertedModularContent);
@@ -203,6 +210,18 @@ public class StronglyTypedContentItemConverter {
         String regex = "([a-z])([A-Z]+)";
         String replacement = "$1_$2";
         return s.replaceAll(regex, replacement).toLowerCase();
+    }
+
+    //This function copies the modular content map while excluding an item, useful for a recursive stack
+    protected Map<String, ContentItem> copyModularContentWithExclusion(
+            Map<String, ContentItem> orig, String excludedContentItem) {
+        HashMap<String, ContentItem> target = new HashMap<>();
+        for (Map.Entry<String, ContentItem> entry : orig.entrySet()) {
+            if (!excludedContentItem.equals(entry.getKey())) {
+                target.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return target;
     }
 
     private static boolean isListOrMap(Class<?> type) {
