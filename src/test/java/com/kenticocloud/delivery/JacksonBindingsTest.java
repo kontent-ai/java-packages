@@ -253,6 +253,21 @@ public class JacksonBindingsTest {
     }
 
     @Test
+    public void testTaxonomyGroupListingResponse() throws IOException {
+        TaxonomyGroupListingResponse response = objectMapper.readValue(
+                this.getClass().getResource("SampleTaxonomyGroupListingResponse.json"), TaxonomyGroupListingResponse.class);
+        Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertEquals(3, response.getTaxonomies().size());
+        TaxonomyGroup group = response.getTaxonomies().get(0);
+        Assert.assertEquals(2016, group.getSystem().getLastModified().getYear());
+        Assert.assertEquals(2, group.getTerms().size());
+        Assert.assertEquals("coffee_expert", group.getTerms().get(0).getCodename());
+        Assert.assertEquals(2, group.getTerms().get(0).getTerms().size());
+        Assert.assertNotNull(response.getPagination());
+        Assert.assertEquals(3, response.getPagination().getLimit().intValue());
+    }
+
+    @Test
     public void testUrlSlugElementDeserialization() throws IOException {
         UrlSlugElement urlSlugElement = objectMapper.readValue(
                 this.getClass().getResource("SampleUrlSlugElement.json"), UrlSlugElement.class);

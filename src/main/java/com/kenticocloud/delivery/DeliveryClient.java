@@ -49,6 +49,7 @@ public class DeliveryClient {
     static final String ITEMS = "items";
     static final String TYPES = "types";
     static final String ELEMENTS = "elements";
+    static final String TAXONOMIES = "taxonomies";
 
     private static final String URL_CONCAT = "%s/%s";
 
@@ -188,6 +189,25 @@ public class DeliveryClient {
         HttpUriRequest request = buildGetRequest(
                 String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
         return executeRequest(request, Element.class);
+    }
+
+    public TaxonomyGroupListingResponse getTaxonomyGroups() throws IOException {
+        return getTaxonomyGroups(new ArrayList<>());
+    }
+
+    public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) throws IOException {
+        HttpUriRequest request = buildGetRequest(TAXONOMIES, params);
+        return executeRequest(request, TaxonomyGroupListingResponse.class);
+    }
+
+    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) throws IOException {
+        return getTaxonomyGroup(taxonomyGroupCodename, new ArrayList<>());
+    }
+
+    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) throws IOException {
+        HttpUriRequest request = buildGetRequest(
+                String.format("%s/%s", TAXONOMIES, taxonomyGroupCodename), params);
+        return executeRequest(request, TaxonomyGroup.class);
     }
 
     public ContentLinkUrlResolver getContentLinkUrlResolver() {

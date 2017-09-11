@@ -28,57 +28,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/**
- * Object model for a Taxonomy element
- */
-public class Taxonomy {
+public class TaxonomyGroupListingResponse {
 
-    @JsonProperty("name")
-    String name;
+    @JsonProperty("taxonomies")
+    List<TaxonomyGroup> taxonomies;
 
-    @JsonProperty("codename")
-    String codename;
+    @JsonProperty("pagination")
+    Pagination pagination;
 
-    @JsonProperty("terms")
-    List<Taxonomy> terms;
+    /**
+     * A list of taxonomy groups
+     * @return list of {@link TaxonomyGroup}
+     */
+    public List<TaxonomyGroup> getTaxonomies() {
+        return taxonomies;
+    }
 
-    Taxonomy() {
-        //Default constructor
+    void setTaxonomies(List<TaxonomyGroup> taxonomies) {
+        this.taxonomies = taxonomies;
     }
 
     /**
-     * The display name of the taxonomy
-     * @return the name of the taxonomy
+     * Information about the retrieved page
+     * @return the {@link Pagination} object identifying the current page
      */
-    public String getName() {
-        return name;
+    public Pagination getPagination() {
+        return pagination;
     }
 
-    void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * The codename of the taxonomy
-     * @return the codename of the taxonomy
-     */
-    public String getCodename() {
-        return codename;
-    }
-
-    void setCodename(String codename) {
-        this.codename = codename;
-    }
-
-    /**
-     * A list of taxonomically descendant terms
-     * @return a list of taxonomically descendant terms
-     */
-    public List<Taxonomy> getTerms() {
-        return terms;
-    }
-
-    void setTerms(List<Taxonomy> terms) {
-        this.terms = terms;
+    void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 }

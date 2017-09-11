@@ -166,6 +166,54 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    public void testGetTaxonomyList() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "taxonomies"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleTaxonomyGroupListingResponse.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        TaxonomyGroupListingResponse response = client.getTaxonomyGroups();
+        Assert.assertNotNull(response);
+    }
+
+    @Test
+    public void testGetTaxonomyGroup() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "taxonomies/personas"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleTaxonomyGroup.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        TaxonomyGroup taxonomyGroup = client.getTaxonomyGroup("personas");
+        Assert.assertNotNull(taxonomyGroup);
+    }
+
+    @Test
     public void testCache() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
         DeliveryClient client = new DeliveryClient(projectId);

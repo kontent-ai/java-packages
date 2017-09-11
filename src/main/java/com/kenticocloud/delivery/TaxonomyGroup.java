@@ -28,57 +28,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
-/**
- * Object model for a Taxonomy element
- */
-public class Taxonomy {
+public class TaxonomyGroup {
 
-    @JsonProperty("name")
-    String name;
-
-    @JsonProperty("codename")
-    String codename;
+    @JsonProperty("system")
+    System system;
 
     @JsonProperty("terms")
     List<Taxonomy> terms;
 
-    Taxonomy() {
-        //Default constructor
+    public System getSystem() {
+        return system;
     }
 
-    /**
-     * The display name of the taxonomy
-     * @return the name of the taxonomy
-     */
-    public String getName() {
-        return name;
+    public void setSystem(System system) {
+        this.system = system;
     }
 
-    void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * The codename of the taxonomy
-     * @return the codename of the taxonomy
-     */
-    public String getCodename() {
-        return codename;
-    }
-
-    void setCodename(String codename) {
-        this.codename = codename;
-    }
-
-    /**
-     * A list of taxonomically descendant terms
-     * @return a list of taxonomically descendant terms
-     */
     public List<Taxonomy> getTerms() {
         return terms;
     }
 
-    void setTerms(List<Taxonomy> terms) {
+    public void setTerms(List<Taxonomy> terms) {
         this.terms = terms;
     }
 }
