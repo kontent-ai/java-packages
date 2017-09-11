@@ -35,6 +35,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class DeliveryClient {
     private static final String URL_CONCAT = "%s/%s";
 
     private ObjectMapper objectMapper = new ObjectMapper();
+    private PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
     private HttpClient httpClient;
     private DeliveryOptions deliveryOptions;
 
@@ -91,7 +93,9 @@ public class DeliveryClient {
             throw new IllegalArgumentException("The Preview API key is not specified.");
         }
         this.deliveryOptions = deliveryOptions;
-        httpClient = HttpClients.createDefault();
+        connManager.setMaxTotal(20);
+        connManager.setDefaultMaxPerRoute(20);
+        httpClient = HttpClients.custom().setConnectionManager(connManager).build();
         reconfigureDeserializer();
     }
 
