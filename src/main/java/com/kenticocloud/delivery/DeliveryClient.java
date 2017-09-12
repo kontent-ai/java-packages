@@ -252,6 +252,10 @@ public class DeliveryClient {
         this.cacheManager = cacheManager;
     }
 
+    public void setMaxConnections(int maxConnections) {
+        connManager.setDefaultMaxPerRoute(maxConnections);
+    }
+
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
         RequestBuilder requestBuilder = RequestBuilder.get(String.format(URL_CONCAT, getBaseUrl(), apiCall));
         if (deliveryOptions.isUsePreviewApi()) {
