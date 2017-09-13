@@ -152,7 +152,7 @@ For text elements, you can use the `getString` method.
 articleItem.getString("body_copy")
 ```
 
-The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/delivery-sdk-net/wiki/Resolving-Links-to-Content-Items) for more details.
+The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/delivery-sdk-java/wiki/Resolving-links-to-content-items) for more details.
 
 ### Asset
 
