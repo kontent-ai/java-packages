@@ -2,11 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Kentico/delivery-sdk-java.svg?branch=master)](https://travis-ci.org/Kentico/delivery-sdk-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Javadoc](http://img.shields.io/badge/javadoc-1.0--SNAPSHOT-brightgreen.svg)](https://kentico.github.io/delivery-sdk-java/docs/javadoc/)
+[![Javadoc](http://img.shields.io/badge/javadoc-1.0-brightgreen.svg)](https://kentico.github.io/delivery-sdk-java/docs/javadoc/)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0--SNAPSHOT-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
-
-🚧 **This is currently a work in progress, and is only a prototype. Not ready for general consumption. Let us know if you want to contribute at DEVELOPERSCOMMUNITY@KENTICO.COM** 🚧 
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
 
 ## Summary
 
@@ -18,38 +16,19 @@ You can add this to your Gradle project by the following:
 
 repositories {
 	mavenCentral()
-	maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery-sdk-java:1.0-SNAPSHOT')
+    compile('com.kenticocloud:delivery-sdk-java:1.0')
 }
 ```
 
 Or via your Maven POM:
 ```xml
-<repositories>
-...
-    <repository>
-        <id>snapshots</id>
-        <url>
-            https://oss.sonatype.org/content/repositories/snapshots/
-        </url>
-        <snapshots>
-            <enabled>true</enabled>
-        </snapshots>
-        <releases>
-            <enabled>false</enabled>
-        </releases>
-    </repository>
-</repositories>
-
-...
-
 <dependency>
     <groupId>com.kenticocloud</groupId>
     <artifactId>delivery-sdk-java</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
 </dependency>
 ```
 

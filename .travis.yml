@@ -16,7 +16,7 @@ addons:
 
 script:
   - ./gradlew sonarqube
-  - ".travis/upload_nexus.sh"
+#  - ".travis/upload_nexus.sh"
 
 before_cache:
   # remove all the artifacts (JAR, ZIP) that are installed in local repo because of gradle deploy
