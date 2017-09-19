@@ -33,6 +33,8 @@ public class ArticleItem {
 
     String title;
 
+    System systemInformationObject;
+
     @ElementMapping("summary")
     String articleSummary;
 
@@ -69,6 +71,14 @@ public class ArticleItem {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public System getSystemInformationObject() {
+        return systemInformationObject;
+    }
+
+    public void setSystemInformationObject(System systemInformationObject) {
+        this.systemInformationObject = systemInformationObject;
     }
 
     public String getArticleSummary() {

@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'com.kenticocloud'
-version '1.0'
+version '1.0.1-SNAPSHOT'
 ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null
 
 apply plugin: 'java'

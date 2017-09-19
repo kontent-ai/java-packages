@@ -256,6 +256,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ArticleItem item = client.getItem("on_roasts", ArticleItem.class);
         Assert.assertNotNull(item);
+        Assert.assertNotNull(item.getSystemInformationObject());
         Assert.assertNull(item.getRandomValue());
         Assert.assertNull(item.getRandomStringList());
         Assert.assertNull(item.getRandomStringMap());

@@ -95,7 +95,6 @@ public class StronglyTypedContentItemConverter {
         }).scan();
     }
 
-    //TODO: All of the reflection that happens in here should be stored in a plan object and cached in a WeakHashMap to avoid doing this over and over for performance
     <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
         if (tClass == Object.class) {
             Class<?> mappingClass = contentTypeToClassMapping.get(item.getSystem().getType());
@@ -131,6 +130,10 @@ public class StronglyTypedContentItemConverter {
 
     private Object getValueForField(
             ContentItem item, Map<String, ContentItem> modularContent, Object bean, Field field) {
+        //Inject System object
+        if (field.getType() == System.class) {
+            return item.getSystem();
+        }
         //Explicit checks
         //Check to see if this is an explicitly mapped Element
         ElementMapping elementMapping = field.getAnnotation(ElementMapping.class);
