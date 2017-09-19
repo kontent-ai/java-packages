@@ -31,11 +31,14 @@ import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.apache.http.*;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.localserver.LocalServerTestBase;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -104,6 +107,162 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemsListingResponse items = client.getItems();
         Assert.assertNotNull(items);
+    }
+
+    @Test
+    public void testGetItemsAsPage() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+
+                    BufferedReader bufferedReader =
+                            new BufferedReader(
+                                    new InputStreamReader(
+                                            this.getClass().getResourceAsStream("SampleContentItemList.json")
+                                    )
+                            );
+                    String line;
+                    String responseString = "";
+                    while((line = bufferedReader.readLine()) != null) {
+                        if (line.contains("next_page")) {
+                            responseString += "\"next_page\": \"";
+                            responseString += (new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI();
+                            responseString += "/nextPage\"\r\n";
+                        } else {
+                            responseString += line + "\r\n";
+                        }
+                    }
+                    bufferedReader.close();
+                    response.setEntity(new StringEntity(responseString));
+                });
+        this.serverBootstrap.registerHandler("/nextPage",
+                (request, response, context) -> {
+                    response.setEntity(new StringEntity(
+                           "{\n" +
+                                   "  \"items\": [],\n" +
+                                   "  \"modular_content\": {},\n" +
+                                   "  \"pagination\": {\n" +
+                                   "    \"skip\": 50,\n" +
+                                   "    \"limit\": 2,\n" +
+                                   "    \"count\": 0,\n" +
+                                   "    \"next_page\": \"\"\n" +
+                                   "  }\n" +
+                                   "}"
+                    ));
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        Page<ContentItem> pageOfItems =
+                client.getPageOfItems(ContentItem.class, DeliveryParameterBuilder.params().page(0, 3).build());
+        Assert.assertEquals(3, pageOfItems.getSize());
+        Assert.assertEquals(3, pageOfItems.getContent().size());
+        Assert.assertTrue(pageOfItems.hasContent());
+        Assert.assertTrue(pageOfItems.isFirst());
+        Assert.assertFalse(pageOfItems.isLast());
+        Assert.assertTrue(pageOfItems.hasNext());
+        Assert.assertFalse(pageOfItems.hasPrevious());
+
+        Page<ContentItem> nextPage = pageOfItems.nextPage();
+        Assert.assertEquals(0, nextPage.getSize());
+        Assert.assertFalse(nextPage.hasContent());
+        Assert.assertFalse(nextPage.isFirst());
+        Assert.assertTrue(nextPage.isLast());
+        Assert.assertFalse(nextPage.hasNext());
+        Assert.assertTrue(nextPage.hasPrevious());
+
+        Assert.assertNull(nextPage.nextPage());
+    }
+
+    @Test
+    public void testStronglyTypedGetItemsAsPage() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+
+                    BufferedReader bufferedReader =
+                            new BufferedReader(
+                                    new InputStreamReader(
+                                            this.getClass().getResourceAsStream("SampleContentItemList.json")
+                                    )
+                            );
+                    String line;
+                    String responseString = "";
+                    while((line = bufferedReader.readLine()) != null) {
+                        if (line.contains("next_page")) {
+                            responseString += "\"next_page\": \"";
+                            responseString += (new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI();
+                            responseString += "/nextPage\"\r\n";
+                        } else {
+                            responseString += line + "\r\n";
+                        }
+                    }
+                    bufferedReader.close();
+                    response.setEntity(new StringEntity(responseString));
+                });
+        this.serverBootstrap.registerHandler("/nextPage",
+                (request, response, context) -> {
+                    response.setEntity(new StringEntity(
+                            "{\n" +
+                                    "  \"items\": [],\n" +
+                                    "  \"modular_content\": {},\n" +
+                                    "  \"pagination\": {\n" +
+                                    "    \"skip\": 50,\n" +
+                                    "    \"limit\": 2,\n" +
+                                    "    \"count\": 0,\n" +
+                                    "    \"next_page\": \"\"\n" +
+                                    "  }\n" +
+                                    "}"
+                    ));
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        Page<ArticleItem> pageOfItems =
+                client.getPageOfItems(ArticleItem.class, DeliveryParameterBuilder.params().page(0, 3).build());
+        Assert.assertEquals(3, pageOfItems.getSize());
+        Assert.assertEquals(3, pageOfItems.getContent().size());
+        Assert.assertTrue(pageOfItems.hasContent());
+        Assert.assertTrue(pageOfItems.isFirst());
+        Assert.assertFalse(pageOfItems.isLast());
+        Assert.assertTrue(pageOfItems.hasNext());
+        Assert.assertFalse(pageOfItems.hasPrevious());
+
+        Page<ArticleItem> nextPage = pageOfItems.nextPage();
+        Assert.assertEquals(0, nextPage.getSize());
+        Assert.assertFalse(nextPage.hasContent());
+        Assert.assertFalse(nextPage.isFirst());
+        Assert.assertTrue(nextPage.isLast());
+        Assert.assertFalse(nextPage.hasNext());
+        Assert.assertTrue(nextPage.hasPrevious());
+
+        Assert.assertNull(nextPage.nextPage());
     }
 
     @Test

@@ -38,6 +38,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -150,6 +151,23 @@ public class DeliveryClient {
         return getItems(tClass, new ArrayList<>());
     }
 
+    public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
+        ContentItemsListingResponse response = getItems(params);
+        return new Page<>(response, tClass, this);
+    }
+
+    public <T> Page<T> getNextPage(Page<T> currentPage) throws IOException {
+        Pagination pagination = currentPage.getPagination();
+        if (pagination.getNextPage() == null || pagination.getNextPage().isEmpty()) {
+            return null;
+        }
+        RequestBuilder requestBuilder = RequestBuilder.get(pagination.getNextPage());
+        requestBuilder = addHeaders(requestBuilder);
+        HttpUriRequest httpUriRequest = requestBuilder.build();
+        ContentItemsListingResponse response = executeRequest(httpUriRequest, ContentItemsListingResponse.class);
+        return new Page<>(response, currentPage.getType(), this);
+    }
+
     public <T> T getItem(String contentItemCodename, Class<T> tClass) throws IOException {
         return getItem(contentItemCodename, tClass, new ArrayList<>());
     }
@@ -258,6 +276,14 @@ public class DeliveryClient {
 
     protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
         RequestBuilder requestBuilder = RequestBuilder.get(String.format(URL_CONCAT, getBaseUrl(), apiCall));
+        requestBuilder = addHeaders(requestBuilder);
+        for (NameValuePair nameValuePair : nameValuePairs) {
+            requestBuilder.addParameter(nameValuePair);
+        }
+        return requestBuilder.build();
+    }
+
+    protected RequestBuilder addHeaders(RequestBuilder requestBuilder) {
         if (deliveryOptions.isUsePreviewApi()) {
             requestBuilder.setHeader(
                     HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
@@ -265,14 +291,11 @@ public class DeliveryClient {
         }
         if (deliveryOptions.isWaitForLoadingNewContent()) {
             requestBuilder.setHeader(
-                "X-KC-Wait-For-Loading-New-Content", "true"
+                    "X-KC-Wait-For-Loading-New-Content", "true"
             );
         }
         requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
-        for (NameValuePair nameValuePair : nameValuePairs) {
-            requestBuilder.addParameter(nameValuePair);
-        }
-        return requestBuilder.build();
+        return requestBuilder;
     }
 
     private String getBaseUrl() {
@@ -287,7 +310,10 @@ public class DeliveryClient {
         JsonNode jsonNode = cacheManager.resolveRequest(request.getURI().toString(), () -> {
             HttpResponse response = httpClient.execute(request);
             handleErrorIfNecessary(response);
-            return objectMapper.readValue(response.getEntity().getContent(), JsonNode.class);
+            InputStream inputStream = response.getEntity().getContent();
+            JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
+            inputStream.close();
+            return node;
         });
         return objectMapper.treeToValue(jsonNode, tClass);
     }
@@ -296,7 +322,9 @@ public class DeliveryClient {
         if (response.getStatusLine().getStatusCode() >= 500) {
             throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
         } else if (response.getStatusLine().getStatusCode() >= 400) {
-            KenticoError kenticoError = objectMapper.readValue(response.getEntity().getContent(), KenticoError.class);
+            InputStream inputStream = response.getEntity().getContent();
+            KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
+            inputStream.close();
             throw new KenticoErrorException(kenticoError);
         }
     }

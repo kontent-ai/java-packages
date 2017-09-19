@@ -103,6 +103,9 @@ public class StronglyTypedContentItemConverter {
             }
             return (T) convert(item, modularContent, mappingClass);
         }
+        if (tClass == ContentItem.class) {
+            return (T) item;
+        }
         T bean = null;
         try {
             //Invoke the default constructor
