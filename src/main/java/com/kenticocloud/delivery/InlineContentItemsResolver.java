@@ -40,7 +40,7 @@ public abstract class InlineContentItemsResolver<T> {
         this.type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
     }
 
-    abstract String resolve(T data);
+    public abstract String resolve(T data);
 
     protected Type getType() {
         return type;

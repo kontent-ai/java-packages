@@ -58,7 +58,7 @@ public class RichTextElementConverterTest {
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
             @Override
-            String resolve(CustomItem data) {
+            public String resolve(CustomItem data) {
                 return data.getMessageText();
             }
         });
