@@ -534,9 +534,18 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
         ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        client.registerType(ArticleItem.class);
+        client.registerInlineContentItemsResolver(new InlineContentItemsResolver<ArticleItem>() {
+            @Override
+            public String resolve(ArticleItem data) {
+                return "WE REPLACED SUCCESSFULLY";
+            }
+        });
 
         List<ArticleItem> items = client.getItems(ArticleItem.class);
         Assert.assertNotNull(items);
+        Assert.assertFalse(items.get(1).getDescription().contains("<object"));
+        Assert.assertTrue(items.get(1).getDescription().contains("WE REPLACED SUCCESSFULLY"));
     }
 
 

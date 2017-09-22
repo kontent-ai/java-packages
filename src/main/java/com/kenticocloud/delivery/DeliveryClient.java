@@ -25,7 +25,6 @@
 package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.databind.*;
-import com.fasterxml.jackson.databind.deser.BeanDeserializerModifier;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.apache.http.HttpHeaders;
@@ -135,6 +134,12 @@ public class DeliveryClient {
         ContentItemsListingResponse contentItemsListingResponse =
                 executeRequest(request, ContentItemsListingResponse.class);
         contentItemsListingResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        RichTextElementConverter converter = new RichTextElementConverter(
+                getContentLinkUrlResolver(),
+                getBrokenLinkUrlResolver(),
+                stronglyTypedContentItemConverter
+        );
+        converter.process(contentItemsListingResponse.getItems());
         return contentItemsListingResponse;
     }
 
@@ -165,6 +170,12 @@ public class DeliveryClient {
         requestBuilder = addHeaders(requestBuilder);
         HttpUriRequest httpUriRequest = requestBuilder.build();
         ContentItemsListingResponse response = executeRequest(httpUriRequest, ContentItemsListingResponse.class);
+        RichTextElementConverter converter = new RichTextElementConverter(
+                getContentLinkUrlResolver(),
+                getBrokenLinkUrlResolver(),
+                stronglyTypedContentItemConverter
+        );
+        converter.process(response.getItems());
         return new Page<>(response, currentPage.getType(), this);
     }
 
@@ -176,6 +187,12 @@ public class DeliveryClient {
         HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, ITEMS, contentItemCodename), params);
         ContentItemResponse contentItemResponse = executeRequest(request, ContentItemResponse.class);
         contentItemResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        RichTextElementConverter converter = new RichTextElementConverter(
+                getContentLinkUrlResolver(),
+                getBrokenLinkUrlResolver(),
+                stronglyTypedContentItemConverter
+        );
+        converter.process(contentItemResponse.getItem());
         return contentItemResponse;
     }
 
@@ -335,18 +352,6 @@ public class DeliveryClient {
         SimpleModule module = new SimpleModule();
         objectMapper.registerModule(new JSR310Module());
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-        module.setDeserializerModifier(new BeanDeserializerModifier() {
-            @Override
-            public JsonDeserializer<?> modifyDeserializer(DeserializationConfig config, BeanDescription beanDesc, JsonDeserializer<?> deserializer) {
-                if (beanDesc.getBeanClass() == RichTextElement.class)
-                    return new RichTextElementConverter(
-                            getContentLinkUrlResolver(),
-                            getBrokenLinkUrlResolver(),
-                            stronglyTypedContentItemConverter,
-                            deserializer);
-                return deserializer;
-            }
-        });
 
         objectMapper.registerModule(module);
     }
