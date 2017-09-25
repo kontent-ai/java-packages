@@ -66,6 +66,7 @@ The SDK supports full scale of the API querying and filtering capabilities as de
 // the 'brewer' content type, ordered by the 'product_name' element value
 ContentItemsListingResponse response = client.getItems(
     DeliveryParameterBuilder.params()
+        .language("es-ES")
         .filterEquals("system.type", "brewer")
         .projection("image", "price", "product_status", "processing")
         .page(null, 10)
