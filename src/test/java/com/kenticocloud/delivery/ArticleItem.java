@@ -38,6 +38,8 @@ public class ArticleItem {
     @ElementMapping("summary")
     String articleSummary;
 
+    String description;
+
     String randomValue;
 
     ZonedDateTime postDate;
@@ -87,6 +89,14 @@ public class ArticleItem {
 
     public void setArticleSummary(String articleSummary) {
         this.articleSummary = articleSummary;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getRandomValue() {

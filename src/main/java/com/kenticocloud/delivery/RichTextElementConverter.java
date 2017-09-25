@@ -24,23 +24,16 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.deser.ResolvableDeserializer;
-import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-
-import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class RichTextElementConverter extends StdDeserializer<RichTextElement> implements ResolvableDeserializer {
+public class RichTextElementConverter {
 
-    transient ContentLinkUrlResolver contentLinkUrlResolver;
-    transient BrokenLinkUrlResolver brokenLinkUrlResolver;
-    transient StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
-    private final transient JsonDeserializer<?> defaultDeserializer;
+    ContentLinkUrlResolver contentLinkUrlResolver;
+    BrokenLinkUrlResolver brokenLinkUrlResolver;
+    StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
     /*
     Regex prior to the Java \ escapes:
@@ -103,24 +96,27 @@ public class RichTextElementConverter extends StdDeserializer<RichTextElement> i
     public RichTextElementConverter(
             ContentLinkUrlResolver contentLinkUrlResolver,
             BrokenLinkUrlResolver brokenLinkUrlResolver,
-            StronglyTypedContentItemConverter stronglyTypedContentItemConverter,
-            JsonDeserializer<?> defaultDeserializer) {
-        super(RichTextElement.class);
-        this.defaultDeserializer = defaultDeserializer;
+            StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.contentLinkUrlResolver = contentLinkUrlResolver;
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
     }
 
-    @Override
-    public RichTextElement deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-        RichTextElement orig = (RichTextElement) defaultDeserializer.deserialize(p, ctxt);
-        return convert(orig);
+    public void process(List<ContentItem> orig) {
+        for (ContentItem contentItem : orig) {
+            process(contentItem);
+        }
     }
 
-    @Override
-    public void resolve(DeserializationContext ctxt) throws JsonMappingException {
-        ((ResolvableDeserializer) defaultDeserializer).resolve(ctxt);
+    public void process(ContentItem orig) {
+        for (Map.Entry<String, Element> entry : orig.getElements().entrySet()) {
+            Element element = entry.getValue();
+            if (element instanceof RichTextElement) {
+                RichTextElement richTextElement = (RichTextElement) element;
+                richTextElement.setValue(resolveLinks(richTextElement));
+                richTextElement.setValue(resolveModularContent(richTextElement));
+            }
+        }
     }
 
     public RichTextElement convert(RichTextElement orig) {

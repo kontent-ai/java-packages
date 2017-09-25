@@ -37,7 +37,6 @@ public class RichTextElementConverterTest {
         RichTextElementConverter converter = new RichTextElementConverter(
                 link -> link.getUrlSlug(),
                 () -> "/404",
-                new StronglyTypedContentItemConverter(),
                 null);
         RichTextElement original = new RichTextElement();
         original.setValue("<p>Each AeroPress comes with a <a href=\"\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"\" data-item-id=\"not-found\">box</a>.</p>");
@@ -65,8 +64,7 @@ public class RichTextElementConverterTest {
         RichTextElementConverter converter = new RichTextElementConverter(
                 null,
                 null,
-                stronglyTypedContentItemConverter,
-                null);
+                stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
         original.setModularContent(Arrays.asList("donate_with_us"));
         ContentItem contentItem = new ContentItem();

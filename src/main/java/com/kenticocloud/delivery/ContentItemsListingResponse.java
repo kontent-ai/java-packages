@@ -79,6 +79,7 @@ public class ContentItemsListingResponse implements ModularContentProvider {
 
     void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
+        modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
     }
 
     /**
