@@ -80,7 +80,7 @@ public class Page<T> {
     /**
      * Returns whether the current page is the last one.
      *
-     * @return
+     * @return if this is the last page.
      */
     public boolean isLast() {
         return pagination.nextPage.isEmpty();
