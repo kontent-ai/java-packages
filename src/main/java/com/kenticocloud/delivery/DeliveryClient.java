@@ -24,7 +24,9 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import org.apache.http.HttpHeaders;
@@ -35,6 +37,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,6 +50,8 @@ import java.util.UUID;
  * Executes requests against the Kentico Cloud Delivery API.
  */
 public class DeliveryClient {
+
+    private static final Logger logger = LoggerFactory.getLogger(DeliveryClient.class);
 
     static final String ITEMS = "items";
     static final String TYPES = "types";
@@ -324,11 +330,14 @@ public class DeliveryClient {
     }
 
     private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) throws IOException {
+        logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), request.getURI().toString());
         JsonNode jsonNode = cacheManager.resolveRequest(request.getURI().toString(), () -> {
             HttpResponse response = httpClient.execute(request);
             handleErrorIfNecessary(response);
             InputStream inputStream = response.getEntity().getContent();
             JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
+            logger.info("{} - {}", response.getStatusLine(), request.getURI().toString());
+            logger.debug("{} - {}:\n{}", request.getMethod(), request.getURI().toString(), node);
             inputStream.close();
             return node;
         });
@@ -336,9 +345,12 @@ public class DeliveryClient {
     }
 
     private void handleErrorIfNecessary(HttpResponse response) throws IOException {
-        if (response.getStatusLine().getStatusCode() >= 500) {
+        final int status = response.getStatusLine().getStatusCode();
+        if (status >= 500) {
+            logger.error("Kentico API server error, status: {}", status);
             throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
-        } else if (response.getStatusLine().getStatusCode() >= 400) {
+        } else if (status >= 400) {
+            logger.error("Kentico API request error, status: ", status);
             InputStream inputStream = response.getEntity().getContent();
             KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
             inputStream.close();
