@@ -272,8 +272,17 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testLocaleLanguage() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().language(new Locale("pt-br")).build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("language", params.get(0).getName());
+        Assert.assertEquals("pt-br", params.get(0).getValue());
+    }
+
+    @Test
     public void testLanguageNull() {
-        List<NameValuePair> params = DeliveryParameterBuilder.params().language(null).build();
+        String nullValue = null;
+        List<NameValuePair> params = DeliveryParameterBuilder.params().language(nullValue).build();
         Assert.assertEquals(0, params.size());
     }
 }
