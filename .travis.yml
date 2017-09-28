@@ -15,7 +15,7 @@ addons:
       secure: "j2lyZTrsGvCSHJefMQLqKrQ5iicdUaJY0/7RLD2jMCpeXMhJa8fTvus3QPvjelw/uNeIUBAAPWrBjtkpgUDVlTxc+iz3+an6TvMBuabas81J7CSCEG7XBA27MHRCKtlmYa5hXL+FQcTDIYzNObM8722RPxuNT7Yx+Oq+GMNF2m2DCTzal4Fez7Ql2tDJIsxXmcfFQJeX0huBiEpCu/oDxf04IkleQE0Z56U+EnuGIvrffDkGYaCU/41WA5ZDfDqVBazE1fueaZs0yCPLLrAZX6Lm0uEykw0nvi6HjbOVTw2P0IKEsgKqJQn3m5K7f/nCprHB9kCjtFIyOPqv681OUvatXhbZ+/NE8BPxXhzZw0KIaDFIieQFdKd1KyxR3wFAIfNoLYZCRi0uUsxFIIgzrBrL5v9i2SvIPxaxxtwxsVQnEKHXLwJzbwhj6HIxWwI1WwaGXLB6+qCATTvacCRtDoZrG47/06haiVKWoLeO6epTEkb1GiEw0H84XFspZHVIGiUBrwTv6j0t4UPtXzipjQHofLpswAj+3KQbZ3NjfPlqcTI6KNgpiJMR3fBm141GihdNgVldMU42IG0kfbztlqGONVdU1udPQF/lNGHFuNStvJs1AWA1MM2wjT2ope6Q7l3l90ZcsmfiU1bjafE7RrU/rDX9+5FSId7Qj0/kS1c="
 
 script:
-  - ./gradlew sonarqube
+  - ".travis/build.sh"
   - ".travis/upload_nexus.sh"
 
 before_cache:
