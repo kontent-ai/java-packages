@@ -30,7 +30,7 @@ cache:
   - $HOME/.gradle/wrapper
 
 before_install:
-  - "./travis/unpack_deploy_keys.sh"
+  - ".travis/unpack_deploy_keys.sh"
 
 after_success:
   - ".travis/deploy_ghpages.sh"
