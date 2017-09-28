@@ -29,6 +29,7 @@ import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class DeliveryParameterBuilder {
 
@@ -175,6 +176,13 @@ public class DeliveryParameterBuilder {
     public DeliveryParameterBuilder language(String language) {
         if (language != null) {
             nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language));
+        }
+        return this;
+    }
+
+    public DeliveryParameterBuilder language(Locale language) {
+        if (language != null) {
+            nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language.toString().replace('_', '-')));
         }
         return this;
     }
