@@ -109,6 +109,7 @@ public class Page<T> {
      * should check {@link #hasNext()} before calling this method to make sure they receive a non-{@literal null} value.
      *
      * @return the next page.
+     * @throws IOException
      */
     public Page<T> nextPage() throws IOException {
         return deliveryClient.getNextPage(this);
