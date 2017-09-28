@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Pull requests and commits to other branches shouldn't try to deploy, just build to verify
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
+# Pull requests shouldn't try to deploy
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
     echo "Skipping key unpack; just doing a build."
     exit 0
 fi
