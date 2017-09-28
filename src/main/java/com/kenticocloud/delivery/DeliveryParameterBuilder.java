@@ -182,7 +182,7 @@ public class DeliveryParameterBuilder {
 
     public DeliveryParameterBuilder language(Locale language) {
         if (language != null) {
-            nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language.toString()));
+            nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language.toString().replace('_', '-')));
         }
         return this;
     }
