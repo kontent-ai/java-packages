@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery-sdk-java.svg)](http://javadoc.io/doc/com.kenticocloud/delivery-sdk-java)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0.3-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
 
 ## Summary
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery-sdk-java:1.0.2')
+    compile('com.kenticocloud:delivery-sdk-java:1.0.3')
 }
 ```
 
@@ -29,7 +29,7 @@ Or via your Maven POM:
 <dependency>
     <groupId>com.kenticocloud</groupId>
     <artifactId>delivery-sdk-java</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
 
