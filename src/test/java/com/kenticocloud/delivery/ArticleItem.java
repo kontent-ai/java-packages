@@ -51,6 +51,12 @@ public class ArticleItem {
     @ContentItemMapping("origins_of_arabica_bourbon")
     ContentItem arabicaBourbonOrigin;
 
+    @ContentItemMapping("related_articles")
+    List<ContentItem> relatedArticles;
+
+    @ContentItemMapping("related_articles")
+    Map<String, ContentItem> relatedArticlesMap;
+
     List<ArticleItem> articleItems;
 
     List<ContentItem> allModularContent;
@@ -137,6 +143,22 @@ public class ArticleItem {
 
     public void setArabicaBourbonOrigin(ContentItem arabicaBourbonOrigin) {
         this.arabicaBourbonOrigin = arabicaBourbonOrigin;
+    }
+
+    public List<ContentItem> getRelatedArticles() {
+        return relatedArticles;
+    }
+
+    public void setRelatedArticles(List<ContentItem> relatedArticles) {
+        this.relatedArticles = relatedArticles;
+    }
+
+    public Map<String, ContentItem> getRelatedArticlesMap() {
+        return relatedArticlesMap;
+    }
+
+    public void setRelatedArticlesMap(Map<String, ContentItem> relatedArticlesMap) {
+        this.relatedArticlesMap = relatedArticlesMap;
     }
 
     public List<ArticleItem> getArticleItems() {

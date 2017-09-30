@@ -548,6 +548,40 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    public void testContentItemListMapping() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItem.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+        client.registerType(ArticleItem.class);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ArticleItem itemObj = client.getItem("on_roasts", ArticleItem.class);
+        Assert.assertNotNull(itemObj);
+        Assert.assertNotNull(itemObj.getRelatedArticles());
+        Assert.assertEquals(2, itemObj.getRelatedArticles().size());
+        //The following assertion will probably have a warning in an IDE, but because reflection is being used, is
+        //ensures that this actually is a ContentItem and not a ModularContentElement
+        Assert.assertTrue(itemObj.getRelatedArticles().get(0) instanceof ContentItem);
+
+        Assert.assertNotNull(itemObj.getRelatedArticlesMap());
+        Assert.assertEquals(2, itemObj.getRelatedArticlesMap().size());
+        Assert.assertTrue(itemObj.getRelatedArticlesMap().get("coffee_processing_techniques") instanceof ContentItem);
+    }
+
+    @Test
     public void testGetStronglyTypedItemByClasspathScan() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 

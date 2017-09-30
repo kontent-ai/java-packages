@@ -156,6 +156,18 @@ public class StronglyTypedContentItemConverter {
         if (contentItemMapping != null && modularContent.containsKey(contentItemMapping.value())) {
             return getCastedModularContentForField(field.getType(), contentItemMapping.value(), modularContent);
         }
+        if (contentItemMapping != null &&
+                isListOrMap(field.getType()) &&
+                item.getElements().containsKey(contentItemMapping.value()) &&
+                item.getElements().get(contentItemMapping.value()) instanceof ModularContentElement) {
+            ModularContentElement modularContentElement =
+                    (ModularContentElement) item.getElements().get(contentItemMapping.value());
+            Map<String, ContentItem> referencedModularContent = new HashMap<>();
+            for (String codename : modularContentElement.getValue()) {
+                referencedModularContent.put(codename, modularContent.get(codename));
+            }
+            return getCastedModularContentForListOrMap(bean, field, referencedModularContent);
+        }
 
         //Implicit checks
         String candidateCodename = fromCamelCase(field.getName());
