@@ -95,6 +95,14 @@ public class StronglyTypedContentItemConverter {
         }).scan();
     }
 
+    Object convert(ContentItem item, Map<String, ContentItem> modularContent, String contentType) {
+        Class<?> mappingClass = contentTypeToClassMapping.get(contentType);
+        if (mappingClass == null) {
+            return item;
+        }
+        return convert(item, modularContent, mappingClass);
+    }
+
     <T> T convert(ContentItem item, Map<String, ContentItem> modularContent, Class<T> tClass) {
         if (tClass == Object.class) {
             Class<?> mappingClass = contentTypeToClassMapping.get(item.getSystem().getType());

@@ -126,12 +126,41 @@ public class ContentItem {
      * Returns a new instance of T by mapping fields to elements in this content item.  Element fields are mapped
      * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
      * annotation.  T must have a default constructor and have standard setter methods.
+     * When passing in Object.class, the type returned will be an instance of the class registered with the
+     * {@link DeliveryClient} that is annotated with {@link ContentItemMapping} that matches the contentType of this
+     * ContentItem (however still returned as type Object).
      * @param tClass The class which a new instance should be returned from
      * @param <T> The type of class
      * @return An instance of T with data mapped from the {@link ContentItem} in this response.
      */
     public <T> T castTo(Class<T> tClass) {
         return stronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
+    }
+
+    /**
+     * Returns a new instance by mapping fields to elements in this content item.  Element fields are mapped
+     * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
+     * annotation.  The type returned will be an instance of the class registered with the {@link DeliveryClient} that
+     * is annotated with {@link ContentItemMapping} that matches the contentType of this ContentItem (however still
+     * returned as type Object).
+     * @see #castTo(Class)
+     * @return An instance with data mapped from the {@link ContentItem} in this response.
+     */
+    public Object castToDefault() {
+        return this.castTo(Object.class);
+    }
+
+    /**
+     * Returns a new instance by mapping fields to elements in this content item.  Element fields are mapped
+     * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
+     * annotation.  The type returned will be an instance of the class registered with the {@link DeliveryClient} that
+     * that matches the contentType provided.
+     * @param contentType The contentType to match this ContentItem too.
+     * @return An instance with data mapped from the {@link ContentItem} in this response.
+     */
+    public Object castTo(String contentType) {
+        return stronglyTypedContentItemConverter.convert(
+                this, modularContentProvider.getModularContent(), contentType);
     }
 
     void setModularContentProvider(ModularContentProvider modularContentProvider) {
