@@ -42,6 +42,18 @@ shadowJar {
     relocate 'org.apache.http', 'shadow.kentico.http'
 }
 
+task androidSourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    baseName = 'delivery-sdk-android'
+    classifier = 'sources'
+}
+
+task androidJavadocJar(type: Jar, dependsOn: javadoc) {
+    baseName = 'delivery-sdk-android'
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from 'build/docs/javadoc'
@@ -56,11 +68,15 @@ artifacts {
     archives jar
     archives javadocJar
     archives sourcesJar
+    archives shadowJar
+    archives androidSourcesJar
+    archives androidJavadocJar
 }
 
 signing {
     required { isContinuousIntegrationBuild && gradle.taskGraph.hasTask("uploadArchives") }
     sign configurations.archives
+    sign configurations.shadow
 }
 
 uploadArchives {
@@ -80,7 +96,13 @@ uploadArchives {
             //Use this repository, and comment out the above for viewing the generated POM
             //repository(url: "file://localhost/tmp/myRepo/")
 
-            pom.project {
+            addFilter('android') { artifact, File file ->
+                file.name.contains('android-')
+            }
+            addFilter('java') { artifact, file ->
+                file.name.contains('java-')
+            }
+            pom('java').project {
                 name 'delivery-sdk-java'
                 packaging 'jar'
                 description 'Kentico Cloud Delivery Java SDK https://kenticocloud.com/'
@@ -108,28 +130,7 @@ uploadArchives {
                     }
                 }
             }
-        }
-    }
-}
-
-uploadShadow {
-    repositories {
-        mavenDeployer {
-            //Comment out this step if you do not have the signing key
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            //Use this repository, and comment out the above for viewing the generated POM
-            //repository(url: "file://localhost/tmp/myRepo/")
-
-            pom.project {
+            pom('android').project {
                 name 'delivery-sdk-android'
                 packaging 'jar'
                 description 'Kentico Cloud Delivery Android SDK https://kenticocloud.com/'
