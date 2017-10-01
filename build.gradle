@@ -36,6 +36,9 @@ dependencies {
 }
 
 shadowJar {
+    baseName = 'delivery-sdk-android'
+    version = project.version
+    classifier = null
     relocate 'org.apache.http', 'shadow.kentico.http'
 }
 
@@ -84,7 +87,56 @@ uploadArchives {
                 url 'https://github.com/Kentico/delivery-sdk-java'
 
                 scm {
-                    url 'https://github.com/Kentico/delivery-sdk-jav'
+                    url 'https://github.com/Kentico/delivery-sdk-java'
+                    connection 'scm:https://github.com/Kentico/delivery-sdk-java.git'
+                    developerConnection 'scm:git://github.com/Kentico/delivery-sdk-java.git'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT License'
+                        url 'http://www.opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'aweigold'
+                        name 'Adam J. Weigold'
+                        email 'adam@adamweigold.com'
+                    }
+                }
+            }
+        }
+    }
+}
+
+uploadShadow {
+    repositories {
+        mavenDeployer {
+            //Comment out this step if you do not have the signing key
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: nexusUsername, password: nexusPassword)
+            }
+
+            //Use this repository, and comment out the above for viewing the generated POM
+            //repository(url: "file://localhost/tmp/myRepo/")
+
+            pom.project {
+                name 'delivery-sdk-android'
+                packaging 'jar'
+                description 'Kentico Cloud Delivery Android SDK https://kenticocloud.com/'
+                url 'https://github.com/Kentico/delivery-sdk-java'
+
+                scm {
+                    url 'https://github.com/Kentico/delivery-sdk-java'
                     connection 'scm:https://github.com/Kentico/delivery-sdk-java.git'
                     developerConnection 'scm:git://github.com/Kentico/delivery-sdk-java.git'
                 }

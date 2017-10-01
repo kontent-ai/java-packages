@@ -200,6 +200,85 @@ for (Option option : element.getOptions()) {
 articleItem.getModularContent("related_articles")
 ```
 
+## Android
+Basic Android support is available, however it is still very much in the beta phase.
+
+The SDK is built on top of Java 8 APIs which means currently there are a lot of limitations on environments this is working in.
+
+### Android Project setup
+Android support is tested to work with Android Studio 3, the latest preview can be found at <https://developer.android.com/studio/preview/index.html>.
+
+The minimum SDK version that currently works is 26, which may be extremely limiting to which devices you can deploy to.  To update your project, update your app's gradle file:
+```groovy
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+    defaultConfig {
+        ...
+        minSdkVersion 26
+        targetSdkVersion 26
+        ...
+    }
+    ...
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    ...
+    implementation 'com.kenticocloud:delivery-sdk-android:1.0.4'
+}
+    
+```
+
+An example of interacting with the SDK is here:
+```java
+package yourapppackage.yourapp;
+
+import android.os.StrictMode;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.widget.TextView;
+
+import com.kenticocloud.delivery.ContentItemResponse;
+import com.kenticocloud.delivery.DeliveryClient;
+import com.kenticocloud.delivery.DeliveryParameterBuilder;
+import com.kenticocloud.delivery.TextElement;
+
+import java.io.IOException;
+import java.util.List;
+
+import shadow.kentico.http.NameValuePair;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        //This is bad, but the point is just to prove this out.  To fix the DeliveryClient should
+        //be in a separate thread.
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().projection("title", "summary", "post_date", "teaser_image", "related_articles").build();
+
+        try {
+            ContentItemResponse item = client.getItem("on_roasts", params);
+            String title = ((TextElement) item.getItem().getElements().get("title")).getValue();
+            final TextView textViewToChange = (TextView) findViewById(R.id.textoutput);
+            textViewToChange.setText(title);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
 ## Further information
 
 For more developer resources, visit the Kentico Cloud Developer Hub at <https://developer.kenticocloud.com>.
