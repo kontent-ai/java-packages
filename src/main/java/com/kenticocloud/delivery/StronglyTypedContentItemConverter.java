@@ -29,12 +29,16 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.*;
 
 public class StronglyTypedContentItemConverter {
+
+    private static final Logger logger = LoggerFactory.getLogger(StronglyTypedContentItemConverter.class);
 
     private HashMap<String, Class<?>> contentTypeToClassMapping = new HashMap<>();
     private HashMap<Class<?>, String> classToContentTypeMapping = new HashMap<>();
@@ -56,6 +60,7 @@ public class StronglyTypedContentItemConverter {
                     "if this is not possible, please use registerType(String, Class)");
         }
         registerType(clazzContentItemMapping.value(), clazz);
+        logger.debug("Registered type for {}", clazz.getSimpleName());
     }
 
     protected void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
@@ -172,7 +177,7 @@ public class StronglyTypedContentItemConverter {
         //Implicit checks
         String candidateCodename = fromCamelCase(field.getName());
         //Check to see if this is an implicitly mapped Element
-        if (item.getElements().containsKey(candidateCodename)){
+        if (item.getElements().containsKey(candidateCodename)) {
             return item.getElements().get(candidateCodename).getValue();
         }
         //Check to see if this is an implicitly mapped ContentItem
@@ -181,7 +186,7 @@ public class StronglyTypedContentItemConverter {
         }
 
         //Check to see if this is a collection of implicitly mapped ContentItem
-        if (isListOrMap(field.getType())){
+        if (isListOrMap(field.getType())) {
             return getCastedModularContentForListOrMap(bean, field, modularContent);
         }
         return null;
@@ -203,6 +208,7 @@ public class StronglyTypedContentItemConverter {
         Type type = getType(bean, field);
         if (type == null) {
             //We have failed to get the type, probably due to a missing setter, skip this field
+            logger.debug("Failed to get type from {} (probably due to a missing setter), {} skipped", bean, field);
             return null;
         }
         if (type == ContentItem.class) {
@@ -258,7 +264,7 @@ public class StronglyTypedContentItemConverter {
         if (List.class.isAssignableFrom(type)) {
             return new ArrayList(items.values());
         }
-        if (Map.class.isAssignableFrom(type)){
+        if (Map.class.isAssignableFrom(type)) {
             return items;
         }
         return items;
@@ -277,21 +283,26 @@ public class StronglyTypedContentItemConverter {
         }
         if (propertyDescriptor == null) {
             //Likely no accessors
+            logger.debug("Property descriptor for object {} with field {} is null", bean, field);
             return null;
         }
         Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
         if (writeMethod == null) {
+            logger.debug("No write method for property {}", propertyDescriptor);
             return null;
         }
         Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0]).getActualTypeArguments();
-        if (Map.class.isAssignableFrom(field.getType())) {
-            return actualTypeArguments[1];
-        }
-        return actualTypeArguments[0];
+
+        Type type = (Map.class.isAssignableFrom(field.getType())) ? actualTypeArguments[1] : actualTypeArguments[0];
+
+        logger.debug("Got type {} from object {}, field {}", type, bean, field);
+
+        return type;
 
     }
 
     private static void handleReflectionException(Exception ex) {
+        logger.error("Reflection exception", ex);
         if (ex instanceof NoSuchMethodException) {
             throw new IllegalStateException("Method not found: " + ex.getMessage());
         }
