@@ -33,6 +33,7 @@ public class RichTextElementConverter {
 
     ContentLinkUrlResolver contentLinkUrlResolver;
     BrokenLinkUrlResolver brokenLinkUrlResolver;
+    RichTextElementResolver richTextElementResolver;
     StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
     /*
@@ -96,9 +97,11 @@ public class RichTextElementConverter {
     public RichTextElementConverter(
             ContentLinkUrlResolver contentLinkUrlResolver,
             BrokenLinkUrlResolver brokenLinkUrlResolver,
+            RichTextElementResolver richTextElementResolver,
             StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.contentLinkUrlResolver = contentLinkUrlResolver;
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
+        this.richTextElementResolver = richTextElementResolver;
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
     }
 
@@ -115,6 +118,9 @@ public class RichTextElementConverter {
                 RichTextElement richTextElement = (RichTextElement) element;
                 richTextElement.setValue(resolveLinks(richTextElement));
                 richTextElement.setValue(resolveModularContent(richTextElement));
+                if (richTextElementResolver != null) {
+                    richTextElement.setValue(richTextElementResolver.resolve(richTextElement.getValue()));
+                }
             }
         }
     }
@@ -125,10 +131,16 @@ public class RichTextElementConverter {
         }
         orig.setValue(resolveLinks(orig));
         orig.setValue(resolveModularContent(orig));
+        if (richTextElementResolver != null) {
+            orig.setValue(richTextElementResolver.resolve(orig.getValue()));
+        }
         return orig;
     }
 
     private String resolveLinks(RichTextElement element) {
+        if (element.links == null) {
+            return element.getValue();
+        }
         Matcher matcher = linkPattern.matcher(element.getValue());
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {

@@ -77,12 +77,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(deliveryOptions);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
         client.setBrokenLinkUrlResolver(() -> "/404");
+        client.addRichTextElementResolver(content -> String.format("%s%s", "<p>test</p>", content));
 
         List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemsListingResponse items = client.getItems(urlPattern);
 
         Assert.assertNotNull(items);
         Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("href=\"/on roasts\""));
+        Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("<p>test</p>"));
     }
 
     @Test
@@ -391,6 +393,23 @@ public class DeliveryClientTest extends LocalServerTestBase {
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
         Assert.assertTrue(cacheHit[0]);
+    }
+
+    @Test
+    public void testReplacingResolver() {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        DeliveryClient deliveryClient = new DeliveryClient(projectId);
+        Assert.assertTrue(deliveryClient.getRichTextElementResolver() instanceof DelegatingRichTextElementResolver);
+        deliveryClient.setRichTextElementResolver(null);
+        //Test that the entire resolver is replaced
+        deliveryClient.addRichTextElementResolver(content -> "resolver1");
+        Assert.assertFalse(deliveryClient.getRichTextElementResolver() instanceof DelegatingRichTextElementResolver);
+        Assert.assertEquals("resolver1", deliveryClient.getRichTextElementResolver().resolve("replaceme"));
+        //Test that adding a new one saves the existing one by creating a delegating resolver
+        deliveryClient.addRichTextElementResolver(content -> content.replace("1", "2"));
+        Assert.assertTrue(deliveryClient.getRichTextElementResolver() instanceof DelegatingRichTextElementResolver);
+        Assert.assertEquals(2, ((DelegatingRichTextElementResolver) deliveryClient.getRichTextElementResolver()).resolvers.size());
+        Assert.assertEquals("resolver2", deliveryClient.getRichTextElementResolver().resolve("replaceme"));
     }
 
     @Test
