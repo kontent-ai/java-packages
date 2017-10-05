@@ -115,5 +115,10 @@ public abstract class Element {
         this.parent = parent;
     }
 
-    abstract <T> T getValue();
+    /**
+     * Returns the value of the element.
+     * @param <T> Type will depend on the concrete class.
+     * @return The value of the element.
+     */
+    public abstract <T> T getValue();
 }

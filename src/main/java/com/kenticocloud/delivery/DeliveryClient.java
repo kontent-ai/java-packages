@@ -61,6 +61,7 @@ public class DeliveryClient {
 
     private ContentLinkUrlResolver contentLinkUrlResolver;
     private BrokenLinkUrlResolver brokenLinkUrlResolver;
+    private RichTextElementResolver richTextElementResolver = new DelegatingRichTextElementResolver();
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
             new StronglyTypedContentItemConverter();
 
@@ -137,6 +138,7 @@ public class DeliveryClient {
         RichTextElementConverter converter = new RichTextElementConverter(
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
+                getRichTextElementResolver(),
                 stronglyTypedContentItemConverter
         );
         converter.process(contentItemsListingResponse.getItems());
@@ -173,6 +175,7 @@ public class DeliveryClient {
         RichTextElementConverter converter = new RichTextElementConverter(
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
+                getRichTextElementResolver(),
                 stronglyTypedContentItemConverter
         );
         converter.process(response.getItems());
@@ -190,6 +193,7 @@ public class DeliveryClient {
         RichTextElementConverter converter = new RichTextElementConverter(
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
+                getRichTextElementResolver(),
                 stronglyTypedContentItemConverter
         );
         converter.process(contentItemResponse.getItem());
@@ -255,7 +259,6 @@ public class DeliveryClient {
 
     public void setContentLinkUrlResolver(ContentLinkUrlResolver contentLinkUrlResolver) {
         this.contentLinkUrlResolver = contentLinkUrlResolver;
-        reconfigureDeserializer();
     }
 
     public BrokenLinkUrlResolver getBrokenLinkUrlResolver() {
@@ -264,7 +267,27 @@ public class DeliveryClient {
 
     public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
-        reconfigureDeserializer();
+    }
+
+    public RichTextElementResolver getRichTextElementResolver() {
+        return richTextElementResolver;
+    }
+
+    public void setRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
+        this.richTextElementResolver = richTextElementResolver;
+    }
+
+    public void addRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
+        if (this.richTextElementResolver instanceof DelegatingRichTextElementResolver) {
+            ((DelegatingRichTextElementResolver) this.richTextElementResolver).addResolver(richTextElementResolver);
+        } else if (this.richTextElementResolver == null) {
+            setRichTextElementResolver(richTextElementResolver);
+        } else {
+            DelegatingRichTextElementResolver delegatingResolver = new DelegatingRichTextElementResolver();
+            delegatingResolver.addResolver(this.richTextElementResolver);
+            delegatingResolver.addResolver(richTextElementResolver);
+            setRichTextElementResolver(delegatingResolver);
+        }
     }
 
     public void registerType(String contentType, Class<?> clazz) {
