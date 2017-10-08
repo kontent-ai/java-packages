@@ -43,7 +43,7 @@ public class Link {
     @JsonProperty("url_slug")
     String urlSlug;
 
-    Link() {
+    public Link() {
         //Default constructor
     }
 
@@ -55,7 +55,7 @@ public class Link {
         return type;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -67,7 +67,7 @@ public class Link {
         return codename;
     }
 
-    void setCodename(String codename) {
+    public void setCodename(String codename) {
         this.codename = codename;
     }
 
@@ -81,7 +81,7 @@ public class Link {
         return urlSlug;
     }
 
-    void setUrlSlug(String urlSlug) {
+    public void setUrlSlug(String urlSlug) {
         this.urlSlug = urlSlug;
     }
 }

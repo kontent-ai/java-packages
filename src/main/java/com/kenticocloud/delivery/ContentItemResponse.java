@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -44,9 +45,10 @@ public class ContentItemResponse implements ModularContentProvider {
     @JsonProperty("modular_content")
     Map<String, ContentItem> modularContent;
 
+    @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
-    ContentItemResponse() {
+    public ContentItemResponse() {
         //Default constructor
     }
 
@@ -58,7 +60,7 @@ public class ContentItemResponse implements ModularContentProvider {
         return item;
     }
 
-    void setItem(ContentItem item) {
+    public void setItem(ContentItem item) {
         this.item = item;
         item.setModularContentProvider(this);
     }
@@ -72,7 +74,7 @@ public class ContentItemResponse implements ModularContentProvider {
         return modularContent;
     }
 
-    void setModularContent(Map<String, ContentItem> modularContent) {
+    public void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
         modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
     }

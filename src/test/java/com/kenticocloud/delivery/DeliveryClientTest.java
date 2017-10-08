@@ -74,7 +74,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
 
-        DeliveryClient client = new DeliveryClient(deliveryOptions);
+        DeliveryClient client = new DeliveryClient(deliveryOptions, null);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
         client.setBrokenLinkUrlResolver(() -> "/404");
         client.addRichTextElementResolver(content -> String.format("%s%s", "<p>test</p>", content));
@@ -99,13 +99,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
                         )
                 ));
         HttpHost httpHost = this.start();
-        DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProjectId(projectId);
+        DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
         ContentItemsListingResponse items = client.getItems();
         Assert.assertNotNull(items);
@@ -160,13 +158,10 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     ));
                 });
         HttpHost httpHost = this.start();
-        DeliveryClient client = new DeliveryClient(projectId);
-
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProjectId(projectId);
+        DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
         Page<ContentItem> pageOfItems =
                 client.getPageOfItems(ContentItem.class, DeliveryParameterBuilder.params().page(0, 3).build());
@@ -238,13 +233,10 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     ));
                 });
         HttpHost httpHost = this.start();
-        DeliveryClient client = new DeliveryClient(projectId);
-
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProjectId(projectId);
+        DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
         Page<ArticleItem> pageOfItems =
                 client.getPageOfItems(ArticleItem.class, DeliveryParameterBuilder.params().page(0, 3).build());

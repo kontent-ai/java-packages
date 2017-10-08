@@ -43,7 +43,7 @@ public class Image {
     @JsonProperty("url")
     String url;
 
-    Image() {
+    public Image() {
         //Default constructor
     }
 
@@ -55,7 +55,7 @@ public class Image {
         return imageId;
     }
 
-    void setImageId(String imageId) {
+    public void setImageId(String imageId) {
         this.imageId = imageId;
     }
 
@@ -69,7 +69,7 @@ public class Image {
         return description;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -81,7 +81,7 @@ public class Image {
         return url;
     }
 
-    void setUrl(String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 }

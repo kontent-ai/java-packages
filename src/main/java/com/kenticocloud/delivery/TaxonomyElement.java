@@ -41,7 +41,7 @@ public class TaxonomyElement extends Element {
     @JsonProperty("value")
     List<Taxonomy> value;
 
-    TaxonomyElement() {
+    public TaxonomyElement() {
         setType(TYPE_VALUE);
     }
 
@@ -53,7 +53,7 @@ public class TaxonomyElement extends Element {
         return taxonomyGroup;
     }
 
-    void setTaxonomyGroup(String taxonomyGroup) {
+    public void setTaxonomyGroup(String taxonomyGroup) {
         this.taxonomyGroup = taxonomyGroup;
     }
 
@@ -66,7 +66,7 @@ public class TaxonomyElement extends Element {
         return value;
     }
 
-    void setValue(List<Taxonomy> value) {
+    public void setValue(List<Taxonomy> value) {
         this.value = value;
     }
 }

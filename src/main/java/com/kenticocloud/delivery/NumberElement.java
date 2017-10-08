@@ -36,7 +36,7 @@ public class NumberElement extends Element {
     @JsonProperty("value")
     Double value;
 
-    NumberElement() {
+    public NumberElement() {
         setType(TYPE_VALUE);
     }
 
@@ -49,7 +49,7 @@ public class NumberElement extends Element {
         return value;
     }
 
-    void setValue(Double value) {
+    public void setValue(Double value) {
         this.value = value;
     }
 }

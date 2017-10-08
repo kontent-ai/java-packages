@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
+import com.kenticocloud.delivery.template.TemplateEngineConfig;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -70,6 +71,7 @@ public class DeliveryClient {
     private RichTextElementResolver richTextElementResolver = new DelegatingRichTextElementResolver();
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
             new StronglyTypedContentItemConverter();
+    private TemplateEngineConfig templateEngineConfig;
 
     private CacheManager cacheManager = (requestUri, executor) -> executor.execute();
 
@@ -79,6 +81,17 @@ public class DeliveryClient {
      * @param deliveryOptions The settings of the Kentico Cloud project.
      */
     public DeliveryClient(DeliveryOptions deliveryOptions) {
+        this(deliveryOptions, new TemplateEngineConfig());
+    }
+
+    /**
+     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
+     * @throws IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are invalid.
+     * @param deliveryOptions The settings of the Kentico Cloud project.
+     * @param templateEngineConfig Configuration object used for customization of template render engines
+     *                             for inline content
+     */
+    public DeliveryClient(DeliveryOptions deliveryOptions, TemplateEngineConfig templateEngineConfig) {
         if (deliveryOptions == null) {
             throw new IllegalArgumentException("The Delivery options object is not specified.");
         }
@@ -103,6 +116,10 @@ public class DeliveryClient {
         connManager.setMaxTotal(20);
         connManager.setDefaultMaxPerRoute(20);
         httpClient = HttpClients.custom().setConnectionManager(connManager).build();
+        if (templateEngineConfig != null) {
+            templateEngineConfig.init();
+            this.templateEngineConfig = templateEngineConfig;
+        }
         reconfigureDeserializer();
     }
 
@@ -145,6 +162,7 @@ public class DeliveryClient {
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
                 getRichTextElementResolver(),
+                templateEngineConfig,
                 stronglyTypedContentItemConverter
         );
         converter.process(contentItemsListingResponse.getItems());
@@ -182,6 +200,7 @@ public class DeliveryClient {
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
                 getRichTextElementResolver(),
+                templateEngineConfig,
                 stronglyTypedContentItemConverter
         );
         converter.process(response.getItems());
@@ -200,6 +219,7 @@ public class DeliveryClient {
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),
                 getRichTextElementResolver(),
+                templateEngineConfig,
                 stronglyTypedContentItemConverter
         );
         converter.process(contentItemResponse.getItem());
@@ -353,14 +373,15 @@ public class DeliveryClient {
     }
 
     private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) throws IOException {
-        logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), request.getURI().toString());
-        JsonNode jsonNode = cacheManager.resolveRequest(request.getURI().toString(), () -> {
+        String requestUri = request.getURI().toString();
+        logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), requestUri);
+        JsonNode jsonNode = cacheManager.resolveRequest(requestUri, () -> {
             HttpResponse response = httpClient.execute(request);
             handleErrorIfNecessary(response);
             InputStream inputStream = response.getEntity().getContent();
             JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
-            logger.info("{} - {}", response.getStatusLine(), request.getURI().toString());
-            logger.debug("{} - {}:\n{}", request.getMethod(), request.getURI().toString(), node);
+            logger.info("{} - {}", response.getStatusLine(), requestUri);
+            logger.debug("{} - {}:\n{}", request.getMethod(), requestUri, node);
             inputStream.close();
             return node;
         });

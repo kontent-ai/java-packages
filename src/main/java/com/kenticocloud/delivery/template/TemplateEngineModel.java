@@ -22,36 +22,47 @@
  * SOFTWARE.
  */
 
-package com.kenticocloud.delivery;
+package com.kenticocloud.delivery.template;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import java.time.ZonedDateTime;
+public class TemplateEngineModel {
 
-/**
- * Object model for Date &amp; time elements
- */
-public class DateTimeElement extends Element {
+    private Object inlineContentItem;
+    private Map<String, Object> variables = new HashMap<>();
+    private Locale locale = Locale.getDefault();
 
-    static final String TYPE_VALUE = "date_time";
-
-    @JsonProperty("value")
-    ZonedDateTime value;
-
-    public DateTimeElement() {
-        setType(TYPE_VALUE);
+    public Object getInlineContentItem() {
+        return inlineContentItem;
     }
 
-    /**
-     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
-     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
-     */
-    @Override
-    public ZonedDateTime getValue() {
-        return value;
+    public void setInlineContentItem(Object inlineContentItem) {
+        this.inlineContentItem = inlineContentItem;
     }
 
-    public void setValue(ZonedDateTime value) {
-        this.value = value;
+    public Map<String, Object> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Map<String, Object> variables) {
+        this.variables = variables;
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
+    public void addVariable(String key, Object value) {
+        variables.put(key, value);
+    }
+
+    public void addVariables(Map<String, Object> variables) {
+        this.variables.putAll(variables);
     }
 }

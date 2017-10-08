@@ -58,7 +58,7 @@ public class System {
     @JsonProperty("last_modified")
     ZonedDateTime lastModified;
 
-    System() {
+    public System() {
         //Default constructor
     }
 
@@ -70,7 +70,7 @@ public class System {
         return id;
     }
 
-    void setId(String id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -82,7 +82,7 @@ public class System {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -96,7 +96,7 @@ public class System {
         return codename;
     }
 
-    void setCodename(String codename) {
+    public void setCodename(String codename) {
         this.codename = codename;
     }
 
@@ -108,7 +108,7 @@ public class System {
         return language;
     }
 
-    void setLanguage(String language) {
+    public void setLanguage(String language) {
         this.language = language;
     }
 
@@ -120,7 +120,7 @@ public class System {
         return type;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -132,7 +132,7 @@ public class System {
         return sitemapLocations;
     }
 
-    void setSitemapLocations(List<String> sitemapLocations) {
+    public void setSitemapLocations(List<String> sitemapLocations) {
         this.sitemapLocations = sitemapLocations;
     }
 
@@ -144,7 +144,7 @@ public class System {
         return lastModified;
     }
 
-    void setLastModified(ZonedDateTime lastModified) {
+    public void setLastModified(ZonedDateTime lastModified) {
         this.lastModified = lastModified;
     }
 }

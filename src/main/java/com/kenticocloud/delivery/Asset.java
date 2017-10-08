@@ -46,7 +46,7 @@ public class Asset {
     @JsonProperty("url")
     String url;
 
-    Asset() {
+    public Asset() {
         //Default constructor
     }
 
@@ -58,7 +58,7 @@ public class Asset {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -70,7 +70,7 @@ public class Asset {
         return type;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -82,7 +82,7 @@ public class Asset {
         return size;
     }
 
-    void setSize(Integer size) {
+    public void setSize(Integer size) {
         this.size = size;
     }
 
@@ -94,7 +94,7 @@ public class Asset {
         return description;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
@@ -106,7 +106,7 @@ public class Asset {
         return url;
     }
 
-    void setUrl(String url) {
+    public void setUrl(String url) {
         this.url = url;
     }
 }

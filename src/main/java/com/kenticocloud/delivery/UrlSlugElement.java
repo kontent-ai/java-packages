@@ -36,7 +36,7 @@ public class UrlSlugElement extends Element {
     @JsonProperty("value")
     String value;
 
-    UrlSlugElement() {
+    public UrlSlugElement() {
         setType(TYPE_VALUE);
     }
 
@@ -49,7 +49,7 @@ public class UrlSlugElement extends Element {
         return value;
     }
 
-    void setValue(String value) {
+    public void setValue(String value) {
         this.value = value;
     }
 }
