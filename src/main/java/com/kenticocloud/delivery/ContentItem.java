@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Collections;
@@ -41,11 +42,13 @@ public class ContentItem {
     @JsonProperty("elements")
     Map<String, Element> elements;
 
+    @JsonIgnore
     ModularContentProvider modularContentProvider;
 
+    @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
-    ContentItem() {
+    public ContentItem() {
         //Default constructor
     }
 
@@ -57,7 +60,7 @@ public class ContentItem {
         return system;
     }
 
-    void setSystem(System system) {
+    public void setSystem(System system) {
         this.system = system;
     }
 
@@ -69,7 +72,7 @@ public class ContentItem {
         return elements;
     }
 
-    void setElements(Map<String, Element> elements) {
+    public void setElements(Map<String, Element> elements) {
         this.elements = elements;
         elements.forEach((s, element) -> element.setParent(this));
     }

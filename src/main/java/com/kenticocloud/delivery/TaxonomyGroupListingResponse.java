@@ -44,7 +44,7 @@ public class TaxonomyGroupListingResponse {
         return taxonomies;
     }
 
-    void setTaxonomies(List<TaxonomyGroup> taxonomies) {
+    public void setTaxonomies(List<TaxonomyGroup> taxonomies) {
         this.taxonomies = taxonomies;
     }
 
@@ -56,7 +56,7 @@ public class TaxonomyGroupListingResponse {
         return pagination;
     }
 
-    void setPagination(Pagination pagination) {
+    public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 }

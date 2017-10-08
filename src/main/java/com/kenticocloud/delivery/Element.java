@@ -61,7 +61,7 @@ public abstract class Element {
 
     ContentItem parent;
 
-    Element() {
+    public Element() {
         //Default constructor
     }
 
@@ -75,7 +75,7 @@ public abstract class Element {
         return type;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -87,7 +87,7 @@ public abstract class Element {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -103,7 +103,7 @@ public abstract class Element {
         return codeName;
     }
 
-    void setCodeName(String codeName) {
+    public void setCodeName(String codeName) {
         this.codeName = codeName;
     }
 
@@ -111,7 +111,7 @@ public abstract class Element {
         return parent;
     }
 
-    void setParent(ContentItem parent) {
+    public void setParent(ContentItem parent) {
         this.parent = parent;
     }
 

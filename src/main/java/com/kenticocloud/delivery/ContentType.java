@@ -39,7 +39,7 @@ public class ContentType {
     @JsonProperty("elements")
     Map<String, Element> elements;
 
-    ContentType() {
+    public ContentType() {
         //Default constructor
     }
 
@@ -51,7 +51,7 @@ public class ContentType {
         return system;
     }
 
-    void setSystem(System system) {
+    public void setSystem(System system) {
         this.system = system;
     }
 
@@ -63,7 +63,7 @@ public class ContentType {
         return elements;
     }
 
-    void setElements(Map<String, Element> elements) {
+    public void setElements(Map<String, Element> elements) {
         this.elements = elements;
     }
 

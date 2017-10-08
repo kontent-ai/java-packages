@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
@@ -49,6 +50,7 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     @JsonProperty("pagination")
     Pagination pagination;
 
+    @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
     ContentItemsListingResponse() {
@@ -63,7 +65,7 @@ public class ContentItemsListingResponse implements ModularContentProvider {
         return items;
     }
 
-    void setItems(List<ContentItem> items) {
+    public void setItems(List<ContentItem> items) {
         this.items = items;
         items.forEach(contentItem -> contentItem.setModularContentProvider(this));
     }
@@ -77,7 +79,7 @@ public class ContentItemsListingResponse implements ModularContentProvider {
         return modularContent;
     }
 
-    void setModularContent(Map<String, ContentItem> modularContent) {
+    public void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
         modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
     }

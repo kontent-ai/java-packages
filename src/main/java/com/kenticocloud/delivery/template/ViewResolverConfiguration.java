@@ -22,36 +22,40 @@
  * SOFTWARE.
  */
 
-package com.kenticocloud.delivery;
+package com.kenticocloud.delivery.template;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import java.time.ZonedDateTime;
+public class ViewResolverConfiguration {
 
-/**
- * Object model for Date &amp; time elements
- */
-public class DateTimeElement extends Element {
+    List<String> prefixes = new ArrayList<>();
+    String suffix = ".html";
 
-    static final String TYPE_VALUE = "date_time";
-
-    @JsonProperty("value")
-    ZonedDateTime value;
-
-    public DateTimeElement() {
-        setType(TYPE_VALUE);
+    public ViewResolverConfiguration() {
+        this.prefixes.addAll(Arrays.asList("kentico/templates/", "META-INF/kentico/templates/"));
     }
 
-    /**
-     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
-     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
-     */
-    @Override
-    public ZonedDateTime getValue() {
-        return value;
+    public ViewResolverConfiguration addPrefixes(String... prefixes) {
+        this.prefixes.addAll(Arrays.asList(prefixes));
+        return this;
     }
 
-    public void setValue(ZonedDateTime value) {
-        this.value = value;
+    public ViewResolverConfiguration setSuffix(String suffix) {
+        this.suffix = suffix;
+        return this;
+    }
+
+    public List<String> getPrefixes() {
+        return prefixes;
+    }
+
+    public void setPrefixes(List<String> prefixes) {
+        this.prefixes = prefixes;
+    }
+
+    public String getSuffix() {
+        return suffix;
     }
 }

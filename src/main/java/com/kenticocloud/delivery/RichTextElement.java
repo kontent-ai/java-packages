@@ -45,7 +45,7 @@ public class RichTextElement extends TextElement {
     @JsonProperty("modular_content")
     List<String> modularContent;
 
-    RichTextElement() {
+    public RichTextElement() {
         setType(TYPE_VALUE);
     }
 
@@ -70,7 +70,7 @@ public class RichTextElement extends TextElement {
         return images;
     }
 
-    void setImages(Map<String, Image> images) {
+    public void setImages(Map<String, Image> images) {
         this.images = images;
     }
 
@@ -85,7 +85,7 @@ public class RichTextElement extends TextElement {
         return links;
     }
 
-    void setLinks(Map<String, Link> links) {
+    public void setLinks(Map<String, Link> links) {
         this.links = links;
     }
 
@@ -99,7 +99,7 @@ public class RichTextElement extends TextElement {
         return modularContent;
     }
 
-    void setModularContent(List<String> modularContent) {
+    public void setModularContent(List<String> modularContent) {
         this.modularContent = modularContent;
     }
 }

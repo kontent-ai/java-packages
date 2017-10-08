@@ -38,7 +38,7 @@ public class AssetsElement extends Element {
     @JsonProperty("value")
     List<Asset> value;
 
-    AssetsElement() {
+    public AssetsElement() {
         setType(TYPE_VALUE);
     }
 
@@ -52,7 +52,7 @@ public class AssetsElement extends Element {
         return value;
     }
 
-    void setValue(List<Asset> value) {
+    public void setValue(List<Asset> value) {
         this.value = value;
     }
 }

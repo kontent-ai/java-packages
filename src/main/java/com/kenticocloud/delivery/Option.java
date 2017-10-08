@@ -37,7 +37,7 @@ public class Option {
     @JsonProperty("codename")
     String codename;
 
-    Option() {
+    public Option() {
         //Default constructor
     }
 
@@ -49,7 +49,7 @@ public class Option {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -61,7 +61,7 @@ public class Option {
         return codename;
     }
 
-    void setCodename(String codename) {
+    public void setCodename(String codename) {
         this.codename = codename;
     }
 }

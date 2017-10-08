@@ -41,7 +41,7 @@ public class MultipleChoiceElement extends Element {
     @JsonProperty("options")
     List<Option> options;
 
-    MultipleChoiceElement() {
+    public MultipleChoiceElement() {
         setType(TYPE_VALUE);
     }
 
@@ -59,7 +59,7 @@ public class MultipleChoiceElement extends Element {
         return value;
     }
 
-    void setValue(List<Option> value) {
+    public void setValue(List<Option> value) {
         this.value = value;
     }
 
@@ -76,7 +76,7 @@ public class MultipleChoiceElement extends Element {
         return options;
     }
 
-    void setOptions(List<Option> options) {
+    public void setOptions(List<Option> options) {
         this.options = options;
     }
 }

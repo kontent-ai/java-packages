@@ -22,36 +22,20 @@
  * SOFTWARE.
  */
 
-package com.kenticocloud.delivery;
+package com.kenticocloud.delivery.template;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+public abstract class TemplateEngineInlineContentItemsResolver {
 
-import java.time.ZonedDateTime;
-
-/**
- * Object model for Date &amp; time elements
- */
-public class DateTimeElement extends Element {
-
-    static final String TYPE_VALUE = "date_time";
-
-    @JsonProperty("value")
-    ZonedDateTime value;
-
-    public DateTimeElement() {
-        setType(TYPE_VALUE);
+    public TemplateEngineInlineContentItemsResolver() throws RenderingEngineMissingException {
+        //Default constructor
     }
 
-    /**
-     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
-     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
-     */
-    @Override
-    public ZonedDateTime getValue() {
-        return value;
+    public String resolve(TemplateEngineModel data) {
+        TemplateEngine templateEngine = getTemplateEngine();
+        return templateEngine.process(data);
     }
 
-    public void setValue(ZonedDateTime value) {
-        this.value = value;
-    }
+    public abstract boolean supports(TemplateEngineModel data);
+
+    public abstract TemplateEngine getTemplateEngine();
 }

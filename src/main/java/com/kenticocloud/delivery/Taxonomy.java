@@ -42,7 +42,7 @@ public class Taxonomy {
     @JsonProperty("terms")
     List<Taxonomy> terms;
 
-    Taxonomy() {
+    public Taxonomy() {
         //Default constructor
     }
 
@@ -54,7 +54,7 @@ public class Taxonomy {
         return name;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -66,7 +66,7 @@ public class Taxonomy {
         return codename;
     }
 
-    void setCodename(String codename) {
+    public void setCodename(String codename) {
         this.codename = codename;
     }
 
@@ -78,7 +78,7 @@ public class Taxonomy {
         return terms;
     }
 
-    void setTerms(List<Taxonomy> terms) {
+    public void setTerms(List<Taxonomy> terms) {
         this.terms = terms;
     }
 }

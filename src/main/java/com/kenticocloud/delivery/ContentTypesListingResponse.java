@@ -44,7 +44,7 @@ public class ContentTypesListingResponse {
     @JsonProperty("pagination")
     Pagination pagination;
 
-    ContentTypesListingResponse() {
+    public ContentTypesListingResponse() {
         //Default constructor
     }
 
@@ -56,7 +56,7 @@ public class ContentTypesListingResponse {
         return types;
     }
 
-    void setTypes(List<ContentType> types) {
+    public void setTypes(List<ContentType> types) {
         this.types = types;
     }
 
@@ -68,7 +68,7 @@ public class ContentTypesListingResponse {
         return pagination;
     }
 
-    void setPagination(Pagination pagination) {
+    public void setPagination(Pagination pagination) {
         this.pagination = pagination;
     }
 }

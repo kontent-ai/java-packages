@@ -38,7 +38,7 @@ public class ModularContentElement extends Element {
     @JsonProperty("value")
     List<String> value;
 
-    ModularContentElement() {
+    public ModularContentElement() {
         setType(TYPE_VALUE);
     }
 
@@ -55,7 +55,7 @@ public class ModularContentElement extends Element {
         return value;
     }
 
-    void setValue(List<String> value) {
+    public void setValue(List<String> value) {
         this.value = value;
     }
 }

@@ -24,6 +24,10 @@
 
 package com.kenticocloud.delivery;
 
+import com.kenticocloud.delivery.template.TemplateEngineConfig;
+import com.kenticocloud.delivery.template.TemplateEngineInlineContentItemsResolver;
+import com.kenticocloud.delivery.template.TemplateEngineModel;
+
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -34,6 +38,7 @@ public class RichTextElementConverter {
     ContentLinkUrlResolver contentLinkUrlResolver;
     BrokenLinkUrlResolver brokenLinkUrlResolver;
     RichTextElementResolver richTextElementResolver;
+    TemplateEngineConfig templateEngineConfig;
     StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
     /*
@@ -98,10 +103,12 @@ public class RichTextElementConverter {
             ContentLinkUrlResolver contentLinkUrlResolver,
             BrokenLinkUrlResolver brokenLinkUrlResolver,
             RichTextElementResolver richTextElementResolver,
+            TemplateEngineConfig templateEngineConfig,
             StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.contentLinkUrlResolver = contentLinkUrlResolver;
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
         this.richTextElementResolver = richTextElementResolver;
+        this.templateEngineConfig = templateEngineConfig;
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
     }
 
@@ -164,27 +171,60 @@ public class RichTextElementConverter {
         Matcher matcher = modularContentPattern.matcher(element.getValue());
         StringBuffer buffer = new StringBuffer();
         while (matcher.find()) {
-            ContentItem modularContent = element.getParent().getModularContent(matcher.group("codename"));
-            if (modularContent != null) {
-                InlineContentItemsResolver resolverForType =
-                        stronglyTypedContentItemConverter.getResolverForType(modularContent);
-                if (resolverForType == null) {
-                    // The modular content doesn't have a resolver, preserve the <object> tag
-                    matcher.appendReplacement(buffer, matcher.group(0));
-                } else {
-                    Object convertedModularContent = modularContent.castTo((Class) resolverForType.getType());
-                    matcher.appendReplacement(buffer, resolverForType.resolve(convertedModularContent));
-                }
-            } else {
-                // The modular content isn't fetched or doesn't exist, preserve the <object> tag
-                matcher.appendReplacement(buffer, matcher.group(0));
-            }
+            resolveMatch(element, matcher, buffer);
         }
         matcher.appendTail(buffer);
         return buffer.toString();
     }
 
+    private void resolveMatch(RichTextElement element, Matcher matcher, StringBuffer buffer) {
+        boolean resolverFound = false;
+        ContentItem modularContent = element.getParent().getModularContent(matcher.group("codename"));
+        if (modularContent != null) {
+            InlineContentItemsResolver resolverForType =
+                    stronglyTypedContentItemConverter.getResolverForType(modularContent);
+            if (resolverForType != null) {
+                Object convertedModularContent = modularContent.castTo((Class) resolverForType.getType());
+                matcher.appendReplacement(buffer, resolverForType.resolve(convertedModularContent));
+                resolverFound = true;
+            }
+            TemplateEngineInlineContentItemsResolver supportedResolver;
+            if (!resolverFound && templateEngineConfig != null) {
+                Object modularContentModel = modularContent.castToDefault();
+                TemplateEngineModel model = new TemplateEngineModel();
+                model.setInlineContentItem(modularContentModel);
+                //TODO: Add support for adding Locale from query if it exists
+                model.addVariable("parent", element);
+                model.addVariables(templateEngineConfig.getDefaultModelVariables());
+                supportedResolver = getTemplateResolver(model);
+                if (supportedResolver != null) {
+                    matcher.appendReplacement(buffer, supportedResolver.resolve(model));
+                    resolverFound = true;
+                }
+            }
+        }
+        if (!resolverFound) {
+            // The modular content isn't fetched, doesn't exist, or there is no resolver, preserve the <object> tag
+            matcher.appendReplacement(buffer, matcher.group(0));
+        }
+    }
+
     private String resolveMatch(String match, String url) {
         return match.replace("href=\"\"", String.format("href=\"%s\"", StringUtils.escapeHtml(url)));
+    }
+
+    private TemplateEngineInlineContentItemsResolver getTemplateResolver(TemplateEngineModel model) {
+        if (templateEngineConfig == null) {
+            return null;
+        }
+        List<TemplateEngineInlineContentItemsResolver> templateResolvers = templateEngineConfig.getResolvers();
+        if (templateResolvers != null) {
+            for (TemplateEngineInlineContentItemsResolver templateResolver : templateResolvers) {
+                if (templateResolver.supports(model)) {
+                    return templateResolver;
+                }
+            }
+        }
+        return null;
     }
 }
