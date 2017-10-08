@@ -1,1 +1,3 @@
 com.kenticocloud.delivery
+com.kenticocloud.delivery.template
+com.kenticocloud.delivery.template.thymeleaf
