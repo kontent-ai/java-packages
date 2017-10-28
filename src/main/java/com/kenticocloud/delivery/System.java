@@ -26,7 +26,7 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.ZonedDateTime;
+import org.joda.time.DateTime;
 import java.util.List;
 
 /**
@@ -56,7 +56,7 @@ public class System {
     List<String> sitemapLocations;
 
     @JsonProperty("last_modified")
-    ZonedDateTime lastModified;
+    DateTime lastModified;
 
     public System() {
         //Default constructor
@@ -140,11 +140,11 @@ public class System {
      * When was the content item last modified
      * @return Zoned DateTime generated from ISO 8601 formatted string
      */
-    public ZonedDateTime getLastModified() {
+    public DateTime getLastModified() {
         return lastModified;
     }
 
-    public void setLastModified(ZonedDateTime lastModified) {
+    public void setLastModified(DateTime lastModified) {
         this.lastModified = lastModified;
     }
 }

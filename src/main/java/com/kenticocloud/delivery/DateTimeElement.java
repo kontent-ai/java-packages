@@ -26,7 +26,7 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.time.ZonedDateTime;
+import org.joda.time.DateTime;
 
 /**
  * Object model for Date &amp; time elements
@@ -36,7 +36,7 @@ public class DateTimeElement extends Element {
     static final String TYPE_VALUE = "date_time";
 
     @JsonProperty("value")
-    ZonedDateTime value;
+    DateTime value;
 
     public DateTimeElement() {
         setType(TYPE_VALUE);
@@ -44,14 +44,14 @@ public class DateTimeElement extends Element {
 
     /**
      * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
-     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
+     * @return a {@link DateTime} instance representing the original ISO 8601 string.
      */
     @Override
-    public ZonedDateTime getValue() {
+    public DateTime getValue() {
         return value;
     }
 
-    public void setValue(ZonedDateTime value) {
+    public void setValue(DateTime value) {
         this.value = value;
     }
 }
