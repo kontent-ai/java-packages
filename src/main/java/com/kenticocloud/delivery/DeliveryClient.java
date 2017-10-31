@@ -350,6 +350,11 @@ public class DeliveryClient {
     }
 
     protected RequestBuilder addHeaders(RequestBuilder requestBuilder) {
+        if (deliveryOptions.getProductionApiKey() != null) {
+            requestBuilder.setHeader(
+                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getProductionApiKey())
+            );
+        }
         if (deliveryOptions.isUsePreviewApi()) {
             requestBuilder.setHeader(
                     HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())

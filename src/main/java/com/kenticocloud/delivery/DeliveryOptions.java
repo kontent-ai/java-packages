@@ -33,6 +33,7 @@ public class DeliveryOptions {
     String productionEndpoint = "https://deliver.kenticocloud.com/%s";
     String previewEndpoint = "https://preview-deliver.kenticocloud.com/%s";
     String projectId;
+    String productionApiKey = null;
     String previewApiKey;
     boolean usePreviewApi = false;
     boolean waitForLoadingNewContent = false;
@@ -115,6 +116,22 @@ public class DeliveryOptions {
      */
     public void setProjectId(String projectId) {
         this.projectId = projectId;
+    }
+
+    /**
+     * Gets the Production API key.
+     * @return The Preview API key set in this options instance.
+     */
+    public String getProductionApiKey() {
+        return productionApiKey;
+    }
+
+    /**
+     * Sets the Production API key.
+     * @param productionApiKey The Preview API key configured with your Kentico Cloud account.
+     */
+    public void setProductionApiKey(String productionApiKey) {
+        this.productionApiKey = productionApiKey;
     }
 
     /**
