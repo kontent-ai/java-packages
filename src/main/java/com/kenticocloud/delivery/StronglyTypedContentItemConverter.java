@@ -226,7 +226,7 @@ public class StronglyTypedContentItemConverter {
         if (contentType != null) {
             HashMap convertedModularContent = new HashMap<>();
             for (Map.Entry<String, ContentItem> entry : modularContent.entrySet()) {
-                if (contentType.equals(entry.getValue().getSystem().getType())) {
+                if (entry.getValue() != null && contentType.equals(entry.getValue().getSystem().getType())) {
                     Map<String, ContentItem> modularContentForRecursion =
                             copyModularContentWithExclusion(modularContent, entry.getKey());
                     convertedModularContent.put(entry.getKey(),
