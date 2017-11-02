@@ -306,5 +306,6 @@ Check out the [contributing](https://github.com/Kentico/delivery-sdk-net/blob/ma
 We would like to express our thanks to the following people who contributed and made the project possible:
 
 - [Tommaso Garuglieri](https://github.com/GaruGaru)
+- [Gabriel Cunha](https://github.com/cunhazera)
 
 Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/delivery-sdk-java/issues) and send us a pull request!
