@@ -297,3 +297,14 @@ Ensure your `JAVA_HOME` environment is set.  Then build the project via the prov
 
 Optional:
 [JetBrains IntelliJ Idea](https://www.jetbrains.com/idea/) project files are included.  Open up the project and Import the Gradle project to sync up dependencies.
+
+## Feedback & Contributing
+
+Check out the [contributing](https://github.com/Kentico/delivery-sdk-net/blob/master/CONTRIBUTING.md) page to see the best places to file issues, start discussions, and begin contributing.
+
+### Wall of Fame
+We would like to express our thanks to the following people who contributed and made the project possible:
+
+- [Tommaso Garuglieri](https://github.com/GaruGaru)
+
+Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/delivery-sdk-java/issues) and send us a pull request!
