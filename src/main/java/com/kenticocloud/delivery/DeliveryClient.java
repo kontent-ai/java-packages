@@ -112,6 +112,9 @@ public class DeliveryClient {
                 (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty())) {
             throw new IllegalArgumentException("The Preview API key is not specified.");
         }
+        if (deliveryOptions.isUsePreviewApi() && deliveryOptions.getProductionApiKey() != null){
+            throw new IllegalArgumentException("Cannot provide both a preview API key and a production API key.");
+        }
         this.deliveryOptions = deliveryOptions;
         connManager.setMaxTotal(20);
         connManager.setDefaultMaxPerRoute(20);
@@ -350,7 +353,11 @@ public class DeliveryClient {
     }
 
     protected RequestBuilder addHeaders(RequestBuilder requestBuilder) {
-        if (deliveryOptions.isUsePreviewApi()) {
+        if (deliveryOptions.getProductionApiKey() != null) {
+            requestBuilder.setHeader(
+                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getProductionApiKey())
+            );
+        } else if (deliveryOptions.isUsePreviewApi()) {
             requestBuilder.setHeader(
                     HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
             );

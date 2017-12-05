@@ -651,6 +651,36 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertTrue(items.get(1).getDescription().contains("WE REPLACED SUCCESSFULLY"));
     }
 
+    @Test
+    public void testGetProductionKey() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String productionApiKey = "production_api_key";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    Assert.assertEquals(
+                            "Bearer production_api_key",
+                            request.getHeaders("Authorization")[0].getValue());
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+
+        DeliveryOptions options = new DeliveryOptions();
+        options.setProjectId(projectId);
+        options.setProductionEndpoint(testServerUri);
+        options.setProductionApiKey(productionApiKey);
+
+        DeliveryClient client = new DeliveryClient(options);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+    }
 
     @Test
     public void testGetPreviewItem() throws Exception {
@@ -1017,6 +1047,18 @@ public class DeliveryClientTest extends LocalServerTestBase {
             Assert.fail("Expected IllegalArgumentException due to empty Preview API Key");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("The Preview API key is not specified.", e.getMessage());
+        }
+    }
+    @Test
+    public void testExceptionWhenBothProductionApiKeyAndPreviewApiKeyProvided() {
+        DeliveryOptions deliveryOptions =
+                new DeliveryOptions("02a70003-e864-464e-b62c-e0ede97deb8c", "preview_api_key");
+        deliveryOptions.setProductionApiKey("production_api_key");
+        try {
+            DeliveryClient client = new DeliveryClient(deliveryOptions);
+            Assert.fail("Expected IllegalArgumentException due to providing both a preview and production API key");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot provide both a preview API key and a production API key.", e.getMessage());
         }
     }
 
