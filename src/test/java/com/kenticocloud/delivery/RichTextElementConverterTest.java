@@ -103,6 +103,65 @@ public class RichTextElementConverterTest {
     }
 
     @Test
+    public void testRecursiveModularContentReplacement() {
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
+            @Override
+            public String resolve(CustomItem data) {
+                return data.getMessageText();
+            }
+        });
+        RichTextElementConverter converter = new RichTextElementConverter(
+                null,
+                null,
+                null,
+                null,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Arrays.asList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem parentDonateWithUs = new ContentItem();
+            System parentSystem = new System();
+            parentSystem.setType("item");
+            parentDonateWithUs.setSystem(parentSystem);
+            RichTextElement parentTextElement = new RichTextElement();
+            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            HashMap<String, Element> parentElements = new HashMap<>();
+            parentElements.put("message_text", parentTextElement);
+            parentDonateWithUs.setElements(parentElements);
+            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            TextElement textElement = new TextElement();
+            textElement.setValue("Please donate with us.");
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", textElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("parent_donate_with_us", parentDonateWithUs);
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p>Please donate with us.</p>",
+                converted.getValue());
+    }
+
+    @Test
     public void testModularContentReplacementSkippedIfNotThere() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
@@ -191,6 +250,127 @@ public class RichTextElementConverterTest {
         Assert.assertEquals(
                 "<p><custom>Please donate with us.</custom></p>",
                 converted.getValue());
+    }
 
+    @Test
+    public void testRecursiveTemplateResolver() throws RenderingEngineMissingException {
+        ThymeleafInlineContentItemsResolver resolver = new ThymeleafInlineContentItemsResolver();
+        ViewResolverConfiguration configuration = new ViewResolverConfiguration()
+                .addPrefixes("customTemplateLocation/")
+                .setSuffix(".template");
+        resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
+        TemplateEngineConfig templateEngineConfig = new TemplateEngineConfig();
+        templateEngineConfig.setResolvers(Arrays.asList(resolver));
+
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        RichTextElementConverter converter = new RichTextElementConverter(
+                null,
+                null,
+                null,
+                templateEngineConfig,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Arrays.asList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem parentDonateWithUs = new ContentItem();
+            System parentSystem = new System();
+            parentSystem.setType("item");
+            parentDonateWithUs.setSystem(parentSystem);
+            RichTextElement parentTextElement = new RichTextElement();
+            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            HashMap<String, Element> parentElements = new HashMap<>();
+            parentElements.put("message_text", parentTextElement);
+            parentDonateWithUs.setElements(parentElements);
+            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            TextElement textElement = new TextElement();
+            textElement.setValue("Please donate with us.");
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", textElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("parent_donate_with_us", parentDonateWithUs);
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p><custom><custom>Please donate with us.</custom></custom></p>",
+                converted.getValue());
+    }
+
+    @Test
+    public void testRecursiveResolverHaltsWithCycle() throws RenderingEngineMissingException {
+        ThymeleafInlineContentItemsResolver resolver = new ThymeleafInlineContentItemsResolver();
+        ViewResolverConfiguration configuration = new ViewResolverConfiguration()
+                .addPrefixes("customTemplateLocation/")
+                .setSuffix(".template");
+        resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
+        TemplateEngineConfig templateEngineConfig = new TemplateEngineConfig();
+        templateEngineConfig.setResolvers(Arrays.asList(resolver));
+
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        RichTextElementConverter converter = new RichTextElementConverter(
+                null,
+                null,
+                null,
+                templateEngineConfig,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Arrays.asList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem parentDonateWithUs = new ContentItem();
+            System parentSystem = new System();
+            parentSystem.setType("item");
+            parentDonateWithUs.setSystem(parentSystem);
+            RichTextElement parentTextElement = new RichTextElement();
+            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            HashMap<String, Element> parentElements = new HashMap<>();
+            parentElements.put("message_text", parentTextElement);
+            parentDonateWithUs.setElements(parentElements);
+            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            TextElement textElement = new TextElement();
+            textElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object>");
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", textElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("parent_donate_with_us", parentDonateWithUs);
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p><custom><custom><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></custom></custom></p>",
+                converted.getValue());
     }
 }

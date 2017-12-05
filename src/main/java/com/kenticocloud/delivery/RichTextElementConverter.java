@@ -28,6 +28,8 @@ import com.kenticocloud.delivery.template.TemplateEngineConfig;
 import com.kenticocloud.delivery.template.TemplateEngineInlineContentItemsResolver;
 import com.kenticocloud.delivery.template.TemplateEngineModel;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -165,31 +167,54 @@ public class RichTextElementConverter {
     }
 
     private String resolveModularContent(RichTextElement element) {
+        return resolveModularContentRecursively(element, element.getValue(), new ArrayList<>());
+    }
+
+    private String resolveModularContentRecursively(
+            RichTextElement element, String content, Collection<String> itemsAlreadyResolved) {
         if (element.getModularContent() == null || element.getParent() == null) {
             return element.getValue();
         }
-        Matcher matcher = modularContentPattern.matcher(element.getValue());
+        Matcher matcher = modularContentPattern.matcher(content);
         StringBuffer buffer = new StringBuffer();
+
         while (matcher.find()) {
-            resolveMatch(element, matcher, buffer);
+            String codename = matcher.group("codename");
+            ContentItem modularContent = element.getParent().getModularContent(codename);
+            InternalInlineContentItemResolver resolver = null;
+            //Check to see if we encountered a cycle in our tree, if so, halt resolution
+            if (!itemsAlreadyResolved.contains(codename)) {
+                resolver = resolveMatch(element, modularContent);
+            }
+            if (resolver == null) {
+                // The modular content isn't fetched, doesn't exist, we encountered a cycle, or there is no resolver,
+                // preserve the <object> tag
+                matcher.appendReplacement(buffer, matcher.group(0));
+            } else {
+                String resolvedString = resolver.resolve();
+
+                //The resolved String may have an inline modular content object element, so recursively call, but add
+                //the resolved modular content to the blacklist below to avoid an infinite cyclic loop
+                ArrayList<String> resolvedItems = new ArrayList<>(itemsAlreadyResolved);
+                resolvedItems.add(codename);
+                resolvedString = resolveModularContentRecursively(element, resolvedString, resolvedItems);
+
+                matcher.appendReplacement(buffer, resolvedString);
+            }
         }
         matcher.appendTail(buffer);
         return buffer.toString();
     }
 
-    private void resolveMatch(RichTextElement element, Matcher matcher, StringBuffer buffer) {
-        boolean resolverFound = false;
-        ContentItem modularContent = element.getParent().getModularContent(matcher.group("codename"));
+    private InternalInlineContentItemResolver resolveMatch(RichTextElement element, ContentItem modularContent) {
         if (modularContent != null) {
             InlineContentItemsResolver resolverForType =
                     stronglyTypedContentItemConverter.getResolverForType(modularContent);
             if (resolverForType != null) {
                 Object convertedModularContent = modularContent.castTo((Class) resolverForType.getType());
-                matcher.appendReplacement(buffer, resolverForType.resolve(convertedModularContent));
-                resolverFound = true;
-            }
-            TemplateEngineInlineContentItemsResolver supportedResolver;
-            if (!resolverFound && templateEngineConfig != null) {
+                return () -> resolverForType.resolve(convertedModularContent);
+            } else if (templateEngineConfig != null) {
+                TemplateEngineInlineContentItemsResolver supportedResolver;
                 Object modularContentModel = modularContent.castToDefault();
                 TemplateEngineModel model = new TemplateEngineModel();
                 model.setInlineContentItem(modularContentModel);
@@ -198,15 +223,11 @@ public class RichTextElementConverter {
                 model.addVariables(templateEngineConfig.getDefaultModelVariables());
                 supportedResolver = getTemplateResolver(model);
                 if (supportedResolver != null) {
-                    matcher.appendReplacement(buffer, supportedResolver.resolve(model));
-                    resolverFound = true;
+                    return () -> supportedResolver.resolve(model);
                 }
             }
         }
-        if (!resolverFound) {
-            // The modular content isn't fetched, doesn't exist, or there is no resolver, preserve the <object> tag
-            matcher.appendReplacement(buffer, matcher.group(0));
-        }
+        return null;
     }
 
     private String resolveMatch(String match, String url) {
@@ -226,5 +247,9 @@ public class RichTextElementConverter {
             }
         }
         return null;
+    }
+
+    private interface InternalInlineContentItemResolver {
+        String resolve();
     }
 }
