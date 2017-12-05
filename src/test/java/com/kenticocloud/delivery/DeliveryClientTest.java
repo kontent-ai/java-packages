@@ -1049,6 +1049,18 @@ public class DeliveryClientTest extends LocalServerTestBase {
             Assert.assertEquals("The Preview API key is not specified.", e.getMessage());
         }
     }
+    @Test
+    public void testExceptionWhenBothProductionApiKeyAndPreviewApiKeyProvided() {
+        DeliveryOptions deliveryOptions =
+                new DeliveryOptions("02a70003-e864-464e-b62c-e0ede97deb8c", "preview_api_key");
+        deliveryOptions.setProductionApiKey("production_api_key");
+        try {
+            DeliveryClient client = new DeliveryClient(deliveryOptions);
+            Assert.fail("Expected IllegalArgumentException due to providing both a preview and production API key");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot provide both a preview API key and a production API key.", e.getMessage());
+        }
+    }
 
     private Map<String, String> convertNameValuePairsToMap(List<NameValuePair> nameValuePairs) {
         HashMap<String, String> map = new HashMap<>();

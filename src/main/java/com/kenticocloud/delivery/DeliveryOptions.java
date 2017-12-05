@@ -148,6 +148,7 @@ public class DeliveryOptions {
      */
     public void setPreviewApiKey(String previewApiKey) {
         this.previewApiKey = previewApiKey;
+        setUsePreviewApi(previewApiKey != null);
     }
 
     /**
