@@ -199,7 +199,9 @@ public class RichTextElementConverter {
                 resolvedItems.add(codename);
                 resolvedString = resolveModularContentRecursively(element, resolvedString, resolvedItems);
 
-                matcher.appendReplacement(buffer, resolvedString);
+                //Make resolved replacement string a literal string to make sure dollar signs are not interpreted as capturing groups
+                // and add resolved string to the buffer
+                matcher.appendReplacement(buffer, matcher.quoteReplacement(resolvedString));
             }
         }
         matcher.appendTail(buffer);
