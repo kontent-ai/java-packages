@@ -103,6 +103,51 @@ public class RichTextElementConverterTest {
     }
 
     @Test
+    public void testModularContentReplacementWithDollarSign() {
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
+            @Override
+            public String resolve(CustomItem data) {
+                return data.getMessageText();
+            }
+        });
+        RichTextElementConverter converter = new RichTextElementConverter(
+                null,
+                null,
+                null,
+                null,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Arrays.asList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            TextElement textElement = new TextElement();
+            textElement.setValue("You are our 1 millionth customer. Click here to claim your $1,000,000!");
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", textElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p>You are our 1 millionth customer. Click here to claim your $1,000,000!</p>",
+                converted.getValue());
+    }
+
+    @Test
     public void testRecursiveModularContentReplacement() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
