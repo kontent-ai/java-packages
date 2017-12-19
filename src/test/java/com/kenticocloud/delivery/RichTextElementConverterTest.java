@@ -119,28 +119,28 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Arrays.asList("customer_winner"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
-            ContentItem donateWithUs = new ContentItem();
+            ContentItem customerWinner = new ContentItem();
             System system = new System();
             system.setType("item");
-            donateWithUs.setSystem(system);
+            customerWinner.setSystem(system);
             TextElement textElement = new TextElement();
             textElement.setValue("You are our 1 millionth customer. Click here to claim your $1,000,000!");
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
-            donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
-            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+            customerWinner.setElements(elements);
+            customerWinner.setModularContentProvider(HashMap::new);
+            customerWinner.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("donate_with_us", donateWithUs);
+            modularContent.put("customer_winner", customerWinner);
             return modularContent;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"customer_winner\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>You are our 1 millionth customer. Click here to claim your $1,000,000!</p>",
