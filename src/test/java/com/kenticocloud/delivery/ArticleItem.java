@@ -24,7 +24,7 @@
 
 package com.kenticocloud.delivery;
 
-import java.time.ZonedDateTime;
+import org.joda.time.DateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +42,7 @@ public class ArticleItem {
 
     String randomValue;
 
-    ZonedDateTime postDate;
+    DateTime postDate;
 
     List<Asset> teaserImage;
 
@@ -113,11 +113,11 @@ public class ArticleItem {
         this.randomValue = randomValue;
     }
 
-    public ZonedDateTime getPostDate() {
+    public DateTime getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(ZonedDateTime postDate) {
+    public void setPostDate(DateTime postDate) {
         this.postDate = postDate;
     }
 
