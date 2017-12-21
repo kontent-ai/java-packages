@@ -305,6 +305,7 @@ Check out the [contributing](https://github.com/Kentico/delivery-sdk-net/blob/ma
 ### Wall of Fame
 We would like to express our thanks to the following people who contributed and made the project possible:
 
+- [Adam J. Weigold](https://github.com/aweigold)
 - [Tommaso Garuglieri](https://github.com/GaruGaru)
 - [Gabriel Cunha](https://github.com/cunhazera)
 
