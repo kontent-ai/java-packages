@@ -210,6 +210,12 @@ public class RichTextElementConverter {
 
     private InternalInlineContentItemResolver resolveMatch(RichTextElement element, ContentItem modularContent) {
         if (modularContent != null) {
+            for (Element modularContentElement: modularContent.getElements().values()) {
+                if (modularContentElement instanceof RichTextElement) {
+                    RichTextElement embeddedRichTextElement = (RichTextElement) modularContentElement;
+                    embeddedRichTextElement.setValue(resolveLinks(embeddedRichTextElement));
+                }
+            }
             InlineContentItemsResolver resolverForType =
                     stronglyTypedContentItemConverter.getResolverForType(modularContent);
             if (resolverForType != null) {

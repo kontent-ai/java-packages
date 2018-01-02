@@ -207,6 +207,70 @@ public class RichTextElementConverterTest {
     }
 
     @Test
+    public void testRecursiveModularContentReplacementWithLinks() {
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
+            @Override
+            public String resolve(CustomItem data) {
+                return data.getMessageText();
+            }
+        });
+        RichTextElementConverter converter = new RichTextElementConverter(
+                Link::getUrlSlug,
+                () -> "/404",
+                content -> content,
+                null,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Arrays.asList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem parentDonateWithUs = new ContentItem();
+            System parentSystem = new System();
+            parentSystem.setType("item");
+            parentDonateWithUs.setSystem(parentSystem);
+            RichTextElement parentTextElement = new RichTextElement();
+            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            HashMap<String, Element> parentElements = new HashMap<>();
+            parentElements.put("message_text", parentTextElement);
+            parentDonateWithUs.setElements(parentElements);
+            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            RichTextElement richTextElement = new RichTextElement();
+            richTextElement.setValue("<p>Each AeroPress comes with a <a href=\"\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"\" data-item-id=\"not-found\">box</a>.</p>");
+            Link link = new Link();
+            link.setUrlSlug("/test me/\"<>&\u0080");
+            HashMap<String, Link> links = new HashMap<>();
+            links.put("65832c4e-8e9c-445f-a001-b9528d13dac8", link);
+            richTextElement.setLinks(links);
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", richTextElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("parent_donate_with_us", parentDonateWithUs);
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p><p>Each AeroPress comes with a <a href=\"/test me/&#34;&#60;&#62;&#38;&#128;\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"/404\" data-item-id=\"not-found\">box</a>.</p></p>",
+                converted.getValue());
+    }
+
+    @Test
     public void testModularContentReplacementSkippedIfNotThere() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
