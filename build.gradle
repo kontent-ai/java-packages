@@ -8,6 +8,7 @@ plugins {
 group 'com.kenticocloud'
 version '1.0.6-SNAPSHOT'
 ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null
+ext.repositoryHost = ext.isContinuousIntegrationBuild ? "maven.org" : "localBuild"
 
 apply plugin: 'java'
 apply plugin: 'jacoco'
@@ -40,6 +41,16 @@ dependencies {
     testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3', classifier: 'tests'
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+}
+
+jar {
+    manifest {
+        attributes(
+                "Implementation-Version": project.version,
+                "Repository-Host": repositoryHost,
+                "Package-Id": "$project.group:$project.name"
+        )
+    }
 }
 
 shadowJar {

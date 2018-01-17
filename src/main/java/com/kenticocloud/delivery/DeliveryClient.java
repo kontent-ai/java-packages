@@ -46,6 +46,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.jar.Attributes;
+import java.util.jar.Manifest;
 
 /**
  * Executes requests against the Kentico Cloud Delivery API.
@@ -53,6 +55,31 @@ import java.util.UUID;
 public class DeliveryClient {
 
     private static final Logger logger = LoggerFactory.getLogger(DeliveryClient.class);
+
+    static String SDK_ID;
+
+    static {
+        try {
+            Manifest mf = new Manifest();
+            mf.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
+            Attributes attributes = mf.getMainAttributes();
+            String repositoryHost = attributes.getValue("Repository-Host");
+            String version = attributes.getValue("Implementation-Version");
+            String packageId = attributes.getValue("Package-Id");
+            repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
+            version = version == null ? "localBuild" : version;
+            packageId = packageId == null ? "com.kenticocloud:delivery-sdk-java" : packageId;
+            SDK_ID = String.format(
+                    "%s;%s;%s",
+                    repositoryHost,
+                    packageId,
+                    version);
+            logger.info("SDK ID: {}", SDK_ID);
+        } catch (IOException e) {
+            logger.info("Jar manifest read error, setting developer build SDK ID");
+            SDK_ID = "localBuild;com.kenticocloud:delivery-sdk-java;localBuild";
+        }
+    }
 
     static final String ITEMS = "items";
     static final String TYPES = "types";
@@ -368,6 +395,7 @@ public class DeliveryClient {
             );
         }
         requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
+        requestBuilder.setHeader("X-KC-SDKID", SDK_ID);
         return requestBuilder;
     }
 

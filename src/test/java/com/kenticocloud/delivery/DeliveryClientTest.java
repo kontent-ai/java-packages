@@ -49,6 +49,36 @@ import java.util.Map;
 public class DeliveryClientTest extends LocalServerTestBase {
 
     @Test
+    public void testSdkIdHeader() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String previewApiKey = "preview_api_key";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    Assert.assertEquals(
+                            "localBuild;com.kenticocloud:delivery-sdk-java;localBuild",
+                            request.getHeaders("X-KC-SDKID")[0].getValue());
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setPreviewEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+    }
+
+    @Test
     public void testGetItems() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
