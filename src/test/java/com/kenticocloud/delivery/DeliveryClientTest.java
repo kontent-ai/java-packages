@@ -57,8 +57,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
                     Assert.assertEquals(
-                            "localBuild;com.kenticocloud:delivery-sdk-java;localBuild",
-                            request.getHeaders("X-KC-SDKID")[0].getValue());
+                            3,
+                            request.getHeaders("X-KC-SDKID")[0].getValue().split(";").length);
                     response.setEntity(
                             new InputStreamEntity(
                                     this.getClass().getResourceAsStream("SampleContentItem.json")
