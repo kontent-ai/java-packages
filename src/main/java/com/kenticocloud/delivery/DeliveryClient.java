@@ -45,9 +45,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
-import java.util.jar.Attributes;
-import java.util.jar.Manifest;
 
 /**
  * Executes requests against the Kentico Cloud Delivery API.
@@ -60,14 +59,13 @@ public class DeliveryClient {
 
     static {
         try {
-            Manifest mf = new Manifest();
-            mf.read(Thread.currentThread().getContextClassLoader().getResourceAsStream("META-INF/MANIFEST.MF"));
-            Attributes attributes = mf.getMainAttributes();
-            String repositoryHost = attributes.getValue("Repository-Host");
-            String version = attributes.getValue("Implementation-Version");
-            String packageId = attributes.getValue("Package-Id");
+            Properties buildProps = new Properties();
+            buildProps.load(DeliveryClient.class.getResourceAsStream("build.properties"));
+            String repositoryHost = buildProps.getProperty("Repository-Host");
+            String version = buildProps.getProperty("Implementation-Version");
+            String packageId = buildProps.getProperty("Package-Id");
             repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
-            version = version == null ? "localBuild" : version;
+            version = version == null ? "0.0.0" : version;
             packageId = packageId == null ? "com.kenticocloud:delivery-sdk-java" : packageId;
             SDK_ID = String.format(
                     "%s;%s;%s",
@@ -77,7 +75,7 @@ public class DeliveryClient {
             logger.info("SDK ID: {}", SDK_ID);
         } catch (IOException e) {
             logger.info("Jar manifest read error, setting developer build SDK ID");
-            SDK_ID = "localBuild;com.kenticocloud:delivery-sdk-java;localBuild";
+            SDK_ID = "localBuild;com.kenticocloud:delivery-sdk-java;0.0.0";
         }
     }
 
