@@ -37,6 +37,7 @@ public class DeliveryOptions {
     String previewApiKey;
     boolean usePreviewApi = false;
     boolean waitForLoadingNewContent = false;
+    int retryAttempts = 0;
 
     /**
      * Constructs an empty settings instance of {@link DeliveryOptions}.
@@ -182,5 +183,21 @@ public class DeliveryOptions {
      */
     public void setWaitForLoadingNewContent(boolean waitForLoadingNewContent) {
         this.waitForLoadingNewContent = waitForLoadingNewContent;
+    }
+
+    /**
+     * Get the number of times the client will retry to connect to the Kentico Cloud api on failures per request.
+     * @return The number of retry attempts on failed responses from Kentico Cloud
+     */
+    public int getRetryAttempts() {
+        return retryAttempts;
+    }
+
+    /**
+     * Sets the number of times the client will try to connect to the Kentico Cloud api on failures per request.
+     * @param retryAttempts The number of retry attempts.
+     */
+    public void setRetryAttempts(int retryAttempts) {
+        this.retryAttempts = retryAttempts;
     }
 }
