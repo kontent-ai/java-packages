@@ -7,7 +7,7 @@ plugins {
 
 group 'com.kenticocloud'
 version '1.0.6-SNAPSHOT'
-ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null
+ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null ? System.getenv('CONTINUOUS_INTEGRATION').toBoolean() : false
 ext.repositoryHost = isContinuousIntegrationBuild ? "maven.org" : "localBuild"
 
 apply plugin: 'java'
@@ -43,14 +43,14 @@ dependencies {
 
 }
 
-processResources {
-    if (isContinuousIntegrationBuild) {
-        filesMatching('build.properties') {
+if (isContinuousIntegrationBuild) {
+    processResources {
+        filesMatching('com/kenticocloud/delivery/build.properties') {
             filter { String line ->
                 line.replace "0.0.0", project.version
             }
             filter { String line ->
-                line.replace "localBuild", "$project.group:$project.name"
+                line.replace "localBuild", repositoryHost
             }
         }
     }
