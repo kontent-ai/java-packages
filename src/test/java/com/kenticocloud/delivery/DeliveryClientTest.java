@@ -582,11 +582,20 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
-                (request, response, context) -> response.setEntity(
-                        new InputStreamEntity(
-                                this.getClass().getResourceAsStream("SampleContentItem.json")
-                        )
-                ));
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Assert.assertFalse(nameValuePairs.stream()
+                            .anyMatch(nameValuePair -> nameValuePair.getName().equals("system.type")));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
@@ -600,6 +609,90 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Object itemObj = client.getItem("on_roasts", Object.class);
         Assert.assertNotNull(itemObj);
         Assert.assertTrue(itemObj instanceof ArticleItem);
+    }
+
+    @Test
+    public void testGetStronglyTypedItemAutomaticallyAddsSystemType() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Assert.assertEquals(1, nameValuePairs.stream()
+                            .filter(nameValuePair -> nameValuePair.getName().equals("system.type"))
+                            .count());
+
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+
+                    Assert.assertTrue(params.containsKey("system.type"));
+                    Assert.assertEquals("article", params.get("system.type"));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+        client.registerType("article", ArticleItem.class);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ArticleItem itemObj = client.getItem("on_roasts", ArticleItem.class);
+        Assert.assertNotNull(itemObj);
+    }
+
+    @Test
+    public void testGetStronglyTypedItemAutomaticallyDoesNotSentSystemTypeWhenAdded() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Assert.assertEquals(1, nameValuePairs.stream()
+                            .filter(nameValuePair -> nameValuePair.getName().equals("system.type"))
+                            .count());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+
+                    Assert.assertTrue(params.containsKey("system.type"));
+                    Assert.assertEquals("customVal", params.get("system.type"));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+        client.registerType("article", ArticleItem.class);
+
+        //modify default baseurl to point to test server, this is private so using reflection
+        String testServerUri = httpHost.toURI() + "/%s";
+        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
+        deliveryOptionsField.setAccessible(true);
+        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+
+        ArticleItem itemObj = client.getItem(
+                "on_roasts",
+                ArticleItem.class,
+                DeliveryParameterBuilder.params()
+                        .filterEquals("system.type", "customVal")
+                        .build());
+        Assert.assertNotNull(itemObj);
     }
 
     @Test
@@ -752,11 +845,22 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items"),
-                (request, response, context) -> response.setEntity(
-                        new InputStreamEntity(
-                                this.getClass().getResourceAsStream("SampleContentItemList.json")
-                        )
-                ));
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
+
+                    Assert.assertTrue(params.containsKey("system.type"));
+                    Assert.assertEquals("article", params.get("system.type"));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItemList.json")
+                            )
+                    );
+                });
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 

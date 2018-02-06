@@ -63,6 +63,13 @@ public class StronglyTypedContentItemConverter {
         logger.debug("Registered type for {}", clazz.getSimpleName());
     }
 
+    protected String getContentType(Class tClass) {
+        if (classToContentTypeMapping.containsKey(tClass)) {
+            return classToContentTypeMapping.get(tClass);
+        }
+        return null;
+    }
+
     protected void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
         typeToInlineResolverMapping.put(resolver.getType(), resolver);
     }
