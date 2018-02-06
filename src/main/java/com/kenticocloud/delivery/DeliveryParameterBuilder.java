@@ -28,6 +28,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
@@ -108,6 +109,10 @@ public class DeliveryParameterBuilder {
         return this;
     }
 
+    public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
+        return filterIn(attribute, values.toArray(new String[values.size()]));
+    }
+
     public DeliveryParameterBuilder filterContains(String attribute, String value) {
         if (attribute != null) {
             nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, CONTAINS), value));
@@ -122,11 +127,19 @@ public class DeliveryParameterBuilder {
         return this;
     }
 
+    public DeliveryParameterBuilder filterAny(String attribute, Collection<String> values) {
+        return filterAny(attribute, values.toArray(new String[values.size()]));
+    }
+
     public DeliveryParameterBuilder filterAll(String attribute, String... values) {
         if (attribute != null) {
             nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, ALL), String.join(",", values)));
         }
         return this;
+    }
+
+    public DeliveryParameterBuilder filterAll(String attribute, Collection<String> values) {
+        return filterAll(attribute, values.toArray(new String[values.size()]));
     }
 
     public DeliveryParameterBuilder orderByAsc(String attribute) {

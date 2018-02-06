@@ -28,6 +28,7 @@ import org.apache.http.NameValuePair;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -126,6 +127,17 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testInCollection() {
+        List<String> values = new ArrayList<>();
+        values.add("bar");
+        values.add("foobar");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterIn("foo", values).build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[in]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
     public void testInNullAttr() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterIn(null, null, null).build();
         Assert.assertEquals(0, params.size());
@@ -154,6 +166,17 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testAnyCollection() {
+        List<String> values = new ArrayList<>();
+        values.add("bar");
+        values.add("foobar");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterAny("foo", values).build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[any]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
     public void testAnyNullAttr() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterAny(null, null, null).build();
         Assert.assertEquals(0, params.size());
@@ -162,6 +185,17 @@ public class DeliveryParameterBuilderTest {
     @Test
     public void testAll() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterAll("foo", "bar", "foobar").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[all]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testAllCollection() {
+        List<String> values = new ArrayList<>();
+        values.add("bar");
+        values.add("foobar");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterAll("foo", values).build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[all]", params.get(0).getName());
         Assert.assertEquals("bar,foobar", params.get(0).getValue());
