@@ -43,3 +43,10 @@ hs_err_pid*
 .idea/dataSources/
 .idea/dictionaries/*
 .idea/shelf/
+
+# Visual Studio Code #
+/bin/
+.classpath
+.project
+/.settings
+/.vscode
