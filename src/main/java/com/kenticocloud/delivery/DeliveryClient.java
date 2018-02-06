@@ -38,15 +38,13 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Executes requests against the Kentico Cloud Delivery API.
@@ -198,6 +196,7 @@ public class DeliveryClient {
     }
 
     public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
+        addTypeParameterIfNecessary(tClass, params);
         ContentItemsListingResponse contentItemsListingResponse = getItems(params);
         return contentItemsListingResponse.castTo(tClass);
     }
@@ -255,6 +254,7 @@ public class DeliveryClient {
     }
 
     public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) throws IOException {
+        addTypeParameterIfNecessary(tClass, params);
         ContentItemResponse contentItemResponse = getItem(contentItemCodename, params);
         return contentItemResponse.castTo(tClass);
     }
@@ -432,6 +432,16 @@ public class DeliveryClient {
             KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
             inputStream.close();
             throw new KenticoErrorException(kenticoError);
+        }
+    }
+
+    private void addTypeParameterIfNecessary(Class tClass, List<NameValuePair> params) {
+        Optional<NameValuePair> any = params.stream()
+                .filter(nameValuePair -> nameValuePair.getName().equals("system.type"))
+                .findAny();
+        if (!any.isPresent()) {
+            String contentType = stronglyTypedContentItemConverter.getContentType(tClass);
+            params.add(new BasicNameValuePair("system.type", contentType));
         }
     }
 
