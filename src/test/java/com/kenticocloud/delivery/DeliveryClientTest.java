@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -76,6 +77,103 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testRetry() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        final boolean[] sentError = {false};
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    if (sentError[0]) {
+                        response.setEntity(
+                                new InputStreamEntity(
+                                        this.getClass().getResourceAsStream("SampleContentItem.json")
+                                )
+                        );
+                    } else {
+                        response.setEntity(new StringEntity("Response Error!"));
+                        sentError[0] = true;
+                    }
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+        deliveryOptions.setRetryAttempts(1);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+        Assert.assertTrue(sentError[0]);
+    }
+
+    @Test
+    public void testRetryStops() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        final int[] sentErrorCount = {0};
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    response.setEntity(new StringEntity("Response Error!"));
+                    sentErrorCount[0] = sentErrorCount[0] + 1;
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+        deliveryOptions.setRetryAttempts(1);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+
+        try {
+            client.getItem("on_roasts");
+            Assert.fail("Expected a failure exception");
+        } catch (Exception e) {
+            Assert.assertTrue(e instanceof JsonParseException);
+        }
+        Assert.assertEquals(2, sentErrorCount[0]);
+    }
+
+    @Test
+    public void testRetryStopsOnKenticoException() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        final int[] sentErrorCount = {0};
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roatst"),
+                (request, response, context) -> {
+                    response.setStatusCode(404);
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleKenticoError.json")
+                            )
+                    );
+                    sentErrorCount[0] = sentErrorCount[0] + 1;
+                });
+        HttpHost httpHost = this.start();
+        String testServerUri = httpHost.toURI() + "/%s";
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId(projectId);
+        deliveryOptions.setProductionEndpoint(testServerUri);
+        deliveryOptions.setRetryAttempts(1);
+
+        DeliveryClient client = new DeliveryClient(deliveryOptions);
+
+        try {
+            client.getItem("on_roatst");
+            Assert.fail("Expected KenticoErrorException");
+        } catch (KenticoErrorException e) {
+            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getMessage());
+            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getKenticoError().getMessage());
+        }
+        Assert.assertEquals(1, sentErrorCount[0]);
     }
 
     @Test
@@ -1089,6 +1187,19 @@ public class DeliveryClientTest extends LocalServerTestBase {
             Assert.fail("Expected IllegalArgumentException due to providing both a preview and production API key");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Cannot provide both a preview API key and a production API key.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void testExceptionWhenRetryCountIsLessThanZero() {
+        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
+        deliveryOptions.setRetryAttempts(-1);
+        try {
+            DeliveryClient client = new DeliveryClient(deliveryOptions);
+            Assert.fail("Expected IllegalArgumentException due to negative number provided for retry count");
+        } catch (IllegalArgumentException e) {
+            Assert.assertEquals("Cannot retry connections less than 0 times.", e.getMessage());
         }
     }
 

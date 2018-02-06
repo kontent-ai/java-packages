@@ -55,7 +55,7 @@ public class DeliveryClient {
 
     private static final Logger logger = LoggerFactory.getLogger(DeliveryClient.class);
 
-    static String SDK_ID;
+    static String sdkId;
 
     static {
         try {
@@ -67,15 +67,15 @@ public class DeliveryClient {
             repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
             version = version == null ? "0.0.0" : version;
             packageId = packageId == null ? "com.kenticocloud:delivery-sdk-java" : packageId;
-            SDK_ID = String.format(
+            sdkId = String.format(
                     "%s;%s;%s",
                     repositoryHost,
                     packageId,
                     version);
-            logger.info("SDK ID: {}", SDK_ID);
+            logger.info("SDK ID: {}", sdkId);
         } catch (IOException e) {
             logger.info("Jar manifest read error, setting developer build SDK ID");
-            SDK_ID = "localBuild;com.kenticocloud:delivery-sdk-java;0.0.0";
+            sdkId = "localBuild;com.kenticocloud:delivery-sdk-java;0.0.0";
         }
     }
 
@@ -139,6 +139,9 @@ public class DeliveryClient {
         }
         if (deliveryOptions.isUsePreviewApi() && deliveryOptions.getProductionApiKey() != null){
             throw new IllegalArgumentException("Cannot provide both a preview API key and a production API key.");
+        }
+        if (deliveryOptions.getRetryAttempts() < 0) {
+            throw new IllegalArgumentException("Cannot retry connections less than 0 times.");
         }
         this.deliveryOptions = deliveryOptions;
         connManager.setMaxTotal(20);
@@ -393,7 +396,7 @@ public class DeliveryClient {
             );
         }
         requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
-        requestBuilder.setHeader("X-KC-SDKID", SDK_ID);
+        requestBuilder.setHeader("X-KC-SDKID", sdkId);
         return requestBuilder;
     }
 
@@ -406,19 +409,43 @@ public class DeliveryClient {
     }
 
     private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) throws IOException {
-        String requestUri = request.getURI().toString();
-        logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), requestUri);
-        JsonNode jsonNode = cacheManager.resolveRequest(requestUri, () -> {
-            HttpResponse response = httpClient.execute(request);
-            handleErrorIfNecessary(response);
-            InputStream inputStream = response.getEntity().getContent();
-            JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
-            logger.info("{} - {}", response.getStatusLine(), requestUri);
-            logger.debug("{} - {}:\n{}", request.getMethod(), requestUri, node);
-            inputStream.close();
-            return node;
-        });
-        return objectMapper.treeToValue(jsonNode, tClass);
+        return executeRequest(request, tClass, 0);
+    }
+
+    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass, int attemptNumber) throws IOException {
+        try {
+            String requestUri = request.getURI().toString();
+            logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), requestUri);
+            JsonNode jsonNode = cacheManager.resolveRequest(requestUri, () -> {
+                HttpResponse response = httpClient.execute(request);
+                handleErrorIfNecessary(response);
+                InputStream inputStream = response.getEntity().getContent();
+                JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
+                logger.info("{} - {}", response.getStatusLine(), requestUri);
+                logger.debug("{} - {}:\n{}", request.getMethod(), requestUri, node);
+                inputStream.close();
+                return node;
+            });
+            return objectMapper.treeToValue(jsonNode, tClass);
+        } catch (KenticoErrorException kenticoError) {
+            throw kenticoError;
+        } catch (Exception ex) {
+            logger.error("Failed request: {}", ex.getMessage());
+            if (attemptNumber < deliveryOptions.getRetryAttempts()) {
+                int nextAttemptNumber = attemptNumber + 1;
+                //Perform a binary exponential backoff
+                int wait = (int) (100 * Math.pow(2, nextAttemptNumber));
+                logger.info("Reattempting request after {}ms", wait);
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+                return executeRequest(request, tClass, nextAttemptNumber);
+            } else {
+                throw ex;
+            }
+        }
     }
 
     private void handleErrorIfNecessary(HttpResponse response) throws IOException {
