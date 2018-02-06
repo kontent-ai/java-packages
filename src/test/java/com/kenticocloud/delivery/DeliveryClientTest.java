@@ -484,11 +484,20 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
-                (request, response, context) -> response.setEntity(
-                        new InputStreamEntity(
-                                this.getClass().getResourceAsStream("SampleContentItem.json")
-                        )
-                ));
+                (request, response, context) -> {
+                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
+
+                    List<NameValuePair> nameValuePairs =
+                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
+                    Assert.assertFalse(nameValuePairs.stream()
+                            .anyMatch(nameValuePair -> nameValuePair.getName().equals("system.type")));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);

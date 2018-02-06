@@ -441,7 +441,9 @@ public class DeliveryClient {
                 .findAny();
         if (!any.isPresent()) {
             String contentType = stronglyTypedContentItemConverter.getContentType(tClass);
-            params.add(new BasicNameValuePair("system.type", contentType));
+            if (contentType != null) {
+                params.add(new BasicNameValuePair("system.type", contentType));
+            }
         }
     }
 
