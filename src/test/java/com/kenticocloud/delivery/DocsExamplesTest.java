@@ -34,6 +34,8 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 import java.lang.reflect.Field;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 public class DocsExamplesTest extends LocalServerTestBase {
@@ -254,7 +256,7 @@ public class DocsExamplesTest extends LocalServerTestBase {
     public void testNotificationSignatures() throws Exception {
         String message = "The quick brown fox jumps over the lazy dog.";
         String secret = "3mlfw0i7LGSI+/n/cFd3I9cnLLr4e0ttUzKxwMqZTVU=";
-        String expectedBase64EncodedHmac = "36883ecb7b56cca6153564e3e943677f9d2d74caab090f4bc5d2f2c626e7ecbc";
+        String expectedBase64EncodedHmac = "Nog+y3tWzKYVNWTj6UNnf50tdMqrCQ9LxdLyxibn7Lw=";
         String actualHmac = generateHash(message, secret);
 
         Assert.assertEquals(expectedBase64EncodedHmac, actualHmac);
@@ -262,9 +264,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
 
     public static String generateHash(String message, String secret) throws Exception {
         Mac sha256Hmac = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes("UTF-8"), "HmacSHA256");
+        SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), "HmacSHA256");
         sha256Hmac.init(secretKeySpec);
 
-        return DatatypeConverter.printHexBinary(sha256Hmac.doFinal(message.getBytes("UTF-8"))).toLowerCase();
+        return Base64.getEncoder().encodeToString(sha256Hmac.doFinal(message.getBytes(StandardCharsets.UTF_8)));
     }
 }
