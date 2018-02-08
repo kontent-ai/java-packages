@@ -6,7 +6,7 @@ plugins {
 }
 
 group 'com.kenticocloud'
-version '1.0.6'
+version '2.0.0-SNAPSHOT'
 ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null ? System.getenv('CONTINUOUS_INTEGRATION').toBoolean() : false
 ext.repositoryHost = isContinuousIntegrationBuild ? "maven.org" : "localBuild"
 
