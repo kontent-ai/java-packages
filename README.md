@@ -6,7 +6,7 @@
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
 [![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0.6-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
-[![Analytics](https://ga-beacon.appspot.com/UA-69014260-4/Kentico/delivery-sdk-java)](https://github.com/igrigorik/ga-beacon)
+[![Analytics](https://ga-beacon.appspot.com/UA-69014260-4/Kentico/delivery-sdk-java?pixel)](https://github.com/igrigorik/ga-beacon)
 
 ## Summary
 
