@@ -9,7 +9,7 @@ else
     -Penable.signing=true \
     -Psigning.keyId=D1115C87 \
     -Psigning.password=$signingPassword \
-    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -Psigning.secretKeyRingFile="$TRAVIS_BUILD_DIR/signing.gpg" \
     -PnexusUsername=$sonatypeUsername \
     -PnexusPassword=$sonatypePassword
 
@@ -17,7 +17,7 @@ else
     -Penable.signing=true \
     -Psigning.keyId=D1115C87 \
     -Psigning.password=$signingPassword \
-    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -Psigning.secretKeyRingFile="$TRAVIS_BUILD_DIR/signing.gpg" \
     -PnexusUsername=$sonatypeUsername \
     -PnexusPassword=$sonatypePassword
 
@@ -25,7 +25,7 @@ else
     -Penable.signing=true \
     -Psigning.keyId=D1115C87 \
     -Psigning.password=$signingPassword \
-    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -Psigning.secretKeyRingFile="$TRAVIS_BUILD_DIR/signing.gpg" \
     -PnexusUsername=$sonatypeUsername \
     -PnexusPassword=$sonatypePassword
 fi
