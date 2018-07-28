@@ -64,7 +64,7 @@ public class DeliveryClient {
             String packageId = buildProps.getProperty("Package-Id");
             repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
             version = version == null ? "0.0.0" : version;
-            packageId = packageId == null ? "com.kenticocloud:delivery-sdk-java" : packageId;
+            packageId = packageId == null ? "com.kenticocloud:delivery" : packageId;
             sdkId = String.format(
                     "%s;%s;%s",
                     repositoryHost,
@@ -73,7 +73,7 @@ public class DeliveryClient {
             logger.info("SDK ID: {}", sdkId);
         } catch (IOException e) {
             logger.info("Jar manifest read error, setting developer build SDK ID");
-            sdkId = "localBuild;com.kenticocloud:delivery-sdk-java;0.0.0";
+            sdkId = "localBuild;com.kenticocloud:delivery;0.0.0";
         }
     }
 
@@ -214,6 +214,7 @@ public class DeliveryClient {
 
     public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
         ContentItemsListingResponse response = getItems(params);
+        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         return new Page<>(response, tClass, this);
     }
 
@@ -226,6 +227,7 @@ public class DeliveryClient {
         requestBuilder = addHeaders(requestBuilder);
         HttpUriRequest httpUriRequest = requestBuilder.build();
         ContentItemsListingResponse response = executeRequest(httpUriRequest, ContentItemsListingResponse.class);
+        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         RichTextElementConverter converter = new RichTextElementConverter(
                 getContentLinkUrlResolver(),
                 getBrokenLinkUrlResolver(),

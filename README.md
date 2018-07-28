@@ -2,9 +2,9 @@
 
 [![Build Status](https://travis-ci.org/Kentico/delivery-sdk-java.svg?branch=master)](https://travis-ci.org/Kentico/delivery-sdk-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery-sdk-java.svg)](http://javadoc.io/doc/com.kenticocloud/delivery-sdk-java)
+[![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery.svg)](http://javadoc.io/doc/com.kenticocloud/delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-1.0.6-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery-sdk-java/)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
 [![Analytics](https://ga-beacon.appspot.com/UA-69014260-4/Kentico/delivery-sdk-java?pixel)](https://github.com/igrigorik/ga-beacon)
 
@@ -17,11 +17,11 @@ You can add this to your Gradle project by the following:
 ```groovy
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery-sdk-java:1.0.6')
+    compile('com.kenticocloud:delivery:2.0.0')
 }
 ```
 
@@ -29,8 +29,8 @@ Or via your Maven POM:
 ```xml
 <dependency>
     <groupId>com.kenticocloud</groupId>
-    <artifactId>delivery-sdk-java</artifactId>
-    <version>1.0.6</version>
+    <artifactId>delivery</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -48,6 +48,7 @@ DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3
 You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](https://github.com/Kentico/delivery-sdk-java/blob/master/src/main/java/com/kenticocloud/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
 
 * `setPreviewApiKey(String)` – sets the Delivery Preview API key.
+* `setProductionApiKey(String)` - sets the Delivery Client key for secured access.
 * `setProjectId(String)` – sets the project identifier.
 * `setUsePreviewApi(boolean)` – determines whether to use the Delivery Preview API.
 * `setWaitForLoadingNewContent(boolean)` – makes the client instance wait while fetching updated content, useful when acting upon [webhook calls](https://developer.kenticocloud.com/docs/webhooks#section-requesting-new-content).
@@ -197,85 +198,6 @@ for (Option option : element.getOptions()) {
 articleItem.getModularContent("related_articles")
 ```
 
-## Android
-Basic Android support is available, however it is still very much in the beta phase.
-
-The SDK is built on top of Java 8 APIs which means currently there are a lot of limitations on environments this is working in.
-
-### Android Project setup
-Android support is tested to work with Android Studio 3, the latest preview can be found at <https://developer.android.com/studio/preview/index.html>.
-
-The minimum SDK version that currently works is 26, which may be extremely limiting to which devices you can deploy to.  To update your project, update your app's gradle file:
-```groovy
-android {
-    compileSdkVersion 26
-    buildToolsVersion "26.0.2"
-    defaultConfig {
-        ...
-        minSdkVersion 26
-        targetSdkVersion 26
-        ...
-    }
-    ...
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-}
-
-dependencies {
-    ...
-    implementation 'com.kenticocloud:delivery-sdk-android:1.0.6'
-}
-    
-```
-
-An example of interacting with the SDK is here:
-```java
-package yourapppackage.yourapp;
-
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.TextView;
-
-import com.kenticocloud.delivery.ContentItemResponse;
-import com.kenticocloud.delivery.DeliveryClient;
-import com.kenticocloud.delivery.DeliveryParameterBuilder;
-import com.kenticocloud.delivery.TextElement;
-
-import java.io.IOException;
-import java.util.List;
-
-import shadow.kentico.http.NameValuePair;
-
-public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //This is bad, but the point is just to prove this out.  To fix the DeliveryClient should
-        //be in a separate thread.
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
-        List<NameValuePair> params = DeliveryParameterBuilder.params().projection("title", "summary", "post_date", "teaser_image", "related_articles").build();
-
-        try {
-            ContentItemResponse item = client.getItem("on_roasts", params);
-            String title = ((TextElement) item.getItem().getElements().get("title")).getValue();
-            final TextView textViewToChange = (TextView) findViewById(R.id.textoutput);
-            textViewToChange.setText(title);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-}
-```
-
 ## Further information
 
 For more developer resources, visit the Kentico Cloud Developer Hub at <https://developer.kenticocloud.com>.
@@ -293,7 +215,7 @@ Ensure your `JAVA_HOME` environment is set.  Then build the project via the prov
 ```
 
 Optional:
-[JetBrains IntelliJ Idea](https://www.jetbrains.com/idea/) project files are included.  Open up the project and Import the Gradle project to sync up dependencies.
+[JetBrains IntelliJ Idea](https://www.jetbrains.com/idea/) Import the Gradle project to sync up dependencies.
 
 ## Feedback & Contributing
 

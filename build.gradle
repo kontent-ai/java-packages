@@ -1,184 +1,27 @@
-plugins {
-    id 'io.codearte.nexus-staging' version '0.11.0'
-    id 'com.github.johnrengelman.shadow' version '2.0.1'
-    id "org.sonarqube" version "2.2"
-    id "com.gorylenko.gradle-git-properties" version "1.4.17"
-}
+/*
+ * MIT License
+ *
+ * Copyright (c) 2018
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 
-group 'com.kenticocloud'
-version '2.0.0-SNAPSHOT'
-ext.isContinuousIntegrationBuild = System.getenv('CONTINUOUS_INTEGRATION') != null ? System.getenv('CONTINUOUS_INTEGRATION').toBoolean() : false
-ext.repositoryHost = isContinuousIntegrationBuild ? "maven.org" : "localBuild"
-
-apply plugin: 'java'
-apply plugin: 'jacoco'
-apply plugin: 'maven'
-apply plugin: 'signing'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.9'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.4.0'
-    
-    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-
-    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-
-    compile group: 'io.github.lukehutch', name: 'fast-classpath-scanner', version: '2.4.7'
-
-    compileOnly group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'
-    testCompile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3', classifier: 'tests'
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
-}
-
-if (isContinuousIntegrationBuild) {
-    processResources {
-        filesMatching('com/kenticocloud/delivery/build.properties') {
-            filter { String line ->
-                line.replace "0.0.0", project.version
-            }
-            filter { String line ->
-                line.replace "localBuild", repositoryHost
-            }
-        }
-    }
-}
-
-shadowJar {
-    baseName = 'delivery-sdk-android'
-    version = project.version
-    classifier = null
-    relocate 'org.apache.http', 'shadow.kentico.http'
-}
-
-task androidSourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    baseName = 'delivery-sdk-android'
-    classifier = 'sources'
-}
-
-task androidJavadocJar(type: Jar, dependsOn: javadoc) {
-    baseName = 'delivery-sdk-android'
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from 'build/docs/javadoc'
-}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-artifacts {
-    archives jar
-    archives javadocJar
-    archives sourcesJar
-    archives shadowJar
-    archives androidSourcesJar
-    archives androidJavadocJar
-}
-
-signing {
-    required { isContinuousIntegrationBuild && gradle.taskGraph.hasTask("uploadArchives") }
-    sign configurations.archives
-    sign configurations.shadow
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            //Comment out this step if you do not have the signing key
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: nexusUsername, password: nexusPassword)
-            }
-
-            //Use this repository, and comment out the above for viewing the generated POM
-            //repository(url: "file://localhost/tmp/myRepo/")
-
-            addFilter('android') { artifact, File file ->
-                file.name.contains('android-')
-            }
-            addFilter('java') { artifact, file ->
-                file.name.contains('java-')
-            }
-            pom('java').project {
-                name 'delivery-sdk-java'
-                packaging 'jar'
-                description 'Kentico Cloud Delivery Java SDK https://kenticocloud.com/'
-                url 'https://github.com/Kentico/delivery-sdk-java'
-
-                scm {
-                    url 'https://github.com/Kentico/delivery-sdk-java'
-                    connection 'scm:https://github.com/Kentico/delivery-sdk-java.git'
-                    developerConnection 'scm:git://github.com/Kentico/delivery-sdk-java.git'
-                }
-
-                licenses {
-                    license {
-                        name 'MIT License'
-                        url 'http://www.opensource.org/licenses/mit-license.php'
-                        distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'aweigold'
-                        name 'Adam J. Weigold'
-                        email 'adam@adamweigold.com'
-                    }
-                }
-            }
-            pom('android').project {
-                name 'delivery-sdk-android'
-                packaging 'jar'
-                description 'Kentico Cloud Delivery Android SDK https://kenticocloud.com/'
-                url 'https://github.com/Kentico/delivery-sdk-java'
-
-                scm {
-                    url 'https://github.com/Kentico/delivery-sdk-java'
-                    connection 'scm:https://github.com/Kentico/delivery-sdk-java.git'
-                    developerConnection 'scm:git://github.com/Kentico/delivery-sdk-java.git'
-                }
-
-                licenses {
-                    license {
-                        name 'MIT License'
-                        url 'http://www.opensource.org/licenses/mit-license.php'
-                        distribution 'repo'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'aweigold'
-                        name 'Adam J. Weigold'
-                        email 'adam@adamweigold.com'
-                    }
-                }
-            }
-        }
-    }
+subprojects { project ->
+    version '2.0.0-SNAPSHOT'
 }

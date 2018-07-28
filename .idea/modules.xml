@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java_main.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java_main.iml" group="delivery-sdk-java" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/delivery-sdk-java_test.iml" filepath="$PROJECT_DIR$/.idea/modules/delivery-sdk-java_test.iml" group="delivery-sdk-java" />
     </modules>

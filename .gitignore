@@ -37,12 +37,15 @@ hs_err_pid*
 .idea/gradle.xml
 .idea/workspace.xml
 .idea/jsLibraryMappings.xml
+.idea/usage.statistics.xml
 .idea/tasks.xml
 .idea/sonarlint/
 .idea/dataSources.*
 .idea/dataSources/
 .idea/dictionaries/*
 .idea/shelf/
+.idea/modules.xml
+*.iml
 
 # Visual Studio Code #
 /bin/

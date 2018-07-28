@@ -1,11 +1,31 @@
 #!/bin/bash
 
-./gradlew build
+set -e # Exit with nonzero exit code if anything fails
 
-# Pull requests shouldn't try to run sonarqube as travis doesn't configure it correctly when doing a PR from another remote
 if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
-    echo "Skipping sonarqube; just doing a build."
-    exit 0
-fi
+    ./gradlew build
+else
+    ./gradlew build \
+    -Penable.signing=true \
+    -Psigning.keyId=D1115C87 \
+    -Psigning.password=$signingPassword \
+    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -PnexusUsername=$sonatypeUsername \
+    -PnexusPassword=$sonatypePassword
 
-./gradlew sonarqube
+    ./gradlew sonarqube \
+    -Penable.signing=true \
+    -Psigning.keyId=D1115C87 \
+    -Psigning.password=$signingPassword \
+    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -PnexusUsername=$sonatypeUsername \
+    -PnexusPassword=$sonatypePassword
+
+    ./gradlew publish \
+    -Penable.signing=true \
+    -Psigning.keyId=D1115C87 \
+    -Psigning.password=$signingPassword \
+    -Psigning.secretKeyRingFile="$HOME/signing.gpg" \
+    -PnexusUsername=$sonatypeUsername \
+    -PnexusPassword=$sonatypePassword
+fi
