@@ -27,7 +27,6 @@ plugins {
 }
 
 group 'com.kenticocloud'
-version '2.0.0-SNAPSHOT'
 
 apply plugin: 'java'
 apply plugin: 'idea'
