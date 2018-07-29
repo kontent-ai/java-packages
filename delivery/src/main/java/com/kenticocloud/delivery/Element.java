@@ -36,7 +36,7 @@ import java.util.List;
  * When retrieving content items or content types, you get an elements collection as a part of the retrieved item or
  * type.
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = TextElement.class, name = TextElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = RichTextElement.class, name = RichTextElement.TYPE_VALUE),

@@ -28,7 +28,7 @@ import com.kenticocloud.delivery.template.*;
 
 public class GoodResolver extends TemplateEngineInlineContentItemsResolver {
 
-    public GoodResolver() throws RenderingEngineMissingException {
+    public GoodResolver() {
     }
 
     @Override

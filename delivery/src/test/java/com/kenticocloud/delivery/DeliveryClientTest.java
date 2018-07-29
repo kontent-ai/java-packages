@@ -69,7 +69,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -147,7 +147,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         final int[] sentErrorCount = {0};
 
         this.serverBootstrap.registerHandler(
-                String.format("/%s/%s", projectId, "items/on_roatst"),
+                String.format("/%s/%s", projectId, "items/error"),
                 (request, response, context) -> {
                     response.setStatusCode(404);
                     response.setEntity(
@@ -167,11 +167,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(deliveryOptions);
 
         try {
-            client.getItem("on_roatst");
+            client.getItem("error");
             Assert.fail("Expected KenticoErrorException");
         } catch (KenticoErrorException e) {
-            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getMessage());
-            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getKenticoError().getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", e.getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", e.getKenticoError().getMessage());
         }
         Assert.assertEquals(1, sentErrorCount[0]);
     }
@@ -238,6 +238,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testGetItemsAsPage() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -257,34 +258,34 @@ public class DeliveryClientTest extends LocalServerTestBase {
                                     )
                             );
                     String line;
-                    String responseString = "";
+                    StringBuilder responseString = new StringBuilder();
                     while((line = bufferedReader.readLine()) != null) {
                         if (line.contains("next_page")) {
-                            responseString += "\"next_page\": \"";
-                            responseString += (new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI();
-                            responseString += "/nextPage\"\r\n";
+                            responseString.append("\"next_page\": \"");
+                            responseString.append((new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI());
+                            responseString.append("/nextPage\"\r\n");
                         } else {
-                            responseString += line + "\r\n";
+                            responseString.append(line).append("\r\n");
                         }
                     }
                     bufferedReader.close();
-                    response.setEntity(new StringEntity(responseString));
+                    response.setEntity(new StringEntity(responseString.toString()));
                 });
         this.serverBootstrap.registerHandler("/nextPage",
-                (request, response, context) -> {
-                    response.setEntity(new StringEntity(
-                           "{\n" +
-                                   "  \"items\": [],\n" +
-                                   "  \"modular_content\": {},\n" +
-                                   "  \"pagination\": {\n" +
-                                   "    \"skip\": 50,\n" +
-                                   "    \"limit\": 2,\n" +
-                                   "    \"count\": 0,\n" +
-                                   "    \"next_page\": \"\"\n" +
-                                   "  }\n" +
-                                   "}"
-                    ));
-                });
+                (request, response, context) -> response.setEntity(
+                        new StringEntity(
+                                "{\n" +
+                                        "  \"items\": [],\n" +
+                                        "  \"modular_content\": {},\n" +
+                                        "  \"pagination\": {\n" +
+                                        "    \"skip\": 50,\n" +
+                                        "    \"limit\": 2,\n" +
+                                        "    \"count\": 0,\n" +
+                                        "    \"next_page\": \"\"\n" +
+                                        "  }\n" +
+                                        "}"
+                        )
+                ));
         HttpHost httpHost = this.start();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
@@ -313,6 +314,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testStronglyTypedGetItemsAsPage() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -332,34 +334,34 @@ public class DeliveryClientTest extends LocalServerTestBase {
                                     )
                             );
                     String line;
-                    String responseString = "";
+                    StringBuilder responseString = new StringBuilder();
                     while((line = bufferedReader.readLine()) != null) {
                         if (line.contains("next_page")) {
-                            responseString += "\"next_page\": \"";
-                            responseString += (new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI();
-                            responseString += "/nextPage\"\r\n";
+                            responseString.append("\"next_page\": \"");
+                            responseString.append((new HttpHost("localhost", this.server.getLocalPort(), this.scheme.name())).toURI());
+                            responseString.append("/nextPage\"\r\n");
                         } else {
-                            responseString += line + "\r\n";
+                            responseString.append(line).append("\r\n");
                         }
                     }
                     bufferedReader.close();
-                    response.setEntity(new StringEntity(responseString));
+                    response.setEntity(new StringEntity(responseString.toString()));
                 });
         this.serverBootstrap.registerHandler("/nextPage",
-                (request, response, context) -> {
-                    response.setEntity(new StringEntity(
-                            "{\n" +
-                                    "  \"items\": [],\n" +
-                                    "  \"modular_content\": {},\n" +
-                                    "  \"pagination\": {\n" +
-                                    "    \"skip\": 50,\n" +
-                                    "    \"limit\": 2,\n" +
-                                    "    \"count\": 0,\n" +
-                                    "    \"next_page\": \"\"\n" +
-                                    "  }\n" +
-                                    "}"
-                    ));
-                });
+                (request, response, context) -> response.setEntity(
+                        new StringEntity(
+                                "{\n" +
+                                        "  \"items\": [],\n" +
+                                        "  \"modular_content\": {},\n" +
+                                        "  \"pagination\": {\n" +
+                                        "    \"skip\": 50,\n" +
+                                        "    \"limit\": 2,\n" +
+                                        "    \"count\": 0,\n" +
+                                        "    \"next_page\": \"\"\n" +
+                                        "  }\n" +
+                                        "}"
+                        )
+                ));
         HttpHost httpHost = this.start();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
@@ -436,7 +438,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -460,7 +462,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -471,6 +473,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testGetTaxonomyGroup() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -484,7 +487,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -546,7 +549,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -600,7 +603,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -641,7 +644,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -680,7 +683,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -710,7 +713,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -736,7 +739,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -765,7 +768,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -780,6 +783,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testContentItemListMapping() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -794,7 +798,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -828,7 +832,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.scanClasspathForMappings("com.kenticocloud");
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -864,7 +868,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -934,7 +938,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -973,11 +977,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testKenticoException() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
-                String.format("/%s/%s", projectId, "items/on_roatst"),
+                String.format("/%s/%s", projectId, "items/error"),
                 (request, response, context) -> {
                     response.setStatusCode(404);
                     response.setEntity(
@@ -989,39 +994,40 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
         ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
 
         try {
-            ContentItemResponse item = client.getItem("on_roatst");
+            ContentItemResponse item = client.getItem("error");
             Assert.fail("Expected KenticoErrorException");
         } catch (KenticoErrorException e) {
-            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getMessage());
-            Assert.assertEquals("The requested content item 'on_roatst' was not found.", e.getKenticoError().getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", e.getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", e.getKenticoError().getMessage());
         }
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testKentico500Exception() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
-                String.format("/%s/%s", projectId, "items/on_roatst"),
+                String.format("/%s/%s", projectId, "items/error"),
                 (request, response, context) -> response.setStatusCode(500));
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
         ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
 
         try {
-            ContentItemResponse item = client.getItem("on_roatst");
+            ContentItemResponse item = client.getItem("error");
             Assert.fail("Expected IOException");
         } catch (IOException e) {
             Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.", e.getMessage());
@@ -1077,7 +1083,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -1123,6 +1129,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testGetType() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -1136,7 +1143,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -1184,6 +1191,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testGetTypeElement() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
@@ -1197,7 +1205,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
+        //modify default baseUrl to point to test server, this is private so using reflection
         String testServerUri = httpHost.toURI() + "/%s";
         Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
         deliveryOptionsField.setAccessible(true);
@@ -1210,6 +1218,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenProjectIdIsNull() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         try {
@@ -1221,6 +1230,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenProjectIdIsEmpty() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("");
@@ -1233,6 +1243,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenDeliveryOptionsIsNull() {
         try {
             DeliveryOptions deliveryOptions = null;
@@ -1244,6 +1255,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenInvalidProjectIdProvided() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("Invalid GUID");
@@ -1256,6 +1268,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenNullPreviewApiKeyProvided() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
@@ -1269,6 +1282,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenEmptyPreviewApiKeyProvided() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
@@ -1281,7 +1295,9 @@ public class DeliveryClientTest extends LocalServerTestBase {
             Assert.assertEquals("The Preview API key is not specified.", e.getMessage());
         }
     }
+
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenBothProductionApiKeyAndPreviewApiKeyProvided() {
         DeliveryOptions deliveryOptions =
                 new DeliveryOptions("02a70003-e864-464e-b62c-e0ede97deb8c", "preview_api_key");
@@ -1295,6 +1311,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testExceptionWhenRetryCountIsLessThanZero() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");

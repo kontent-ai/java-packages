@@ -31,7 +31,7 @@ import com.kenticocloud.delivery.template.thymeleaf.ThymeleafInlineContentItemsR
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class RichTextElementConverterTest {
@@ -39,7 +39,7 @@ public class RichTextElementConverterTest {
     @Test
     public void testLinkReplacement() {
         RichTextElementConverter converter = new RichTextElementConverter(
-                link -> link.getUrlSlug(),
+                Link::getUrlSlug,
                 () -> "/404",
                 content -> content,
                 null,
@@ -74,7 +74,7 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem donateWithUs = new ContentItem();
@@ -119,7 +119,7 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("customer_winner"));
+        original.setModularContent(Collections.singletonList("customer_winner"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem customerWinner = new ContentItem();
@@ -164,7 +164,7 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
@@ -223,7 +223,7 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
@@ -287,7 +287,7 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(HashMap::new);
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
@@ -303,7 +303,7 @@ public class RichTextElementConverterTest {
     @Test
     public void testRichTextElementResolver() {
         RichTextElementConverter converter = new RichTextElementConverter(
-                link -> link.getUrlSlug(),
+                Link::getUrlSlug,
                 () -> "/404",
                 content -> "<p>replaced</p>",
                 null,
@@ -322,7 +322,7 @@ public class RichTextElementConverterTest {
                 .setSuffix(".template");
         resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
         TemplateEngineConfig templateEngineConfig = new TemplateEngineConfig();
-        templateEngineConfig.setResolvers(Arrays.asList(resolver));
+        templateEngineConfig.setResolvers(Collections.singletonList(resolver));
 
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
@@ -333,7 +333,7 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem donateWithUs = new ContentItem();
@@ -369,7 +369,7 @@ public class RichTextElementConverterTest {
                 .setSuffix(".template");
         resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
         TemplateEngineConfig templateEngineConfig = new TemplateEngineConfig();
-        templateEngineConfig.setResolvers(Arrays.asList(resolver));
+        templateEngineConfig.setResolvers(Collections.singletonList(resolver));
 
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
@@ -380,7 +380,7 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
@@ -430,7 +430,7 @@ public class RichTextElementConverterTest {
                 .setSuffix(".template");
         resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
         TemplateEngineConfig templateEngineConfig = new TemplateEngineConfig();
-        templateEngineConfig.setResolvers(Arrays.asList(resolver));
+        templateEngineConfig.setResolvers(Collections.singletonList(resolver));
 
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
@@ -441,7 +441,7 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Arrays.asList("donate_with_us"));
+        original.setModularContent(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
         contentItem.setModularContentProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();

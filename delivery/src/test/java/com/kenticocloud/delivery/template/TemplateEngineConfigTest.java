@@ -27,7 +27,7 @@ package com.kenticocloud.delivery.template;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 public class TemplateEngineConfigTest {
 
@@ -49,7 +49,7 @@ public class TemplateEngineConfigTest {
     @Test
     public void testInitWithReplacedPath() {
         TemplateEngineConfig config = new TemplateEngineConfig();
-        config.setPathsToScan(Arrays.asList("com.kenticocloud.delivery.resolvers"));
+        config.setPathsToScan(Collections.singletonList("com.kenticocloud.delivery.resolvers"));
         config.init();
         Assert.assertEquals(1, config.getResolvers().size());
     }

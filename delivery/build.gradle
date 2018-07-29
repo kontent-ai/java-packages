@@ -75,10 +75,11 @@ if (isCI()) {
         }
     }
 }
-
-test {
-    // show standard out and standard error of the test JVM(s) on the console
-    testLogging.showStandardStreams = true
+if (isCI()) {
+    test {
+        // show standard out and standard error of the test JVM(s) on the console on CI server
+        testLogging.showStandardStreams = true
+    }
 }
 
 task sourcesJar(type: Jar) {
@@ -103,6 +104,9 @@ tasks.withType(Jar) {
         into 'META-INF'
     }
 }
+
+// There are a few things in tests that we purposely have bad code.  This suppresses the compiler warnings.
+compileTestJava.options.warnings=false
 
 publishing {
     publications {

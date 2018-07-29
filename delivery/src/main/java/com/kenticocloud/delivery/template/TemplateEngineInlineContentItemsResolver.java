@@ -26,7 +26,7 @@ package com.kenticocloud.delivery.template;
 
 public abstract class TemplateEngineInlineContentItemsResolver {
 
-    public TemplateEngineInlineContentItemsResolver() throws RenderingEngineMissingException {
+    public TemplateEngineInlineContentItemsResolver() {
         //Default constructor
     }
 

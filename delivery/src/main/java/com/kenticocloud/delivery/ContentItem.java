@@ -117,7 +117,7 @@ public class ContentItem {
      * @return The {@link ContentItem}.  Returns null if it was not included in the response.
      */
     public ContentItem getModularContent(String codeName) {
-        //This shouldn't happen if this is deserialized from Jackson, but protecting against the NPE for unexpected
+        //This shouldn't happen if this is de-serialized from Jackson, but protecting against the NPE for unexpected
         //usages.
         if (modularContentProvider == null) {
             return null;

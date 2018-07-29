@@ -66,7 +66,7 @@ public class RichTextElementConverter {
         Global pattern flags
             g modifier: global. All matches (don't return after first match)
     */
-    private Pattern linkPattern = Pattern.compile("<a[^>]+?data-item-id=\\\"(?<id>[^\\\"]+)\\\"[^>]*>");
+    private Pattern linkPattern = Pattern.compile("<a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*>");
 
     /*
     Regex prior to the Java \ escapes:
@@ -97,9 +97,9 @@ public class RichTextElementConverter {
             g modifier: global. All matches (don't return after first match)
      */
     private Pattern modularContentPattern = Pattern.compile(
-            "<object type=\\\"application\\/kenticocloud\" data-type=\\\"" +
-                    "(?<type>[^\\\"]+)\\\" data-codename=\\\"" +
-                    "(?<codename>[^\\\"]+)\\\"><\\/object>");
+            "<object type=\"application/kenticocloud\" data-type=\"" +
+                    "(?<type>[^\"]+)\" data-codename=\"" +
+                    "(?<codename>[^\"]+)\"></object>");
 
     public RichTextElementConverter(
             ContentLinkUrlResolver contentLinkUrlResolver,
@@ -201,7 +201,7 @@ public class RichTextElementConverter {
 
                 //Make resolved replacement string a literal string to make sure dollar signs are not interpreted as capturing groups
                 // and add resolved string to the buffer
-                matcher.appendReplacement(buffer, matcher.quoteReplacement(resolvedString));
+                matcher.appendReplacement(buffer, Matcher.quoteReplacement(resolvedString));
             }
         }
         matcher.appendTail(buffer);

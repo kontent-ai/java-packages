@@ -270,6 +270,7 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testProjectionNull() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().projection(null).build();
         Assert.assertEquals(0, params.size());
@@ -322,6 +323,7 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    @SuppressWarnings("all")
     public void testLanguageNull() {
         String nullValue = null;
         List<NameValuePair> params = DeliveryParameterBuilder.params().language(nullValue).build();

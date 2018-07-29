@@ -50,7 +50,7 @@ public class TemplateEngineConfig {
     public void init() {
         if (isAutoRegister()) {
             FastClasspathScanner scanner =
-                    new FastClasspathScanner(getPathsToScan().toArray(new String[getPathsToScan().size()]));
+                    new FastClasspathScanner(getPathsToScan().toArray(new String[0]));
             scanner.matchSubclassesOf(TemplateEngineInlineContentItemsResolver.class, subclass -> {
                 try {
                     TemplateEngineInlineContentItemsResolver resolver =

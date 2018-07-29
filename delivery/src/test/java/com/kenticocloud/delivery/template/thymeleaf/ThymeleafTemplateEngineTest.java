@@ -35,7 +35,7 @@ import com.kenticocloud.delivery.template.ViewResolverConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ThymeleafTemplateEngineTest {
@@ -122,7 +122,7 @@ public class ThymeleafTemplateEngineTest {
         ThymeleafInlineContentItemsResolver resolver = new ThymeleafInlineContentItemsResolver();
         ViewResolverConfiguration configuration = new ViewResolverConfiguration();
         List<String> prefixes = configuration.getPrefixes();
-        List<String> replacements = Arrays.asList("nonExistentLocation/");
+        List<String> replacements = Collections.singletonList("nonExistentLocation/");
         configuration.setPrefixes(replacements);
         resolver.getTemplateEngine().setViewResolverConfiguration(configuration);
         ArticleItem articleItem = new ArticleItem();

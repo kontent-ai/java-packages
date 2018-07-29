@@ -110,7 +110,7 @@ public class DeliveryParameterBuilder {
     }
 
     public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
-        return filterIn(attribute, values.toArray(new String[values.size()]));
+        return filterIn(attribute, values.toArray(new String[0]));
     }
 
     public DeliveryParameterBuilder filterContains(String attribute, String value) {
@@ -128,7 +128,7 @@ public class DeliveryParameterBuilder {
     }
 
     public DeliveryParameterBuilder filterAny(String attribute, Collection<String> values) {
-        return filterAny(attribute, values.toArray(new String[values.size()]));
+        return filterAny(attribute, values.toArray(new String[0]));
     }
 
     public DeliveryParameterBuilder filterAll(String attribute, String... values) {
@@ -139,7 +139,7 @@ public class DeliveryParameterBuilder {
     }
 
     public DeliveryParameterBuilder filterAll(String attribute, Collection<String> values) {
-        return filterAll(attribute, values.toArray(new String[values.size()]));
+        return filterAll(attribute, values.toArray(new String[0]));
     }
 
     public DeliveryParameterBuilder orderByAsc(String attribute) {

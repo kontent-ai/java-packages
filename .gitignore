@@ -43,6 +43,7 @@ hs_err_pid*
 .idea/dataSources.*
 .idea/dataSources/
 .idea/dictionaries/*
+!.idea/dictionaries/kentico.xml
 .idea/shelf/
 .idea/modules.xml
 *.iml

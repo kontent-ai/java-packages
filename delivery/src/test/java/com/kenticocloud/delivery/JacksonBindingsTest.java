@@ -281,7 +281,7 @@ public class JacksonBindingsTest {
         KenticoError kenticoError = objectMapper.readValue(
                 this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
         Assert.assertNotNull("object failed deserialization", kenticoError);
-        Assert.assertEquals("The requested content item 'on_roatst' was not found.", kenticoError.getMessage());
+        Assert.assertEquals("The requested content item 'error' was not found.", kenticoError.getMessage());
         Assert.assertEquals("HyufT6wUgEc=", kenticoError.getRequestId());
         Assert.assertEquals(100, kenticoError.getErrorCode());
         Assert.assertEquals(0, kenticoError.getSpecificCode());
