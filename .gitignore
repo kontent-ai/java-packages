@@ -1,6 +1,6 @@
 .gradle
-/build/
-/out/
+build/
+out/
 signing.gpg
 deploy_key
 deploy_key.pub

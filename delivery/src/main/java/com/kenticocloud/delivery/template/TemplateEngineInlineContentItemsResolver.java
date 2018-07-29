@@ -24,18 +24,14 @@
 
 package com.kenticocloud.delivery.template;
 
-public abstract class TemplateEngineInlineContentItemsResolver {
+public interface TemplateEngineInlineContentItemsResolver {
 
-    public TemplateEngineInlineContentItemsResolver() {
-        //Default constructor
-    }
-
-    public String resolve(TemplateEngineModel data) {
+    default String resolve(TemplateEngineModel data) {
         TemplateEngine templateEngine = getTemplateEngine();
         return templateEngine.process(data);
     }
 
-    public abstract boolean supports(TemplateEngineModel data);
+    boolean supports(TemplateEngineModel data);
 
-    public abstract TemplateEngine getTemplateEngine();
+    TemplateEngine getTemplateEngine();
 }

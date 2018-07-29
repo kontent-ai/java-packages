@@ -37,7 +37,7 @@ public class DeliveryOptions {
     String previewApiKey;
     boolean usePreviewApi = false;
     boolean waitForLoadingNewContent = false;
-    int retryAttempts = 0;
+    int retryAttempts = 3;
 
     /**
      * Constructs an empty settings instance of {@link DeliveryOptions}.

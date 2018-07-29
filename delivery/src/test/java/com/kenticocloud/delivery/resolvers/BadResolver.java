@@ -29,7 +29,7 @@ import com.kenticocloud.delivery.template.TemplateEngine;
 import com.kenticocloud.delivery.template.TemplateEngineInlineContentItemsResolver;
 import com.kenticocloud.delivery.template.TemplateEngineModel;
 
-public class BadResolver extends TemplateEngineInlineContentItemsResolver {
+public class BadResolver implements TemplateEngineInlineContentItemsResolver {
 
     public BadResolver() throws RenderingEngineMissingException {
         throw new RenderingEngineMissingException("Bad resolver", new Exception());

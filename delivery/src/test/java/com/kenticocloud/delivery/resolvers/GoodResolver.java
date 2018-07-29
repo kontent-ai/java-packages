@@ -26,10 +26,7 @@ package com.kenticocloud.delivery.resolvers;
 
 import com.kenticocloud.delivery.template.*;
 
-public class GoodResolver extends TemplateEngineInlineContentItemsResolver {
-
-    public GoodResolver() {
-    }
+public class GoodResolver implements TemplateEngineInlineContentItemsResolver {
 
     @Override
     public boolean supports(TemplateEngineModel data) {

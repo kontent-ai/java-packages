@@ -32,7 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.Thymeleaf;
 
-public class ThymeleafInlineContentItemsResolver extends TemplateEngineInlineContentItemsResolver {
+public class ThymeleafInlineContentItemsResolver implements TemplateEngineInlineContentItemsResolver {
     private static final Logger logger = LoggerFactory.getLogger(ThymeleafInlineContentItemsResolver.class);
 
     protected ThymeleafTemplateEngine thymeleafTemplateEngine;

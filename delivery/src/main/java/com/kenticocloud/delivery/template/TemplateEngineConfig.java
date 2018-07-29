@@ -51,10 +51,10 @@ public class TemplateEngineConfig {
         if (isAutoRegister()) {
             FastClasspathScanner scanner =
                     new FastClasspathScanner(getPathsToScan().toArray(new String[0]));
-            scanner.matchSubclassesOf(TemplateEngineInlineContentItemsResolver.class, subclass -> {
+            scanner.matchClassesImplementing(TemplateEngineInlineContentItemsResolver.class, implementingClass -> {
                 try {
                     TemplateEngineInlineContentItemsResolver resolver =
-                            ConstructorUtils.invokeConstructor(subclass, null);
+                            ConstructorUtils.invokeConstructor(implementingClass, null);
                     resolver.getTemplateEngine().setViewResolverConfiguration(getViewResolverConfiguration());
                     addResolvers(resolver);
                     logger.info("Registered inline content template resolver: {}", resolver.getClass().getName());

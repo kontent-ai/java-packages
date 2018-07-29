@@ -308,7 +308,7 @@ public class DeliveryClient {
 
     public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) throws IOException {
         HttpUriRequest request = buildGetRequest(
-                String.format("%s/%s", TAXONOMIES, taxonomyGroupCodename), params);
+                String.format(URL_CONCAT, TAXONOMIES, taxonomyGroupCodename), params);
         return executeRequest(request, TaxonomyGroup.class);
     }
 
@@ -456,7 +456,7 @@ public class DeliveryClient {
             logger.error("Kentico API server error, status: {}", status);
             throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
         } else if (status >= 400) {
-            logger.error("Kentico API request error, status: ", status);
+            logger.error("Kentico API request error, status: {}", status);
             InputStream inputStream = response.getEntity().getContent();
             KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
             inputStream.close();
