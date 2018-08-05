@@ -29,46 +29,47 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
- * Content types listing response
- * <p>
- * When you retrieve a list of content items or content types from your project, the Delivery API returns a
- * {@link ContentTypesListingResponse}
+ * Content type listing response from an invocation of {@link DeliveryClient#getTypes()}, or
+ * {@link DeliveryClient#getTypes(List)}.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+ *      KenticoCloud API reference - List content types</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+ *      KenticoCloud API reference - Content type object</a>
+ * @see ContentType
  * @see DeliveryClient#getTypes()
  * @see DeliveryClient#getTypes(List)
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class ContentTypesListingResponse {
 
+    /**
+     * The {@link ContentType}s returned by this ContentTypesListingResponse.
+     *
+     * @see         <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+     *              KenticoCloud API reference - List content types</a>
+     * @see         <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     *              KenticoCloud API reference - Content type object</a>
+     * @see         ContentType
+     * @param types New value for the {@link ContentType}s of this ContentTypesListingResponse.
+     * @return      The {@link ContentType}s of this ContentTypesListingResponse.
+     */
     @JsonProperty("types")
     List<ContentType> types;
 
+    /**
+     * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
+     *
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     *                      KenticoCloud API reference - Listing response paging</a>
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#section-pagination-object">
+     *                      KenticoCloud API reference - Pagination object</a>
+     * @param pagination    New value for the {@link Pagination} of this ContentTypesListingResponse
+     * @return              The {@link Pagination} for this ContentTypesListingResponse identifying the current page.
+     */
     @JsonProperty("pagination")
     Pagination pagination;
-
-    public ContentTypesListingResponse() {
-        //Default constructor
-    }
-
-    /**
-     * A list of content types
-     * @return list of {@link ContentType} objects
-     */
-    public List<ContentType> getTypes() {
-        return types;
-    }
-
-    public void setTypes(List<ContentType> types) {
-        this.types = types;
-    }
-
-    /**
-     * Information about the retrieved page
-     * @return the {@link Pagination} object identifying the current page
-     */
-    public Pagination getPagination() {
-        return pagination;
-    }
-
-    public void setPagination(Pagination pagination) {
-        this.pagination = pagination;
-    }
 }

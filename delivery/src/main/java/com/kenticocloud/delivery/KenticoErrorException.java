@@ -26,6 +26,7 @@ package com.kenticocloud.delivery;
 
 /**
  * Thrown to indicate failure of a Kentico request.
+ *
  * @see KenticoError
  */
 public class KenticoErrorException extends RuntimeException {

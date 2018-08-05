@@ -31,64 +31,88 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Content item listing response
- * <p>
- * When retrieving a single content item, the Delivery API returns a {@link ContentItemResponse}
+ * Content item listing response from an invocation of {@link DeliveryClient#getItem(String)}, or
+ * {@link DeliveryClient#getItem(String, List)}.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ *      KenticoCloud API reference - Content item object</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+ *      KenticoCloud API reference - View a content item</a>
+ * @see ContentItem
  * @see DeliveryClient#getItem(String)
  * @see DeliveryClient#getItem(String, List)
  */
+@lombok.Getter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class ContentItemResponse implements ModularContentProvider {
 
+    /**
+     * The {@link ContentItem} returned by this ContentItemResponse.
+     *
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     *          KenticoCloud API reference - Content item object</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *          KenticoCloud API reference - View a content item</a>
+     * @return  The {@link ContentItem} of this ContentItemResponse.
+     */
     @JsonProperty("item")
     ContentItem item;
 
+    /**
+     * A map of content items used in modular content and Rich text elements.
+     *
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
+     *          KenticoCloud API reference - Modular content</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     *          KenticoCloud API reference - Content item object</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *          KenticoCloud API reference - View a content item</a>
+     * @return  The modular {@link ContentItem}s referenced in this response.
+     */
     @JsonProperty("modular_content")
     Map<String, ContentItem> modularContent;
 
     @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
-    public ContentItemResponse() {
-        //Default constructor
-    }
-
     /**
-     * The {@link ContentItem} response
-     * @return the {@link ContentItem} requested
+     * Returns a new instance of T by mapping fields to elements in this response's {@link #getItem()}.  Element fields
+     * are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by an
+     * {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.  When
+     * passing in Object.class, the type returned will be an instance of the class registered with the
+     * {@link DeliveryClient} that is annotated with {@link ContentItemMapping} that matches the
+     * {@link System#type} of this ContentItem (however still returned as type Object).
+     * <p>
+     * If {@link Object} is passed in, the {@link StronglyTypedContentItemConverter} will cast this ContentItem to a
+     * type that is mapped this ContentItem's {@link System#type} from a previous registration via the
+     * {@link DeliveryClient#registerType(Class)} or {@link DeliveryClient#registerType(String, Class)} methods.  If no
+     * registration has been done, then this same instance of ContentItem will be returned.
+     *
+     * @param   tClass The class which a new instance should be returned from using this ContentItem.
+     * @param   <T> The type of class which will be returned.
+     * @return  An instance of T with data mapped from the {@link ContentItem} in this response.
+     * @see     DeliveryClient#registerType(Class)
+     * @see     DeliveryClient#registerType(String, Class)
+     * @see     ContentItemMapping
+     * @see     ElementMapping
+     * @see     StronglyTypedContentItemConverter
      */
-    public ContentItem getItem() {
-        return item;
+    public <T> T castTo(Class<T> tClass) {
+        return stronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
     }
 
-    public void setItem(ContentItem item) {
+    void setItem(ContentItem item) {
         this.item = item;
         item.setModularContentProvider(this);
     }
 
-    /**
-     * A map of content items used in Modular content and Rich text elements
-     * @return map of {@link ContentItem} objects
-     */
-    @Override
-    public Map<String, ContentItem> getModularContent() {
-        return modularContent;
-    }
-
-    public void setModularContent(Map<String, ContentItem> modularContent) {
+    void setModularContent(Map<String, ContentItem> modularContent) {
         this.modularContent = modularContent;
         modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
-    }
-
-    /**
-     * Returns a new instance of T by mapping fields to elements in this content item.  Element fields are mapped
-     * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
-     * annotation.  T must have a default constructor and have standard setter methods.
-     * @param tClass The class which a new instance should be returned from
-     * @param <T> The type of class
-     * @return An instance of T with data mapped from the {@link ContentItem} in this response.
-     */
-    public <T> T castTo(Class<T> tClass) {
-        return stronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
     }
 
     void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {

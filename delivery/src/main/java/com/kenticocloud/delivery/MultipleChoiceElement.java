@@ -31,19 +31,16 @@ import java.util.List;
 /**
  * Object model for Multiple choice elements
  */
-public class MultipleChoiceElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class MultipleChoiceElement extends Element<List<Option>> {
 
     static final String TYPE_VALUE = "multiple_choice";
 
-    @JsonProperty("value")
-    List<Option> value;
-
-    @JsonProperty("options")
-    List<Option> options;
-
-    public MultipleChoiceElement() {
-        setType(TYPE_VALUE);
-    }
+    @JsonProperty("type")
+    String type;
 
     /**
      * The value of the selected elements.
@@ -51,17 +48,13 @@ public class MultipleChoiceElement extends Element {
      * The value of a Multiple choice element is a list of option objects. Each option object has a name and codename.
      * <p>
      * Note, this is not returned when querying for the element by type.
-     * @return a list of selected elements
-     * @see Option
+     *
+     * @param value Sets the value of this
+     * @return      A list of selected elements.
+     * @see         Option
      */
-    @Override
-    public List<Option> getValue() {
-        return value;
-    }
-
-    public void setValue(List<Option> value) {
-        this.value = value;
-    }
+    @JsonProperty("value")
+    List<Option> value;
 
     /**
      * The available option elements on this content type element.
@@ -69,14 +62,15 @@ public class MultipleChoiceElement extends Element {
      * The value of a Multiple choice element is a list of option objects. Each option object has a name and codename.
      * <p>
      * Note, this is only returned when querying for the element by type.
-     * @return a list of option elements
-     * @see Option
+     *
+     * @param options   Sets the options of this.
+     * @return          A list of option elements.
+     * @see             Option
      */
-    public List<Option> getOptions() {
-        return options;
-    }
+    @JsonProperty("options")
+    List<Option> options;
 
-    public void setOptions(List<Option> options) {
-        this.options = options;
+    public MultipleChoiceElement() {
+        setType(TYPE_VALUE);
     }
 }

@@ -30,15 +30,43 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Object model for Rich text elements
+ * Object model for Rich text elements.
+ * <p>
+ * The value of a Rich text element is formatted text.
+ * <p>
+ * Besides formatted text in the element's value attribute, Rich text elements can contain inline images and links
+ * to other content items.
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
 public class RichTextElement extends TextElement {
 
     static final String TYPE_VALUE = "rich_text";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * Images associated with this rich text element.
+     *
+     * @param images    Sets the images of this.
+     * @return          A map of {@link Image} objects.
+     * @see             Image
+     */
     @JsonProperty("images")
     Map<String, Image> images;
 
+    /**
+     * Links associated with this rich text element.
+     * <p>
+     * Each object in the links collection represents a content item ID in the GUID format,
+     * e.g., f4b3fc05-e988-4dae-9ac1-a94aba566474.
+     *
+     * @param links Sets the links of this.
+     * @return      A map of {@link Link} objects.
+     */
     @JsonProperty("links")
     Map<String, Link> links;
 
@@ -47,59 +75,5 @@ public class RichTextElement extends TextElement {
 
     public RichTextElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of a Rich text element is formatted text.
-     * <p>
-     * Besides formatted text in the element's value attribute, Rich text elements can contain inline images and links
-     * to other content items.
-     * @return formatted text
-     */
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    /**
-     * Images associated with this rich text element.
-     * @return a map of {@link Image} objects
-     * @see Image
-     */
-    public Map<String, Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Map<String, Image> images) {
-        this.images = images;
-    }
-
-    /**
-     * Links associated with this rich text element.
-     * <p>
-     * Each object in the links collection represents a content item ID in the GUID format,
-     * e.g., f4b3fc05-e988-4dae-9ac1-a94aba566474.
-     * @return a map of {@link Link} objects
-     */
-    public Map<String, Link> getLinks() {
-        return links;
-    }
-
-    public void setLinks(Map<String, Link> links) {
-        this.links = links;
-    }
-
-    /**
-     * A list of {@link ContentItem} objects inserted into rich text as modules.
-     * <p>
-     * The list is represented as an array of strings, each string being a codename of a content item.
-     * @return a list of {@link ContentItem} codenames
-     */
-    public List<String> getModularContent() {
-        return modularContent;
-    }
-
-    public void setModularContent(List<String> modularContent) {
-        this.modularContent = modularContent;
     }
 }

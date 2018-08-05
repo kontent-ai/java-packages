@@ -45,7 +45,7 @@ public class RichTextElementConverterTest {
                 null,
                 null);
         RichTextElement original = new RichTextElement();
-        original.setValue("<p>Each AeroPress comes with a <a href=\"\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"\" data-item-id=\"not-found\">box</a>.</p>");
+        original.setValue("<p>Each AeroPress comes with a <a href=\"\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"\" data-item-id=\"not-found\">box</a>.  See <a href=\"https://en.wikipedia.org/wiki/Coffee_filter\">Coffee filters</a>.</p>");
         Link link = new Link();
         link.setUrlSlug("/test me/\"<>&\u0080");
         HashMap<String, Link> links = new HashMap<>();
@@ -53,7 +53,7 @@ public class RichTextElementConverterTest {
         original.setLinks(links);
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
-                "<p>Each AeroPress comes with a <a href=\"/test me/&#34;&#60;&#62;&#38;&#128;\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"/404\" data-item-id=\"not-found\">box</a>.</p>",
+                "<p>Each AeroPress comes with a <a href=\"/test me/&#34;&#60;&#62;&#38;&#128;\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"/404\" data-item-id=\"not-found\">box</a>.  See <a href=\"https://en.wikipedia.org/wiki/Coffee_filter\">Coffee filters</a>.</p>",
                 converted.getValue());
     }
 

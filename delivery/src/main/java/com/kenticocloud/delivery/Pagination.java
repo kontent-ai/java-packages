@@ -29,68 +29,53 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Pagination object
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class Pagination {
-
-    @JsonProperty("skip")
-    Integer skip;
-
-    @JsonProperty("limit")
-    Integer limit;
-
-    @JsonProperty("count")
-    Integer count;
-
-    @JsonProperty("next_page")
-    String nextPage;
 
     /**
      * Number of content items skipped from the response
-     * @return Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query parameter
+     *
+     * @param skip  Sets skip on this.
+     * @return      Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query
+     *              parameter.
      */
-    public Integer getSkip() {
-        return skip;
-    }
-
-    public void setSkip(Integer skip) {
-        this.skip = skip;
-    }
+    @JsonProperty("skip")
+    Integer skip;
 
     /**
      * Number of content items returned from the response
-     * @return Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query parameter
+     *
+     * @param limit Sets limit on this.
+     * @return      Reflects the value set by the {@link DeliveryParameterBuilder#page(Integer, Integer)} query
+     *              parameter.
      */
-    public Integer getLimit() {
-        return limit;
-    }
-
-    public void setLimit(Integer limit) {
-        this.limit = limit;
-    }
+    @JsonProperty("limit")
+    Integer limit;
 
     /**
      * Number of retrieved content items
      * <p>
      * If the limit and skip query parameters ({@link DeliveryParameterBuilder#page(Integer, Integer)}) aren't set, the
      * count attribute will contain the total number of content items matching the specified filtering parameters.
-     * @return Number of retrieved content items
+     *
+     * @param count Sets count on this.
+     * @return      Number of retrieved content items.
      */
-    public Integer getCount() {
-        return count;
-    }
-
-    public void setCount(Integer count) {
-        this.count = count;
-    }
+    @JsonProperty("count")
+    Integer count;
 
     /**
-     * URL to the next page of results.
-     * @return URL to the next page of results (note, support for this in the API is still WIP)
+     * URL to the next page of results.  Generally speaking, this value will not be needed.
+     * Consider using {@link Page#nextPage()}.
+     *
+     * @param nextPage  Sets nextPage on this.
+     * @return          URL to the next page of results.
      */
-    public String getNextPage() {
-        return nextPage;
-    }
+    @JsonProperty("next_page")
+    String nextPage;
 
-    public void setNextPage(String nextPage) {
-        this.nextPage = nextPage;
-    }
 }

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,49 +24,19 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.io.IOException;
 
 /**
- * Object model for Link elements
- * <p>
- * Links associated with rich text elements
- *
- * @see RichTextElement
+ * Thrown when an {@link IOException} is thrown when executing against the KenticoCloud API.  Generally means
+ * connectivity problems with Kentico.
  */
-@lombok.Getter
-@lombok.Setter
-@lombok.ToString
-@lombok.EqualsAndHashCode
-@lombok.NoArgsConstructor
-public class Link {
+public class KenticoIOException extends RuntimeException {
 
-    /**
-     * Content type of the content item
-     *
-     * @param type  Sets the type of this.
-     * @return      The content item type codename.
-     */
-    @JsonProperty("type")
-    String type;
+    KenticoIOException(String message) {
+        super(message);
+    }
 
-    /**
-     * Display name of the element
-     *
-     * @param codename  Sets the codename of this.
-     * @return          The codename of the link element.
-     */
-    @JsonProperty("codename")
-    String codename;
-
-    /**
-     * URL slug of the content item
-     * <p>
-     * Empty string if the content item's type does not use a URL slug element
-     *
-     * @param urlSlug   Sets the urlSlug of this.
-     * @return          URL slug of the content item.
-     */
-    @JsonProperty("url_slug")
-    String urlSlug;
-
+    KenticoIOException(IOException cause) {
+        super(cause);
+    }
 }

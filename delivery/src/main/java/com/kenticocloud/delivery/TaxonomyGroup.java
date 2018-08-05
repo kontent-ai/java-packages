@@ -28,27 +28,32 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Object model for a single Taxonomy group
+ */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class TaxonomyGroup {
 
+    /**
+     * System attributes fo the taxonomy group.
+     *
+     * @param system    Sets the system of this.
+     * @return          Returns the system attributes of this.
+     */
     @JsonProperty("system")
     System system;
 
+    /**
+     * Taxonomy terms in this taxonomy group.
+     *
+     * @param terms Sets the taxonomy terms of this.
+     * @return      Returns the taxonomy terms in this group.
+     */
     @JsonProperty("terms")
     List<Taxonomy> terms;
 
-    public System getSystem() {
-        return system;
-    }
-
-    public void setSystem(System system) {
-        this.system = system;
-    }
-
-    public List<Taxonomy> getTerms() {
-        return terms;
-    }
-
-    public void setTerms(List<Taxonomy> terms) {
-        this.terms = terms;
-    }
 }

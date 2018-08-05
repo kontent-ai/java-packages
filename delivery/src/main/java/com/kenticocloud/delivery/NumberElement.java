@@ -29,27 +29,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object model for Number elements
  */
-public class NumberElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class NumberElement extends Element<Double> {
 
     static final String TYPE_VALUE = "number";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * The value of a Number element is a decimal number. If empty, the value is null.
+     *
+     * @param value Sets the value of this.
+     * @return      The value of the number.
+     */
     @JsonProperty("value")
     Double value;
 
     public NumberElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of a Number element is a decimal number. If empty, the value is null.
-     * @return the value of the number
-     */
-    @Override
-    public Double getValue() {
-        return value;
-    }
-
-    public void setValue(Double value) {
-        this.value = value;
     }
 }

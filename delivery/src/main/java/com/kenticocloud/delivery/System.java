@@ -35,116 +35,76 @@ import java.util.List;
  * Every {@link ContentItem} and {@link ContentType} in a JSON response from the Delivery API contains a system
  * attribute. This attribute represents the System object with information about the retrieved content item
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class System {
-
-    @JsonProperty("id")
-    String id;
-
-    @JsonProperty("name")
-    String name;
-
-    @JsonProperty("codename")
-    String codename;
-
-    @JsonProperty("language")
-    String language;
-
-    @JsonProperty("type")
-    String type;
-
-    @JsonProperty("sitemap_locations")
-    List<String> sitemapLocations;
-
-    @JsonProperty("last_modified")
-    ZonedDateTime lastModified;
-
-    public System() {
-        //Default constructor
-    }
 
     /**
      * Unique identifier of the content item
-     * @return identifier
+     *
+     * @param id    Sets the id of this.
+     * @return      The identifier of this.
      */
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    @JsonProperty("id")
+    String id;
 
     /**
-     * Display name of the content item
-     * @return display name
+     * Display name of the content item.
+     *
+     * @param name  Sets the name of this.
+     * @return      The display name of this.
      */
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonProperty("name")
+    String name;
 
     /**
      * Codename of the content item
      * <p>
      * Generated from the content item's display name.
-     * @return codename
+     *
+     * @param codename  Sets the codename of this.
+     * @return          The codename of this.
      */
-    public String getCodename() {
-        return codename;
-    }
-
-    public void setCodename(String codename) {
-        this.codename = codename;
-    }
+    @JsonProperty("codename")
+    String codename;
 
     /**
      * Codename of the language variant
-     * @return language variant
+     *
+     * @param language  Sets the language of this.
+     * @return          The language variant of this.
      */
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
-    }
+    @JsonProperty("language")
+    String language;
 
     /**
      * Codename of the content type
-     * @return the content type codename
+     *
+     * @param type  Sets the type of this.
+     * @return      The content type codename.
      */
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    @JsonProperty("type")
+    String type;
 
     /**
      * A list of sitemap locations the content item is in
-     * @return sitemap location strings
+     *
+     * @param sitemapLocations  Sets the sitemapLocations of this.
+     * @return                  The sitemap location strings of this.
      */
-    public List<String> getSitemapLocations() {
-        return sitemapLocations;
-    }
-
-    public void setSitemapLocations(List<String> sitemapLocations) {
-        this.sitemapLocations = sitemapLocations;
-    }
+    @JsonProperty("sitemap_locations")
+    List<String> sitemapLocations;
 
     /**
      * When was the content item last modified
-     * @return Zoned DateTime generated from ISO 8601 formatted string
+     *
+     * @param lastModified  Sets the lastModified time of this.
+     * @return              Zoned DateTime generated from ISO 8601 formatted string
      */
-    public ZonedDateTime getLastModified() {
-        return lastModified;
-    }
+    @JsonProperty("last_modified")
+    ZonedDateTime lastModified;
 
-    public void setLastModified(ZonedDateTime lastModified) {
-        this.lastModified = lastModified;
-    }
 }

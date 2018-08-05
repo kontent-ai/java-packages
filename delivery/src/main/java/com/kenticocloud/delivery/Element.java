@@ -48,77 +48,57 @@ import java.util.List;
     @JsonSubTypes.Type(value = TaxonomyElement.class, name = TaxonomyElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE)
 })
-public abstract class Element {
-
-    @JsonProperty("type")
-    String type;
-
-    @JsonProperty("name")
-    String name;
-
-    @JsonProperty("codename")
-    String codeName;
-
-    ContentItem parent;
-
-    public Element() {
-        //Default constructor
-    }
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
+public abstract class Element<T> {
 
     /**
      * Type of the element
      * <p>
      * Valid values: text, rich_text, number, multiple_choice, date_time, asset, modular_content, taxonomy, url_slug.
-     * @return the codename for this element type
+     *
+     * @param type  the type of element
+     * @return      the codename for this element type
      */
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
+    @JsonProperty("type")
+    String type;
 
     /**
      * Display name of the element
-     * @return the display name of this element
+     *
+     * @param name  the name of this element
+     * @return      the display name of this element
      */
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonProperty("name")
+    String name;
 
     /**
      * The codename for this element
      * <p>
      * Note: This is only populated when querying an individual content type element.
-     * @return codename for this content type element as defined in a content type
-     * @see DeliveryClient#getContentTypeElement(String, String)
-     * @see DeliveryClient#getContentTypeElement(String, String, List)
+     *
+     * @param codeName  the codename of this element
+     * @return          codename for this content type element as defined in a content type
+     * @see             DeliveryClient#getContentTypeElement(String, String)
+     * @see             DeliveryClient#getContentTypeElement(String, String, List)
      */
-    public String getCodeName() {
-        return codeName;
-    }
+    @JsonProperty("codename")
+    String codeName;
 
-    public void setCodeName(String codeName) {
-        this.codeName = codeName;
-    }
-
-    public ContentItem getParent() {
-        return parent;
-    }
-
-    public void setParent(ContentItem parent) {
-        this.parent = parent;
-    }
+    /**
+     * A reference to the parent ContentItem to this element.
+     *
+     * @param parent    the parent to this
+     * @return          the parent to this
+     */
+    ContentItem parent;
 
     /**
      * Returns the value of the element.
-     * @param <T> Type will depend on the concrete class.
      * @return The value of the element.
      */
-    public abstract <T> T getValue();
+    public abstract T getValue();
 }

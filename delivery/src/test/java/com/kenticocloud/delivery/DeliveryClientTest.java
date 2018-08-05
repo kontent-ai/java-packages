@@ -29,7 +29,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
-import org.apache.http.*;
+import org.apache.http.HttpHost;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.entity.StringEntity;
@@ -136,7 +137,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
             client.getItem("on_roasts");
             Assert.fail("Expected a failure exception");
         } catch (Exception e) {
-            Assert.assertTrue(e instanceof JsonParseException);
+            Assert.assertTrue(e instanceof KenticoIOException);
+            Assert.assertTrue(e.getCause() instanceof JsonParseException);
         }
         Assert.assertEquals(2, sentErrorCount[0]);
     }
@@ -1029,8 +1031,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         try {
             ContentItemResponse item = client.getItem("error");
             Assert.fail("Expected IOException");
-        } catch (IOException e) {
-            Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.", e.getMessage());
+        } catch (KenticoIOException e) {
+            Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: HTTP/1.1 500 Internal Server Error", e.getMessage());
         }
     }
 
@@ -1091,41 +1093,6 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentTypesListingResponse types = client.getTypes();
         Assert.assertNotNull(types);
-    }
-
-    @Test
-    public void testGetTypeWithParams() throws Exception {
-        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
-
-        this.serverBootstrap.registerHandler(
-                String.format("/%s/%s", projectId, "types/coffee"),
-                (request, response, context) -> {
-                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
-
-                    List<NameValuePair> nameValuePairs =
-                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
-                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
-                    Assert.assertEquals(1, params.size());
-                    Assert.assertEquals("/path1/path2/test-article",params.get("elements.url_pattern"));
-                    response.setEntity(
-                            new InputStreamEntity(
-                                    this.getClass().getResourceAsStream("SampleContentType.json")
-                            )
-                    );
-                });
-        HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
-        DeliveryOptions deliveryOptions = new DeliveryOptions();
-        deliveryOptions.setProjectId(projectId);
-        deliveryOptions.setProductionEndpoint(testServerUri);
-
-        DeliveryClient client = new DeliveryClient(deliveryOptions);
-        client.setContentLinkUrlResolver(Link::getUrlSlug);
-
-        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
-        ContentType type = client.getType("coffee", urlPattern);
-
-        Assert.assertNotNull(type);
     }
 
     @Test

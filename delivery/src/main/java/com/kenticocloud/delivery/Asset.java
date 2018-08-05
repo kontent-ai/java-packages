@@ -27,86 +27,59 @@ package com.kenticocloud.delivery;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Object model for Asset elements
+ * Object model for Asset elements.
+ *
+ * @see AssetsElement
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#section-asset">KenticoCloud API reference - Asset</a>
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class Asset {
 
+    /**
+     * File name of the asset.
+     *
+     * @param name  New value for the name of this asset.
+     * @return      The name of the asset.
+     */
     @JsonProperty("name")
     String name;
 
+    /**
+     * MIME type of the asset.
+     *
+     * @param type  New value for the MIME type of this asset.
+     * @return      The MIME type of this asset.
+     */
     @JsonProperty("type")
     String type;
 
+    /**
+     * Size of the asset in bytes.
+     *
+     * @param size  New value for the size of this asset in bytes.
+     * @return      The size of this asset in bytes.
+     */
     @JsonProperty("size")
     Integer size;
 
+    /**
+     * Description of the asset.
+     *
+     * @param description   New value for the description of this asset.
+     * @return              The description of this asset.
+     */
     @JsonProperty("description")
     String description;
 
+    /**
+     * Absolute URL for the asset.
+     *
+     * @param url   New Value for the absolute URL of this asset.
+     * @return      The absolute URL of this asset.
+     */
     @JsonProperty("url")
     String url;
-
-    public Asset() {
-        //Default constructor
-    }
-
-    /**
-     * File name of the asset
-     * @return file name
-     */
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * MIME type of the asset
-     * @return MIME type
-     */
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Size of the asset in bytes
-     * @return number of bytes
-     */
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    /**
-     * Description of the asset
-     * @return asset description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Absolute URL for the asset
-     * @return URL for the asset, hosted by Kentico
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

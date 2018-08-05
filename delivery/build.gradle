@@ -24,6 +24,7 @@
 
 plugins {
     id "org.sonarqube" version "2.6.2"
+    id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
 group 'com.kenticocloud'
@@ -38,6 +39,11 @@ sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
+}
+
+lombok {
+    version = "1.18.2"
+    sha256 = ""
 }
 
 dependencies {
@@ -84,6 +90,21 @@ if (isCI()) {
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     classifier = 'sources'
+}
+
+import io.franzbecker.gradle.lombok.task.DelombokTask
+task delombok(type: DelombokTask, dependsOn: compileJava) {
+    ext.outputDir = file("$buildDir/delombok")
+    outputs.dir(outputDir)
+    sourceSets.main.java.srcDirs.each { dir ->
+        inputs.dir(dir)
+        args(dir, "-d", outputDir)
+    }
+}
+
+javadoc {
+    dependsOn delombok
+    source = delombok.outputDir
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

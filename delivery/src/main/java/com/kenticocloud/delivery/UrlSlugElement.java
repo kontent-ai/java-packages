@@ -29,27 +29,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object model for URL slug elements
  */
-public class UrlSlugElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class UrlSlugElement extends Element<String> {
 
     static final String TYPE_VALUE = "url_slug";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * The value of URL slug elements is a string.
+     *
+     * @param value Sets the value of this.
+     * @return      A URL slug string.
+     */
     @JsonProperty("value")
     String value;
 
     public UrlSlugElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of URL slug elements is a string.
-     * @return a URL slug string
-     */
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

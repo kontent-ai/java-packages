@@ -29,27 +29,27 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object model for text elements
  */
-public class TextElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class TextElement extends Element<String> {
 
     static final String TYPE_VALUE = "text";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * The value of a Text element is a string.
+     *
+     * @param value Sets the value of this.
+     * @return      The element value of this.
+     */
     @JsonProperty("value")
     String value;
 
     public TextElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of a Text element is a string.
-     * @return element value
-     */
-    @Override
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
     }
 }

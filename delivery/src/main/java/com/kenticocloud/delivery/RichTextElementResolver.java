@@ -24,7 +24,21 @@
 
 package com.kenticocloud.delivery;
 
+/**
+ * RichTextElementResolvers added to the {@link DeliveryClient} will be invoked when resolving any
+ * {@link RichTextElement}.
+ */
 public interface RichTextElementResolver {
 
+    /**
+     * The current state of the rich text element's value is provided.  This may have been changed from the original by
+     * the {@link ContentLinkUrlResolver}, {@link BrokenLinkUrlResolver}, {@link InlineContentItemsResolver}s, and/or
+     * previously ordered {@link RichTextElementResolver}s.
+     * <p>
+     * It is expected to return the state of the rich text element, even if no manipulation is performed.
+     *
+     * @param content   The current state of the rich text element's value.
+     * @return          The new state of the rich text element's value.
+     */
     String resolve(String content);
 }

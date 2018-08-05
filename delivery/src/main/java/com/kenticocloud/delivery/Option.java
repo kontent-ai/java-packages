@@ -29,39 +29,29 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object model for option values in a {@link MultipleChoiceElement}
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class Option {
-
-    @JsonProperty("name")
-    String name;
-
-    @JsonProperty("codename")
-    String codename;
-
-    public Option() {
-        //Default constructor
-    }
 
     /**
      * The display name of the option
-     * @return the name of the option
+     *
+     * @param name  Sets the display name of this.
+     * @return      The name of the option.
      */
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonProperty("name")
+    String name;
 
     /**
      * The codename of the option
-     * @return the codename of the option
+     *
+     * @param codename  Sets the codename of this.
+     * @return          The codename of the option.
      */
-    public String getCodename() {
-        return codename;
-    }
+    @JsonProperty("codename")
+    String codename;
 
-    public void setCodename(String codename) {
-        this.codename = codename;
-    }
 }

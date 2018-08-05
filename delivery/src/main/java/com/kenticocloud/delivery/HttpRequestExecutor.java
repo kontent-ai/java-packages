@@ -28,7 +28,18 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import java.io.IOException;
 
+/**
+ * This callback is provided to {@link CacheManager} implementations to invoke on a cache miss.
+ *
+ * @see CacheManager
+ */
 public interface HttpRequestExecutor {
 
+    /**
+     * Return a response from the KenticoCloud API.
+     *
+     * @return              The JSON response from the KenticoCloud API
+     * @throws IOException  On an exception calling the KenticoCloud API, this should be rethrown.
+     */
     JsonNode execute() throws IOException;
 }

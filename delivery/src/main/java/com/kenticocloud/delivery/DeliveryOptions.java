@@ -24,42 +24,142 @@
 
 package com.kenticocloud.delivery;
 
+import lombok.Builder;
+
 /**
- * Keeps settings which are provided by customer or have default values,
- * used in {@link DeliveryClient}.
+ * Keeps settings which are provided by customer or have default values, used in {@link DeliveryClient}.
+ *
+ * @see DeliveryClient
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+ *      KenticoCloud API reference - Authentication</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+ *      KenticoCloud API reference - Delivery API</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#secure-access">
+ *      KenticoCloud API reference - Secure access</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/docs/securing-public-access">
+ *      KenticoCloud API reference - Securing public access</a>
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class DeliveryOptions {
 
+    /**
+     * The Production endpoint address.  Mainly useful to change for mocks in unit tests, or if you are establishing a
+     * proxy.
+     * <p>
+     * This defaults to "https://deliver.kenticocloud.com/%s", and should be set to a printf-style string.
+     *
+     * @param productionEndpoint    New value for the productionEndpoint in this DeliveryOptions instance.
+     * @return                      The value of the printf-style string used as the production endpoint to
+     *                              KenticoCloud.
+     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *                          KenticoCloud API reference - Production vs. preview</a>
+     * @see                         java.util.Formatter
+     */
+    @Builder.Default
     String productionEndpoint = "https://deliver.kenticocloud.com/%s";
+
+    /**
+     * The Preview endpoint address.  Mainly useful to change for mocks in unit tests, or if you are establishing a
+     * proxy.
+     * <p>
+     * This defaults to "https://preview-deliver.kenticocloud.com/%s", and should be set to a printf-style string.
+     *
+     * @param previewEndpoint   New value for the productionEndpoint in this DeliveryOptions instance.
+     * @return                  The value of the printf-style string used as the preview endpoint to KenticoCloud.
+     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *                          KenticoCloud API reference - Production vs. preview</a>
+     * @see                     java.util.Formatter
+     */
+    @Builder.Default
     String previewEndpoint = "https://preview-deliver.kenticocloud.com/%s";
+
+    /**
+     * The Project ID associated with your Kentico Cloud account.  Must be in the format of an {@link java.util.UUID}.
+     *
+     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     *                  {@link java.util.UUID}.
+     * @return          The Project identifier set in this DeliveryOptions instance.
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+     *                  KenticoCloud API reference - Delivery API</a>
+     */
     String projectId;
+
+    /**
+     * The Production API key configured with your Kentico Cloud account.
+     *
+     * @param productionApiKey  Sets the value of the production API key in this DeliveryOptions instance.
+     * @return                  The value of the production API key in this DeliveryOptions instance.
+     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *                          KenticoCloud API reference - Production vs. preview</a>
+     */
+    @Builder.Default
     String productionApiKey = null;
+
+    /**
+     * The Preview API key configured with your Kentico Cloud account.
+     *
+     * @return  The value of the preview API key in this DeliveryOptions instance.
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *          KenticoCloud API reference - Production vs. preview</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+     *          KenticoCloud API reference - Authentication</a>
+     */
     String previewApiKey;
+
+    /**
+     * This boolean flag determines if this client will use the preview API instead of the production API.  Defaults to
+     * 'false'.
+     *
+     * @param usePreviewApi Whether the preview API should be used instead of the production API.  Defaults to 'false'.
+     * @return              Whether this DeliveryOptions instance is set to use the preview API instead of the
+     *                      production API.
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *                      KenticoCloud API reference - Production vs. preview</a>
+     */
+    @Builder.Default
     boolean usePreviewApi = false;
+
+    /**
+     * If the requested content has changed since the last request, the header determines whether to wait while fetching
+     * content. This can be useful when retrieving changed content in reaction to a webhook call. By default, when set
+     * to false, the API serves old content (if cached by the CDN) while it's fetching the new content to minimize wait
+     * time. To always fetch new content, set the header to true.
+     *
+     * @param waitForLoadingNewContent  New value for this DeliveryOptions instance.
+     * @return                          Whether this DeliveryOptions instance is set to always fetch new content.
+     */
+    @Builder.Default
     boolean waitForLoadingNewContent = false;
+
+    /**
+     * Sets the number of retry attempts the client should make when a request to the API fails.  Defaults to 3.
+     *
+     * @param retryAttempts New value for this DeliveryOptions instance.
+     * @return              The number of retry attempts configured per request in this DeliveryOptions instance.
+     */
+    @Builder.Default
     int retryAttempts = 3;
 
     /**
-     * Constructs an empty settings instance of {@link DeliveryOptions}.
-     */
-    public DeliveryOptions() {
-        //Default constructor
-    }
-
-    /**
      * Constructs a setting instance of {@link DeliveryOptions} using your Kentico Cloud Project identifier.
+     *
      * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
-     * {@link java.util.UUID}.
+     *                  {@link java.util.UUID}.
      */
     public DeliveryOptions(String projectId) {
+        this();
         this.setProjectId(projectId);
     }
 
     /**
      * Constructs a settings instance of {@link DeliveryOptions} using your Kentico Cloud Project identifier and using
      * the preview API.
-     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
-     * {@link java.util.UUID}.
+     *
+     * @param projectId     The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     *                      {@link java.util.UUID}.
      * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
      */
     public DeliveryOptions(String projectId, String previewApiKey) {
@@ -69,135 +169,17 @@ public class DeliveryOptions {
     }
 
     /**
-     * Gets the Production endpoint address.
-     * @return The Production endpoint address set in this options instance.
-     */
-    public String getProductionEndpoint() {
-        return productionEndpoint;
-    }
-
-    /**
-     * Sets the Production endpoint address.  Defaults to "https://deliver.kenticocloud.com/%s"
-     * @see java.util.Formatter
-     * @param productionEndpoint A Java format String containing the base URL.
-     */
-    public void setProductionEndpoint(String productionEndpoint) {
-        this.productionEndpoint = productionEndpoint;
-    }
-
-    /**
-     * Gets the Preview endpoint address.
-     * @return The Preview endpoint address set in this options instance.
-     */
-    public String getPreviewEndpoint() {
-        return previewEndpoint;
-    }
-
-    /**
-     * Sets the Preview endpoint address.  Defaults to "https://preview-deliver.kenticocloud.com/%s".
-     * @see java.util.Formatter
-     * @param previewEndpoint A Java format String containing the base URL.
-     */
-    public void setPreviewEndpoint(String previewEndpoint) {
-        this.previewEndpoint = previewEndpoint;
-    }
-
-    /**
-     * Gets the Project identifier.
-     * @return The Project identifier set in this options instance.
-     */
-    public String getProjectId() {
-        return projectId;
-    }
-
-    /**
-     * Sets the Project identifier.
-     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
-     * {@link java.util.UUID}.
-     */
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    /**
-     * Gets the Production API key.
-     * @return The Preview API key set in this options instance.
-     */
-    public String getProductionApiKey() {
-        return productionApiKey;
-    }
-
-    /**
-     * Sets the Production API key.
-     * @param productionApiKey The Preview API key configured with your Kentico Cloud account.
-     */
-    public void setProductionApiKey(String productionApiKey) {
-        this.productionApiKey = productionApiKey;
-    }
-
-    /**
-     * Gets the Preview API key.
-     * @return The Preview API key set in this options instance.
-     */
-    public String getPreviewApiKey() {
-        return previewApiKey;
-    }
-
-    /**
-     * Sets the Preview API key.
-     * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
+     * The Preview API key configured with your Kentico Cloud account.
+     *
+     * @param previewApiKey Sets the value of the preview API key in this DeliveryOptions instance.  If not null,
+     *                      automatically sets {@link #setUsePreviewApi(boolean)} to 'true'.
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     *                      KenticoCloud API reference - Production vs. preview</a>
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+     *                      KenticoCloud API reference - Authentication</a>
      */
     public void setPreviewApiKey(String previewApiKey) {
         this.previewApiKey = previewApiKey;
         setUsePreviewApi(previewApiKey != null);
-    }
-
-    /**
-     * Gets whether the Preview API will be used.
-     * @return Whether the Preview API is used.
-     */
-    public boolean isUsePreviewApi() {
-        return usePreviewApi;
-    }
-
-    /**
-     * Sets whether the Preview API should be used.  If TRUE, the Preview API needs to be set as well.
-     * @see #setPreviewApiKey(String)
-     * @param usePreviewApi Whether the API should be used.  Defaults to false.
-     */
-    public void setUsePreviewApi(boolean usePreviewApi) {
-        this.usePreviewApi = usePreviewApi;
-    }
-
-    /**
-     * Gets whether you want to wait for updated content.
-     * @return Whether waiting for updated content is set.
-     */
-    public boolean isWaitForLoadingNewContent() {
-        return waitForLoadingNewContent;
-    }
-
-    /**
-     * Set to TRUE if you want to wait for updated content.  It should be used when you are acting upon a webhook call.
-     * @param waitForLoadingNewContent Whether to wait for new content.  Defaults to false.
-     */
-    public void setWaitForLoadingNewContent(boolean waitForLoadingNewContent) {
-        this.waitForLoadingNewContent = waitForLoadingNewContent;
-    }
-
-    /**
-     * Get the number of times the client will retry to connect to the Kentico Cloud api on failures per request.
-     * @return The number of retry attempts on failed responses from Kentico Cloud
-     */
-    public int getRetryAttempts() {
-        return retryAttempts;
-    }
-
-    /**
-     * Sets the number of times the client will try to connect to the Kentico Cloud api on failures per request.
-     * @param retryAttempts The number of retry attempts.
-     */
-    public void setRetryAttempts(int retryAttempts) {
-        this.retryAttempts = retryAttempts;
     }
 }

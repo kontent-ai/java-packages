@@ -24,7 +24,37 @@
 
 package com.kenticocloud.delivery;
 
+/**
+ * Interface to provide for rendering broken content item links in rich text.
+ * <p>
+ * An implementation of this can be provided to via
+ * {@link DeliveryClient#setBrokenLinkUrlResolver(BrokenLinkUrlResolver)} to resolve links to a content item that are
+ * not published.  This is passed on to the {@link RichTextElementConverter} to update {@code href} attributes in links
+ * when no {@code data-item-id} is available on the link.
+ * <p>
+ * This is a {@link FunctionalInterface} to simplify implementation.
+ * <p>
+ * For example, the following implementation will render {@code <a href="/404">Some text</a>}:
+ * <pre>{@code
+ * DeliveryClient deliveryClient = new DeliveryClient("02a70003-e864-464e-b62c-e0ede97deb8c");
+ * deliveryClient.setBrokenLinkUrlResolver(() -> "/404");
+ * }</pre>
+ *
+ * @see RichTextElementConverter
+ * @see RichTextElement
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#section-link-to-a-content-item">
+ *      KenticoCloud API reference - Link to a content item</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#section-rich-text-links">
+ *      KenticoCloud API reference - Rich text links</a>
+ */
+@FunctionalInterface
 public interface BrokenLinkUrlResolver {
 
+    /**
+     * Returns a String to be placed in the href attribute of any links to content items that are not published within
+     * {@link RichTextElement}s.
+     *
+     * @return The String to place in the href attribute of any links to content items that are not published.
+     */
     String resolveBrokenLinkUrl();
 }

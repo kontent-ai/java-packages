@@ -27,10 +27,20 @@ package com.kenticocloud.delivery;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implementation of {@link RichTextElementResolver} that iterates over a list of resolvers sequentially.
+ *
+ * @see DeliveryClient#addRichTextElementResolver(RichTextElementResolver)
+ * @see DeliveryClient#setRichTextElementResolver(RichTextElementResolver)
+ * @see RichTextElementConverter
+ */
 public class DelegatingRichTextElementResolver implements RichTextElementResolver {
 
     List<RichTextElementResolver> resolvers = new ArrayList<>();
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String resolve(String content) {
         if (resolvers.isEmpty()) {
@@ -43,6 +53,11 @@ public class DelegatingRichTextElementResolver implements RichTextElementResolve
         return resolvedContent;
     }
 
+    /**
+     * Adds a {@link RichTextElementResolver} to the list of resolvers this resolver will delegate to.
+     *
+     * @param resolver The {@link RichTextElementResolver} to add to the delegate list.
+     */
     public void addResolver(RichTextElementResolver resolver) {
         resolvers.add(resolver);
     }

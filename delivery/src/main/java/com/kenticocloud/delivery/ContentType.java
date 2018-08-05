@@ -30,41 +30,37 @@ import java.util.Map;
 
 /**
  * Object model description of a single content type object.
+ * <p>
+ * Also serves as the response from an invocation of {@link DeliveryClient#getType(String)}.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+ *      KenticoCloud API reference - Content type object</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-type">
+ *      KenticoCloud API reference - View a content type</a>
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class ContentType {
 
+    /**
+     * {@link System} attributes of the content type.
+     *
+     * @param system    New value for System attributes of this content type.
+     * @return          The System attributes of this content type.
+     */
     @JsonProperty("system")
     System system;
 
+    /**
+     * Content type elements in the content type.  These are keyed by the codename of the element.
+     * <p>
+     * Note: The order of the {@link Element} objects might not match the order in the KenticoCloud UI.
+     *
+     * @param elements  New value of this ContentType's {@link Element} objects.
+     * @return          Map of this ContentType's {@link Element} objects.
+     */
     @JsonProperty("elements")
     Map<String, Element> elements;
-
-    public ContentType() {
-        //Default constructor
-    }
-
-    /**
-     * {@link System} attributes of the content item
-     * @return {@link System} attributes of the content item
-     */
-    public System getSystem() {
-        return system;
-    }
-
-    public void setSystem(System system) {
-        this.system = system;
-    }
-
-    /**
-     * Content type elements in the content item
-     * @return map of {@link Element} objects
-     */
-    public Map<String, Element> getElements() {
-        return elements;
-    }
-
-    public void setElements(Map<String, Element> elements) {
-        this.elements = elements;
-    }
-
 }

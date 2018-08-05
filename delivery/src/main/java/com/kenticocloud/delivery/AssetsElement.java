@@ -30,29 +30,31 @@ import java.util.List;
 
 /**
  * Object model for Assets elements.
+ *
+ * @see Asset
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#section-asset">KenticoCloud API reference - Asset</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ *      KenticoCloud API reference - Content item object</a>
  */
-public class AssetsElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class AssetsElement extends Element<List<Asset>> {
 
     static final String TYPE_VALUE = "asset";
 
+    /**
+     * When used in content items, Asset elements can contain multiple assets. The value in the JSON response for an
+     * Asset element consists of a list of {@link Asset} objects.
+     *
+     * @param value New value for this element's List of Assets.
+     * @return      This element's list of assets.
+     */
     @JsonProperty("value")
     List<Asset> value;
 
     public AssetsElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * When used in content items, Asset elements can contain multiple assets. The value in the JSON response for an
-     * Asset element consists of a list of {@link Asset} objects.
-     * @return list of assets
-     */
-    @Override
-    public List<Asset> getValue() {
-        return value;
-    }
-
-    public void setValue(List<Asset> value) {
-        this.value = value;
     }
 }

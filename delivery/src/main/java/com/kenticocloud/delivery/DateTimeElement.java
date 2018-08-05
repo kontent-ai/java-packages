@@ -29,29 +29,35 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.ZonedDateTime;
 
 /**
- * Object model for Date &amp; time elements
+ * Object model for Date &amp; time elements.
+ *
+ * @see Asset
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#section-date-time">
+ *      KenticoCloud API reference - Date time</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ *      KenticoCloud API reference - Content item object</a>
  */
-public class DateTimeElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class DateTimeElement extends Element<ZonedDateTime> {
 
     static final String TYPE_VALUE = "date_time";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
+     *
+     * @param value New value of the {@link ZonedDateTime} of this element.
+     * @return      A {@link ZonedDateTime} instance representing the original ISO 8601 string.
+     */
     @JsonProperty("value")
     ZonedDateTime value;
 
     public DateTimeElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.
-     * @return a {@link ZonedDateTime} instance representing the original ISO 8601 string.
-     */
-    @Override
-    public ZonedDateTime getValue() {
-        return value;
-    }
-
-    public void setValue(ZonedDateTime value) {
-        this.value = value;
     }
 }

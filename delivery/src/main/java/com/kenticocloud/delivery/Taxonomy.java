@@ -31,54 +31,38 @@ import java.util.List;
 /**
  * Object model for a Taxonomy element
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class Taxonomy {
-
-    @JsonProperty("name")
-    String name;
-
-    @JsonProperty("codename")
-    String codename;
-
-    @JsonProperty("terms")
-    List<Taxonomy> terms;
-
-    public Taxonomy() {
-        //Default constructor
-    }
 
     /**
      * The display name of the taxonomy
-     * @return the name of the taxonomy
+     *
+     * @param name  Sets the name of this.
+     * @return      The name of the taxonomy.
      */
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    @JsonProperty("name")
+    String name;
 
     /**
      * The codename of the taxonomy
-     * @return the codename of the taxonomy
+     *
+     * @param codename  Sets the codename of this.
+     * @return          The codename of the taxonomy.
      */
-    public String getCodename() {
-        return codename;
-    }
-
-    public void setCodename(String codename) {
-        this.codename = codename;
-    }
+    @JsonProperty("codename")
+    String codename;
 
     /**
      * A list of taxonomically descendant terms
-     * @return a list of taxonomically descendant terms
+     *
+     * @param terms Sets the taxonomy terms of this.
+     * @return      A list of taxonomically descendant terms.
      */
-    public List<Taxonomy> getTerms() {
-        return terms;
-    }
+    @JsonProperty("terms")
+    List<Taxonomy> terms;
 
-    public void setTerms(List<Taxonomy> terms) {
-        this.terms = terms;
-    }
 }

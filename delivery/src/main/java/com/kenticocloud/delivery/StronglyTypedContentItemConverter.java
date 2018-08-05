@@ -29,16 +29,16 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.beanutils.PropertyUtilsBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@lombok.extern.slf4j.Slf4j
 public class StronglyTypedContentItemConverter {
-
-    private static final Logger logger = LoggerFactory.getLogger(StronglyTypedContentItemConverter.class);
 
     private HashMap<String, Class<?>> contentTypeToClassMapping = new HashMap<>();
     private HashMap<Class<?>, String> classToContentTypeMapping = new HashMap<>();
@@ -60,7 +60,7 @@ public class StronglyTypedContentItemConverter {
                     "if this is not possible, please use registerType(String, Class)");
         }
         registerType(clazzContentItemMapping.value(), clazz);
-        logger.debug("Registered type for {}", clazz.getSimpleName());
+        log.debug("Registered type for {}", clazz.getSimpleName());
     }
 
     protected String getContentType(Class tClass) {
@@ -215,7 +215,7 @@ public class StronglyTypedContentItemConverter {
         Type type = getType(bean, field);
         if (type == null) {
             //We have failed to get the type, probably due to a missing setter, skip this field
-            logger.debug("Failed to get type from {} (probably due to a missing setter), {} skipped", bean, field);
+            log.debug("Failed to get type from {} (probably due to a missing setter), {} skipped", bean, field);
             return null;
         }
         if (type == ContentItem.class) {
@@ -290,26 +290,29 @@ public class StronglyTypedContentItemConverter {
         }
         if (propertyDescriptor == null) {
             //Likely no accessors
-            logger.debug("Property descriptor for object {} with field {} is null", bean, field);
+            log.debug("Property descriptor for object {} with field {} is null", bean, field);
             return null;
         }
         Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
         if (writeMethod == null) {
-            logger.debug("No write method for property {}", propertyDescriptor);
+            log.debug("No write method for property {}", propertyDescriptor);
             return null;
         }
-        Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0]).getActualTypeArguments();
+        Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0])
+                .getActualTypeArguments();
 
         Type type = (Map.class.isAssignableFrom(field.getType())) ? actualTypeArguments[1] : actualTypeArguments[0];
 
-        logger.debug("Got type {} from object {}, field {}", type, bean, field);
+        log.debug("Got type {} from {}",
+                type.getTypeName(),
+                String.format("%s#%s", bean.getClass().getSimpleName(),field.getName()));
 
         return type;
 
     }
 
     private static void handleReflectionException(Exception ex) {
-        logger.error("Reflection exception", ex);
+        log.error("Reflection exception", ex);
         if (ex instanceof NoSuchMethodException) {
             throw new IllegalStateException("Method not found: " + ex.getMessage());
         }

@@ -28,35 +28,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
+/**
+ * Content type listing response from an invocation of {@link DeliveryClient#getTypes()}, or
+ * {@link DeliveryClient#getTypes(List)}.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#list-taxonomy-groups">
+ *      KenticoCloud API reference - List taxonomy groups</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+ *      KenticoCloud API reference - Taxonomy group model</a>
+ * @see ContentType
+ * @see DeliveryClient#getTypes()
+ * @see DeliveryClient#getTypes(List)
+ */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class TaxonomyGroupListingResponse {
-
-    @JsonProperty("taxonomies")
-    List<TaxonomyGroup> taxonomies;
-
-    @JsonProperty("pagination")
-    Pagination pagination;
 
     /**
      * A list of taxonomy groups
-     * @return list of {@link TaxonomyGroup}
+     *
+     * @param taxonomies    Sets the taxonomies of this.
+     * @return              List of {@link TaxonomyGroup}.
      */
-    public List<TaxonomyGroup> getTaxonomies() {
-        return taxonomies;
-    }
-
-    public void setTaxonomies(List<TaxonomyGroup> taxonomies) {
-        this.taxonomies = taxonomies;
-    }
+    @JsonProperty("taxonomies")
+    List<TaxonomyGroup> taxonomies;
 
     /**
-     * Information about the retrieved page
-     * @return the {@link Pagination} object identifying the current page
+     * Information about the retrieved page.
+     *
+     * @param pagination    Sets the pagination of this.
+     * @return              The {@link Pagination} object identifying the current page.
      */
-    public Pagination getPagination() {
-        return pagination;
-    }
+    @JsonProperty("pagination")
+    Pagination pagination;
 
-    public void setPagination(Pagination pagination) {
-        this.pagination = pagination;
-    }
 }

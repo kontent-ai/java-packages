@@ -26,8 +26,6 @@ package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-
 /**
  * Kentico error response
  * <p>
@@ -43,49 +41,30 @@ import java.io.Serializable;
  * unique error ID. Hint: use the chat button in the bottom right corner of
  * <a href="https://developer.kenticocloud.com/v1/reference">this page</a>.
  */
-public class KenticoError implements Serializable {
-
-    static final long serialVersionUID = 42L;
-
-    @JsonProperty("message")
-    String message;
-
-    @JsonProperty("request_id")
-    String requestId;
-
-    @JsonProperty("error_code")
-    int errorCode;
-
-    @JsonProperty("specific_code")
-    int specificCode;
-
-    KenticoError() {
-        //Default constructor
-    }
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
+public class KenticoError {
 
     /**
      * Returns the error message provided by Kentico detailing the error.
-     * @return the error message from Kentico.
+     *
+     * @param message   Sets the message of this.
+     * @return          The error message from Kentico.
      */
-    public String getMessage() {
-        return message;
-    }
-
-    void setMessage(String message) {
-        this.message = message;
-    }
+    @JsonProperty("message")
+    String message;
 
     /**
      * Returns a unique ID that can be provided to Kentico for support in relation to the error.
-     * @return the unique ID for this error
+     *
+     * @param requestId Sets the request ID of this.
+     * @return          The unique ID for this error
      */
-    public String getRequestId() {
-        return requestId;
-    }
-
-    void setRequestId(String requestId) {
-        this.requestId = requestId;
-    }
+    @JsonProperty("request_id")
+    String requestId;
 
     /**
      * Returns the HTTP error code returned by Kentico.
@@ -98,25 +77,20 @@ public class KenticoError implements Serializable {
      * <tr><td>404 - Not Found</td><td>The requested resource doesn't exist. Try checking the resource name for typos.
      * </td></tr>
      * </table>
-     * @return the http error code
+     *
+     * @param errorCode Sets the errorCode of this.
+     * @return          The http error code.
      */
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    void setErrorCode(int errorCode) {
-        this.errorCode = errorCode;
-    }
+    @JsonProperty("error_code")
+    int errorCode;
 
     /**
      * Returns the specific code returned by the Kentico error response.
-     * @return the specific code returned by the Kentico error response
+     *
+     * @param specificCode  Sets the specific code of this.
+     * @return              The specific code returned by the Kentico error response.
      */
-    public int getSpecificCode() {
-        return specificCode;
-    }
+    @JsonProperty("specific_code")
+    int specificCode;
 
-    void setSpecificCode(int specificCode) {
-        this.specificCode = specificCode;
-    }
 }

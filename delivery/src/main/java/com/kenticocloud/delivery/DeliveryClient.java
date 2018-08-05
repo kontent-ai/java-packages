@@ -33,14 +33,15 @@ import com.kenticocloud.delivery.template.TemplateEngineConfig;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
+import org.apache.http.StatusLine;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.message.BasicLineFormatter;
 import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,10 +49,14 @@ import java.util.*;
 
 /**
  * Executes requests against the Kentico Cloud Delivery API.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+ *      KenticoCloud API reference - Authentication</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+ *      KenticoCloud API reference - Delivery API</a>
  */
+@lombok.extern.slf4j.Slf4j
 public class DeliveryClient {
-
-    private static final Logger logger = LoggerFactory.getLogger(DeliveryClient.class);
 
     static String sdkId;
 
@@ -70,9 +75,9 @@ public class DeliveryClient {
                     repositoryHost,
                     packageId,
                     version);
-            logger.info("SDK ID: {}", sdkId);
+            log.info("SDK ID: {}", sdkId);
         } catch (IOException e) {
-            logger.info("Jar manifest read error, setting developer build SDK ID");
+            log.info("Jar manifest read error, setting developer build SDK ID");
             sdkId = "localBuild;com.kenticocloud:delivery;0.0.0";
         }
     }
@@ -86,7 +91,7 @@ public class DeliveryClient {
 
     private ObjectMapper objectMapper = new ObjectMapper();
     private PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-    private HttpClient httpClient;
+    private CloseableHttpClient httpClient;
     private DeliveryOptions deliveryOptions;
 
     private ContentLinkUrlResolver contentLinkUrlResolver;
@@ -100,8 +105,11 @@ public class DeliveryClient {
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     * @throws IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are invalid.
-     * @param deliveryOptions The settings of the Kentico Cloud project.
+     *
+     * @param deliveryOptions   The settings of the Kentico Cloud project.
+     * @throws                  IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are
+     *                          invalid.
+     * @see                     DeliveryOptions
      */
     public DeliveryClient(DeliveryOptions deliveryOptions) {
         this(deliveryOptions, new TemplateEngineConfig());
@@ -109,10 +117,14 @@ public class DeliveryClient {
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     * @throws IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are invalid.
-     * @param deliveryOptions The settings of the Kentico Cloud project.
-     * @param templateEngineConfig Configuration object used for customization of template render engines
-     *                             for inline content
+     *
+     * @param deliveryOptions       The settings of the Kentico Cloud project.
+     * @param templateEngineConfig  Configuration object used for customization of template render engines for inline
+     *                              content
+     * @throws                      IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are
+     *                              invalid.
+     * @see                         DeliveryOptions
+     * @see                         TemplateEngineConfig
      */
     public DeliveryClient(DeliveryOptions deliveryOptions, TemplateEngineConfig templateEngineConfig) {
         if (deliveryOptions == null) {
@@ -154,9 +166,10 @@ public class DeliveryClient {
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     * @throws IllegalArgumentException Thrown if the Project id is invalid.
+     *
      * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
-     * {@link java.util.UUID}.
+     *                  {@link java.util.UUID}.
+     * @throws          IllegalArgumentException Thrown if the Project id is invalid.
      */
     public DeliveryClient(String projectId) {
         this(new DeliveryOptions(projectId));
@@ -169,20 +182,48 @@ public class DeliveryClient {
      * An API key (which comes in the form of a verified <a href="https://jwt.io/">JSON Web Token</a>) provides
      * read-only access to a single project.  You can find the API keys for your project in the API keys section in the
      * <a href="https://app.kenticocloud.com/">Kentico Cloud</a> app.
-     * @throws IllegalArgumentException Thrown if the Project id is invalid.
-     * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
-     * {@link java.util.UUID}.
+     *
+     * @param projectId     The Project ID associated with your Kentico Cloud account.  Must be in the format of an
+     *                      {@link java.util.UUID}.
      * @param previewApiKey The Preview API key configured with your Kentico Cloud account.
+     * @throws              IllegalArgumentException Thrown if the Project id is invalid.
      */
     public DeliveryClient(String projectId, String previewApiKey) {
         this(new DeliveryOptions(projectId, previewApiKey));
     }
 
-    public ContentItemsListingResponse getItems() throws IOException {
+    /**
+     * Returns a {@link ContentItemsListingResponse} for all items in the project.  Beware, this is an incredibly
+     * expensive operation on a big project, you were forewarned.
+     *
+     * @return  A {@link ContentItemsListingResponse} for all items in the project.
+     * @throws  KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see     ContentItem
+     * @see     ContentItemsListingResponse
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     *          KenticoCloud API reference - List content items</a>
+     */
+    public ContentItemsListingResponse getItems() {
         return getItems(new ArrayList<>());
     }
 
-    public ContentItemsListingResponse getItems(List<NameValuePair> params) throws IOException {
+    /**
+     * Returns a {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.
+     *
+     * @param params    The query parameters to use for this listing request.
+     * @return          A {@link ContentItemsListingResponse} for items matching the query parameters.
+     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see             DeliveryParameterBuilder
+     * @see             ContentItem
+     * @see             ContentItemsListingResponse
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     *                  KenticoCloud API reference - Listing response</a>
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     *                  KenticoCloud API reference - List content items</a>
+     */
+    public ContentItemsListingResponse getItems(List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(ITEMS, params);
         ContentItemsListingResponse contentItemsListingResponse =
                 executeRequest(request, ContentItemsListingResponse.class);
@@ -198,27 +239,130 @@ public class DeliveryClient {
         return contentItemsListingResponse;
     }
 
-    public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
+    /**
+     * Returns a new instance of {@code List<T>} by mapping fields to elements from a
+     * {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.  For performance reasons, if there are is a {@link System#type} registered with T, then
+     * the 'system.type=YOUR_TYPE' query parameter will be added automatically if 'system.type' is not part of the
+     * query.
+     * <p>
+     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
+     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     *
+     * @param tClass    The class which a new instance should be returned from.
+     * @param <T>       The type of class.
+     * @param params    The query parameters to use for this listing request.
+     * @return          An instance of {@code List<T>} with data mapped from the {@link ContentItem} list in this
+     *                  response.
+     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see             DeliveryParameterBuilder
+     * @see             ContentItemsListingResponse#castTo(Class)
+     * @see             ContentItemMapping
+     * @see             ElementMapping
+     * @see             #registerType(Class)
+     * @see             #registerType(String, Class)
+     */
+    public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) {
         addTypeParameterIfNecessary(tClass, params);
         ContentItemsListingResponse contentItemsListingResponse = getItems(params);
         return contentItemsListingResponse.castTo(tClass);
     }
 
-    public ContentItemResponse getItem(String contentItemCodename) throws IOException {
+    /**
+     * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
+     * {@link System#codename}.
+     *
+     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
+     * @return                      A {@link ContentItemResponse} for the {@link ContentItem} in the project.
+     * @throws                      KenticoIOException If an {@link IOException} is thrown connecting to Kentico.
+     * @see                         ContentItem
+     * @see                         ContentItemResponse
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *                              KenticoCloud API reference - View a content item</a>
+     */
+    public ContentItemResponse getItem(String contentItemCodename) {
         return getItem(contentItemCodename, new ArrayList<>());
     }
 
-    public <T> List<T> getItems(Class<T> tClass) throws IOException {
+    /**
+     * Returns a new instance of {@code List<T>} by mapping fields to elements from a
+     * {@link ContentItemsListingResponse}.  Beware, this is an incredibly expensive operation on a big project, you
+     * were forewarned.  It is recommended to use {@link #getItems(Class, List)} using a
+     * {@link DeliveryParameterBuilder} instead.  For performance reasons, if there are is a {@link System#type}
+     * registered with T, then the 'system.type=YOUR_TYPE' query parameter will be added automatically.
+     * <p>
+     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
+     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     *
+     * @param tClass    The class which a new instance should be returned from.
+     * @param <T>       The type of class.
+     * @return          An instance of {@code List<T>} with data mapped from the {@link ContentItem} list in this
+     *                  response.
+     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see             DeliveryParameterBuilder
+     * @see             ContentItemsListingResponse#castTo(Class)
+     * @see             ContentItemMapping
+     * @see             ElementMapping
+     * @see             #registerType(Class)
+     * @see             #registerType(String, Class)
+     */
+    public <T> List<T> getItems(Class<T> tClass) {
         return getItems(tClass, new ArrayList<>());
     }
 
-    public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) throws IOException {
+    /**
+     * Returns {@link Page} containing a new instance of {@code List<T>} by mapping fields to elements from a
+     * {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.
+     * <p>
+     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
+     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     *
+     * @param tClass    The class which a new instance should be returned from.
+     * @param <T>       The type of class.
+     * @param params    The query parameters to use for this listing request.
+     * @return          An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in this
+     *                  response.
+     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see             Page
+     * @see             Pagination
+     * @see             DeliveryParameterBuilder
+     * @see             ContentItemsListingResponse#castTo(Class)
+     * @see             ContentItemMapping
+     * @see             ElementMapping
+     * @see             #registerType(Class)
+     * @see             #registerType(String, Class)
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     *                  KenticoCloud API reference - Listing response paging</a>
+     */
+    public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
         ContentItemsListingResponse response = getItems(params);
         response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         return new Page<>(response, tClass, this);
     }
 
-    public <T> Page<T> getNextPage(Page<T> currentPage) throws IOException {
+    /**
+     * Returns the next {@link Page} of results.
+     *
+     * @param currentPage   The instance of the {@link Page} preceding the {@link Page} being requested.
+     * @param <T>           The type of class.
+     * @return              An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in this
+     *                      response.
+     * @throws              KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see                 Page
+     * @see                 Pagination
+     * @see                 DeliveryParameterBuilder
+     * @see                 ContentItemsListingResponse#castTo(Class)
+     * @see                 ContentItemMapping
+     * @see                 ElementMapping
+     * @see                 #registerType(Class)
+     * @see                 #registerType(String, Class)
+     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     *                      KenticoCloud API reference - Listing response paging</a>
+     */
+    public <T> Page<T> getNextPage(Page<T> currentPage) {
         Pagination pagination = currentPage.getPagination();
         if (pagination.getNextPage() == null || pagination.getNextPage().isEmpty()) {
             return null;
@@ -239,11 +383,53 @@ public class DeliveryClient {
         return new Page<>(response, currentPage.getType(), this);
     }
 
-    public <T> T getItem(String contentItemCodename, Class<T> tClass) throws IOException {
+    /**
+     * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
+     * {@link System#codename}.
+     * <p>
+     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
+     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     *
+     * @param tClass                The class which a new instance should be returned from.
+     * @param <T>                   The type of class.
+     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
+     * @return                      An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in
+     *                              this response.
+     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
+     *                              KenticoCloud.
+     * @see                         ContentItem
+     * @see                         ContentItemResponse#castTo(Class)
+     * @see                         ContentItemMapping
+     * @see                         ElementMapping
+     * @see                         #registerType(Class)
+     * @see                         #registerType(String, Class)
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *                              KenticoCloud API reference - View a content item</a>
+     */
+    public <T> T getItem(String contentItemCodename, Class<T> tClass) {
         return getItem(contentItemCodename, tClass, new ArrayList<>());
     }
 
-    public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) throws IOException {
+    /**
+     * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * depth or to apply a projection. For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.
+     *
+     * @param contentItemCodename   The {@link System#codename} for the {@link ContentItem} requested.
+     * @param params                The query parameters to use for this ContentItemResponse request.
+     * @return                      A {@link ContentItemResponse} for the {@link ContentItem} in the project.
+     * @throws                      KenticoIOException If an {@link IOException} is thrown connecting to Kentico.
+     * @see                         DeliveryParameterBuilder
+     * @see                         ContentItem
+     * @see                         ContentItemResponse
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *                              KenticoCloud API reference - View a content item</a>
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     *                              KenticoCloud API reference - Listing response</a>
+     */
+    public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, ITEMS, contentItemCodename), params);
         ContentItemResponse contentItemResponse = executeRequest(request, ContentItemResponse.class);
         contentItemResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
@@ -258,72 +444,242 @@ public class DeliveryClient {
         return contentItemResponse;
     }
 
-    public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) throws IOException {
+    /**
+     * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * depth or to apply a projection. For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.
+     * <p>
+     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
+     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
+     *
+     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
+     * @param tClass                The class which a new instance should be returned from.
+     * @param <T>                   The type of class.
+     * @param params                The query parameters to use for this ContentItemResponse request.
+     * @return                      An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in
+     *                              this response.
+     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
+     *                              KenticoCloud.
+     * @see                         ContentItem
+     * @see                         ContentItemResponse#castTo(Class)
+     * @see                         ContentItemMapping
+     * @see                         ElementMapping
+     * @see                         #registerType(Class)
+     * @see                         #registerType(String, Class)
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     *                              KenticoCloud API reference - View a content item</a>
+     */
+    public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) {
         addTypeParameterIfNecessary(tClass, params);
         ContentItemResponse contentItemResponse = getItem(contentItemCodename, params);
         return contentItemResponse.castTo(tClass);
     }
 
-    public ContentTypesListingResponse getTypes() throws IOException {
+    /**
+     * Returns a {@link ContentTypesListingResponse} detailing all {@link ContentType}s in the project.
+     *
+     * @return  A ContentTypesListingResponse containing all {@link ContentType}s in the project.
+     * @throws  KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see     ContentType
+     * @see     DeliveryClient#getTypes()
+     * @see     DeliveryClient#getTypes(List)
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+     *          KenticoCloud API reference - List content types</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     *          KenticoCloud API reference - Content type object</a>
+     */
+    public ContentTypesListingResponse getTypes() {
         return getTypes(new ArrayList<>());
     }
 
-    public ContentTypesListingResponse getTypes(List<NameValuePair> params) throws IOException {
+    /**
+     * Returns a {@link ContentTypesListingResponse} detailing all {@link ContentType}s in the project.  Query
+     * parameters can be provided, which can be used for paging. For simplicity, it is recommended to use
+     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
+     * query parameters.
+     *
+     * @param params    The query parameters to use for this ContentItemResponse request.
+     * @return          A ContentTypesListingResponse containing a page or all {@link ContentType}s.
+     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
+     * @see             Pagination
+     * @see             ContentType
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+     *                  KenticoCloud API reference - List content types</a>
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     *                  KenticoCloud API reference - Content type object</a>
+     */
+    public ContentTypesListingResponse getTypes(List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(TYPES, params);
         return executeRequest(request, ContentTypesListingResponse.class);
     }
 
-    public ContentType getType(String contentTypeCodeName) throws IOException {
-        return getType(contentTypeCodeName, new ArrayList<>());
-    }
-
-    public ContentType getType(String contentTypeCodeName, List<NameValuePair> params) throws IOException {
-        HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, TYPES, contentTypeCodeName), params);
+    /**
+     * Returns the {@link ContentType} with a {@link System#codename}.
+     *
+     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
+     * @return                      The ContentType matching {@link System#codename}.
+     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
+     *                              KenticoCloud.
+     * @see                         ContentType
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-type">
+     *                              KenticoCloud API reference - View a content type</a>
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     *                              KenticoCloud API reference - Content type object</a>
+     */
+    public ContentType getType(String contentTypeCodeName) {
+        HttpUriRequest request =
+                buildGetRequest(String.format(URL_CONCAT, TYPES, contentTypeCodeName), new ArrayList<>());
         return executeRequest(request, ContentType.class);
     }
 
-    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) throws IOException {
+    /**
+     * Retrieve a specific {@link ContentType} {@link Element} by specifying its codename and its parent content type.
+     *
+     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
+     * @param elementCodeName       The codename for the Element.
+     * @return                      The Element for the ContentType requested.
+     * @see                         <a
+     *                              href="https://developer.kenticocloud.com/v1/reference#view-a-content-type-element">
+     *                              KenticoCloud API reference - View a content type element</a>
+     * @see                         <a
+     *                              href="https://developer.kenticocloud.com/v1/reference#content-type-element-object">
+     *                              KenticoCloud API reference - Content element model</a>
+     */
+    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) {
         return getContentTypeElement(contentTypeCodeName, elementCodeName, new ArrayList<>());
     }
 
-    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName, List<NameValuePair> params)
-            throws IOException {
+    /**
+     * Retrieve a specific {@link ContentType} {@link Element} by specifying its codename and its parent content type.
+     * Generally you will want to use {@link #getContentTypeElement(String, String)} instead, but this allows
+     * specification of query parameters.
+     *
+     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
+     * @param elementCodeName       The codename for the Element.
+     * @param params                Query params to add to the request.
+     * @return                      The Element for the ContentType requested.
+     * @see                         #getContentTypeElement(String, String)
+     * @see                         <a
+     *                              href="https://developer.kenticocloud.com/v1/reference#view-a-content-type-element">
+     *                              KenticoCloud API reference - View a content type element</a>
+     * @see                         <a
+     *                              href="https://developer.kenticocloud.com/v1/reference#content-type-element-object">
+     *                              KenticoCloud API reference - Content element model</a>
+     */
+    public Element getContentTypeElement(
+            String contentTypeCodeName, String elementCodeName, List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(
                 String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
         return executeRequest(request, Element.class);
     }
 
-    public TaxonomyGroupListingResponse getTaxonomyGroups() throws IOException {
+    /**
+     * Retrieve all {@link TaxonomyGroup} in your project.  Returns them ordered alphabetically by codename.
+     *
+     * @return  A response object containing all {@link TaxonomyGroup} in the project.
+     * @see     TaxonomyGroup
+     * @see     Taxonomy
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-taxonomy-groups">
+     *          KenticoCloud API reference - List taxonomy groups</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     *          KenticoCloud API reference - Taxonomy group model</a>
+     */
+    public TaxonomyGroupListingResponse getTaxonomyGroups() {
         return getTaxonomyGroups(new ArrayList<>());
     }
 
-    public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) throws IOException {
+    /**
+     * Retrieve a page of {@link TaxonomyGroup} in your project.
+     * Use {@link DeliveryParameterBuilder#page(Integer, Integer)}.
+     *
+     * @param params    Built from {@link DeliveryParameterBuilder#page(Integer, Integer)}
+     * @return          A response object containing all {@link TaxonomyGroup} in the project.
+     * @see             TaxonomyGroup
+     * @see             Taxonomy
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-taxonomy-groups">
+     *                  KenticoCloud API reference - List taxonomy groups</a>
+     * @see             <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     *                  KenticoCloud API reference - Taxonomy group model</a>
+     */
+    public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(TAXONOMIES, params);
         return executeRequest(request, TaxonomyGroupListingResponse.class);
     }
 
-    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) throws IOException {
+    /**
+     * Retrieve a specific {@link TaxonomyGroup} from your project by specifying its codename.
+     *
+     * @param taxonomyGroupCodename The codename of a specfic taxonomy group.
+     * @return                      The {@link TaxonomyGroup}.
+     * @see                         TaxonomyGroup
+     * @see                         Taxonomy
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-taxonomy-group">
+     *                              KenticoCloud API reference - View a taxonomy group</a>
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     *                              KenticoCloud API reference - Taxonomy group model</a>
+     */
+    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) {
         return getTaxonomyGroup(taxonomyGroupCodename, new ArrayList<>());
     }
 
-    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) throws IOException {
+    /**
+     * Retrieve a specific {@link TaxonomyGroup} from your project by specifying its codename.  Generally you will want
+     * to use {@link #getTaxonomyGroup(String)} instead, but this allows specification of query parameters.
+     *
+     * @param taxonomyGroupCodename The codename of a specfic taxonomy group.
+     * @param params                Query params to add to the request.
+     * @return                      The {@link TaxonomyGroup}.
+     * @see                         TaxonomyGroup
+     * @see                         Taxonomy
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-taxonomy-group">
+     *                              KenticoCloud API reference - View a taxonomy group</a>
+     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     *                              KenticoCloud API reference - Taxonomy group model</a>
+     */
+    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) {
         HttpUriRequest request = buildGetRequest(
                 String.format(URL_CONCAT, TAXONOMIES, taxonomyGroupCodename), params);
         return executeRequest(request, TaxonomyGroup.class);
     }
 
+    /**
+     * Retrieve the currently configured {@link ContentLinkUrlResolver} for this client.
+     *
+     * @return  This client's {@link ContentLinkUrlResolver}
+     * @see     ContentLinkUrlResolver
+     */
     public ContentLinkUrlResolver getContentLinkUrlResolver() {
         return contentLinkUrlResolver;
     }
 
+    /**
+     * Sets the {@link ContentLinkUrlResolver} for this client.
+     *
+     * @param contentLinkUrlResolver    Sets the ContentLinkResolver of this client.
+     * @see                             ContentLinkUrlResolver
+     */
     public void setContentLinkUrlResolver(ContentLinkUrlResolver contentLinkUrlResolver) {
         this.contentLinkUrlResolver = contentLinkUrlResolver;
     }
 
+    /**
+     * Retrieve the currently configured {@link BrokenLinkUrlResolver} for this client.
+     *
+     * @return  This client's {@link BrokenLinkUrlResolver}
+     * @see     BrokenLinkUrlResolver
+     */
     public BrokenLinkUrlResolver getBrokenLinkUrlResolver() {
         return brokenLinkUrlResolver;
     }
 
+    /**
+     * Sets the {@link BrokenLinkUrlResolver} for this client.
+     *
+     * @param brokenLinkUrlResolver Sets the BrokenLinkUrlResolver of this client.
+     * @see                         BrokenLinkUrlResolver
+     */
     public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
         this.brokenLinkUrlResolver = brokenLinkUrlResolver;
     }
@@ -365,10 +721,22 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
     }
 
+    /**
+     * Sets the {@link CacheManager} for this client.
+     *
+     * @param cacheManager  A {@link CacheManager} implementation for this client to use.
+     * @see                 CacheManager
+     */
     public void setCacheManager(CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
+    /**
+     * Sets the maximum number of connections in the client pool to the KenticoCloud API.  Defaults to 20.
+     *
+     * @param maxConnections The number of connections to the KenticoCloud API the underlying HTTP connection pool uses
+     *                       in this client.
+     */
     public void setMaxConnections(int maxConnections) {
         connManager.setDefaultMaxPerRoute(maxConnections);
     }
@@ -410,34 +778,45 @@ public class DeliveryClient {
         }
     }
 
-    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) throws IOException {
-        return executeRequest(request, tClass, 0);
+    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) {
+        try {
+            return executeRequest(request, tClass, 0);
+        } catch (IOException e) {
+            log.error("IOException connecting to Kentico: {}", e.toString());
+            throw new KenticoIOException(e);
+        }
     }
 
     private <T> T executeRequest(HttpUriRequest request, Class<T> tClass, int attemptNumber) throws IOException {
         try {
             String requestUri = request.getURI().toString();
-            logger.info("HTTP {} - {} - {}", request.getMethod(), request.getAllHeaders(), requestUri);
+            log.debug("HTTP {} - {}", request.getMethod(), requestUri);
             JsonNode jsonNode = cacheManager.resolveRequest(requestUri, () -> {
-                HttpResponse response = httpClient.execute(request);
-                handleErrorIfNecessary(response);
-                InputStream inputStream = response.getEntity().getContent();
-                JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
-                logger.info("{} - {}", response.getStatusLine(), requestUri);
-                logger.debug("{} - {}:\n{}", request.getMethod(), requestUri, node);
-                inputStream.close();
-                return node;
+                try (CloseableHttpResponse response = httpClient.execute(request)) {
+                    handleErrorIfNecessary(response);
+                    InputStream inputStream = response.getEntity().getContent();
+                    JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
+                    log.info("{} - {}",
+                            BasicLineFormatter.INSTANCE.formatStatusLine(null, response.getStatusLine())
+                                    .toString(),
+                            requestUri);
+                    log.debug("{}:\n{}",
+                            String.format("%s - %s", request.getMethod(), requestUri),
+                            node.toString());
+                    inputStream.close();
+                    return node;
+                }
             });
             return objectMapper.treeToValue(jsonNode, tClass);
         } catch (KenticoErrorException kenticoError) {
             throw kenticoError;
         } catch (Exception ex) {
-            logger.error("Failed request: {}", ex.getMessage());
+            log.error("Failed request: {}", ex.getMessage());
             if (attemptNumber < deliveryOptions.getRetryAttempts()) {
                 int nextAttemptNumber = attemptNumber + 1;
                 //Perform a binary exponential backoff
                 int wait = (int) (100 * Math.pow(2, nextAttemptNumber));
-                logger.info("Reattempting request after {}ms", wait);
+                log.info("Reattempting request after {}ms", wait);
                 try {
                     Thread.sleep(wait);
                 } catch (InterruptedException e) {
@@ -450,17 +829,27 @@ public class DeliveryClient {
         }
     }
 
-    private void handleErrorIfNecessary(HttpResponse response) throws IOException {
-        final int status = response.getStatusLine().getStatusCode();
+    private void handleErrorIfNecessary(HttpResponse response) {
+        StatusLine statusLine = response.getStatusLine();
+        final int status = statusLine.getStatusCode();
         if (status >= 500) {
-            logger.error("Kentico API server error, status: {}", status);
-            throw new IOException("Unknown error with Kentico API.  Kentico is likely suffering site issues.");
+            String statusString = BasicLineFormatter.INSTANCE.formatStatusLine(null, statusLine).toString();
+            log.error("Kentico API server error, status: {}", statusString);
+            String message =
+                    String.format(
+                            "Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: %s",
+                            statusString);
+            throw new KenticoIOException(message);
         } else if (status >= 400) {
-            logger.error("Kentico API request error, status: {}", status);
-            InputStream inputStream = response.getEntity().getContent();
-            KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
-            inputStream.close();
-            throw new KenticoErrorException(kenticoError);
+            String statusString = BasicLineFormatter.INSTANCE.formatStatusLine(null, statusLine).toString();
+            log.error("Kentico API server error, status: {}", statusString);
+            try (InputStream inputStream = response.getEntity().getContent()) {
+                KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
+                throw new KenticoErrorException(kenticoError);
+            } catch (IOException e) {
+                log.error("IOException connecting to Kentico: {}", e.toString());
+                throw new KenticoIOException(e);
+            }
         }
     }
 

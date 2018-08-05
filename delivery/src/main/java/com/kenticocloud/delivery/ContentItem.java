@@ -33,12 +33,32 @@ import java.util.Map;
 
 /**
  * Object model description of a single content item object.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ *      KenticoCloud API reference - Content item object</a>
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class ContentItem {
 
+    /**
+     * {@link System} attributes of the content item.
+     *
+     * @param system    New value for System attributes of this content item.
+     * @return          The System attributes of this content item.
+     */
     @JsonProperty("system")
     System system;
 
+    /**
+     * Content type elements in the content item.  These are keyed by the codename of the element.
+     * <p>
+     * Note: The order of the {@link Element} objects might not match the order in the KenticoCloud UI.
+     *
+     * @return Map of this ContentItem's {@link Element} objects.
+     */
     @JsonProperty("elements")
     Map<String, Element> elements;
 
@@ -48,30 +68,13 @@ public class ContentItem {
     @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
-    public ContentItem() {
-        //Default constructor
-    }
-
     /**
-     * {@link System} attributes of the content item
-     * @return {@link System} attributes of the content item
+     * Content type elements in the content item.  These are keyed by the codename of the element.
+     * <p>
+     * Note: The order of the {@link Element} objects might not match the order in the KenticoCloud UI.
+     *
+     * @param elements New value for this ContentItem's {@link Element} objects.
      */
-    public System getSystem() {
-        return system;
-    }
-
-    public void setSystem(System system) {
-        this.system = system;
-    }
-
-    /**
-     * Content type elements in the content item
-     * @return map of {@link Element} objects
-     */
-    public Map<String, Element> getElements() {
-        return elements;
-    }
-
     public void setElements(Map<String, Element> elements) {
         this.elements = elements;
         elements.forEach((s, element) -> element.setParent(this));
@@ -79,12 +82,13 @@ public class ContentItem {
 
     /**
      * Convenience method to get the value of a Text or Rich text element without traversing the Elements map.
-     * @param codeName the element codeName to get the value of
-     * @return The value of the element.  Returns null if the element does not exist, or if it is not a
-     * {@link TextElement} or {@link RichTextElement}
+     *
+     * @param codename  The element codename to retrieve the String rendering of from this ContentItem.
+     * @return          The value of the element.  Returns null if the element does not exist, or if it is not a
+     *                  {@link TextElement} or {@link RichTextElement}.
      */
-    public String getString(String codeName) {
-        Element element = elements.get(codeName);
+    public String getString(String codename) {
+        Element element = elements.get(codename);
         if (element == null) {
             return null;
         }
@@ -96,12 +100,13 @@ public class ContentItem {
 
     /**
      * Convenience method to get the value of an Assets element without traversing the Elements map.
-     * @param codeName the element codeName to get the Asset list of
-     * @return A list of {@link Asset} objects.  Returns an empty collection if the element does not exist, or if it is
-     * not an {@link AssetsElement}
+     *
+     * @param codename  The element codename to get the Asset list of from this ContentItem.
+     * @return          A list of {@link Asset} objects.  Returns an empty collection if the element does not exist, or
+     *                  if it is not an {@link AssetsElement}.
      */
-    public List<Asset> getAssets(String codeName) {
-        Element element = elements.get(codeName);
+    public List<Asset> getAssets(String codename) {
+        Element element = elements.get(codename);
         if (element == null) {
             return Collections.emptyList();
         }
@@ -112,17 +117,18 @@ public class ContentItem {
     }
 
     /**
-     * Convenience method to retrieve the ContentItem of modular content.
-     * @param codeName the {@link ContentItem} codeName
-     * @return The {@link ContentItem}.  Returns null if it was not included in the response.
+     * Convenience method to retrieve the ContentItem from modular content.
+     *
+     * @param codename  The {@link ContentItem} codename of the modular content.
+     * @return          The {@link ContentItem}.  Returns null if it was not included in the response.
      */
-    public ContentItem getModularContent(String codeName) {
+    public ContentItem getModularContent(String codename) {
         //This shouldn't happen if this is de-serialized from Jackson, but protecting against the NPE for unexpected
         //usages.
         if (modularContentProvider == null) {
             return null;
         }
-        return modularContentProvider.getModularContent().get(codeName);
+        return modularContentProvider.getModularContent().get(codename);
     }
 
     /**
@@ -130,11 +136,22 @@ public class ContentItem {
      * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
      * annotation.  T must have a default constructor and have standard setter methods.
      * When passing in Object.class, the type returned will be an instance of the class registered with the
-     * {@link DeliveryClient} that is annotated with {@link ContentItemMapping} that matches the contentType of this
-     * ContentItem (however still returned as type Object).
-     * @param tClass The class which a new instance should be returned from
-     * @param <T> The type of class
-     * @return An instance of T with data mapped from the {@link ContentItem} in this response.
+     * {@link DeliveryClient} that is annotated with {@link ContentItemMapping} that matches the
+     * {@link System#type} of this ContentItem (however still returned as type Object).
+     * <p>
+     * If {@link Object} is passed in, the {@link StronglyTypedContentItemConverter} will cast this ContentItem to a
+     * type that is mapped this ContentItem's {@link System#type} from a previous registration via the registration has
+     * been done, then this same instance of ContentItem will be returned.  Invoking {@link #castToDefault()} is the
+     * same as invoking this method with {@link Object}.
+     *
+     * @param tClass    The class which a new instance should be returned from using this ContentItem.
+     * @param <T>       The type of class which will be returned.
+     * @return          An instance of T with data mapped from this {@link ContentItem}.
+     * @see             DeliveryClient#registerType(Class)
+     * @see             DeliveryClient#registerType(String, Class)
+     * @see             ContentItemMapping
+     * @see             ElementMapping
+     * @see             StronglyTypedContentItemConverter
      */
     public <T> T castTo(Class<T> tClass) {
         return stronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
@@ -144,10 +161,18 @@ public class ContentItem {
      * Returns a new instance by mapping fields to elements in this content item.  Element fields are mapped
      * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
      * annotation.  The type returned will be an instance of the class registered with the {@link DeliveryClient} that
-     * is annotated with {@link ContentItemMapping} that matches the contentType of this ContentItem (however still
-     * returned as type Object).
-     * @see #castTo(Class)
-     * @return An instance with data mapped from the {@link ContentItem} in this response.
+     * is annotated with {@link ContentItemMapping} that matches the {@link System#type} of this ContentItem
+     * (however still returned as type Object).
+     * <p>
+     * If no registration has been done, then this same instance of ContentItem will be returned.
+     *
+     * @return  An instance with data mapped from this {@link ContentItem}.
+     * @see     #castTo(Class)
+     * @see     DeliveryClient#registerType(Class)
+     * @see     DeliveryClient#registerType(String, Class)
+     * @see     ContentItemMapping
+     * @see     ElementMapping
+     * @see     StronglyTypedContentItemConverter
      */
     public Object castToDefault() {
         return this.castTo(Object.class);
@@ -157,13 +182,22 @@ public class ContentItem {
      * Returns a new instance by mapping fields to elements in this content item.  Element fields are mapped
      * by automatically CamelCasing and checking for equality, unless otherwise annotated by an {@link ElementMapping}
      * annotation.  The type returned will be an instance of the class registered with the {@link DeliveryClient} that
-     * that matches the contentType provided.
-     * @param contentType The contentType to match this ContentItem too.
-     * @return An instance with data mapped from the {@link ContentItem} in this response.
+     * that matches the {@link System#type} provided.
+     * <p>
+     * If no registration has been done, then this same instance of ContentItem will be returned.
+     *
+     * @param contentItemSystemType The contentItemSystemType to match this ContentItem too.
+     * @return                      An instance with data mapped from this {@link ContentItem}.
+     * @see                         #castTo(Class)
+     * @see                         DeliveryClient#registerType(Class)
+     * @see                         DeliveryClient#registerType(String, Class)
+     * @see                         ContentItemMapping
+     * @see                         ElementMapping
+     * @see                         StronglyTypedContentItemConverter
      */
-    public Object castTo(String contentType) {
+    public Object castTo(String contentItemSystemType) {
         return stronglyTypedContentItemConverter.convert(
-                this, modularContentProvider.getModularContent(), contentType);
+                this, modularContentProvider.getModularContent(), contentItemSystemType);
     }
 
     void setModularContentProvider(ModularContentProvider modularContentProvider) {

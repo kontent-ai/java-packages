@@ -24,9 +24,13 @@
 
 package com.kenticocloud.delivery;
 
-import java.io.IOException;
 import java.util.List;
 
+/**
+ * Represents a page of results from the KenticoCloud API.
+ *
+ * @param <T> The type of results.
+ */
 public class Page<T> {
 
     Pagination pagination;
@@ -108,15 +112,16 @@ public class Page<T> {
      * Returns the next page. Can be {@literal null} in case the current page is already the last one. Clients
      * should check {@link #hasNext()} before calling this method to make sure they receive a non-{@literal null} value.
      *
-     * @return the next page.
-     * @throws IOException Thrown if there is an issue communicating with the Kentico Cloud API
+     * @return                      The next page.
+     * @throws KenticoIOException   Thrown if there is an issue communicating with the Kentico Cloud API
      */
-    public Page<T> nextPage() throws IOException {
+    public Page<T> nextPage() {
         return deliveryClient.getNextPage(this);
     }
 
     /**
      * Returns the pagination information from the request
+     *
      * @return a pagination object
      */
     public Pagination getPagination() {

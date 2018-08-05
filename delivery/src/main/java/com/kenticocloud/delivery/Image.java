@@ -30,58 +30,43 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Object model for Image elements
  * <p>
  * Images associated with rich text elements
+ *
  * @see RichTextElement
  */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
 public class Image {
-
-    @JsonProperty("image_id")
-    String imageId;
-
-    @JsonProperty("description")
-    String description;
-
-    @JsonProperty("url")
-    String url;
-
-    public Image() {
-        //Default constructor
-    }
 
     /**
      * ID of the image
-     * @return image ID
+     *
+     * @param imageId   Sets the imageId of this
+     * @return          This imageId
      */
-    public String getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
+    @JsonProperty("image_id")
+    String imageId;
 
     /**
      * Description of the image
      * <p>
      * Used for the alt attribute of an &lt;img&gt; tag.
-     * @return the image description
+     *
+     * @param description   Sets the description of this
+     * @return              The image description of this
      */
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    @JsonProperty("description")
+    String description;
 
     /**
      * Absolute URL for the image
-     * @return An absolute URL image hosted by Kentico
+     *
+     * @param url   Sets the url of this
+     * @return      An absolute URL image hosted by Kentico
      */
-    public String getUrl() {
-        return url;
-    }
+    @JsonProperty("url")
+    String url;
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
 }

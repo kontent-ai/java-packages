@@ -32,77 +32,81 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Content items listing response
- * <p>
- * When you retrieve a list of content items from your project, the Delivery API returns a
- * {@link ContentItemsListingResponse}
- * @see DeliveryClient#getItems()
- * @see DeliveryClient#getItems(List)
+ * Content item listing response from an invocation of {@link DeliveryClient#getItems()}, or
+ * {@link DeliveryClient#getItems(List)}.
+ *
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+ *      KenticoCloud API reference - Listing response</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ *      KenticoCloud API reference - Content item object</a>
+ * @see <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+ *      KenticoCloud API reference - List content items</a>
+ * @see ContentItem
+ * @see DeliveryClient#getItem(String)
+ * @see DeliveryClient#getItem(String, List)
  */
+@lombok.Getter
+@lombok.ToString
+@lombok.EqualsAndHashCode
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class ContentItemsListingResponse implements ModularContentProvider {
 
+    /**
+     * The {@link ContentItem}s returned by this ContentItemsListingResponse.
+     *
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     *          KenticoCloud API reference - Listing response</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     *          KenticoCloud API reference - Content item object</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     *          KenticoCloud API reference - List content items</a>
+     * @return  The {@link ContentItem}s of this ContentItemsListingResponse.
+     */
     @JsonProperty("items")
     List<ContentItem> items;
 
+    /**
+     * A map of content items used in modular content and Rich text elements.
+     *
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     *          KenticoCloud API reference - Listing response</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
+     *          KenticoCloud API reference - Modular content</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     *          KenticoCloud API reference - Content item object</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     *          KenticoCloud API reference - List content items</a>
+     * @return  The modular {@link ContentItem}s referenced in this response.
+     */
     @JsonProperty("modular_content")
     Map<String, ContentItem> modularContent;
 
+    /**
+     * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
+     *
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     *          KenticoCloud API reference - Listing response paging</a>
+     * @see     <a href="https://developer.kenticocloud.com/v1/reference#section-pagination-object">
+     *          KenticoCloud API reference - Pagination object</a>
+     * @return  The {@link Pagination} for this ContentItemsListingResponse identifying the current page.
+     */
     @JsonProperty("pagination")
     Pagination pagination;
 
     @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
 
-    ContentItemsListingResponse() {
-        //Default constructor
-    }
-
     /**
-     * A list of content items
-     * @return list of {@link ContentItem} objects
-     */
-    public List<ContentItem> getItems() {
-        return items;
-    }
-
-    public void setItems(List<ContentItem> items) {
-        this.items = items;
-        items.forEach(contentItem -> contentItem.setModularContentProvider(this));
-    }
-
-    /**
-     * A map of content items used in Modular content and Rich text elements
-     * @return map of {@link ContentItem} objects
-     */
-    @Override
-    public Map<String, ContentItem> getModularContent() {
-        return modularContent;
-    }
-
-    public void setModularContent(Map<String, ContentItem> modularContent) {
-        this.modularContent = modularContent;
-        modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
-    }
-
-    /**
-     * Information about the retrieved page
-     * @return the {@link Pagination} object identifying the current page
-     */
-    public Pagination getPagination() {
-        return pagination;
-    }
-
-    void setPagination(Pagination pagination) {
-        this.pagination = pagination;
-    }
-
-    /**
-     * Returns a new instance of List&lt;T&gt; by mapping fields to elements in this content item.  Element fields are
+     * Returns a new instance of {@code List<T>} by mapping fields to elements in this content item.  Element fields are
      * mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by an
      * {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     * @param tClass The class which a new instance should be returned from
-     * @param <T> The type of class
-     * @return An instance of List&lt;T&gt; with data mapped from the {@link ContentItem} list in this response.
+     *
+     * @param tClass    The class which a new instance should be returned from
+     * @param <T>       The type of class
+     * @return          An instance of {@code List<T>} with data mapped from the {@link ContentItem} list in this
+     *                  response.
      */
     public <T> List<T> castTo(Class<T> tClass) {
         ArrayList<T> tItems = new ArrayList<>();
@@ -110,6 +114,20 @@ public class ContentItemsListingResponse implements ModularContentProvider {
             tItems.add(stronglyTypedContentItemConverter.convert(item, getModularContent(),tClass));
         }
         return tItems;
+    }
+
+    void setItems(List<ContentItem> items) {
+        this.items = items;
+        items.forEach(contentItem -> contentItem.setModularContentProvider(this));
+    }
+
+    void setModularContent(Map<String, ContentItem> modularContent) {
+        this.modularContent = modularContent;
+        modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
+    }
+
+    void setPagination(Pagination pagination) {
+        this.pagination = pagination;
     }
 
     void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {

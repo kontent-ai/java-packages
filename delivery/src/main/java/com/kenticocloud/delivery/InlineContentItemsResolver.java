@@ -27,6 +27,11 @@ package com.kenticocloud.delivery;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
+/**
+ * Concrete implementations of this can resolve strongly typed content types included inline rich text.
+ *
+ * @param <T>   The strongly typed content type model this resolver supports.
+ */
 public abstract class InlineContentItemsResolver<T> {
 
     //Neil Gafter Super Type Token, http://gafter.blogspot.com/2006/12/super-type-tokens.html
@@ -40,6 +45,13 @@ public abstract class InlineContentItemsResolver<T> {
         this.type = ((ParameterizedType) superclass).getActualTypeArguments()[0];
     }
 
+    /**
+     * Returns the raw text of what to insert into the rich text with the given inline strongly typed content type of
+     * type T.
+     *
+     * @param data  An instance of a strongly typed content item.
+     * @return      Raw text to insert into the rich text.
+     */
     public abstract String resolve(T data);
 
     protected Type getType() {

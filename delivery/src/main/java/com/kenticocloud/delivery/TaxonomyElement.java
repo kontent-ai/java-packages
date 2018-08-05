@@ -31,42 +31,36 @@ import java.util.List;
 /**
  * Object model for a Taxonomy group element
  */
-public class TaxonomyElement extends Element {
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.EqualsAndHashCode(callSuper = true)
+public class TaxonomyElement extends Element<List<Taxonomy>> {
 
     static final String TYPE_VALUE = "taxonomy";
 
+    @JsonProperty("type")
+    String type;
+
+    /**
+     * The name of the taxonomy group
+     *
+     * @param taxonomyGroup Sets the taxonomyGroup of this.
+     * @return              The taxonomy group name of this.
+     */
     @JsonProperty("taxonomy_group")
     String taxonomyGroup;
 
+    /**
+     * The value of Taxonomy elements is a list of {@link Taxonomy} item objects.
+     *
+     * @param value Sets the value of this.
+     * @return      List of {@link Taxonomy} objects.
+     */
     @JsonProperty("value")
     List<Taxonomy> value;
 
     public TaxonomyElement() {
         setType(TYPE_VALUE);
-    }
-
-    /**
-     * The name of the taxonomy group
-     * @return taxonomy group name
-     */
-    public String getTaxonomyGroup() {
-        return taxonomyGroup;
-    }
-
-    public void setTaxonomyGroup(String taxonomyGroup) {
-        this.taxonomyGroup = taxonomyGroup;
-    }
-
-    /**
-     * The value of Taxonomy elements is a list of {@link Taxonomy} item objects.
-     * @return list of {@link Taxonomy} objects
-     */
-    @Override
-    public List<Taxonomy> getValue() {
-        return value;
-    }
-
-    public void setValue(List<Taxonomy> value) {
-        this.value = value;
     }
 }
