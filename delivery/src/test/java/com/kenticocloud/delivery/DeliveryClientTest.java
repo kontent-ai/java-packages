@@ -126,7 +126,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 });
         HttpHost httpHost = this.start();
         String testServerUri = httpHost.toURI() + "/%s";
-        DeliveryOptions deliveryOptions = new DeliveryOptions();
+        DeliveryOptions deliveryOptions = DeliveryOptions.builder()
+                .projectId(projectId)
+                .productionEndpoint(testServerUri)
+                .retryAttempts(1)
+                .build();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
         deliveryOptions.setRetryAttempts(1);

@@ -33,14 +33,11 @@ import java.util.List;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class TaxonomyElement extends Element<List<Taxonomy>> {
 
     static final String TYPE_VALUE = "taxonomy";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * The name of the taxonomy group

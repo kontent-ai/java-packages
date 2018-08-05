@@ -39,14 +39,11 @@ import java.util.Map;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class RichTextElement extends TextElement {
 
     static final String TYPE_VALUE = "rich_text";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * Images associated with this rich text element.

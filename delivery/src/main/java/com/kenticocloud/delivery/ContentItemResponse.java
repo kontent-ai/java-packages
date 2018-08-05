@@ -43,8 +43,8 @@ import java.util.Map;
  * @see DeliveryClient#getItem(String, List)
  */
 @lombok.Getter
-@lombok.ToString
-@lombok.EqualsAndHashCode
+@lombok.ToString(exclude = "stronglyTypedContentItemConverter")
+@lombok.EqualsAndHashCode(exclude = "stronglyTypedContentItemConverter")
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder

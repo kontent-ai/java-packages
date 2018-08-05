@@ -33,14 +33,11 @@ import java.util.List;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class MultipleChoiceElement extends Element<List<Option>> {
 
     static final String TYPE_VALUE = "multiple_choice";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * The value of the selected elements.

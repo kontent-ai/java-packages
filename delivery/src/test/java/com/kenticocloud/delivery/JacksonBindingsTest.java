@@ -48,10 +48,26 @@ public class JacksonBindingsTest {
     public void testContentListDeserialization() throws IOException {
         ContentItemsListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentItemList.json"), ContentItemsListingResponse.class);
+        ContentItemsListingResponse response2 = objectMapper.readValue(
+                this.getClass().getResource("SampleContentItemList.json"), ContentItemsListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertNotNull(response.toString());
+        Assert.assertEquals(response, response2);
+        Assert.assertEquals(response.hashCode(), response2.hashCode());
+        ContentItemsListingResponse response3 = ContentItemsListingResponse.builder()
+                .items(response.getItems())
+                .pagination(response.getPagination())
+                .modularContent(response.getModularContent())
+                .build();
+        Assert.assertEquals(response, response3);
+        Assert.assertEquals(response.hashCode(), response3.hashCode());
+
         Assert.assertEquals(2, response.getModularContent().size());
         Pagination pagination = response.getPagination();
         Assert.assertNotNull(pagination);
+        Assert.assertNotNull(pagination.toString());
+        Assert.assertEquals(pagination, response2.getPagination());
+        Assert.assertEquals(pagination.hashCode(), response2.getPagination().hashCode());
         Assert.assertEquals(0, pagination.getSkip().intValue());
         Assert.assertEquals(3, pagination.getLimit().intValue());
         Assert.assertEquals(3, pagination.getCount().intValue());
@@ -64,11 +80,29 @@ public class JacksonBindingsTest {
     public void testContentItemDeserialization() throws IOException {
         ContentItemResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentItem.json"), ContentItemResponse.class);
+        ContentItemResponse response2 = objectMapper.readValue(
+                this.getClass().getResource("SampleContentItem.json"), ContentItemResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertNotNull(response.toString());
+        Assert.assertEquals(response, response2);
+        Assert.assertEquals(response.hashCode(), response2.hashCode());
+        ContentItemResponse response3 = ContentItemResponse.builder()
+                .item(response.getItem())
+                .modularContent(response.getModularContent())
+                .build();
+        Assert.assertEquals(response, response3);
+        Assert.assertEquals(response.hashCode(), response3.hashCode());
+
         Assert.assertEquals(2, response.getModularContent().size());
 
         ContentItem contentItem = response.getItem();
         Assert.assertNotNull(contentItem);
+        ContentItem contentItem2 = ContentItem.builder()
+                .system(contentItem.getSystem())
+                .elements(contentItem.getElements())
+                .build();
+        Assert.assertEquals(contentItem, contentItem2);
+        Assert.assertEquals(contentItem.hashCode(), contentItem2.hashCode());
 
         System system = contentItem.getSystem();
         Assert.assertNotNull(system);
@@ -84,6 +118,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(5, contentItem.elements.size());
         Element title = contentItem.elements.get("title");
         Assert.assertNotNull(title);
+        Assert.assertNotNull(title.toString());
         Assert.assertEquals("text", title.getType());
 
         Assert.assertEquals("On Roasts", contentItem.getString("title"));
@@ -104,7 +139,18 @@ public class JacksonBindingsTest {
     public void testContentTypeListDeserialization() throws IOException {
         ContentTypesListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentTypeList.json"), ContentTypesListingResponse.class);
+        ContentTypesListingResponse response2 = objectMapper.readValue(
+                this.getClass().getResource("SampleContentTypeList.json"), ContentTypesListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertNotNull(response.toString());
+        Assert.assertEquals(response, response2);
+        Assert.assertEquals(response.hashCode(), response2.hashCode());
+        ContentTypesListingResponse response3 = ContentTypesListingResponse.builder()
+                .types(response.getTypes())
+                .pagination(response.getPagination())
+                .build();
+        Assert.assertEquals(response, response3);
+        Assert.assertEquals(response.hashCode(), response3.hashCode());
 
         Assert.assertEquals(2, response.getTypes().size());
         ContentType contentType = response.getTypes().get(0);
@@ -118,7 +164,18 @@ public class JacksonBindingsTest {
     public void testContentTypeDeserialization() throws IOException {
         ContentType contentType = objectMapper.readValue(
                 this.getClass().getResource("SampleContentType.json"), ContentType.class);
+        ContentType contentType2 = objectMapper.readValue(
+                this.getClass().getResource("SampleContentType.json"), ContentType.class);
         Assert.assertNotNull("object failed deserialization", contentType);
+        Assert.assertNotNull(contentType.toString());
+        Assert.assertEquals(contentType, contentType2);
+        Assert.assertEquals(contentType.hashCode(), contentType2.hashCode());
+        ContentType contentType3 = ContentType.builder()
+                .system(contentType.getSystem())
+                .elements(contentType.getElements())
+                .build();
+        Assert.assertEquals(contentType, contentType3);
+        Assert.assertEquals(contentType.hashCode(), contentType3.hashCode());
 
         System system = contentType.getSystem();
         Assert.assertNotNull(system);
@@ -143,7 +200,12 @@ public class JacksonBindingsTest {
     public void testTextElementDeserialization() throws IOException {
         TextElement textElement = objectMapper.readValue(
                 this.getClass().getResource("SampleTextElement.json"), TextElement.class);
+        TextElement textElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleTextElement.json"), TextElement.class);
         Assert.assertNotNull("object failed deserialization", textElement);
+        Assert.assertNotNull(textElement.toString());
+        Assert.assertEquals(textElement, textElement2);
+        Assert.assertEquals(textElement.hashCode(), textElement2.hashCode());
         Assert.assertEquals("Meta keywords", textElement.getName());
         Assert.assertEquals("\"coffee beginner\", beverages", textElement.getValue());
     }
@@ -152,7 +214,12 @@ public class JacksonBindingsTest {
     public void testRichTextElementDeserialization() throws IOException {
         RichTextElement richTextElement = objectMapper.readValue(
                 this.getClass().getResource("SampleRichTextElement.json"), RichTextElement.class);
+        RichTextElement richTextElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleRichTextElement.json"), RichTextElement.class);
         Assert.assertNotNull("object failed deserialization", richTextElement);
+        Assert.assertNotNull(richTextElement.toString());
+        Assert.assertEquals(richTextElement, richTextElement2);
+        Assert.assertEquals(richTextElement.hashCode(), richTextElement2.hashCode());
         Assert.assertEquals("Description", richTextElement.getName());
         Assert.assertEquals(
                 "<p>We operate our own roasteries, one on every continent we cover, from where we distribute right to the shops. This allows you to experience every cup as if you were right at the very farm it originated from. To achieve this, we use a refurbished 1920s Probat coffee roasters.</p>\n<figure data-image-id=\"14mio\"><img src=\"https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg\" alt=\"Roasting coffee beans\" data-image-id=\"14mio\"></figure><p>We know that roasting is something you must keep on constantly perfecting. Each coffee requires a different roast to get the aroma and taste just right. That’s why our experts fine tune the way we <a data-item-id=\"f4b3fc05-e988-4dae-9ac1-a94aba566474\" href=\"\">roast coffees</a> every day. It’s a constant struggle.</p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"coffee_processing_techniques\"></object>",
@@ -178,7 +245,12 @@ public class JacksonBindingsTest {
     public void testMultipleChoiceElementDeserialization() throws IOException {
         MultipleChoiceElement multipleChoiceElement = objectMapper.readValue(
                 this.getClass().getResource("SampleMultipleChoiceElement.json"), MultipleChoiceElement.class);
+        MultipleChoiceElement multipleChoiceElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleMultipleChoiceElement.json"), MultipleChoiceElement.class);
         Assert.assertNotNull("object failed deserialization", multipleChoiceElement);
+        Assert.assertNotNull(multipleChoiceElement.toString());
+        Assert.assertEquals(multipleChoiceElement, multipleChoiceElement2);
+        Assert.assertEquals(multipleChoiceElement.hashCode(), multipleChoiceElement2.hashCode());
         Assert.assertEquals("Processing", multipleChoiceElement.getName());
         Assert.assertEquals(1, multipleChoiceElement.getValue().size());
         Option option = multipleChoiceElement.getValue().get(0);
@@ -191,7 +263,12 @@ public class JacksonBindingsTest {
     public void testNumberElementDeserialization() throws IOException {
         NumberElement numberElement = objectMapper.readValue(
                 this.getClass().getResource("SampleNumberElement.json"), NumberElement.class);
+        NumberElement numberElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleNumberElement.json"), NumberElement.class);
         Assert.assertNotNull("object failed deserialization", numberElement);
+        Assert.assertNotNull(numberElement.toString());
+        Assert.assertEquals(numberElement, numberElement2);
+        Assert.assertEquals(numberElement.hashCode(), numberElement2.hashCode());
         Assert.assertEquals("Price", numberElement.getName());
         Assert.assertEquals(8.5, numberElement.getValue(), 0.000001);
     }
@@ -200,7 +277,12 @@ public class JacksonBindingsTest {
     public void testDateTimeElementDeserialization() throws IOException {
         DateTimeElement dateTimeElement = objectMapper.readValue(
                 this.getClass().getResource("SampleDateTimeElement.json"), DateTimeElement.class);
+        DateTimeElement dateTimeElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleDateTimeElement.json"), DateTimeElement.class);
         Assert.assertNotNull("object failed deserialization", dateTimeElement);
+        Assert.assertNotNull(dateTimeElement.toString());
+        Assert.assertEquals(dateTimeElement, dateTimeElement2);
+        Assert.assertEquals(dateTimeElement.hashCode(), dateTimeElement2.hashCode());
         Assert.assertEquals("Post date", dateTimeElement.getName());
         Assert.assertEquals(2014, dateTimeElement.getValue().getYear());
         Assert.assertEquals(11, dateTimeElement.getValue().getMonthValue());
@@ -214,11 +296,25 @@ public class JacksonBindingsTest {
     public void testAssetElementDeserialization() throws IOException {
         AssetsElement assetsElement = objectMapper.readValue(
                 this.getClass().getResource("SampleAssetElement.json"), AssetsElement.class);
+        AssetsElement assetsElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleAssetElement.json"), AssetsElement.class);
         Assert.assertNotNull("object failed deserialization", assetsElement);
+        Assert.assertNotNull(assetsElement.toString());
+        Assert.assertEquals(assetsElement, assetsElement2);
+        Assert.assertEquals(assetsElement.hashCode(), assetsElement2.hashCode());
         Assert.assertEquals("Teaser image", assetsElement.getName());
         Assert.assertEquals(1, assetsElement.getValue().size());
         Asset asset = assetsElement.getValue().get(0);
         Assert.assertNotNull(asset);
+        Asset asset2 = Asset.builder()
+                .name(asset.getName())
+                .description(asset.getDescription())
+                .size(asset.getSize())
+                .url(asset.getUrl())
+                .type(asset.getType())
+                .build();
+        Assert.assertEquals(asset, asset2);
+        Assert.assertEquals(asset.hashCode(), asset2.hashCode());
         Assert.assertEquals("coffee-beverages-explained-1080px.jpg", asset.getName());
         Assert.assertEquals("image/jpeg", asset.getType());
         Assert.assertEquals(90895, asset.getSize().longValue());
@@ -232,7 +328,12 @@ public class JacksonBindingsTest {
     public void testModularContentElementDeserialization() throws IOException {
         ModularContentElement modularContentElement = objectMapper.readValue(
                 this.getClass().getResource("SampleModularContentElement.json"), ModularContentElement.class);
+        ModularContentElement modularContentElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleModularContentElement.json"), ModularContentElement.class);
         Assert.assertNotNull("object failed deserialization", modularContentElement);
+        Assert.assertNotNull(modularContentElement.toString());
+        Assert.assertEquals(modularContentElement, modularContentElement2);
+        Assert.assertEquals(modularContentElement.hashCode(), modularContentElement2.hashCode());
         Assert.assertEquals("Facts", modularContentElement.getName());
         Assert.assertEquals(3, modularContentElement.getValue().size());
         Assert.assertEquals("our_philosophy", modularContentElement.getValue().get(0));
@@ -242,7 +343,12 @@ public class JacksonBindingsTest {
     public void testTaxonomyElementDeserialization() throws IOException {
         TaxonomyElement taxonomyElement = objectMapper.readValue(
                 this.getClass().getResource("SampleTaxonomyElement.json"), TaxonomyElement.class);
+        TaxonomyElement taxonomyElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleTaxonomyElement.json"), TaxonomyElement.class);
         Assert.assertNotNull("object failed deserialization", taxonomyElement);
+        Assert.assertNotNull(taxonomyElement.toString());
+        Assert.assertEquals(taxonomyElement, taxonomyElement2);
+        Assert.assertEquals(taxonomyElement.hashCode(), taxonomyElement2.hashCode());
         Assert.assertEquals("Personas", taxonomyElement.getName());
         Assert.assertEquals("personas", taxonomyElement.getTaxonomyGroup());
         Assert.assertEquals(1, taxonomyElement.getValue().size());
@@ -256,7 +362,19 @@ public class JacksonBindingsTest {
     public void testTaxonomyGroupListingResponse() throws IOException {
         TaxonomyGroupListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleTaxonomyGroupListingResponse.json"), TaxonomyGroupListingResponse.class);
+        TaxonomyGroupListingResponse response2 = objectMapper.readValue(
+                this.getClass().getResource("SampleTaxonomyGroupListingResponse.json"), TaxonomyGroupListingResponse.class);
         Assert.assertNotNull("object failed deserialization", response);
+        Assert.assertNotNull(response.toString());
+        Assert.assertEquals(response, response2);
+        Assert.assertEquals(response.hashCode(), response2.hashCode());
+        TaxonomyGroupListingResponse response3 = TaxonomyGroupListingResponse.builder()
+                .taxonomies(response.getTaxonomies())
+                .pagination(response.getPagination())
+                .build();
+        Assert.assertEquals(response, response3);
+        Assert.assertEquals(response.hashCode(), response3.hashCode());
+
         Assert.assertEquals(3, response.getTaxonomies().size());
         TaxonomyGroup group = response.getTaxonomies().get(0);
         Assert.assertEquals(2016, group.getSystem().getLastModified().getYear());
@@ -271,7 +389,12 @@ public class JacksonBindingsTest {
     public void testUrlSlugElementDeserialization() throws IOException {
         UrlSlugElement urlSlugElement = objectMapper.readValue(
                 this.getClass().getResource("SampleUrlSlugElement.json"), UrlSlugElement.class);
+        UrlSlugElement urlSlugElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleUrlSlugElement.json"), UrlSlugElement.class);
         Assert.assertNotNull("object failed deserialization", urlSlugElement);
+        Assert.assertNotNull(urlSlugElement.toString());
+        Assert.assertEquals(urlSlugElement, urlSlugElement2);
+        Assert.assertEquals(urlSlugElement.hashCode(), urlSlugElement2.hashCode());
         Assert.assertEquals("URL slug", urlSlugElement.getName());
         Assert.assertEquals("brazil-natural-barra-grande", urlSlugElement.getValue());
     }
@@ -280,7 +403,12 @@ public class JacksonBindingsTest {
     public void testKenticoErrorDeserialization() throws IOException {
         KenticoError kenticoError = objectMapper.readValue(
                 this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
+        KenticoError kenticoError2 = objectMapper.readValue(
+                this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
         Assert.assertNotNull("object failed deserialization", kenticoError);
+        Assert.assertNotNull(kenticoError.toString());
+        Assert.assertEquals(kenticoError, kenticoError2);
+        Assert.assertEquals(kenticoError.hashCode(), kenticoError2.hashCode());
         Assert.assertEquals("The requested content item 'error' was not found.", kenticoError.getMessage());
         Assert.assertEquals("HyufT6wUgEc=", kenticoError.getRequestId());
         Assert.assertEquals(100, kenticoError.getErrorCode());

@@ -41,6 +41,8 @@ import java.util.Map;
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
+@lombok.EqualsAndHashCode(exclude = {"modularContentProvider", "stronglyTypedContentItemConverter"})
+@lombok.ToString(exclude = {"modularContentProvider", "stronglyTypedContentItemConverter"})
 public class ContentItem {
 
     /**

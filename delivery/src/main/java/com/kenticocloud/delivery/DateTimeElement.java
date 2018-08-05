@@ -39,14 +39,11 @@ import java.time.ZonedDateTime;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class DateTimeElement extends Element<ZonedDateTime> {
 
     static final String TYPE_VALUE = "date_time";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * The value of a Date &amp; time element is a string in the ISO 8601 format. If empty, the value is null.

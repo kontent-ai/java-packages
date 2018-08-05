@@ -31,14 +31,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class TextElement extends Element<String> {
 
     static final String TYPE_VALUE = "text";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * The value of a Text element is a string.

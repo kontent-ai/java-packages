@@ -50,8 +50,8 @@ import java.util.List;
 })
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
-@lombok.EqualsAndHashCode
+@lombok.ToString(exclude = "parent")
+@lombok.EqualsAndHashCode(exclude = "parent")
 @lombok.NoArgsConstructor
 public abstract class Element<T> {
 

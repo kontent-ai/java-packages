@@ -33,14 +33,11 @@ import java.util.List;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class ModularContentElement extends Element<List<String>> {
 
     static final String TYPE_VALUE = "modular_content";
-
-    @JsonProperty("type")
-    String type;
 
     /**
      * A list of {@link ContentItem} codenames

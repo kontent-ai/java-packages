@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery.svg)](http://javadoc.io/doc/com.kenticocloud/delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.1-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
 [![Analytics](https://ga-beacon.appspot.com/UA-69014260-4/Kentico/delivery-sdk-java?pixel)](https://github.com/igrigorik/ga-beacon)
 
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery:2.0.0')
+    compile('com.kenticocloud:delivery:2.0.1')
 }
 ```
 
@@ -30,7 +30,7 @@ Or via your Maven POM:
 <dependency>
     <groupId>com.kenticocloud</groupId>
     <artifactId>delivery</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
 </dependency>
 ```
 
@@ -52,6 +52,15 @@ You can also provide the project ID and other parameters by passing the [`Delive
 * `setProjectId(String)` – sets the project identifier.
 * `setUsePreviewApi(boolean)` – determines whether to use the Delivery Preview API.
 * `setWaitForLoadingNewContent(boolean)` – makes the client instance wait while fetching updated content, useful when acting upon [webhook calls](https://developer.kenticocloud.com/docs/webhooks#section-requesting-new-content).
+
+The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
+
+```java
+DeliveryClient client = new DeliveryClient(DeliveryOptions.builder()
+                                                          .projectId("975bf280-fd91-488c-994c-2f04416e5ee3")
+                                                          .productionApiKey("secured key")
+                                                          .build());
+```
 
 Once you create a `DeliveryClient`, you can start querying your project repository by calling methods on the client instance. See [Basic querying](#basic-querying) for details.
 

@@ -38,7 +38,7 @@ import java.util.List;
  */
 @lombok.Getter
 @lombok.Setter
-@lombok.ToString
+@lombok.ToString(callSuper = true)
 @lombok.EqualsAndHashCode(callSuper = true)
 public class AssetsElement extends Element<List<Asset>> {
 
