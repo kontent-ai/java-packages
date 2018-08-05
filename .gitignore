@@ -46,6 +46,7 @@ hs_err_pid*
 !.idea/dictionaries/kentico.xml
 .idea/shelf/
 .idea/modules.xml
+.idea/uiDesigner.xml
 *.iml
 
 # Visual Studio Code #
