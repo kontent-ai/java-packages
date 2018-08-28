@@ -6,7 +6,6 @@
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
 [![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.1-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
-[![Analytics](https://ga-beacon.appspot.com/UA-69014260-4/Kentico/delivery-sdk-java?pixel)](https://github.com/igrigorik/ga-beacon)
 
 ## Summary
 
@@ -238,3 +237,5 @@ We would like to express our thanks to the following people who contributed and 
 - [Gabriel Cunha](https://github.com/cunhazera)
 
 Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/delivery-sdk-java/issues) and send us a pull request!
+
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/delivery-sdk-java?pixel)
