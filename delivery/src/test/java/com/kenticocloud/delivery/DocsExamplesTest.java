@@ -53,11 +53,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         List<NameValuePair> params = DeliveryParameterBuilder.params().language("es-ES").build();
 
@@ -79,11 +76,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         List<NameValuePair> params = DeliveryParameterBuilder.params()
             .filterEquals("system.type", "article")
@@ -112,11 +106,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         List<NameValuePair> params = DeliveryParameterBuilder.params().projection("title", "summary", "post_date", "teaser_image", "related_articles").build();
 
@@ -138,11 +129,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         List<NameValuePair> params = DeliveryParameterBuilder.params().page(null, 3).build();
         ContentTypesListingResponse types = client.getTypes(params);
@@ -164,11 +152,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentType type = client.getType("coffee");
         Assert.assertNotNull(type);
@@ -188,11 +173,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         Element element = client.getContentTypeElement("coffee", "processing");
         Assert.assertNotNull(element);
@@ -214,11 +196,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         List<NameValuePair> params = DeliveryParameterBuilder.params().page(null, 3).build();
 
@@ -241,11 +220,8 @@ public class DocsExamplesTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseurl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         TaxonomyGroup taxonomyGroup = client.getTaxonomyGroup("personas");
         Assert.assertNotNull(taxonomyGroup);

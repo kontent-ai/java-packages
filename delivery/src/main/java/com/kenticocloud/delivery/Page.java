@@ -34,15 +34,13 @@ import java.util.List;
 public class Page<T> {
 
     Pagination pagination;
-    DeliveryClient deliveryClient;
     List<T> contentItems;
     Class<T> tClass;
 
-    public Page(ContentItemsListingResponse response, Class<T> tClass, DeliveryClient deliveryClient) {
+    public Page(ContentItemsListingResponse response, Class<T> tClass) {
         this.pagination = response.getPagination();
         this.contentItems = response.castTo(tClass);
         this.tClass = tClass;
-        this.deliveryClient = deliveryClient;
     }
 
     /**
@@ -106,17 +104,6 @@ public class Page<T> {
      */
     public boolean hasPrevious() {
         return pagination.skip > 0;
-    }
-
-    /**
-     * Returns the next page. Can be {@literal null} in case the current page is already the last one. Clients
-     * should check {@link #hasNext()} before calling this method to make sure they receive a non-{@literal null} value.
-     *
-     * @return                      The next page.
-     * @throws KenticoIOException   Thrown if there is an issue communicating with the Kentico Cloud API
-     */
-    public Page<T> nextPage() {
-        return deliveryClient.getNextPage(this);
     }
 
     /**

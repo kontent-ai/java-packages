@@ -41,12 +41,13 @@ import org.junit.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeliveryClientTest extends LocalServerTestBase {
 
@@ -70,25 +71,24 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setPreviewEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
     public void testRetry() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
-        final boolean[] sentError = {false};
+        final AtomicBoolean sentError = new AtomicBoolean(false);
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
-                    if (sentError[0]) {
+                    if (sentError.get()) {
                         response.setEntity(
                                 new InputStreamEntity(
                                         this.getClass().getResourceAsStream("SampleContentItem.json")
@@ -96,11 +96,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
                         );
                     } else {
                         response.setEntity(new StringEntity("Response Error!"));
-                        sentError[0] = true;
+                        sentError.set(true);
                     }
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -110,22 +110,24 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
-        Assert.assertTrue(sentError[0]);
+        Assert.assertTrue(sentError.get());
+
+        client.close();
     }
 
     @Test
     public void testRetryStops() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
-        final int[] sentErrorCount = {0};
+        final AtomicInteger sentErrorCount = new AtomicInteger(0);
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
                     response.setEntity(new StringEntity("Response Error!"));
-                    sentErrorCount[0] = sentErrorCount[0] + 1;
+                    sentErrorCount.getAndIncrement();
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = DeliveryOptions.builder()
                 .projectId(projectId)
                 .productionEndpoint(testServerUri)
@@ -135,16 +137,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         deliveryOptions.setProductionEndpoint(testServerUri);
         deliveryOptions.setRetryAttempts(1);
 
-        DeliveryClient client = new DeliveryClient(deliveryOptions);
-
-        try {
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             client.getItem("on_roasts");
             Assert.fail("Expected a failure exception");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof KenticoIOException);
             Assert.assertTrue(e.getCause() instanceof JsonParseException);
         }
-        Assert.assertEquals(2, sentErrorCount[0]);
+        Assert.assertEquals(2, sentErrorCount.get());
     }
 
     @Test
@@ -164,15 +164,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     sentErrorCount[0] = sentErrorCount[0] + 1;
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
         deliveryOptions.setRetryAttempts(1);
 
-        DeliveryClient client = new DeliveryClient(deliveryOptions);
-
-        try {
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             client.getItem("error");
             Assert.fail("Expected KenticoErrorException");
         } catch (KenticoErrorException e) {
@@ -203,7 +201,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -213,12 +211,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         client.setBrokenLinkUrlResolver(() -> "/404");
         client.addRichTextElementResolver(content -> String.format("%s%s", "<p>test</p>", content));
 
-        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        List<com.kenticocloud.delivery.NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemsListingResponse items = client.getItems(urlPattern);
 
         Assert.assertNotNull(items);
         Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("href=\"/on roasts\""));
         Assert.assertTrue(((RichTextElement) items.getItems().get(1).getElements().get("description")).getValue().contains("<p>test</p>"));
+
+        client.close();
     }
 
     @Test
@@ -235,12 +235,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
 
         DeliveryOptions deliveryOptions = new DeliveryOptions();
-        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProductionEndpoint(httpHost.toURI());
         deliveryOptions.setProjectId(projectId);
         DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
         ContentItemsListingResponse items = client.getItems();
         Assert.assertNotNull(items);
+
+        client.close();
     }
 
     @Test
@@ -294,7 +296,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 ));
         HttpHost httpHost = this.start();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
-        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProductionEndpoint(httpHost.toURI());
         deliveryOptions.setProjectId(projectId);
         DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
@@ -308,7 +310,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertTrue(pageOfItems.hasNext());
         Assert.assertFalse(pageOfItems.hasPrevious());
 
-        Page<ContentItem> nextPage = pageOfItems.nextPage();
+        Page<ContentItem> nextPage = client.getNextPage(pageOfItems);
         Assert.assertEquals(0, nextPage.getSize());
         Assert.assertFalse(nextPage.hasContent());
         Assert.assertFalse(nextPage.isFirst());
@@ -316,23 +318,19 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertFalse(nextPage.hasNext());
         Assert.assertTrue(nextPage.hasPrevious());
 
-        Assert.assertNull(nextPage.nextPage());
+        Assert.assertNull(client.getNextPage(nextPage));
+
+        client.close();
     }
 
     @Test
-    @SuppressWarnings("all")
+    @SuppressWarnings("Duplicates")
     public void testStronglyTypedGetItemsAsPage() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items"),
                 (request, response, context) -> {
-                    String uri = String.format("http://testserver%s", request.getRequestLine().getUri());
-
-                    List<NameValuePair> nameValuePairs =
-                            URLEncodedUtils.parse(URI.create(uri), Charset.defaultCharset());
-                    Map<String, String> params = convertNameValuePairsToMap(nameValuePairs);
-
                     BufferedReader bufferedReader =
                             new BufferedReader(
                                     new InputStreamReader(
@@ -370,7 +368,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 ));
         HttpHost httpHost = this.start();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
-        deliveryOptions.setProductionEndpoint(httpHost.toURI() + "/%s");
+        deliveryOptions.setProductionEndpoint(httpHost.toURI());
         deliveryOptions.setProjectId(projectId);
         DeliveryClient client = new DeliveryClient(deliveryOptions, null);
 
@@ -384,7 +382,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertTrue(pageOfItems.hasNext());
         Assert.assertFalse(pageOfItems.hasPrevious());
 
-        Page<ArticleItem> nextPage = pageOfItems.nextPage();
+        Page<ArticleItem> nextPage = client.getNextPage(pageOfItems);
         Assert.assertEquals(0, nextPage.getSize());
         Assert.assertFalse(nextPage.hasContent());
         Assert.assertFalse(nextPage.isFirst());
@@ -392,7 +390,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertFalse(nextPage.hasNext());
         Assert.assertTrue(nextPage.hasPrevious());
 
-        Assert.assertNull(nextPage.nextPage());
+        java.lang.System.out.println("$$$$$$$$$$$$$$$$$$$$$$");
+
+        Assert.assertNull(client.getNextPage(nextPage));
+
+        client.close();
     }
 
     @Test
@@ -416,7 +418,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -424,10 +426,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(deliveryOptions);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
 
-        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        List<com.kenticocloud.delivery.NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentItemResponse item = client.getItem("on_roasts", urlPattern);
 
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
@@ -444,14 +448,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
@@ -468,14 +471,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         TaxonomyGroupListingResponse response = client.getTaxonomyGroups();
         Assert.assertNotNull(response);
+
+        client.close();
     }
 
     @Test
@@ -493,26 +495,25 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         TaxonomyGroup taxonomyGroup = client.getTaxonomyGroup("personas");
         Assert.assertNotNull(taxonomyGroup);
+
+        client.close();
     }
 
     @Test
-    public void testCache() throws Exception {
+    public void testCache() {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
         DeliveryClient client = new DeliveryClient(projectId);
-        final boolean[] cacheHit = {false};
+        final AtomicBoolean cacheHit = new AtomicBoolean(false);
         client.setCacheManager(new CacheManager() {
             @Override
             public JsonNode resolveRequest(String requestUri, HttpRequestExecutor executor) throws IOException {
                 Assert.assertEquals("https://deliver.kenticocloud.com/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", requestUri);
-                cacheHit[0] = true;
+                cacheHit.set(true);
                 ObjectMapper objectMapper = new ObjectMapper();
                 objectMapper.registerModule(new JSR310Module());
                 objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
@@ -521,7 +522,9 @@ public class DeliveryClientTest extends LocalServerTestBase {
         });
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
-        Assert.assertTrue(cacheHit[0]);
+        Assert.assertTrue(cacheHit.get());
+
+        client.close();
     }
 
     @Test
@@ -539,6 +542,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertTrue(deliveryClient.getRichTextElementResolver() instanceof DelegatingRichTextElementResolver);
         Assert.assertEquals(2, ((DelegatingRichTextElementResolver) deliveryClient.getRichTextElementResolver()).resolvers.size());
         Assert.assertEquals("resolver2", deliveryClient.getRichTextElementResolver().resolve("replaceme"));
+
+        deliveryClient.close();
     }
 
     @Test
@@ -555,11 +560,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ArticleItem item = client.getItem("on_roasts", ArticleItem.class);
         Assert.assertNotNull(item);
@@ -583,6 +585,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertEquals(2, item.getAllModularContent().size());
         Assert.assertNotNull(item.getAllModularContentMap());
         Assert.assertEquals(2, item.getAllModularContentMap().size());
+
+        client.close();
     }
 
     @Test
@@ -609,15 +613,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         Object itemObj = client.getItem("on_roasts", Object.class);
         Assert.assertNotNull(itemObj);
         Assert.assertTrue(itemObj instanceof ArticleItem);
+
+        client.close();
     }
 
     @Test
@@ -650,14 +653,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ArticleItem itemObj = client.getItem("on_roasts", ArticleItem.class);
         Assert.assertNotNull(itemObj);
+
+        client.close();
     }
 
     @Test
@@ -689,11 +691,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType("article", ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ArticleItem itemObj = client.getItem(
                 "on_roasts",
@@ -702,6 +701,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
                         .filterEquals("system.type", "customVal")
                         .build());
         Assert.assertNotNull(itemObj);
+
+        client.close();
     }
 
     @Test
@@ -719,15 +720,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         Object itemObj = client.getItem("on_roasts", Object.class);
         Assert.assertNotNull(itemObj);
         Assert.assertTrue(itemObj instanceof ArticleItem);
+
+        client.close();
     }
 
     @Test
@@ -745,11 +745,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentItemResponse response = client.getItem("on_roasts");
         ContentItem itemObj = response.getItem();
@@ -757,6 +754,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Object casted = itemObj.castToDefault();
         Assert.assertNotNull(casted);
         Assert.assertTrue(casted instanceof ArticleItem);
+
+        client.close();
     }
 
     @Test
@@ -774,11 +773,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentItemResponse response = client.getItem("on_roasts");
         ContentItem itemObj = response.getItem();
@@ -786,6 +782,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Object casted = itemObj.castTo("article");
         Assert.assertNotNull(casted);
         Assert.assertTrue(casted instanceof ArticleItem);
+
+        client.close();
     }
 
     @Test
@@ -804,11 +802,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.registerType(ArticleItem.class);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ArticleItem itemObj = client.getItem("on_roasts", ArticleItem.class);
         Assert.assertNotNull(itemObj);
@@ -821,6 +816,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertNotNull(itemObj.getRelatedArticlesMap());
         Assert.assertEquals(2, itemObj.getRelatedArticlesMap().size());
         Assert.assertTrue(itemObj.getRelatedArticlesMap().get("coffee_processing_techniques") instanceof ContentItem);
+
+        client.close();
     }
 
     @Test
@@ -838,15 +835,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(projectId);
         client.scanClasspathForMappings("com.kenticocloud");
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         Object itemObj = client.getItem("on_roasts", Object.class);
         Assert.assertNotNull(itemObj);
         Assert.assertTrue(itemObj instanceof ArticleItem);
+
+        client.close();
     }
 
     @Test
@@ -874,11 +870,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
         client.registerType(ArticleItem.class);
         client.registerInlineContentItemsResolver(new InlineContentItemsResolver<ArticleItem>() {
             @Override
@@ -891,6 +884,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertNotNull(items);
         Assert.assertFalse(items.get(1).getDescription().contains("<object"));
         Assert.assertTrue(items.get(1).getDescription().contains("WE REPLACED SUCCESSFULLY"));
+
+        client.close();
     }
 
     @Test
@@ -911,7 +906,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
 
         DeliveryOptions options = new DeliveryOptions();
         options.setProjectId(projectId);
@@ -922,6 +917,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
@@ -944,14 +941,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setPreviewEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
@@ -971,7 +967,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -980,6 +976,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
+
+        client.close();
     }
 
     @Test
@@ -1000,11 +998,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         try {
             ContentItemResponse item = client.getItem("error");
@@ -1013,6 +1008,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
             Assert.assertEquals("The requested content item 'error' was not found.", e.getMessage());
             Assert.assertEquals("The requested content item 'error' was not found.", e.getKenticoError().getMessage());
         }
+
+        client.close();
     }
 
     @Test
@@ -1026,17 +1023,16 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         try {
             ContentItemResponse item = client.getItem("error");
             Assert.fail("Expected IOException");
         } catch (KenticoIOException e) {
-            Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: HTTP/1.1 500 Internal Server Error", e.getMessage());
+            Assert.assertEquals("Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: 500 Internal Server Error", e.getMessage());
+        } finally {
+            client.close();
         }
     }
 
@@ -1061,7 +1057,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -1069,10 +1065,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(deliveryOptions);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
 
-        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        List<com.kenticocloud.delivery.NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         ContentTypesListingResponse types = client.getTypes(urlPattern);
 
         Assert.assertNotNull(types);
+
+        client.close();
     }
 
     @Test
@@ -1089,14 +1087,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentTypesListingResponse types = client.getTypes();
         Assert.assertNotNull(types);
+
+        client.close();
     }
 
     @Test
@@ -1114,14 +1111,13 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         ContentType type = client.getType("coffee");
         Assert.assertNotNull(type);
+
+        client.close();
     }
 
     @Test
@@ -1145,7 +1141,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     );
                 });
         HttpHost httpHost = this.start();
-        String testServerUri = httpHost.toURI() + "/%s";
+        String testServerUri = httpHost.toURI();
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId(projectId);
         deliveryOptions.setProductionEndpoint(testServerUri);
@@ -1153,12 +1149,14 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryClient client = new DeliveryClient(deliveryOptions);
         client.setContentLinkUrlResolver(Link::getUrlSlug);
 
-        List<NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
+        List<com.kenticocloud.delivery.NameValuePair> urlPattern = DeliveryParameterBuilder.params().filterEquals("elements.url_pattern", "/path1/path2/test-article").build();
         Element element = client.getContentTypeElement("coffee", "processing", urlPattern);
 
         Assert.assertNotNull(element);
         Assert.assertEquals("processing", element.getCodeName());
         Assert.assertTrue(element instanceof MultipleChoiceElement);
+
+        client.close();
     }
 
     @Test
@@ -1176,24 +1174,22 @@ public class DeliveryClientTest extends LocalServerTestBase {
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-        //modify default baseUrl to point to test server, this is private so using reflection
-        String testServerUri = httpHost.toURI() + "/%s";
-        Field deliveryOptionsField = client.getClass().getDeclaredField("deliveryOptions");
-        deliveryOptionsField.setAccessible(true);
-        ((DeliveryOptions) deliveryOptionsField.get(client)).setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
         Element element = client.getContentTypeElement("coffee", "processing");
         Assert.assertNotNull(element);
         Assert.assertEquals("processing", element.getCodeName());
         Assert.assertTrue(element instanceof MultipleChoiceElement);
+
+        client.close();
     }
 
     @Test
     @SuppressWarnings("all")
     public void testExceptionWhenProjectIdIsNull() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to null Project Id");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Kentico Cloud project identifier is not specified.", e.getMessage());
@@ -1205,8 +1201,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     public void testExceptionWhenProjectIdIsEmpty() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("");
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to empty Project Id");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Kentico Cloud project identifier is not specified.", e.getMessage());
@@ -1216,9 +1211,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
     @Test
     @SuppressWarnings("all")
     public void testExceptionWhenDeliveryOptionsIsNull() {
-        try {
-            DeliveryOptions deliveryOptions = null;
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        DeliveryOptions deliveryOptions = null;
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to null Delivery options");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("The Delivery options object is not specified.", e.getMessage());
@@ -1230,8 +1224,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     public void testExceptionWhenInvalidProjectIdProvided() {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("Invalid GUID");
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to invalid Project ID");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Provided string is not a valid project identifier (Invalid GUID).  Have you accidentally passed the Preview API key instead of the project identifier?", e.getMessage());
@@ -1244,8 +1237,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
         deliveryOptions.setUsePreviewApi(true);
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to null Preview API Key");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("The Preview API key is not specified.", e.getMessage());
@@ -1259,8 +1251,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
         deliveryOptions.setUsePreviewApi(true);
         deliveryOptions.setPreviewApiKey("");
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to empty Preview API Key");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("The Preview API key is not specified.", e.getMessage());
@@ -1273,8 +1264,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryOptions deliveryOptions =
                 new DeliveryOptions("02a70003-e864-464e-b62c-e0ede97deb8c", "preview_api_key");
         deliveryOptions.setProductionApiKey("production_api_key");
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to providing both a preview and production API key");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Cannot provide both a preview API key and a production API key.", e.getMessage());
@@ -1287,8 +1277,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         DeliveryOptions deliveryOptions = new DeliveryOptions();
         deliveryOptions.setProjectId("02a70003-e864-464e-b62c-e0ede97deb8c");
         deliveryOptions.setRetryAttempts(-1);
-        try {
-            DeliveryClient client = new DeliveryClient(deliveryOptions);
+        try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to negative number provided for retry count");
         } catch (IllegalArgumentException e) {
             Assert.assertEquals("Cannot retry connections less than 0 times.", e.getMessage());

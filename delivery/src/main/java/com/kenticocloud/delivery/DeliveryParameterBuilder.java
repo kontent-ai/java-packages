@@ -24,9 +24,6 @@
 
 package com.kenticocloud.delivery;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -226,7 +223,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterEquals(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(attribute, value));
+            nameValuePairs.add(new NameValuePair(attribute, value));
         }
         return this;
     }
@@ -244,7 +241,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterLessThan(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, LESS_THAN), value));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, LESS_THAN), value));
         }
         return this;
     }
@@ -262,7 +259,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterLessThanEquals(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, LESS_THAN_OR_EQUALS), value));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, LESS_THAN_OR_EQUALS), value));
         }
         return this;
     }
@@ -280,7 +277,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterGreaterThan(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, GREATER_THAN), value));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, GREATER_THAN), value));
         }
         return this;
     }
@@ -298,7 +295,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterGreaterThanEquals(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, GREATER_THAN_OR_EQUALS), value));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, GREATER_THAN_OR_EQUALS), value));
         }
         return this;
     }
@@ -317,7 +314,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterRange(String attribute, String lower, String upper) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(
+            nameValuePairs.add(new NameValuePair(
                     String.format("%s%s", attribute, RANGE),
                     String.join(",", lower, upper)));
         }
@@ -335,7 +332,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterIn(String attribute, String... values) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, IN), String.join(",", values)));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, IN), String.join(",", values)));
         }
         return this;
     }
@@ -366,7 +363,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterContains(String attribute, String value) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, CONTAINS), value));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, CONTAINS), value));
         }
         return this;
     }
@@ -384,7 +381,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterAny(String attribute, String... values) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, ANY), String.join(",", values)));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, ANY), String.join(",", values)));
         }
         return this;
     }
@@ -417,7 +414,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterAll(String attribute, String... values) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(String.format("%s%s", attribute, ALL), String.join(",", values)));
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, ALL), String.join(",", values)));
         }
         return this;
     }
@@ -448,7 +445,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder orderByAsc(String attribute) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(ORDER, String.format("%s%s", attribute, ASC)));
+            nameValuePairs.add(new NameValuePair(ORDER, String.format("%s%s", attribute, ASC)));
         }
         return this;
     }
@@ -464,7 +461,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder orderByDesc(String attribute) {
         if (attribute != null) {
-            nameValuePairs.add(new BasicNameValuePair(ORDER, String.format("%s%s", attribute, DESC)));
+            nameValuePairs.add(new NameValuePair(ORDER, String.format("%s%s", attribute, DESC)));
         }
         return this;
     }
@@ -484,11 +481,11 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder page(Integer skip, Integer limit) {
         if (skip != null) {
-            nameValuePairs.add(new BasicNameValuePair(SKIP, skip.toString()));
+            nameValuePairs.add(new NameValuePair(SKIP, skip.toString()));
         }
 
         if (limit != null) {
-            nameValuePairs.add(new BasicNameValuePair(LIMIT, limit.toString()));
+            nameValuePairs.add(new NameValuePair(LIMIT, limit.toString()));
         }
         return this;
     }
@@ -505,7 +502,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder projection(String... elements) {
         if (elements != null) {
-            nameValuePairs.add(new BasicNameValuePair(ELEMENTS, String.join(",", elements)));
+            nameValuePairs.add(new NameValuePair(ELEMENTS, String.join(",", elements)));
         }
         return this;
     }
@@ -520,7 +517,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder modularContentDepth(Integer depth) {
         if (depth != null) {
-            nameValuePairs.add(new BasicNameValuePair(DEPTH, depth.toString()));
+            nameValuePairs.add(new NameValuePair(DEPTH, depth.toString()));
         }
         return this;
     }
@@ -532,7 +529,7 @@ public class DeliveryParameterBuilder {
      * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">More on Modular content</a>
      */
     public DeliveryParameterBuilder excludeModularContent() {
-        nameValuePairs.add(new BasicNameValuePair(DEPTH, "0"));
+        nameValuePairs.add(new NameValuePair(DEPTH, "0"));
         return this;
     }
 
@@ -549,7 +546,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder language(String language) {
         if (language != null) {
-            nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language));
+            nameValuePairs.add(new NameValuePair(LANGUAGE, language));
         }
         return this;
     }
@@ -567,7 +564,7 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder language(Locale language) {
         if (language != null) {
-            nameValuePairs.add(new BasicNameValuePair(LANGUAGE, language.toString().replace('_', '-')));
+            nameValuePairs.add(new NameValuePair(LANGUAGE, language.toString().replace('_', '-')));
         }
         return this;
     }

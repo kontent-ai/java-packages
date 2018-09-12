@@ -115,7 +115,7 @@ public class ContentItemResponse implements ModularContentProvider {
         modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
     }
 
-    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+    ContentItemResponse setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
         item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         if (modularContent != null) {
@@ -123,5 +123,6 @@ public class ContentItemResponse implements ModularContentProvider {
                 modularContentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             }
         }
+        return this;
     }
 }

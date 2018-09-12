@@ -24,28 +24,12 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.kenticocloud.delivery.template.TemplateEngineConfig;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.StatusLine;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.message.BasicLineFormatter;
-import org.apache.http.message.BasicNameValuePair;
 
+import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Executes requests against the Kentico Cloud Delivery API.
@@ -56,52 +40,9 @@ import java.util.*;
  *      KenticoCloud API reference - Delivery API</a>
  */
 @lombok.extern.slf4j.Slf4j
-public class DeliveryClient {
+public class DeliveryClient implements Closeable {
 
-    static String sdkId;
-
-    static {
-        try {
-            Properties buildProps = new Properties();
-            buildProps.load(DeliveryClient.class.getResourceAsStream("build.properties"));
-            String repositoryHost = buildProps.getProperty("Repository-Host");
-            String version = buildProps.getProperty("Implementation-Version");
-            String packageId = buildProps.getProperty("Package-Id");
-            repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
-            version = version == null ? "0.0.0" : version;
-            packageId = packageId == null ? "com.kenticocloud:delivery" : packageId;
-            sdkId = String.format(
-                    "%s;%s;%s",
-                    repositoryHost,
-                    packageId,
-                    version);
-            log.info("SDK ID: {}", sdkId);
-        } catch (IOException e) {
-            log.info("Jar manifest read error, setting developer build SDK ID");
-            sdkId = "localBuild;com.kenticocloud:delivery;0.0.0";
-        }
-    }
-
-    static final String ITEMS = "items";
-    static final String TYPES = "types";
-    static final String ELEMENTS = "elements";
-    static final String TAXONOMIES = "taxonomies";
-
-    private static final String URL_CONCAT = "%s/%s";
-
-    private ObjectMapper objectMapper = new ObjectMapper();
-    private PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-    private CloseableHttpClient httpClient;
-    private DeliveryOptions deliveryOptions;
-
-    private ContentLinkUrlResolver contentLinkUrlResolver;
-    private BrokenLinkUrlResolver brokenLinkUrlResolver;
-    private RichTextElementResolver richTextElementResolver = new DelegatingRichTextElementResolver();
-    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
-            new StronglyTypedContentItemConverter();
-    private TemplateEngineConfig templateEngineConfig;
-
-    private CacheManager cacheManager = (requestUri, executor) -> executor.execute();
+    private AsyncDeliveryClient asyncDeliveryClient;
 
     /**
      * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
@@ -127,41 +68,7 @@ public class DeliveryClient {
      * @see                         TemplateEngineConfig
      */
     public DeliveryClient(DeliveryOptions deliveryOptions, TemplateEngineConfig templateEngineConfig) {
-        if (deliveryOptions == null) {
-            throw new IllegalArgumentException("The Delivery options object is not specified.");
-        }
-        if (deliveryOptions.getProjectId() == null || deliveryOptions.getProjectId().isEmpty()) {
-            throw new IllegalArgumentException("Kentico Cloud project identifier is not specified.");
-        }
-        try {
-            UUID.fromString(deliveryOptions.getProjectId());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(
-                    String.format(
-                            "Provided string is not a valid project identifier (%s).  Have you accidentally passed " +
-                                    "the Preview API key instead of the project identifier?",
-                            deliveryOptions.getProjectId()),
-                    e);
-        }
-        if (deliveryOptions.isUsePreviewApi() &&
-                (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty())) {
-            throw new IllegalArgumentException("The Preview API key is not specified.");
-        }
-        if (deliveryOptions.isUsePreviewApi() && deliveryOptions.getProductionApiKey() != null){
-            throw new IllegalArgumentException("Cannot provide both a preview API key and a production API key.");
-        }
-        if (deliveryOptions.getRetryAttempts() < 0) {
-            throw new IllegalArgumentException("Cannot retry connections less than 0 times.");
-        }
-        this.deliveryOptions = deliveryOptions;
-        connManager.setMaxTotal(20);
-        connManager.setDefaultMaxPerRoute(20);
-        httpClient = HttpClients.custom().setConnectionManager(connManager).build();
-        if (templateEngineConfig != null) {
-            templateEngineConfig.init();
-            this.templateEngineConfig = templateEngineConfig;
-        }
-        reconfigureDeserializer();
+        this.asyncDeliveryClient = new AsyncDeliveryClient(deliveryOptions, templateEngineConfig);
     }
 
     /**
@@ -172,7 +79,7 @@ public class DeliveryClient {
      * @throws          IllegalArgumentException Thrown if the Project id is invalid.
      */
     public DeliveryClient(String projectId) {
-        this(new DeliveryOptions(projectId));
+        this.asyncDeliveryClient = new AsyncDeliveryClient(new DeliveryOptions(projectId));
     }
 
     /**
@@ -189,7 +96,7 @@ public class DeliveryClient {
      * @throws              IllegalArgumentException Thrown if the Project id is invalid.
      */
     public DeliveryClient(String projectId, String previewApiKey) {
-        this(new DeliveryOptions(projectId, previewApiKey));
+        this.asyncDeliveryClient = new AsyncDeliveryClient(new DeliveryOptions(projectId, previewApiKey));
     }
 
     /**
@@ -204,7 +111,7 @@ public class DeliveryClient {
      *          KenticoCloud API reference - List content items</a>
      */
     public ContentItemsListingResponse getItems() {
-        return getItems(new ArrayList<>());
+        return getItems(Collections.emptyList());
     }
 
     /**
@@ -224,19 +131,7 @@ public class DeliveryClient {
      *                  KenticoCloud API reference - List content items</a>
      */
     public ContentItemsListingResponse getItems(List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(ITEMS, params);
-        ContentItemsListingResponse contentItemsListingResponse =
-                executeRequest(request, ContentItemsListingResponse.class);
-        contentItemsListingResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-        RichTextElementConverter converter = new RichTextElementConverter(
-                getContentLinkUrlResolver(),
-                getBrokenLinkUrlResolver(),
-                getRichTextElementResolver(),
-                templateEngineConfig,
-                stronglyTypedContentItemConverter
-        );
-        converter.process(contentItemsListingResponse.getItems());
-        return contentItemsListingResponse;
+        return asyncDeliveryClient.getItems(params).blockingGet();
     }
 
     /**
@@ -264,9 +159,7 @@ public class DeliveryClient {
      * @see             #registerType(String, Class)
      */
     public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) {
-        addTypeParameterIfNecessary(tClass, params);
-        ContentItemsListingResponse contentItemsListingResponse = getItems(params);
-        return contentItemsListingResponse.castTo(tClass);
+        return asyncDeliveryClient.getItems(tClass, params).blockingGet();
     }
 
     /**
@@ -282,7 +175,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - View a content item</a>
      */
     public ContentItemResponse getItem(String contentItemCodename) {
-        return getItem(contentItemCodename, new ArrayList<>());
+        return getItem(contentItemCodename, Collections.emptyList());
     }
 
     /**
@@ -308,7 +201,7 @@ public class DeliveryClient {
      * @see             #registerType(String, Class)
      */
     public <T> List<T> getItems(Class<T> tClass) {
-        return getItems(tClass, new ArrayList<>());
+        return getItems(tClass, Collections.emptyList());
     }
 
     /**
@@ -338,9 +231,7 @@ public class DeliveryClient {
      *                  KenticoCloud API reference - Listing response paging</a>
      */
     public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
-        ContentItemsListingResponse response = getItems(params);
-        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-        return new Page<>(response, tClass, this);
+        return asyncDeliveryClient.getPageOfItems(tClass, params).blockingGet();
     }
 
     /**
@@ -363,24 +254,7 @@ public class DeliveryClient {
      *                      KenticoCloud API reference - Listing response paging</a>
      */
     public <T> Page<T> getNextPage(Page<T> currentPage) {
-        Pagination pagination = currentPage.getPagination();
-        if (pagination.getNextPage() == null || pagination.getNextPage().isEmpty()) {
-            return null;
-        }
-        RequestBuilder requestBuilder = RequestBuilder.get(pagination.getNextPage());
-        requestBuilder = addHeaders(requestBuilder);
-        HttpUriRequest httpUriRequest = requestBuilder.build();
-        ContentItemsListingResponse response = executeRequest(httpUriRequest, ContentItemsListingResponse.class);
-        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-        RichTextElementConverter converter = new RichTextElementConverter(
-                getContentLinkUrlResolver(),
-                getBrokenLinkUrlResolver(),
-                getRichTextElementResolver(),
-                templateEngineConfig,
-                stronglyTypedContentItemConverter
-        );
-        converter.process(response.getItems());
-        return new Page<>(response, currentPage.getType(), this);
+        return asyncDeliveryClient.getNextPage(currentPage).blockingGet();
     }
 
     /**
@@ -407,7 +281,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - View a content item</a>
      */
     public <T> T getItem(String contentItemCodename, Class<T> tClass) {
-        return getItem(contentItemCodename, tClass, new ArrayList<>());
+        return getItem(contentItemCodename, tClass, Collections.emptyList());
     }
 
     /**
@@ -430,18 +304,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - Listing response</a>
      */
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(String.format(URL_CONCAT, ITEMS, contentItemCodename), params);
-        ContentItemResponse contentItemResponse = executeRequest(request, ContentItemResponse.class);
-        contentItemResponse.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-        RichTextElementConverter converter = new RichTextElementConverter(
-                getContentLinkUrlResolver(),
-                getBrokenLinkUrlResolver(),
-                getRichTextElementResolver(),
-                templateEngineConfig,
-                stronglyTypedContentItemConverter
-        );
-        converter.process(contentItemResponse.getItem());
-        return contentItemResponse;
+        return asyncDeliveryClient.getItem(contentItemCodename, params).blockingGet();
     }
 
     /**
@@ -472,9 +335,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - View a content item</a>
      */
     public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) {
-        addTypeParameterIfNecessary(tClass, params);
-        ContentItemResponse contentItemResponse = getItem(contentItemCodename, params);
-        return contentItemResponse.castTo(tClass);
+        return asyncDeliveryClient.getItem(contentItemCodename, tClass, params).blockingGet();
     }
 
     /**
@@ -491,7 +352,7 @@ public class DeliveryClient {
      *          KenticoCloud API reference - Content type object</a>
      */
     public ContentTypesListingResponse getTypes() {
-        return getTypes(new ArrayList<>());
+        return getTypes(Collections.emptyList());
     }
 
     /**
@@ -511,8 +372,7 @@ public class DeliveryClient {
      *                  KenticoCloud API reference - Content type object</a>
      */
     public ContentTypesListingResponse getTypes(List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(TYPES, params);
-        return executeRequest(request, ContentTypesListingResponse.class);
+        return asyncDeliveryClient.getTypes(params).blockingGet();
     }
 
     /**
@@ -529,9 +389,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - Content type object</a>
      */
     public ContentType getType(String contentTypeCodeName) {
-        HttpUriRequest request =
-                buildGetRequest(String.format(URL_CONCAT, TYPES, contentTypeCodeName), new ArrayList<>());
-        return executeRequest(request, ContentType.class);
+        return asyncDeliveryClient.getType(contentTypeCodeName).blockingGet();
     }
 
     /**
@@ -548,7 +406,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - Content element model</a>
      */
     public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) {
-        return getContentTypeElement(contentTypeCodeName, elementCodeName, new ArrayList<>());
+        return getContentTypeElement(contentTypeCodeName, elementCodeName, Collections.emptyList());
     }
 
     /**
@@ -570,9 +428,8 @@ public class DeliveryClient {
      */
     public Element getContentTypeElement(
             String contentTypeCodeName, String elementCodeName, List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(
-                String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName), params);
-        return executeRequest(request, Element.class);
+        return asyncDeliveryClient.getContentTypeElement(contentTypeCodeName, elementCodeName, params)
+                .blockingGet();
     }
 
     /**
@@ -587,7 +444,7 @@ public class DeliveryClient {
      *          KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroupListingResponse getTaxonomyGroups() {
-        return getTaxonomyGroups(new ArrayList<>());
+        return getTaxonomyGroups(Collections.emptyList());
     }
 
     /**
@@ -604,8 +461,7 @@ public class DeliveryClient {
      *                  KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(TAXONOMIES, params);
-        return executeRequest(request, TaxonomyGroupListingResponse.class);
+        return asyncDeliveryClient.getTaxonomyGroups(params).blockingGet();
     }
 
     /**
@@ -621,7 +477,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) {
-        return getTaxonomyGroup(taxonomyGroupCodename, new ArrayList<>());
+        return getTaxonomyGroup(taxonomyGroupCodename, Collections.emptyList());
     }
 
     /**
@@ -639,9 +495,7 @@ public class DeliveryClient {
      *                              KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) {
-        HttpUriRequest request = buildGetRequest(
-                String.format(URL_CONCAT, TAXONOMIES, taxonomyGroupCodename), params);
-        return executeRequest(request, TaxonomyGroup.class);
+        return asyncDeliveryClient.getTaxonomyGroup(taxonomyGroupCodename, params).blockingGet();
     }
 
     /**
@@ -651,7 +505,7 @@ public class DeliveryClient {
      * @see     ContentLinkUrlResolver
      */
     public ContentLinkUrlResolver getContentLinkUrlResolver() {
-        return contentLinkUrlResolver;
+        return asyncDeliveryClient.getContentLinkUrlResolver();
     }
 
     /**
@@ -661,7 +515,7 @@ public class DeliveryClient {
      * @see                             ContentLinkUrlResolver
      */
     public void setContentLinkUrlResolver(ContentLinkUrlResolver contentLinkUrlResolver) {
-        this.contentLinkUrlResolver = contentLinkUrlResolver;
+        asyncDeliveryClient.setContentLinkUrlResolver(contentLinkUrlResolver);
     }
 
     /**
@@ -671,7 +525,7 @@ public class DeliveryClient {
      * @see     BrokenLinkUrlResolver
      */
     public BrokenLinkUrlResolver getBrokenLinkUrlResolver() {
-        return brokenLinkUrlResolver;
+        return asyncDeliveryClient.getBrokenLinkUrlResolver();
     }
 
     /**
@@ -681,44 +535,35 @@ public class DeliveryClient {
      * @see                         BrokenLinkUrlResolver
      */
     public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
-        this.brokenLinkUrlResolver = brokenLinkUrlResolver;
+        asyncDeliveryClient.setBrokenLinkUrlResolver(brokenLinkUrlResolver);
     }
 
     public RichTextElementResolver getRichTextElementResolver() {
-        return richTextElementResolver;
+        return asyncDeliveryClient.getRichTextElementResolver();
     }
 
     public void setRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
-        this.richTextElementResolver = richTextElementResolver;
+        asyncDeliveryClient.setRichTextElementResolver(richTextElementResolver);
     }
 
     public void addRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
-        if (this.richTextElementResolver instanceof DelegatingRichTextElementResolver) {
-            ((DelegatingRichTextElementResolver) this.richTextElementResolver).addResolver(richTextElementResolver);
-        } else if (this.richTextElementResolver == null) {
-            setRichTextElementResolver(richTextElementResolver);
-        } else {
-            DelegatingRichTextElementResolver delegatingResolver = new DelegatingRichTextElementResolver();
-            delegatingResolver.addResolver(this.richTextElementResolver);
-            delegatingResolver.addResolver(richTextElementResolver);
-            setRichTextElementResolver(delegatingResolver);
-        }
+        asyncDeliveryClient.addRichTextElementResolver(richTextElementResolver);
     }
 
     public void registerType(String contentType, Class<?> clazz) {
-        stronglyTypedContentItemConverter.registerType(contentType, clazz);
+        asyncDeliveryClient.registerType(contentType, clazz);
     }
 
     public void registerType(Class<?> clazz) {
-        stronglyTypedContentItemConverter.registerType(clazz);
+        asyncDeliveryClient.registerType(clazz);
     }
 
     public void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
-        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
+        asyncDeliveryClient.registerInlineContentItemsResolver(resolver);
     }
 
     public void scanClasspathForMappings(String basePackage) {
-        stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
+        asyncDeliveryClient.scanClasspathForMappings(basePackage);
     }
 
     /**
@@ -728,150 +573,18 @@ public class DeliveryClient {
      * @see                 CacheManager
      */
     public void setCacheManager(CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
+        asyncDeliveryClient.setCacheManager(cacheManager);
+    }
+
+    DeliveryOptions getDeliveryOptions() {
+        return asyncDeliveryClient.getDeliveryOptions();
     }
 
     /**
-     * Sets the maximum number of connections in the client pool to the KenticoCloud API.  Defaults to 20.
-     *
-     * @param maxConnections The number of connections to the KenticoCloud API the underlying HTTP connection pool uses
-     *                       in this client.
+     * Cleans up the underlying http client resources
      */
-    public void setMaxConnections(int maxConnections) {
-        connManager.setDefaultMaxPerRoute(maxConnections);
-    }
-
-    protected HttpUriRequest buildGetRequest(String apiCall, List<NameValuePair> nameValuePairs) {
-        RequestBuilder requestBuilder = RequestBuilder.get(String.format(URL_CONCAT, getBaseUrl(), apiCall));
-        requestBuilder = addHeaders(requestBuilder);
-        for (NameValuePair nameValuePair : nameValuePairs) {
-            requestBuilder.addParameter(nameValuePair);
-        }
-        return requestBuilder.build();
-    }
-
-    protected RequestBuilder addHeaders(RequestBuilder requestBuilder) {
-        if (deliveryOptions.getProductionApiKey() != null) {
-            requestBuilder.setHeader(
-                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getProductionApiKey())
-            );
-        } else if (deliveryOptions.isUsePreviewApi()) {
-            requestBuilder.setHeader(
-                    HttpHeaders.AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey())
-            );
-        }
-        if (deliveryOptions.isWaitForLoadingNewContent()) {
-            requestBuilder.setHeader(
-                    "X-KC-Wait-For-Loading-New-Content", "true"
-            );
-        }
-        requestBuilder.setHeader(HttpHeaders.ACCEPT, "application/json");
-        requestBuilder.setHeader("X-KC-SDKID", sdkId);
-        return requestBuilder;
-    }
-
-    private String getBaseUrl() {
-        if (deliveryOptions.isUsePreviewApi()) {
-            return String.format(deliveryOptions.getPreviewEndpoint(), deliveryOptions.getProjectId());
-        } else {
-            return String.format(deliveryOptions.getProductionEndpoint(), deliveryOptions.getProjectId());
-        }
-    }
-
-    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass) {
-        try {
-            return executeRequest(request, tClass, 0);
-        } catch (IOException e) {
-            log.error("IOException connecting to Kentico: {}", e.toString());
-            throw new KenticoIOException(e);
-        }
-    }
-
-    private <T> T executeRequest(HttpUriRequest request, Class<T> tClass, int attemptNumber) throws IOException {
-        try {
-            String requestUri = request.getURI().toString();
-            log.debug("HTTP {} - {}", request.getMethod(), requestUri);
-            JsonNode jsonNode = cacheManager.resolveRequest(requestUri, () -> {
-                try (CloseableHttpResponse response = httpClient.execute(request)) {
-                    handleErrorIfNecessary(response);
-                    InputStream inputStream = response.getEntity().getContent();
-                    JsonNode node = objectMapper.readValue(inputStream, JsonNode.class);
-                    log.info("{} - {}",
-                            BasicLineFormatter.INSTANCE.formatStatusLine(null, response.getStatusLine())
-                                    .toString(),
-                            requestUri);
-                    log.debug("{}:\n{}",
-                            String.format("%s - %s", request.getMethod(), requestUri),
-                            node.toString());
-                    inputStream.close();
-                    return node;
-                }
-            });
-            return objectMapper.treeToValue(jsonNode, tClass);
-        } catch (KenticoErrorException kenticoError) {
-            throw kenticoError;
-        } catch (Exception ex) {
-            log.error("Failed request: {}", ex.getMessage());
-            if (attemptNumber < deliveryOptions.getRetryAttempts()) {
-                int nextAttemptNumber = attemptNumber + 1;
-                //Perform a binary exponential backoff
-                int wait = (int) (100 * Math.pow(2, nextAttemptNumber));
-                log.info("Reattempting request after {}ms", wait);
-                try {
-                    Thread.sleep(wait);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                }
-                return executeRequest(request, tClass, nextAttemptNumber);
-            } else {
-                throw ex;
-            }
-        }
-    }
-
-    private void handleErrorIfNecessary(HttpResponse response) {
-        StatusLine statusLine = response.getStatusLine();
-        final int status = statusLine.getStatusCode();
-        if (status >= 500) {
-            String statusString = BasicLineFormatter.INSTANCE.formatStatusLine(null, statusLine).toString();
-            log.error("Kentico API server error, status: {}", statusString);
-            String message =
-                    String.format(
-                            "Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: %s",
-                            statusString);
-            throw new KenticoIOException(message);
-        } else if (status >= 400) {
-            String statusString = BasicLineFormatter.INSTANCE.formatStatusLine(null, statusLine).toString();
-            log.error("Kentico API server error, status: {}", statusString);
-            try (InputStream inputStream = response.getEntity().getContent()) {
-                KenticoError kenticoError = objectMapper.readValue(inputStream, KenticoError.class);
-                throw new KenticoErrorException(kenticoError);
-            } catch (IOException e) {
-                log.error("IOException connecting to Kentico: {}", e.toString());
-                throw new KenticoIOException(e);
-            }
-        }
-    }
-
-    private void addTypeParameterIfNecessary(Class tClass, List<NameValuePair> params) {
-        Optional<NameValuePair> any = params.stream()
-                .filter(nameValuePair -> nameValuePair.getName().equals("system.type"))
-                .findAny();
-        if (!any.isPresent()) {
-            String contentType = stronglyTypedContentItemConverter.getContentType(tClass);
-            if (contentType != null) {
-                params.add(new BasicNameValuePair("system.type", contentType));
-            }
-        }
-    }
-
-    private void reconfigureDeserializer() {
-        objectMapper = new ObjectMapper();
-
-        SimpleModule module = new SimpleModule();
-        objectMapper.registerModule(new JSR310Module());
-        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-
-        objectMapper.registerModule(module);
+    @Override
+    public void close() {
+        asyncDeliveryClient.close();
     }
 }

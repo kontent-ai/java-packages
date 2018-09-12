@@ -24,7 +24,7 @@
 
 package com.kenticocloud.delivery;
 
-import org.apache.http.NameValuePair;
+import com.kenticocloud.delivery.NameValuePair;
 import org.junit.Assert;
 import org.junit.Test;
 
