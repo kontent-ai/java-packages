@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,21 +25,17 @@
 package com.kenticocloud.delivery;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
 
-import java.io.IOException;
+import java.util.List;
 
-/**
- * This callback is provided to {@link CacheManager} implementations to invoke on a cache miss.
- *
- * @see CacheManager
- */
-public interface HttpRequestExecutor {
+// TODO: JavaDoc
+public interface AsyncCacheManager {
 
-    /**
-     * Return a response from the KenticoCloud API.
-     *
-     * @return              The JSON response from the KenticoCloud API
-     * @throws IOException  On an exception calling the KenticoCloud API, this should be rethrown.
-     */
-    JsonNode execute() throws IOException;
+    // TODO: JavaDoc
+    Maybe<JsonNode> get(final String url);
+
+    // TODO: JavaDoc
+    Completable put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);
 }

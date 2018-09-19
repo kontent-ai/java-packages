@@ -39,7 +39,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -48,6 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.IntStream;
 
 public class DeliveryClientTest extends LocalServerTestBase {
 
@@ -390,8 +390,6 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertFalse(nextPage.hasNext());
         Assert.assertTrue(nextPage.hasPrevious());
 
-        java.lang.System.out.println("$$$$$$$$$$$$$$$$$$$$$$");
-
         Assert.assertNull(client.getNextPage(nextPage));
 
         client.close();
@@ -505,24 +503,157 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
-    public void testCache() {
+    public void testCache() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
         DeliveryClient client = new DeliveryClient(projectId);
-        final AtomicBoolean cacheHit = new AtomicBoolean(false);
-        client.setCacheManager(new CacheManager() {
-            @Override
-            public JsonNode resolveRequest(String requestUri, HttpRequestExecutor executor) throws IOException {
-                Assert.assertEquals("https://deliver.kenticocloud.com/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", requestUri);
-                cacheHit.set(true);
-                ObjectMapper objectMapper = new ObjectMapper();
-                objectMapper.registerModule(new JSR310Module());
-                objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-                return objectMapper.readValue(this.getClass().getResourceAsStream("SampleContentItem.json"), JsonNode.class);
-            }
-        });
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JSR310Module());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        final JsonNode jsonNode = objectMapper.readValue(this.getClass().getResourceAsStream("SampleContentItem.json"), JsonNode.class);
+
+        final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
+        client.setCacheManager(testCache);
+
+        testCache.put("https://deliver.kenticocloud.com/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", jsonNode, null);
+
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
-        Assert.assertTrue(cacheHit.get());
+        Assert.assertEquals(1, testCache.queries.get());
+        Assert.assertEquals(1, testCache.hits.get());
+
+        client.close();
+    }
+
+    @Test
+    public void testPutInCacheAfterNotFoundInCache() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItem.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
+        client.setCacheManager(testCache);
+
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+        Assert.assertEquals(1, testCache.queries.get());
+        Assert.assertEquals(0, testCache.hits.get());
+        Assert.assertEquals(1, testCache.puts.get());
+
+        client.close();
+    }
+
+    @Test
+    public void testExplicitlySkipCache() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItem.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
+        client.setCacheManager(testCache);
+
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+        client.getDeliveryOptions().setWaitForLoadingNewContent(true);
+
+        ContentItemResponse item = client.getItem("on_roasts");
+        Assert.assertNotNull(item);
+
+        Assert.assertEquals(0, testCache.queries.get());
+        Assert.assertEquals(1, testCache.puts.get());
+
+        client.close();
+    }
+
+    @Test
+    public void testCacheWriteOnceReadMany() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        final AtomicInteger kenticoGets = new AtomicInteger(0);
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    kenticoGets.incrementAndGet();
+                    response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleContentItem.json")
+                        ));
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        final String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+        final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
+        client.setCacheManager(testCache);
+
+        final int nrOfTimesToRetrieveItem = 10;
+        IntStream.rangeClosed(1, nrOfTimesToRetrieveItem).boxed()
+                .forEach(integer -> Assert.assertNotNull(client.getItem("on_roasts")));
+
+        Assert.assertEquals(1, kenticoGets.get());
+        Assert.assertEquals(1, testCache.puts.get());
+        Assert.assertEquals(nrOfTimesToRetrieveItem, testCache.queries.get());
+        Assert.assertEquals(nrOfTimesToRetrieveItem-1, testCache.hits.get());
+        Assert.assertTrue(testCache.cache.containsKey(testServerUri + "/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts"));
+
+        client.close();
+    }
+
+    @Test
+    public void testCacheRepopulationAfterInvalidation() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        final AtomicInteger kenticoGets = new AtomicInteger(0);
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    kenticoGets.incrementAndGet();
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            ));
+                });
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+        final String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+        final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
+        client.setCacheManager(testCache);
+
+        Assert.assertNotNull(client.getItem("on_roasts"));
+        Assert.assertNotNull(client.getItem("on_roasts"));
+
+        testCache.invalidate(new SimpleInMemoryCacheManager.CacheTag("origins_of_arabica_bourbon", "en-US"));
+
+        Assert.assertNotNull(client.getItem("on_roasts"));
+        Assert.assertEquals(2, kenticoGets.get());
+        Assert.assertEquals(2, testCache.puts.get());
+        Assert.assertEquals(3, testCache.queries.get());
 
         client.close();
     }
@@ -1291,5 +1422,4 @@ public class DeliveryClientTest extends LocalServerTestBase {
         }
         return map;
     }
-
 }

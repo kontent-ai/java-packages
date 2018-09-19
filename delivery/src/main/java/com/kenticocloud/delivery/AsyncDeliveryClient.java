@@ -30,8 +30,10 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import com.kenticocloud.delivery.template.TemplateEngineConfig;
+import io.reactivex.Completable;
 import io.reactivex.Flowable;
 import io.reactivex.Maybe;
+import io.reactivex.MaybeSource;
 import lombok.extern.slf4j.Slf4j;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Request;
@@ -51,13 +53,12 @@ import static org.asynchttpclient.Dsl.*;
 
 // TODO: add JavaDoc
 
-// TODO: immutable delivery options
-
 // TODO: documentation about closing the client
 
 @Slf4j
 public class AsyncDeliveryClient implements Closeable {
 
+    private static final String HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT = "X-KC-Wait-For-Loading-New-Content";
     private static String sdkId;
 
     static {
@@ -102,8 +103,17 @@ public class AsyncDeliveryClient implements Closeable {
     private AsyncHttpClient asyncHttpClient;
     private RxHttpClient rxHttpClient;
 
-    // TODO: implement an async/non-blocking cache manager
-    private CacheManager cacheManager = (requestUri, executor) -> executor.execute();
+    private AsyncCacheManager cacheManager = new AsyncCacheManager() {
+        @Override
+        public Maybe<JsonNode> get(String url) {
+            return Maybe.empty();
+        }
+
+        @Override
+        public Completable put(String url, JsonNode jsonNode, List<ContentItem> containedContentItems) {
+            return Completable.complete();
+        }
+    };
 
     @SuppressWarnings("WeakerAccess")
     public AsyncDeliveryClient(DeliveryOptions deliveryOptions) {
@@ -352,7 +362,7 @@ public class AsyncDeliveryClient implements Closeable {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void setCacheManager(CacheManager cacheManager) {
+    public void setCacheManager(AsyncCacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 
@@ -361,13 +371,28 @@ public class AsyncDeliveryClient implements Closeable {
     }
 
     private <T> Maybe<T> executeRequest(final String url, Class<T> tClass) {
-        return rxHttpClient.prepare(buildNewRequest(url))
+        final Request request = buildNewRequest(url);
+
+        final boolean skipCache = Optional.ofNullable(request.getHeaders().get(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT))
+                .map(Boolean::valueOf)
+                .orElse(false);
+
+        final Maybe<T> retrieveFromCache =
+                cacheManager.get(url).map(jsonNode -> objectMapper.treeToValue(jsonNode, tClass));
+
+        final Maybe<T> retrieveFromKentico = rxHttpClient.prepare(request)
                 .map(this::logResponseInfo)
                 .map(this::handleErrorIfNecessary)
                 .map(Response::getResponseBody)
-                .map(this::bodyToJson)
-                .map(jsonNode -> objectMapper.treeToValue(jsonNode, tClass))
+                .map(this::bodyToJsonNode)
+                .flatMap(jsonNode -> putInCache(url, tClass, jsonNode))
                 .retryWhen(this::configureErrorAndRetryFlow);
+
+        if (skipCache) {
+            return retrieveFromKentico;
+        } else {
+            return retrieveFromCache.switchIfEmpty(retrieveFromKentico);
+        }
     }
 
     private Request buildNewRequest(String url) {
@@ -386,7 +411,7 @@ public class AsyncDeliveryClient implements Closeable {
         }
         if (deliveryOptions.isWaitForLoadingNewContent()) {
             request.getHeaders()
-                    .add("X-KC-Wait-For-Loading-New-Content", "true");
+                    .add(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT, "true");
         }
         return request;
     }
@@ -436,8 +461,22 @@ public class AsyncDeliveryClient implements Closeable {
         return response;
     }
 
-    private JsonNode bodyToJson(final String body) throws IOException {
+    private JsonNode bodyToJsonNode(final String body) throws IOException {
         return objectMapper.readValue(body, JsonNode.class);
+    }
+
+    private <T> MaybeSource<T> putInCache(String url, Class<T> tClass, JsonNode jsonNode) throws com.fasterxml.jackson.core.JsonProcessingException {
+        final T t = objectMapper.treeToValue(jsonNode, tClass);
+        final List<ContentItem> containedContentItems;
+        if (t instanceof ContentItemResponse) {
+            containedContentItems = Collections.singletonList(((ContentItemResponse) t).getItem());
+        } else if (t instanceof ContentItemsListingResponse) {
+            containedContentItems = new ArrayList<>(((ContentItemsListingResponse) t).getItems());
+        } else {
+            containedContentItems = Collections.emptyList();
+        }
+        return cacheManager.put(url, jsonNode, containedContentItems)
+                .andThen(Maybe.just(t));
     }
 
     private Publisher<?> configureErrorAndRetryFlow(Flowable<Throwable> errors) {

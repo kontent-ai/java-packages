@@ -24,7 +24,11 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.kenticocloud.delivery.template.TemplateEngineConfig;
+import io.reactivex.Completable;
+import io.reactivex.Maybe;
+import io.reactivex.internal.operators.completable.CompletableFromRunnable;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -572,8 +576,29 @@ public class DeliveryClient implements Closeable {
      * @param cacheManager  A {@link CacheManager} implementation for this client to use.
      * @see                 CacheManager
      */
-    public void setCacheManager(CacheManager cacheManager) {
-        asyncDeliveryClient.setCacheManager(cacheManager);
+    public void setCacheManager(final CacheManager cacheManager) {
+        final AsyncCacheManager bridgedCacheManager = new AsyncCacheManager() {
+            @Override
+            public Maybe<JsonNode> get(String url) {
+                return Maybe.create(emitter -> {
+                    try {
+                        final JsonNode jsonNode = cacheManager.get(url);
+                        if (jsonNode != null) {
+                            emitter.onSuccess(jsonNode);
+                        }
+                        emitter.onComplete();
+                    } catch (Exception e) {
+                        emitter.onError(e);
+                    }
+                });
+            }
+
+            @Override
+            public Completable put(String url, JsonNode jsonNode, List<ContentItem> containedContentItems) {
+                return new CompletableFromRunnable(() -> cacheManager.put(url, jsonNode, containedContentItems));
+            }
+        };
+        asyncDeliveryClient.setCacheManager(bridgedCacheManager);
     }
 
     DeliveryOptions getDeliveryOptions() {
