@@ -128,7 +128,7 @@ When retrieving a list of content items, you get an instance of the `ContentItem
 
 The `ContentItem` class provides the following:
 
-* `getSystem()` returna a `System` object with metadata such as code name, display name, type, or sitemap location.
+* `getSystem()` returns a `System` object with metadata such as code name, display name, type, or sitemap location.
 * `getElements()` returns a Map containing all the elements included in the response keyed by code names.
 * Methods for easier access to certain types of content elements such as modular content, or assets.
 
