@@ -412,7 +412,7 @@ public class DeliveryClient {
 
     /**
      * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
      * depth or to apply a projection. For simplicity, it is recommended to use
      * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
      * query parameters.
@@ -446,7 +446,7 @@ public class DeliveryClient {
 
     /**
      * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
      * depth or to apply a projection. For simplicity, it is recommended to use
      * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
      * query parameters.

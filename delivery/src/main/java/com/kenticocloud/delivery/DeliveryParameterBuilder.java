@@ -41,7 +41,7 @@ import java.util.Locale;
  *     <li>Only return the 'title', 'summary', 'post_date', and 'teaser_image' elements</li>
  *     <li>Only return items where the 'personas' selected include 'coffee_lover'</li>
  *     <li>Order by 'post_date' desc order</li>
- *     <li>Returning no modular content (0 levels of depth)</li>
+ *     <li>Returning no linked items (0 levels of depth)</li>
  *     <li>Returning only the first 3 items</li>
  * </ul>
  * The DeliveryParameterBuilder will look like this:
@@ -54,7 +54,7 @@ import java.util.Locale;
  *                 .projection("title", "summary", "post_date", "teaser_image")
  *                 .filterContains("elements.personas", "coffee_lover")
  *                 .orderByDesc("elements.post_date")
- *                 .modularContentDepth(0)
+ *                 .linkedItemsDepth(0)
  *                 .page(null, 3)
  *                 .build()
  * );
@@ -70,8 +70,8 @@ import java.util.Locale;
  * <p>
  * When retrieving a list of content items from your project with {@link DeliveryClient#getItems(List)} and/or
  * {@link DeliveryClient#getItems(Class, List)}, you can filter large sets of content items by building query operators
- * from content elements and system attributes. Note that the query operators do not apply to modular content items
- * represented by the {@link ContentItemsListingResponse#getModularContent()} field in the response.
+ * from content elements and system attributes. Note that the query operators do not apply to linked items
+ * represented by the {@link ContentItemsListingResponse#getLinkedItems()} field in the response.
  * <p>
  * If you want to limit the listing response only to certain elements, see {@link #projection(String...)}.
  * <p>
@@ -116,7 +116,7 @@ import java.util.Locale;
  * {@link #filterAny(String, Collection)}, {@link #filterAny(String, String...)}, and
  * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kentico Cloud
  * include the sitemap locations system object ({@link System#getSitemapLocations()}), and the {@link AssetsElement},
- * {@link ModularContentElement}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
+ * {@link LinkedItem}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
  * other system attributes and content type elements are simple types, such as strings or numbers.
  * <p>
  * <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">Comparing values</a>
@@ -166,18 +166,18 @@ import java.util.Locale;
  * For example, to retrieve only the elements with codenames 'title', 'summary', and 'related_articles':
  * {@code .projection("title", "summary", "related_articles")}
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#modular-content">Modular content</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#linked-items">Linked items</a>
  * <p>
- * Content items might reference modular content items using the {@link ModularContentElement}. Recursively, these
- * modular content items can reference another {@link ModularContentElement} element. By default, only one level of
- * modular content is returned.
+ * Content items might reference linked items using the {@link LinkedItem}. Recursively, these
+ * linked items can reference another {@link LinkedItem} element. By default, only one level of
+ * linked items are returned.
  * <p>
- * If you want to include more than one level of modular content items in a response, use the
- * {@link #modularContentDepth(Integer)} operator.
+ * If you want to include more than one level of linked items in a response, use the
+ * {@link #linkedItemsDepth(Integer)} operator.
  * <p>
- * If you want to exclude all modular content, use the {@link #excludeModularContent()} operator.
+ * If you want to exclude all linked items, use the {@link #excludeLinkedItems()} operator.
  * <p>
- * Note: When retrieving content items, modular content cannot be filtered.
+ * Note: When retrieving content items, linked items cannot be filtered.
  *
  * @see <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
  *      KenticoCloud API reference - Listing response</a>
@@ -511,14 +511,14 @@ public class DeliveryParameterBuilder {
     }
 
     /**
-     * Choose the depth of modular content to return.
+     * Choose the depth of linked items to return.
      *
      * @param depth The number of levels of depth to return.
      * @return      This DeliveryParameterBuilder with the added operator.
-     * @see         <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
-     *              More on Modular content</a>
+     * @see         <a href="https://developer.kenticocloud.com/v2/reference#section-linked-items">
+     *              More on Linked items</a>
      */
-    public DeliveryParameterBuilder modularContentDepth(Integer depth) {
+    public DeliveryParameterBuilder linkedItemsDepth(Integer depth) {
         if (depth != null) {
             nameValuePairs.add(new BasicNameValuePair(DEPTH, depth.toString()));
         }
@@ -526,12 +526,12 @@ public class DeliveryParameterBuilder {
     }
 
     /**
-     * Excludes all modular content.  Analogous to {@code .modularContentDepth(0)}
+     * Excludes all linked items.  Analogous to {@code .linkedItemsDepth(0)}
      *
      * @return  This DeliveryParameterBuilder with the added operator.
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">More on Modular content</a>
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">More on Linked items</a>
      */
-    public DeliveryParameterBuilder excludeModularContent() {
+    public DeliveryParameterBuilder excludeLinkedItems() {
         nameValuePairs.add(new BasicNameValuePair(DEPTH, "0"));
         return this;
     }

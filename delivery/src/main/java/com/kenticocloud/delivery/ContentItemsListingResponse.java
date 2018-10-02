@@ -51,7 +51,7 @@ import java.util.Map;
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-public class ContentItemsListingResponse implements ModularContentProvider {
+public class ContentItemsListingResponse implements LinkedItemProvider {
 
     /**
      * The {@link ContentItem}s returned by this ContentItemsListingResponse.
@@ -68,20 +68,20 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     List<ContentItem> items;
 
     /**
-     * A map of content items used in modular content and Rich text elements.
+     * A map of content items used in linked item and Rich text elements.
      *
      * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
      *          KenticoCloud API reference - Listing response</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
-     *          KenticoCloud API reference - Modular content</a>
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
+     *          KenticoCloud API reference - Linked items</a>
      * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
      * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
      *          KenticoCloud API reference - List content items</a>
-     * @return  The modular {@link ContentItem}s referenced in this response.
+     * @return  The linked {@link ContentItem}s referenced in this response.
      */
     @JsonProperty("modular_content")
-    Map<String, ContentItem> modularContent;
+    Map<String, ContentItem> linkedItems;
 
     /**
      * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
@@ -111,19 +111,19 @@ public class ContentItemsListingResponse implements ModularContentProvider {
     public <T> List<T> castTo(Class<T> tClass) {
         ArrayList<T> tItems = new ArrayList<>();
         for (ContentItem item : getItems()) {
-            tItems.add(stronglyTypedContentItemConverter.convert(item, getModularContent(),tClass));
+            tItems.add(stronglyTypedContentItemConverter.convert(item, this.getLinkedItems(), tClass));
         }
         return tItems;
     }
 
     void setItems(List<ContentItem> items) {
         this.items = items;
-        items.forEach(contentItem -> contentItem.setModularContentProvider(this));
+        items.forEach(contentItem -> contentItem.setLinkedItemProvider(this));
     }
 
-    void setModularContent(Map<String, ContentItem> modularContent) {
-        this.modularContent = modularContent;
-        modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
+    void setLinkedItems(Map<String, ContentItem> linkedItems) {
+        this.linkedItems = linkedItems;
+        linkedItems.values().forEach(contentItem -> contentItem.setLinkedItemProvider(this));
     }
 
     void setPagination(Pagination pagination) {
@@ -135,9 +135,9 @@ public class ContentItemsListingResponse implements ModularContentProvider {
         for (ContentItem item : getItems()) {
             item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         }
-        if (modularContent != null) {
-            for (ContentItem modularContentItem : modularContent.values()) {
-                modularContentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        if (linkedItems != null) {
+            for (ContentItem linkedItem : linkedItems.values()) {
+                linkedItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             }
         }
     }
