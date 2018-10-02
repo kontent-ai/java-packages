@@ -37,7 +37,7 @@ Or via your Maven POM:
 
 The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Cloud projects.
 
-To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v1/docs/getting-content#section-getting-content-items).
+To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v2/docs/getting-content#section-getting-content-items).
 
 ```java
 // Initializes an instance of the DeliveryClient client

@@ -32,8 +32,8 @@ import java.util.List;
  * Object model for Assets elements.
  *
  * @see Asset
- * @see <a href="https://developer.kenticocloud.com/v1/reference#section-asset">KenticoCloud API reference - Asset</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#section-asset">KenticoCloud API reference - Asset</a>
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
  */
 @lombok.Getter

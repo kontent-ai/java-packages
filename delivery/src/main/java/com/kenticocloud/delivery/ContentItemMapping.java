@@ -86,7 +86,7 @@ import java.lang.annotation.Target;
  * @see ElementMapping
  * @see LinkedItem
  * @see StronglyTypedContentItemConverter
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
  * @see <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
  *      KenticoCloud API reference - Linked items</a>

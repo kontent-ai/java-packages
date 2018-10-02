@@ -32,9 +32,9 @@ import java.time.ZonedDateTime;
  * Object model for Date &amp; time elements.
  *
  * @see Asset
- * @see <a href="https://developer.kenticocloud.com/v1/reference#section-date-time">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#section-date-time">
  *      KenticoCloud API reference - Date time</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
  */
 @lombok.Getter

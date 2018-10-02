@@ -35,11 +35,11 @@ import java.util.Map;
  * Content item listing response from an invocation of {@link DeliveryClient#getItems()}, or
  * {@link DeliveryClient#getItems(List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
  *      KenticoCloud API reference - Listing response</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#list-content-items">
  *      KenticoCloud API reference - List content items</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
@@ -56,11 +56,11 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
     /**
      * The {@link ContentItem}s returned by this ContentItemsListingResponse.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
      *          KenticoCloud API reference - Listing response</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#list-content-items">
      *          KenticoCloud API reference - List content items</a>
      * @return  The {@link ContentItem}s of this ContentItemsListingResponse.
      */
@@ -70,13 +70,13 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
     /**
      * A map of content items used in linked item and Rich text elements.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
      *          KenticoCloud API reference - Listing response</a>
      * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
      *          KenticoCloud API reference - Linked items</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#list-content-items">
      *          KenticoCloud API reference - List content items</a>
      * @return  The linked {@link ContentItem}s referenced in this response.
      */
@@ -86,9 +86,9 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
     /**
      * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">
      *          KenticoCloud API reference - Listing response paging</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#section-pagination-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#section-pagination-object">
      *          KenticoCloud API reference - Pagination object</a>
      * @return  The {@link Pagination} for this ContentItemsListingResponse identifying the current page.
      */

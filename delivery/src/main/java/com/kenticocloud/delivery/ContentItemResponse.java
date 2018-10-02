@@ -34,9 +34,9 @@ import java.util.Map;
  * Content item listing response from an invocation of {@link DeliveryClient#getItem(String)}, or
  * {@link DeliveryClient#getItem(String, List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
  *      KenticoCloud API reference - View a content item</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
@@ -53,9 +53,9 @@ public class ContentItemResponse implements LinkedItemProvider {
     /**
      * The {@link ContentItem} returned by this ContentItemResponse.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *          KenticoCloud API reference - View a content item</a>
      * @return  The {@link ContentItem} of this ContentItemResponse.
      */
@@ -67,9 +67,9 @@ public class ContentItemResponse implements LinkedItemProvider {
      *
      * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
      *          KenticoCloud API reference - Linked items</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *          KenticoCloud API reference - View a content item</a>
      * @return  The linked {@link ContentItem}s referenced in this response.
      */

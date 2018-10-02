@@ -71,7 +71,7 @@ import java.io.IOException;
  *
  * @see DeliveryClient#setCacheManager(CacheManager)
  * @see HttpRequestExecutor
- * @see <a href="https://developer.kenticocloud.com/v1/reference#webhooks-and-notifications">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#webhooks-and-notifications">
  *      KenticoCloud API reference - Webhooks and notifications</a>
  */
 @FunctionalInterface

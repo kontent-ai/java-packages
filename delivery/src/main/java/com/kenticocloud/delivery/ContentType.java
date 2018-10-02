@@ -33,9 +33,9 @@ import java.util.Map;
  * <p>
  * Also serves as the response from an invocation of {@link DeliveryClient#getType(String)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
  *      KenticoCloud API reference - Content type object</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-type">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-type">
  *      KenticoCloud API reference - View a content type</a>
  */
 @lombok.Data

@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Object model description of a single content item object.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
  */
 @lombok.Data
