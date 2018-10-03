@@ -42,9 +42,9 @@ package com.kenticocloud.delivery;
  *
  * @see RichTextElementConverter
  * @see RichTextElement
- * @see <a href="https://developer.kenticocloud.com/v1/reference#section-link-to-a-content-item">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#section-link-to-a-content-item">
  *      KenticoCloud API reference - Link to a content item</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#section-rich-text-links">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#section-rich-text-links">
  *      KenticoCloud API reference - Rich text links</a>
  */
 @FunctionalInterface

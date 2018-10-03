@@ -96,7 +96,7 @@ public class RichTextElementConverter {
         Global pattern flags
             g modifier: global. All matches (don't return after first match)
      */
-    private Pattern modularContentPattern = Pattern.compile(
+    private Pattern linkedItemPattern = Pattern.compile(
             "<object type=\"application/kenticocloud\" data-type=\"" +
                     "(?<type>[^\"]+)\" data-codename=\"" +
                     "(?<codename>[^\"]+)\"></object>");
@@ -126,7 +126,7 @@ public class RichTextElementConverter {
             if (element instanceof RichTextElement) {
                 RichTextElement richTextElement = (RichTextElement) element;
                 richTextElement.setValue(resolveLinks(richTextElement));
-                richTextElement.setValue(resolveModularContent(richTextElement));
+                richTextElement.setValue(resolveLinkedItems(richTextElement));
                 if (richTextElementResolver != null) {
                     richTextElement.setValue(richTextElementResolver.resolve(richTextElement.getValue()));
                 }
@@ -139,7 +139,7 @@ public class RichTextElementConverter {
             return orig;
         }
         orig.setValue(resolveLinks(orig));
-        orig.setValue(resolveModularContent(orig));
+        orig.setValue(resolveLinkedItems(orig));
         if (richTextElementResolver != null) {
             orig.setValue(richTextElementResolver.resolve(orig.getValue()));
         }
@@ -166,41 +166,41 @@ public class RichTextElementConverter {
         return buffer.toString();
     }
 
-    private String resolveModularContent(RichTextElement element) {
-        return resolveModularContentRecursively(element, element.getValue(), new ArrayList<>());
+    private String resolveLinkedItems(RichTextElement element) {
+        return resolveLinkedItemsRecursively(element, element.getValue(), new ArrayList<>());
     }
 
-    private String resolveModularContentRecursively(
+    private String resolveLinkedItemsRecursively(
             RichTextElement element, String content, Collection<String> itemsAlreadyResolved) {
-        if (element.getModularContent() == null || element.getParent() == null) {
+        if (element.getLinkedItems() == null || element.getParent() == null) {
             return element.getValue();
         }
-        Matcher matcher = modularContentPattern.matcher(content);
+        Matcher matcher = linkedItemPattern.matcher(content);
         StringBuffer buffer = new StringBuffer();
 
         while (matcher.find()) {
             String codename = matcher.group("codename");
-            ContentItem modularContent = element.getParent().getModularContent(codename);
+            ContentItem linkedItem = element.getParent().getLinkedItem(codename);
             InternalInlineContentItemResolver resolver = null;
-            //Check to see if we encountered a cycle in our tree, if so, halt resolution
+            // Check to see if we encountered a cycle in our tree, if so, halt resolution
             if (!itemsAlreadyResolved.contains(codename)) {
-                resolver = resolveMatch(element, modularContent);
+                resolver = resolveMatch(element, linkedItem);
             }
             if (resolver == null) {
-                // The modular content isn't fetched, doesn't exist, we encountered a cycle, or there is no resolver,
+                // The linked item isn't fetched, doesn't exist, we encountered a cycle, or there is no resolver,
                 // preserve the <object> tag
                 matcher.appendReplacement(buffer, matcher.group(0));
             } else {
                 String resolvedString = resolver.resolve();
 
-                //The resolved String may have an inline modular content object element, so recursively call, but add
-                //the resolved modular content to the blacklist below to avoid an infinite cyclic loop
+                // The resolved String may have an inline linked item object element, so recursively call, but add
+                // the resolved linked item to the blacklist below to avoid an infinite cyclic loop
                 ArrayList<String> resolvedItems = new ArrayList<>(itemsAlreadyResolved);
                 resolvedItems.add(codename);
-                resolvedString = resolveModularContentRecursively(element, resolvedString, resolvedItems);
+                resolvedString = resolveLinkedItemsRecursively(element, resolvedString, resolvedItems);
 
-                //Make resolved replacement string a literal string to make sure dollar signs are not interpreted as capturing groups
-                // and add resolved string to the buffer
+                // Make resolved replacement string a literal string to make sure dollar signs are not interpreted as
+                // capturing groups and add resolved string to the buffer
                 matcher.appendReplacement(buffer, Matcher.quoteReplacement(resolvedString));
             }
         }
@@ -208,24 +208,24 @@ public class RichTextElementConverter {
         return buffer.toString();
     }
 
-    private InternalInlineContentItemResolver resolveMatch(RichTextElement element, ContentItem modularContent) {
-        if (modularContent != null) {
-            for (Element modularContentElement: modularContent.getElements().values()) {
-                if (modularContentElement instanceof RichTextElement) {
-                    RichTextElement embeddedRichTextElement = (RichTextElement) modularContentElement;
+    private InternalInlineContentItemResolver resolveMatch(RichTextElement element, ContentItem linkedItem) {
+        if (linkedItem != null) {
+            for (Element linkedItemElement : linkedItem.getElements().values()) {
+                if (linkedItemElement instanceof RichTextElement) {
+                    RichTextElement embeddedRichTextElement = (RichTextElement) linkedItemElement;
                     embeddedRichTextElement.setValue(resolveLinks(embeddedRichTextElement));
                 }
             }
             InlineContentItemsResolver resolverForType =
-                    stronglyTypedContentItemConverter.getResolverForType(modularContent);
+                    stronglyTypedContentItemConverter.getResolverForType(linkedItem);
             if (resolverForType != null) {
-                Object convertedModularContent = modularContent.castTo((Class) resolverForType.getType());
-                return () -> resolverForType.resolve(convertedModularContent);
+                Object convertedLinkedItem = linkedItem.castTo((Class) resolverForType.getType());
+                return () -> resolverForType.resolve(convertedLinkedItem);
             } else if (templateEngineConfig != null) {
                 TemplateEngineInlineContentItemsResolver supportedResolver;
-                Object modularContentModel = modularContent.castToDefault();
+                Object linkedItemModel = linkedItem.castToDefault();
                 TemplateEngineModel model = new TemplateEngineModel();
-                model.setInlineContentItem(modularContentModel);
+                model.setInlineContentItem(linkedItemModel);
                 //TODO: Add support for adding Locale from query if it exists
                 model.addVariable("parent", element);
                 model.addVariables(templateEngineConfig.getDefaultModelVariables());

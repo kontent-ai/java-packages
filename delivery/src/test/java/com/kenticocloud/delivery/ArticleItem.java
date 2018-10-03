@@ -59,11 +59,11 @@ public class ArticleItem {
 
     List<ArticleItem> articleItems;
 
-    List<ContentItem> allModularContent;
+    List<ContentItem> allLinkedItems;
 
     Map<String, ArticleItem> articleItemMap;
 
-    Map<String, ContentItem> allModularContentMap;
+    Map<String, ContentItem> allLinkedItemsMap;
 
     List<String> randomStringList;
 
@@ -169,12 +169,12 @@ public class ArticleItem {
         this.articleItems = articleItems;
     }
 
-    public List<ContentItem> getAllModularContent() {
-        return allModularContent;
+    public List<ContentItem> getAllLinkedItems() {
+        return allLinkedItems;
     }
 
-    public void setAllModularContent(List<ContentItem> allModularContent) {
-        this.allModularContent = allModularContent;
+    public void setAllLinkedItems(List<ContentItem> allLinkedItems) {
+        this.allLinkedItems = allLinkedItems;
     }
 
     public Map<String, ArticleItem> getArticleItemMap() {
@@ -185,12 +185,12 @@ public class ArticleItem {
         this.articleItemMap = articleItemMap;
     }
 
-    public Map<String, ContentItem> getAllModularContentMap() {
-        return allModularContentMap;
+    public Map<String, ContentItem> getAllLinkedItemsMap() {
+        return allLinkedItemsMap;
     }
 
-    public void setAllModularContentMap(Map<String, ContentItem> allModularContentMap) {
-        this.allModularContentMap = allModularContentMap;
+    public void setAllLinkedItemsMap(Map<String, ContentItem> allLinkedItemsMap) {
+        this.allLinkedItemsMap = allLinkedItemsMap;
     }
 
     public List<String> getRandomStringList() {

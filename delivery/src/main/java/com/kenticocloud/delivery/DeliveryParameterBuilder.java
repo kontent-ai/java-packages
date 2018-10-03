@@ -41,7 +41,7 @@ import java.util.Locale;
  *     <li>Only return the 'title', 'summary', 'post_date', and 'teaser_image' elements</li>
  *     <li>Only return items where the 'personas' selected include 'coffee_lover'</li>
  *     <li>Order by 'post_date' desc order</li>
- *     <li>Returning no modular content (0 levels of depth)</li>
+ *     <li>Returning no linked items (0 levels of depth)</li>
  *     <li>Returning only the first 3 items</li>
  * </ul>
  * The DeliveryParameterBuilder will look like this:
@@ -54,7 +54,7 @@ import java.util.Locale;
  *                 .projection("title", "summary", "post_date", "teaser_image")
  *                 .filterContains("elements.personas", "coffee_lover")
  *                 .orderByDesc("elements.post_date")
- *                 .modularContentDepth(0)
+ *                 .linkedItemsDepth(0)
  *                 .page(null, 3)
  *                 .build()
  * );
@@ -66,16 +66,16 @@ import java.util.Locale;
  * {@code .filterEquals("system.type", your_mapped_type} will automatically be added prior to the request if
  * 'system_type' is not part of any other parameter in the request already.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#content-filtering">Filtering Operators</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#content-filtering">Filtering Operators</a>
  * <p>
  * When retrieving a list of content items from your project with {@link DeliveryClient#getItems(List)} and/or
  * {@link DeliveryClient#getItems(Class, List)}, you can filter large sets of content items by building query operators
- * from content elements and system attributes. Note that the query operators do not apply to modular content items
- * represented by the {@link ContentItemsListingResponse#getModularContent()} field in the response.
+ * from content elements and system attributes. Note that the query operators do not apply to linked items
+ * represented by the {@link ContentItemsListingResponse#getLinkedItems()} field in the response.
  * <p>
  * If you want to limit the listing response only to certain elements, see {@link #projection(String...)}.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-by-system-values">Filtering by system
+ * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-by-system-values">Filtering by system
  * values</a>
  * <p>
  * To filter by system attribute values, you need to use a query attribute in the {@code 'system.<attribute_name>'}
@@ -83,7 +83,7 @@ import java.util.Locale;
  * example, to retrieve only content items based on the Article content type, you can use
  * {@code .filterEquals("system.type", "article"} as a query operator.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-by-element-values">Filtering by element
+ * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-by-element-values">Filtering by element
  * values</a>
  * <p>
  * To filter by content element values, you need to use a query attribute in the
@@ -91,7 +91,7 @@ import java.util.Locale;
  * {@link NumberElement} named 'Price' has a value of 16, you can use {@code .filterEquals("elements.price", "13"} as
  * a query operator.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">Filtering operators</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">Filtering operators</a>
  * <p>
  * You can use the following filtering operators both with the system attributes and element values:
  * <ul>
@@ -110,16 +110,16 @@ import java.util.Locale;
  *     <li>{@link #filterAll(String, Collection)}</li>
  * </ul>
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">Arrays vs. simple types</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">Arrays vs. simple types</a>
  * <p>
  * You can use the {@link #filterContains(String, String)}, {@link #filterAny(String, String...)},
  * {@link #filterAny(String, Collection)}, {@link #filterAny(String, String...)}, and
  * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kentico Cloud
  * include the sitemap locations system object ({@link System#getSitemapLocations()}), and the {@link AssetsElement},
- * {@link ModularContentElement}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
+ * {@link LinkedItem}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
  * other system attributes and content type elements are simple types, such as strings or numbers.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">Comparing values</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">Comparing values</a>
  * <p>
  * The filtering operators {@link #filterLessThan(String, String)}, {@link #filterLessThanEquals(String, String)},
  * {@link #filterGreaterThan(String, String)}, {@link #filterGreaterThanEquals(String, String)}, and
@@ -131,7 +131,7 @@ import java.util.Locale;
  * example, to retrieve content items modified during February and March you'd need to use a query such as
  * {@code .filterRange("system.last_modified", "2018-02-01", "2018-03-31")}, specifying both the start and end dates.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#content-ordering">Ordering operators</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">Ordering operators</a>
  * <p>
  * Sort the content in a listing response.
  * <p>
@@ -149,7 +149,7 @@ import java.util.Locale;
  *     <li>Sort by element value - {@code .orderByDesc("your_element_codename"}</li>
  * </ul>
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">Paging</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">Paging</a>
  * You can get only a small subset of a large collection of content items with the {@link #page(Integer, Integer)}
  * operator.  The first argument is the number of pages to skip, with the second being the page size.  Using these
  * argument, you can display a specific page of results and iterate over a list of content items or types.
@@ -159,27 +159,27 @@ import java.util.Locale;
  * <p>
  * For details about the pagination data in each listing response, see the {@link Pagination} object.
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#projection">Projection</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#projection">Projection</a>
  * <p>
  * Choose which parts of content to retrieve with the {@link #projection(String...)} operator.
  * <p>
  * For example, to retrieve only the elements with codenames 'title', 'summary', and 'related_articles':
  * {@code .projection("title", "summary", "related_articles")}
  * <p>
- * <a href="https://developer.kenticocloud.com/v1/reference#modular-content">Modular content</a>
+ * <a href="https://developer.kenticocloud.com/v2/reference#linked-items">Linked items</a>
  * <p>
- * Content items might reference modular content items using the {@link ModularContentElement}. Recursively, these
- * modular content items can reference another {@link ModularContentElement} element. By default, only one level of
- * modular content is returned.
+ * Content items might reference linked items using the {@link LinkedItem}. Recursively, these
+ * linked items can reference another {@link LinkedItem} element. By default, only one level of
+ * linked items are returned.
  * <p>
- * If you want to include more than one level of modular content items in a response, use the
- * {@link #modularContentDepth(Integer)} operator.
+ * If you want to include more than one level of linked items in a response, use the
+ * {@link #linkedItemsDepth(Integer)} operator.
  * <p>
- * If you want to exclude all modular content, use the {@link #excludeModularContent()} operator.
+ * If you want to exclude all linked items, use the {@link #excludeLinkedItems()} operator.
  * <p>
- * Note: When retrieving content items, modular content cannot be filtered.
+ * Note: When retrieving content items, linked items cannot be filtered.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
  *      KenticoCloud API reference - Listing response</a>
  */
 public class DeliveryParameterBuilder {
@@ -221,7 +221,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterEquals(String attribute, String value) {
@@ -237,9 +237,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThan(String attribute, String value) {
@@ -255,9 +255,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThanEquals(String attribute, String value) {
@@ -273,9 +273,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThan(String attribute, String value) {
@@ -291,9 +291,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThanEquals(String attribute, String value) {
@@ -310,9 +310,9 @@ public class DeliveryParameterBuilder {
      * @param lower     The lower bound value.
      * @param upper     The upper bound value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-comparing-values">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterRange(String attribute, String lower, String upper) {
@@ -330,7 +330,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(String attribute, String... values) {
@@ -346,7 +346,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
@@ -359,9 +359,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterContains(String attribute, String value) {
@@ -377,9 +377,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(String attribute, String... values) {
@@ -395,9 +395,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(String attribute, Collection<String> values) {
@@ -410,9 +410,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(String attribute, String... values) {
@@ -428,9 +428,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-filtering-operators">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(String attribute, Collection<String> values) {
@@ -443,7 +443,7 @@ public class DeliveryParameterBuilder {
      *
      * @param attribute The attribute to sort on.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#content-ordering">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">
      *                  More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByAsc(String attribute) {
@@ -459,7 +459,7 @@ public class DeliveryParameterBuilder {
      *
      * @param attribute The attribute to sort on.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#content-ordering">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">
      *                  More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByDesc(String attribute) {
@@ -480,7 +480,7 @@ public class DeliveryParameterBuilder {
      * @return      This DeliveryParameterBuilder with the added operator.
      * @see         Pagination
      * @see         Page
-     * @see         <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">More on Paging</a>
+     * @see         <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">More on Paging</a>
      */
     public DeliveryParameterBuilder page(Integer skip, Integer limit) {
         if (skip != null) {
@@ -501,7 +501,7 @@ public class DeliveryParameterBuilder {
      *
      * @param elements  The elements to retrieve.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#projection">More on Projection</a>
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#projection">More on Projection</a>
      */
     public DeliveryParameterBuilder projection(String... elements) {
         if (elements != null) {
@@ -511,14 +511,14 @@ public class DeliveryParameterBuilder {
     }
 
     /**
-     * Choose the depth of modular content to return.
+     * Choose the depth of linked items to return.
      *
      * @param depth The number of levels of depth to return.
      * @return      This DeliveryParameterBuilder with the added operator.
-     * @see         <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
-     *              More on Modular content</a>
+     * @see         <a href="https://developer.kenticocloud.com/v2/reference#section-linked-items">
+     *              More on Linked items</a>
      */
-    public DeliveryParameterBuilder modularContentDepth(Integer depth) {
+    public DeliveryParameterBuilder linkedItemsDepth(Integer depth) {
         if (depth != null) {
             nameValuePairs.add(new BasicNameValuePair(DEPTH, depth.toString()));
         }
@@ -526,12 +526,12 @@ public class DeliveryParameterBuilder {
     }
 
     /**
-     * Excludes all modular content.  Analogous to {@code .modularContentDepth(0)}
+     * Excludes all linked items.  Analogous to {@code .linkedItemsDepth(0)}
      *
      * @return  This DeliveryParameterBuilder with the added operator.
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">More on Modular content</a>
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">More on Linked items</a>
      */
-    public DeliveryParameterBuilder excludeModularContent() {
+    public DeliveryParameterBuilder excludeLinkedItems() {
         nameValuePairs.add(new BasicNameValuePair(DEPTH, "0"));
         return this;
     }
@@ -543,8 +543,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/docs/localization">More on Localization</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/docs/localization#section-language-fallbacks">
+     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization">More on Localization</a>
+     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(String language) {
@@ -561,8 +561,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v1/docs/localization">More on Localization</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/docs/localization#section-language-fallbacks">
+     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization">More on Localization</a>
+     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(Locale language) {

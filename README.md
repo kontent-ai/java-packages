@@ -37,7 +37,7 @@ Or via your Maven POM:
 
 The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Cloud projects.
 
-To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v1/docs/getting-content#section-getting-content-items).
+To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v2/docs/getting-content#section-getting-content-items).
 
 ```java
 // Initializes an instance of the DeliveryClient client
@@ -130,7 +130,7 @@ The `ContentItem` class provides the following:
 
 * `getSystem()` returns a `System` object with metadata such as code name, display name, type, or sitemap location.
 * `getElements()` returns a Map containing all the elements included in the response keyed by code names.
-* Methods for easier access to certain types of content elements such as modular content, or assets.
+* Methods for easier access to certain types of content elements such as linked items, or assets.
 
 ## Getting content item properties
 
@@ -199,11 +199,11 @@ for (Option option : element.getOptions()) {
 }
 ```
 
-### Modular content
+### Linked items
 
 ```java
 // Retrieves related articles
-articleItem.getModularContent("related_articles")
+articleItem.getLinkedItems("related_articles")
 ```
 
 ## Further information

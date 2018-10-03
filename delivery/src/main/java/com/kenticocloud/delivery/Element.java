@@ -44,7 +44,7 @@ import java.util.List;
     @JsonSubTypes.Type(value = NumberElement.class, name = NumberElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = DateTimeElement.class, name = DateTimeElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = AssetsElement.class, name = AssetsElement.TYPE_VALUE),
-    @JsonSubTypes.Type(value = ModularContentElement.class, name = ModularContentElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = LinkedItem.class, name = LinkedItem.TYPE_VALUE),
     @JsonSubTypes.Type(value = TaxonomyElement.class, name = TaxonomyElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE)
 })
@@ -58,7 +58,8 @@ public abstract class Element<T> {
     /**
      * Type of the element
      * <p>
-     * Valid values: text, rich_text, number, multiple_choice, date_time, asset, modular_content, taxonomy, url_slug.
+     * Valid values: text, rich_text, number, multiple_choice, date_time, asset, modular_content
+     * ({@link LinkedItem}), taxonomy, url_slug.
      *
      * @param type  the type of element
      * @return      the codename for this element type

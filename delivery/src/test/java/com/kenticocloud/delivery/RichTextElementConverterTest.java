@@ -58,7 +58,7 @@ public class RichTextElementConverterTest {
     }
 
     @Test
-    public void testModularContentReplacement() {
+    public void testLinkedItemsReplacement() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
@@ -74,9 +74,9 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem donateWithUs = new ContentItem();
             System system = new System();
             system.setType("item");
@@ -86,11 +86,11 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -103,7 +103,7 @@ public class RichTextElementConverterTest {
     }
 
     @Test
-    public void testModularContentReplacementWithDollarSign() {
+    public void testLinkedItemsReplacementWithDollarSign() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
@@ -119,9 +119,9 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("customer_winner"));
+        original.setLinkedItems(Collections.singletonList("customer_winner"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem customerWinner = new ContentItem();
             System system = new System();
             system.setType("item");
@@ -131,11 +131,11 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             customerWinner.setElements(elements);
-            customerWinner.setModularContentProvider(HashMap::new);
+            customerWinner.setLinkedItemProvider(HashMap::new);
             customerWinner.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("customer_winner", customerWinner);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("customer_winner", customerWinner);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -148,7 +148,7 @@ public class RichTextElementConverterTest {
     }
 
     @Test
-    public void testRecursiveModularContentReplacement() {
+    public void testRecursiveLinkedItemsReplacement() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
@@ -164,9 +164,9 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
             System parentSystem = new System();
             parentSystem.setType("item");
@@ -176,7 +176,7 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
-            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setLinkedItemProvider(HashMap::new);
             parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
             ContentItem donateWithUs = new ContentItem();
@@ -188,13 +188,13 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("parent_donate_with_us", parentDonateWithUs);
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("parent_donate_with_us", parentDonateWithUs);
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -207,7 +207,7 @@ public class RichTextElementConverterTest {
     }
 
     @Test
-    public void testRecursiveModularContentReplacementWithLinks() {
+    public void testRecursiveLinkedItemsReplacementWithLinks() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
@@ -223,9 +223,9 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
             System parentSystem = new System();
             parentSystem.setType("item");
@@ -235,7 +235,7 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
-            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setLinkedItemProvider(HashMap::new);
             parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
             ContentItem donateWithUs = new ContentItem();
@@ -252,13 +252,13 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", richTextElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("parent_donate_with_us", parentDonateWithUs);
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("parent_donate_with_us", parentDonateWithUs);
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -271,7 +271,7 @@ public class RichTextElementConverterTest {
     }
 
     @Test
-    public void testModularContentReplacementSkippedIfNotThere() {
+    public void testLinkedItemsReplacementSkippedIfNotThere() {
         StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
         stronglyTypedContentItemConverter.registerType(CustomItem.class);
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
@@ -287,9 +287,9 @@ public class RichTextElementConverterTest {
                 null,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(HashMap::new);
+        contentItem.setLinkedItemProvider(HashMap::new);
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
@@ -333,9 +333,9 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem donateWithUs = new ContentItem();
             System system = new System();
             system.setType("item");
@@ -345,11 +345,11 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -380,9 +380,9 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
             System parentSystem = new System();
             parentSystem.setType("item");
@@ -392,7 +392,7 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
-            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setLinkedItemProvider(HashMap::new);
             parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
             ContentItem donateWithUs = new ContentItem();
@@ -404,13 +404,13 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("parent_donate_with_us", parentDonateWithUs);
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("parent_donate_with_us", parentDonateWithUs);
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
@@ -441,9 +441,9 @@ public class RichTextElementConverterTest {
                 templateEngineConfig,
                 stronglyTypedContentItemConverter);
         RichTextElement original = new RichTextElement();
-        original.setModularContent(Collections.singletonList("donate_with_us"));
+        original.setLinkedItems(Collections.singletonList("donate_with_us"));
         ContentItem contentItem = new ContentItem();
-        contentItem.setModularContentProvider(() -> {
+        contentItem.setLinkedItemProvider(() -> {
             ContentItem parentDonateWithUs = new ContentItem();
             System parentSystem = new System();
             parentSystem.setType("item");
@@ -453,7 +453,7 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
-            parentDonateWithUs.setModularContentProvider(HashMap::new);
+            parentDonateWithUs.setLinkedItemProvider(HashMap::new);
             parentDonateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
             ContentItem donateWithUs = new ContentItem();
@@ -465,13 +465,13 @@ public class RichTextElementConverterTest {
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
-            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setLinkedItemProvider(HashMap::new);
             donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
 
-            HashMap<String, ContentItem> modularContent = new HashMap<>();
-            modularContent.put("parent_donate_with_us", parentDonateWithUs);
-            modularContent.put("donate_with_us", donateWithUs);
-            return modularContent;
+            HashMap<String, ContentItem> linkedItems = new HashMap<>();
+            linkedItems.put("parent_donate_with_us", parentDonateWithUs);
+            linkedItems.put("donate_with_us", donateWithUs);
+            return linkedItems;
         });
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;

@@ -277,22 +277,22 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
-    public void testModularContentDepth() {
-        List<NameValuePair> params = DeliveryParameterBuilder.params().modularContentDepth(3).build();
+    public void testLinkedItemsDepth() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().linkedItemsDepth(3).build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("depth", params.get(0).getName());
         Assert.assertEquals("3", params.get(0).getValue());
     }
 
     @Test
-    public void testModularContentDepthNull() {
-        List<NameValuePair> params = DeliveryParameterBuilder.params().modularContentDepth(null).build();
+    public void testLinkedItemsDepthNull() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().linkedItemsDepth(null).build();
         Assert.assertEquals(0, params.size());
     }
 
     @Test
-    public void testExcludeModularContent() {
-        List<NameValuePair> params = DeliveryParameterBuilder.params().excludeModularContent().build();
+    public void testExcludeLinkedItems() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().excludeLinkedItems().build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("depth", params.get(0).getName());
         Assert.assertEquals("0", params.get(0).getValue());
