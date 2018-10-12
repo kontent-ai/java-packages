@@ -95,7 +95,52 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-rel=\"link\" data-codename=\"donate_with_us\"></object></p>");
+        RichTextElement converted = converter.convert(original);
+        Assert.assertEquals(
+                "<p>Please donate with us.</p>",
+                converted.getValue());
+    }
+
+    @Test
+    public void testModularContentReplacementWithUnexpectedDataAttributesAndOrder() {
+        StronglyTypedContentItemConverter stronglyTypedContentItemConverter = new StronglyTypedContentItemConverter();
+        stronglyTypedContentItemConverter.registerType(CustomItem.class);
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(new InlineContentItemsResolver<CustomItem>() {
+            @Override
+            public String resolve(CustomItem data) {
+                return data.getMessageText();
+            }
+        });
+        RichTextElementConverter converter = new RichTextElementConverter(
+                null,
+                null,
+                null,
+                null,
+                stronglyTypedContentItemConverter);
+        RichTextElement original = new RichTextElement();
+        original.setModularContent(Collections.singletonList("donate_with_us"));
+        ContentItem contentItem = new ContentItem();
+        contentItem.setModularContentProvider(() -> {
+            ContentItem donateWithUs = new ContentItem();
+            System system = new System();
+            system.setType("item");
+            donateWithUs.setSystem(system);
+            TextElement textElement = new TextElement();
+            textElement.setValue("Please donate with us.");
+            HashMap<String, Element> elements = new HashMap<>();
+            elements.put("message_text", textElement);
+            donateWithUs.setElements(elements);
+            donateWithUs.setModularContentProvider(HashMap::new);
+            donateWithUs.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+            HashMap<String, ContentItem> modularContent = new HashMap<>();
+            modularContent.put("donate_with_us", donateWithUs);
+            return modularContent;
+        });
+        contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        original.parent = contentItem;
+        original.setValue(
+                "<p><object type=\"application/kenticocloud\" data-codename=\"donate_with_us\" new-value=\"unexpected\" data-new=\"unexpected\" data-type=\"item\" data-rel=\"link\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>Please donate with us.</p>",
