@@ -70,7 +70,7 @@ public class Pagination {
 
     /**
      * URL to the next page of results.  Generally speaking, this value will not be needed.
-     * Consider using {@link Page#nextPage()}.
+     * Consider using {@link DeliveryClient#getNextPage(Page)}.
      *
      * @param nextPage  Sets nextPage on this.
      * @return          URL to the next page of results.

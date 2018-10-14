@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2017
+ * Copyright (c) 2018
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,22 +24,14 @@
 
 package com.kenticocloud.delivery;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.io.IOException;
+import java.io.Serializable;
 
-/**
- * This callback is provided to {@link CacheManager} implementations to invoke on a cache miss.
- *
- * @see CacheManager
- */
-public interface HttpRequestExecutor {
-
-    /**
-     * Return a response from the KenticoCloud API.
-     *
-     * @return              The JSON response from the KenticoCloud API
-     * @throws IOException  On an exception calling the KenticoCloud API, this should be rethrown.
-     */
-    JsonNode execute() throws IOException;
+@Data
+@AllArgsConstructor
+public class NameValuePair implements Serializable {
+    private String name;
+    private String value;
 }

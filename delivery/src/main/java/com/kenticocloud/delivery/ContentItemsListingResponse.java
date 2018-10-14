@@ -130,7 +130,7 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
         this.pagination = pagination;
     }
 
-    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+    ContentItemsListingResponse setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
         for (ContentItem item : getItems()) {
             item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
@@ -140,5 +140,6 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
                 linkedItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             }
         }
+        return this;
     }
 }

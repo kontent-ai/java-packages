@@ -49,32 +49,32 @@ public class DeliveryOptions {
      * The Production endpoint address.  Mainly useful to change for mocks in unit tests, or if you are establishing a
      * proxy.
      * <p>
-     * This defaults to "https://deliver.kenticocloud.com/%s", and should be set to a printf-style string.
+     * This defaults to "https://deliver.kenticocloud.com"
      *
      * @param productionEndpoint    New value for the productionEndpoint in this DeliveryOptions instance.
-     * @return                      The value of the printf-style string used as the production endpoint to
+     * @return                      The value of the pstring used as the production endpoint to
      *                              KenticoCloud.
      * @see                     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                          KenticoCloud API reference - Production vs. preview</a>
      * @see                         java.util.Formatter
      */
     @Builder.Default
-    String productionEndpoint = "https://deliver.kenticocloud.com/%s";
+    String productionEndpoint = "https://deliver.kenticocloud.com";
 
     /**
      * The Preview endpoint address.  Mainly useful to change for mocks in unit tests, or if you are establishing a
      * proxy.
      * <p>
-     * This defaults to "https://preview-deliver.kenticocloud.com/%s", and should be set to a printf-style string.
+     * This defaults to "https://preview-deliver.kenticocloud.com"
      *
      * @param previewEndpoint   New value for the productionEndpoint in this DeliveryOptions instance.
-     * @return                  The value of the printf-style string used as the preview endpoint to KenticoCloud.
+     * @return                  The value of the string used as the preview endpoint to KenticoCloud.
      * @see                     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                          KenticoCloud API reference - Production vs. preview</a>
      * @see                     java.util.Formatter
      */
     @Builder.Default
-    String previewEndpoint = "https://preview-deliver.kenticocloud.com/%s";
+    String previewEndpoint = "https://preview-deliver.kenticocloud.com";
 
     /**
      * The Project ID associated with your Kentico Cloud account.  Must be in the format of an {@link java.util.UUID}.

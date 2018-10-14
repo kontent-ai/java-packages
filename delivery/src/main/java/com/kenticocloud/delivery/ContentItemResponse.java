@@ -115,7 +115,7 @@ public class ContentItemResponse implements LinkedItemProvider {
         linkedItems.values().forEach(contentItem -> contentItem.setLinkedItemProvider(this));
     }
 
-    void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
+    ContentItemResponse setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
         item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         if (linkedItems != null) {
@@ -123,5 +123,6 @@ public class ContentItemResponse implements LinkedItemProvider {
                 linkedItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             }
         }
+        return this;
     }
 }
