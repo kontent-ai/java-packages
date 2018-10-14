@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e # Exit with nonzero exit code if anything fails
-SOURCE_BRANCH="release/2.0"
+SOURCE_BRANCH="master"
 
 if [ "${TRAVIS_PULL_REQUEST}" != "false" -o "${TRAVIS_BRANCH}" != "${SOURCE_BRANCH}" ]; then
     ./gradlew build
