@@ -24,7 +24,9 @@
 
 package com.kenticocloud.delivery;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
@@ -91,20 +93,28 @@ public class StronglyTypedContentItemConverter {
     }
 
     protected void scanClasspathForMappings(String basePackage) {
-        FastClasspathScanner scanner = new FastClasspathScanner(basePackage);
-        scanner.matchClassesWithAnnotation(ContentItemMapping.class, classWithAnnotation -> {
-            ContentItemMapping contentItemMapping = classWithAnnotation.getAnnotation(ContentItemMapping.class);
-            registerType(contentItemMapping.value(), classWithAnnotation);
-        }).matchSubclassesOf(InlineContentItemsResolver.class, subclass -> {
-            try {
-                registerInlineContentItemsResolver(ConstructorUtils.invokeConstructor(subclass, null));
-            } catch (NoSuchMethodException |
-                    IllegalAccessException |
-                    InvocationTargetException |
-                    InstantiationException e) {
-                // No default constructor, no InlineContentItemsResolver.
-            }
-        }).scan();
+        try (ScanResult scanResult = new ClassGraph()
+                .enableAllInfo()
+                .whitelistPackages(basePackage)
+                .scan()) {
+            ClassInfoList mappings = scanResult.getClassesWithAnnotation(ContentItemMapping.class.getName());
+            mappings.loadClasses().forEach(classWithAnnotation -> {
+                ContentItemMapping contentItemMapping = classWithAnnotation.getAnnotation(ContentItemMapping.class);
+                registerType(contentItemMapping.value(), classWithAnnotation);
+            });
+
+            ClassInfoList inlineResolvers = scanResult.getSubclasses(InlineContentItemsResolver.class.getName());
+            inlineResolvers.loadClasses(InlineContentItemsResolver.class).forEach(subclass -> {
+                try {
+                    registerInlineContentItemsResolver(ConstructorUtils.invokeConstructor(subclass, null));
+                } catch (NoSuchMethodException |
+                        IllegalAccessException |
+                        InvocationTargetException |
+                        InstantiationException e) {
+                    // No default constructor, no InlineContentItemsResolver.
+                }
+            });
+        }
     }
 
     Object convert(ContentItem item, Map<String, ContentItem> linkedItems, String contentType) {

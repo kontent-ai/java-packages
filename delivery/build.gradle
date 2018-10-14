@@ -58,7 +58,7 @@ dependencies {
 
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
 
-    compile group: 'io.github.lukehutch', name: 'fast-classpath-scanner', version: '2.4.7'
+    compile group: 'io.github.classgraph', name: 'classgraph', version: '4.2.12'
 
     compileOnly group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'
     testCompile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'

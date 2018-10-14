@@ -24,7 +24,9 @@
 
 package com.kenticocloud.delivery.template;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.ClassInfoList;
+import io.github.classgraph.ScanResult;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,27 +51,32 @@ public class TemplateEngineConfig {
 
     public void init() {
         if (isAutoRegister()) {
-            FastClasspathScanner scanner =
-                    new FastClasspathScanner(getPathsToScan().toArray(new String[0]));
-            scanner.matchClassesImplementing(TemplateEngineInlineContentItemsResolver.class, implementingClass -> {
-                try {
-                    TemplateEngineInlineContentItemsResolver resolver =
-                            ConstructorUtils.invokeConstructor(implementingClass, null);
-                    resolver.getTemplateEngine().setViewResolverConfiguration(getViewResolverConfiguration());
-                    addResolvers(resolver);
-                    logger.info("Registered inline content template resolver: {}", resolver.getClass().getName());
-                } catch (NoSuchMethodException |
-                        IllegalAccessException |
-                        InstantiationException e) {
-                    logger.error("Exception instantiating template resolver {}", e);
-                } catch (InvocationTargetException e) {
-                    if (e.getTargetException() instanceof RenderingEngineMissingException) {
-                        logger.info("Renderer Missing: {}", e.getTargetException().getMessage());
-                    } else {
+            try (ScanResult scanResult = new ClassGraph()
+                    .enableAllInfo()
+                    .whitelistPackages(getPathsToScan().toArray(new String[0]))
+                    .scan()) {
+                ClassInfoList resolvers =
+                        scanResult.getClassesImplementing(TemplateEngineInlineContentItemsResolver.class.getName());
+                resolvers.loadClasses(TemplateEngineInlineContentItemsResolver.class).forEach(implementingClass -> {
+                    try {
+                        TemplateEngineInlineContentItemsResolver resolver =
+                                ConstructorUtils.invokeConstructor(implementingClass, null);
+                        resolver.getTemplateEngine().setViewResolverConfiguration(getViewResolverConfiguration());
+                        addResolvers(resolver);
+                        logger.info("Registered inline content template resolver: {}", resolver.getClass().getName());
+                    } catch (NoSuchMethodException |
+                            IllegalAccessException |
+                            InstantiationException e) {
                         logger.error("Exception instantiating template resolver {}", e);
+                    } catch (InvocationTargetException e) {
+                        if (e.getTargetException() instanceof RenderingEngineMissingException) {
+                            logger.info("Renderer Missing: {}", e.getTargetException().getMessage());
+                        } else {
+                            logger.error("Exception instantiating template resolver {}", e);
+                        }
                     }
-                }
-            }).scan();
+                });
+            }
 
         }
     }
