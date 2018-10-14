@@ -46,28 +46,28 @@ import java.lang.annotation.Target;
  * }
  * </pre>
  * <p>
- * When this annotation is placed on a field and the {@link #value()} matches a key in the {@link ContentItem}'s modular
- * content, then the {@link ContentItem} from the modular content will be cast to the field.  If you do not wish to
- * annotate the field, you can name the field (using CamelCase) the same as the codename of the modular content
+ * When this annotation is placed on a field and the {@link #value()} matches a key in the {@link ContentItem}'s linked
+ * items, then the {@link ContentItem} from the linked item will be cast to the field.  If you do not wish to
+ * annotate the field, you can name the field (using CamelCase) the same as the codename of the linked item
  * {@link ContentItem}.  If using a custom type, the {@link ContentItem} will be recursively converted it until the
  * depth of the original query is exhausted or loops back.  Note, that because this maps to a specific codename, it will
- * generally be of limited use unless you know that instance of modular content will always be referenced.
+ * generally be of limited use unless you know that instance of linked item will always be referenced.
  * <p>
- * For example, the following will map a field to a modular content item with the codename 'origins_of_arabica_bourbon':
+ * For example, the following will map a field to a linked item with the codename 'origins_of_arabica_bourbon':
  * <pre>
  * &#64;ContentItemMapping("origins_of_arabica_bourbon")
  * ContentItem arabicaBourbonOrigin;
  * </pre>
  * <p>
  * When this annotation is placed on a field of type List or Map, the {@link #value()} is used to map to the matching
- * key from {@link ContentItem#getElements()} and if the {@link Element} is of type {@link ModularContentElement}, the
+ * key from {@link ContentItem#getElements()} and if the {@link Element} is of type {@link LinkedItem}, the
  * {@link ContentItem}s contained will be cast to the type of the List or type of the Map's value entry.  If using a
  * custom type, any {@link ContentItem}s with a {@link System#type} that is not registered for the type will be
  * excluded from the List or Map.  If you do not wish to annotate the List or Map, you can name the field (using
  * CamelCase) to the name of the {@link Element} codename.  Keys to maps will be the {@link System#codename} of the
  * {@link ContentItem} instances.
  * <p>
- * For example, the following will map to the 'related_articles' element if it's of type {@link ModularContentElement}:
+ * For example, the following will map to the 'related_articles' element if it's of type {@link LinkedItem}:
  * <pre>
  * &#64;ContentItemMapping("related_articles")
  * List&#60;ContentItem&#62; relatedArticles;
@@ -82,16 +82,16 @@ import java.lang.annotation.Target;
  * @see System
  * @see DeliveryClient#registerType(Class)
  * @see DeliveryClient#scanClasspathForMappings(String)
- * @see DeliveryParameterBuilder#modularContentDepth(Integer)
+ * @see DeliveryParameterBuilder#linkedItemsDepth(Integer)
  * @see ElementMapping
- * @see ModularContentElement
+ * @see LinkedItem
  * @see StronglyTypedContentItemConverter
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
- *      KenticoCloud API reference - Modular content</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#section-modular-content">
- *      KenticoCloud API reference - More on modular content</a>
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
+ *      KenticoCloud API reference - Linked items</a>
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#section-linked-items">
+ *      KenticoCloud API reference - More on Linked items</a>
  */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -100,10 +100,10 @@ public @interface ContentItemMapping {
     /**
      * When placed on a Class, this maps to a {@link ContentItem}'s {@link System#type}.
      * <p>
-     * When placed on a field, this maps to the modular {@link ContentItem} with a matching {@link System#codename}
+     * When placed on a field, this maps to the linked {@link ContentItem} with a matching {@link System#codename}
      * if it was included with the {@link ContentItem}.
      * <p>
-     * When placed on a List or Map, this maps to modular {@link ContentItem}s linked by a {@link ModularContentElement}
+     * When placed on a List or Map, this maps to linked {@link ContentItem}s that are linked by a {@link LinkedItem}
      * with the same name.
      *
      * @return  The {@link System#type} or codename this annotation is referencing.  See the documentation on this

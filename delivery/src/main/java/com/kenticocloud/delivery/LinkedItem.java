@@ -24,9 +24,35 @@
 
 package com.kenticocloud.delivery;
 
-import java.util.Map;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-interface ModularContentProvider {
+import java.util.List;
 
-    Map<String, ContentItem> getModularContent();
+/**
+ * Object model for Linked Item elements
+ */
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString(callSuper = true)
+@lombok.EqualsAndHashCode(callSuper = true)
+public class LinkedItem extends Element<List<String>> {
+
+    // The API refers to linked items by their old name
+    static final String TYPE_VALUE = "modular_content";
+
+    /**
+     * A list of {@link ContentItem} codenames
+     * <p>
+     * The relations to content items saved in a linked item element are represented as a list of strings. Each
+     * string being a codename of a content item.
+     *
+     * @param value Sets the value of this.
+     * @return      A list of codenames referencing {@link ContentItem}.
+     */
+    @JsonProperty("value")
+    List<String> value;
+
+    public LinkedItem() {
+        setType(TYPE_VALUE);
+    }
 }

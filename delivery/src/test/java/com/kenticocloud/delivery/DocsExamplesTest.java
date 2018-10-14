@@ -84,7 +84,7 @@ public class DocsExamplesTest extends LocalServerTestBase {
             .projection("title", "summary", "post_date", "teaser_image")
             .filterContains("elements.personas", "coffee_lover")
             .orderByDesc("elements.post_date")
-            .modularContentDepth(0)
+            .linkedItemsDepth(0)
             .page(null, 3)
             .build();
 

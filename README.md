@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery.svg)](http://javadoc.io/doc/com.kenticocloud/delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.1-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
 [![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
 
 ## Summary
@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery:2.0.1')
+    compile('com.kenticocloud:delivery:2.0.2')
 }
 ```
 
@@ -29,7 +29,7 @@ Or via your Maven POM:
 <dependency>
     <groupId>com.kenticocloud</groupId>
     <artifactId>delivery</artifactId>
-    <version>2.0.1</version>
+    <version>2.0.2</version>
 </dependency>
 ```
 
@@ -37,7 +37,7 @@ Or via your Maven POM:
 
 The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Cloud projects.
 
-To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v1/docs/getting-content#section-getting-content-items).
+To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v2/docs/getting-content#section-getting-content-items).
 
 ```java
 // Initializes an instance of the DeliveryClient client
@@ -128,9 +128,9 @@ When retrieving a list of content items, you get an instance of the `ContentItem
 
 The `ContentItem` class provides the following:
 
-* `getSystem()` returna a `System` object with metadata such as code name, display name, type, or sitemap location.
+* `getSystem()` returns a `System` object with metadata such as code name, display name, type, or sitemap location.
 * `getElements()` returns a Map containing all the elements included in the response keyed by code names.
-* Methods for easier access to certain types of content elements such as modular content, or assets.
+* Methods for easier access to certain types of content elements such as linked items, or assets.
 
 ## Getting content item properties
 
@@ -199,11 +199,11 @@ for (Option option : element.getOptions()) {
 }
 ```
 
-### Modular content
+### Linked items
 
 ```java
 // Retrieves related articles
-articleItem.getModularContent("related_articles")
+articleItem.getLinkedItems("related_articles")
 ```
 
 ## Further information

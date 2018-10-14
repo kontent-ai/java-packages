@@ -44,7 +44,7 @@ import java.util.List;
  * By default, if no CacheManager is provided, the DeliveryClient will use it's default, which just passes through.
  *
  * @see DeliveryClient#setCacheManager(CacheManager)
- * @see <a href="https://developer.kenticocloud.com/v1/reference#webhooks-and-notifications">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#webhooks-and-notifications">
  *      KenticoCloud API reference - Webhooks and notifications</a>
  */
 public interface CacheManager {

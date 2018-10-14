@@ -68,7 +68,7 @@ public class RichTextElement extends TextElement {
     Map<String, Link> links;
 
     @JsonProperty("modular_content")
-    List<String> modularContent;
+    List<String> linkedItems;
 
     public RichTextElement() {
         setType(TYPE_VALUE);

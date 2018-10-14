@@ -34,9 +34,9 @@ import java.util.Map;
  * Content item listing response from an invocation of {@link DeliveryClient#getItem(String)}, or
  * {@link DeliveryClient#getItem(String, List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
  *      KenticoCloud API reference - View a content item</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
@@ -48,14 +48,14 @@ import java.util.Map;
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-public class ContentItemResponse implements ModularContentProvider {
+public class ContentItemResponse implements LinkedItemProvider {
 
     /**
      * The {@link ContentItem} returned by this ContentItemResponse.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *          KenticoCloud API reference - View a content item</a>
      * @return  The {@link ContentItem} of this ContentItemResponse.
      */
@@ -63,18 +63,18 @@ public class ContentItemResponse implements ModularContentProvider {
     ContentItem item;
 
     /**
-     * A map of content items used in modular content and Rich text elements.
+     * A map of content items used in linked item and Rich text elements.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#modular-content">
-     *          KenticoCloud API reference - Modular content</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
+     *          KenticoCloud API reference - Linked items</a>
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
      *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *          KenticoCloud API reference - View a content item</a>
-     * @return  The modular {@link ContentItem}s referenced in this response.
+     * @return  The linked {@link ContentItem}s referenced in this response.
      */
     @JsonProperty("modular_content")
-    Map<String, ContentItem> modularContent;
+    Map<String, ContentItem> linkedItems;
 
     @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
@@ -102,25 +102,25 @@ public class ContentItemResponse implements ModularContentProvider {
      * @see     StronglyTypedContentItemConverter
      */
     public <T> T castTo(Class<T> tClass) {
-        return stronglyTypedContentItemConverter.convert(item, getModularContent(), tClass);
+        return stronglyTypedContentItemConverter.convert(item, this.getLinkedItems(), tClass);
     }
 
     void setItem(ContentItem item) {
         this.item = item;
-        item.setModularContentProvider(this);
+        item.setLinkedItemProvider(this);
     }
 
-    void setModularContent(Map<String, ContentItem> modularContent) {
-        this.modularContent = modularContent;
-        modularContent.values().forEach(contentItem -> contentItem.setModularContentProvider(this));
+    void setLinkedItems(Map<String, ContentItem> linkedItems) {
+        this.linkedItems = linkedItems;
+        linkedItems.values().forEach(contentItem -> contentItem.setLinkedItemProvider(this));
     }
 
     ContentItemResponse setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {
         this.stronglyTypedContentItemConverter = stronglyTypedContentItemConverter;
         item.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
-        if (modularContent != null) {
-            for (ContentItem modularContentItem : modularContent.values()) {
-                modularContentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
+        if (linkedItems != null) {
+            for (ContentItem linkedItem : linkedItems.values()) {
+                linkedItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
             }
         }
         return this;

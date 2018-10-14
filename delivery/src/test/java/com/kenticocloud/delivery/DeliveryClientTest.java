@@ -712,10 +712,10 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertEquals("Origins of Arabica Bourbon", item.getArabicaBourbonOrigin().getSystem().getName());
         Assert.assertNotNull(item.getArticleItems());
         Assert.assertEquals(2, item.getArticleItems().size());
-        Assert.assertNotNull(item.getAllModularContent());
-        Assert.assertEquals(2, item.getAllModularContent().size());
-        Assert.assertNotNull(item.getAllModularContentMap());
-        Assert.assertEquals(2, item.getAllModularContentMap().size());
+        Assert.assertNotNull(item.getAllLinkedItems());
+        Assert.assertEquals(2, item.getAllLinkedItems().size());
+        Assert.assertNotNull(item.getAllLinkedItemsMap());
+        Assert.assertEquals(2, item.getAllLinkedItemsMap().size());
 
         client.close();
     }
@@ -941,7 +941,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertNotNull(itemObj.getRelatedArticles());
         Assert.assertEquals(2, itemObj.getRelatedArticles().size());
         //The following assertion will probably have a warning in an IDE, but because reflection is being used, is
-        //ensures that this actually is a ContentItem and not a ModularContentElement
+        //ensures that this actually is a ContentItem and not a LinkedItem
         Assert.assertTrue(itemObj.getRelatedArticles().get(0) instanceof ContentItem);
 
         Assert.assertNotNull(itemObj.getRelatedArticlesMap());

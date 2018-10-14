@@ -38,9 +38,9 @@ import java.util.List;
 /**
  * Executes requests against the Kentico Cloud Delivery API.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#authentication">
  *      KenticoCloud API reference - Authentication</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#delivery-api">
  *      KenticoCloud API reference - Delivery API</a>
  */
 @lombok.extern.slf4j.Slf4j
@@ -111,7 +111,7 @@ public class DeliveryClient implements Closeable {
      * @throws  KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
      * @see     ContentItem
      * @see     ContentItemsListingResponse
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#list-content-items">
      *          KenticoCloud API reference - List content items</a>
      */
     public ContentItemsListingResponse getItems() {
@@ -129,9 +129,9 @@ public class DeliveryClient implements Closeable {
      * @see             DeliveryParameterBuilder
      * @see             ContentItem
      * @see             ContentItemsListingResponse
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
      *                  KenticoCloud API reference - Listing response</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-content-items">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#list-content-items">
      *                  KenticoCloud API reference - List content items</a>
      */
     public ContentItemsListingResponse getItems(List<NameValuePair> params) {
@@ -175,7 +175,7 @@ public class DeliveryClient implements Closeable {
      * @throws                      KenticoIOException If an {@link IOException} is thrown connecting to Kentico.
      * @see                         ContentItem
      * @see                         ContentItemResponse
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *                              KenticoCloud API reference - View a content item</a>
      */
     public ContentItemResponse getItem(String contentItemCodename) {
@@ -231,7 +231,7 @@ public class DeliveryClient implements Closeable {
      * @see             ElementMapping
      * @see             #registerType(Class)
      * @see             #registerType(String, Class)
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">
      *                  KenticoCloud API reference - Listing response paging</a>
      */
     public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
@@ -254,7 +254,7 @@ public class DeliveryClient implements Closeable {
      * @see                 ElementMapping
      * @see                 #registerType(Class)
      * @see                 #registerType(String, Class)
-     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#listing-response-paging">
+     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">
      *                      KenticoCloud API reference - Listing response paging</a>
      */
     public <T> Page<T> getNextPage(Page<T> currentPage) {
@@ -281,7 +281,7 @@ public class DeliveryClient implements Closeable {
      * @see                         ElementMapping
      * @see                         #registerType(Class)
      * @see                         #registerType(String, Class)
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *                              KenticoCloud API reference - View a content item</a>
      */
     public <T> T getItem(String contentItemCodename, Class<T> tClass) {
@@ -290,7 +290,7 @@ public class DeliveryClient implements Closeable {
 
     /**
      * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
      * depth or to apply a projection. For simplicity, it is recommended to use
      * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
      * query parameters.
@@ -302,9 +302,9 @@ public class DeliveryClient implements Closeable {
      * @see                         DeliveryParameterBuilder
      * @see                         ContentItem
      * @see                         ContentItemResponse
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *                              KenticoCloud API reference - View a content item</a>
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#listing-response">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
      *                              KenticoCloud API reference - Listing response</a>
      */
     public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) {
@@ -313,7 +313,7 @@ public class DeliveryClient implements Closeable {
 
     /**
      * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change modular content
+     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
      * depth or to apply a projection. For simplicity, it is recommended to use
      * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
      * query parameters.
@@ -335,7 +335,7 @@ public class DeliveryClient implements Closeable {
      * @see                         ElementMapping
      * @see                         #registerType(Class)
      * @see                         #registerType(String, Class)
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-item">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
      *                              KenticoCloud API reference - View a content item</a>
      */
     public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) {
@@ -350,9 +350,9 @@ public class DeliveryClient implements Closeable {
      * @see     ContentType
      * @see     DeliveryClient#getTypes()
      * @see     DeliveryClient#getTypes(List)
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#list-content-types">
      *          KenticoCloud API reference - List content types</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
      *          KenticoCloud API reference - Content type object</a>
      */
     public ContentTypesListingResponse getTypes() {
@@ -370,9 +370,9 @@ public class DeliveryClient implements Closeable {
      * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoCloud.
      * @see             Pagination
      * @see             ContentType
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-content-types">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#list-content-types">
      *                  KenticoCloud API reference - List content types</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
      *                  KenticoCloud API reference - Content type object</a>
      */
     public ContentTypesListingResponse getTypes(List<NameValuePair> params) {
@@ -387,9 +387,9 @@ public class DeliveryClient implements Closeable {
      * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
      *                              KenticoCloud.
      * @see                         ContentType
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-content-type">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-type">
      *                              KenticoCloud API reference - View a content type</a>
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#content-type-object">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
      *                              KenticoCloud API reference - Content type object</a>
      */
     public ContentType getType(String contentTypeCodeName) {
@@ -403,10 +403,10 @@ public class DeliveryClient implements Closeable {
      * @param elementCodeName       The codename for the Element.
      * @return                      The Element for the ContentType requested.
      * @see                         <a
-     *                              href="https://developer.kenticocloud.com/v1/reference#view-a-content-type-element">
+     *                              href="https://developer.kenticocloud.com/v2/reference#view-a-content-type-element">
      *                              KenticoCloud API reference - View a content type element</a>
      * @see                         <a
-     *                              href="https://developer.kenticocloud.com/v1/reference#content-type-element-object">
+     *                              href="https://developer.kenticocloud.com/v2/reference#content-type-element-object">
      *                              KenticoCloud API reference - Content element model</a>
      */
     public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) {
@@ -424,10 +424,10 @@ public class DeliveryClient implements Closeable {
      * @return                      The Element for the ContentType requested.
      * @see                         #getContentTypeElement(String, String)
      * @see                         <a
-     *                              href="https://developer.kenticocloud.com/v1/reference#view-a-content-type-element">
+     *                              href="https://developer.kenticocloud.com/v2/reference#view-a-content-type-element">
      *                              KenticoCloud API reference - View a content type element</a>
      * @see                         <a
-     *                              href="https://developer.kenticocloud.com/v1/reference#content-type-element-object">
+     *                              href="https://developer.kenticocloud.com/v2/reference#content-type-element-object">
      *                              KenticoCloud API reference - Content element model</a>
      */
     public Element getContentTypeElement(
@@ -442,9 +442,9 @@ public class DeliveryClient implements Closeable {
      * @return  A response object containing all {@link TaxonomyGroup} in the project.
      * @see     TaxonomyGroup
      * @see     Taxonomy
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#list-taxonomy-groups">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#list-taxonomy-groups">
      *          KenticoCloud API reference - List taxonomy groups</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#taxonomy-group-object">
      *          KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroupListingResponse getTaxonomyGroups() {
@@ -459,9 +459,9 @@ public class DeliveryClient implements Closeable {
      * @return          A response object containing all {@link TaxonomyGroup} in the project.
      * @see             TaxonomyGroup
      * @see             Taxonomy
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#list-taxonomy-groups">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#list-taxonomy-groups">
      *                  KenticoCloud API reference - List taxonomy groups</a>
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#taxonomy-group-object">
      *                  KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) {
@@ -475,9 +475,9 @@ public class DeliveryClient implements Closeable {
      * @return                      The {@link TaxonomyGroup}.
      * @see                         TaxonomyGroup
      * @see                         Taxonomy
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-taxonomy-group">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-taxonomy-group">
      *                              KenticoCloud API reference - View a taxonomy group</a>
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#taxonomy-group-object">
      *                              KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) {
@@ -493,9 +493,9 @@ public class DeliveryClient implements Closeable {
      * @return                      The {@link TaxonomyGroup}.
      * @see                         TaxonomyGroup
      * @see                         Taxonomy
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#view-a-taxonomy-group">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#view-a-taxonomy-group">
      *                              KenticoCloud API reference - View a taxonomy group</a>
-     * @see                         <a href="https://developer.kenticocloud.com/v1/reference#taxonomy-group-object">
+     * @see                         <a href="https://developer.kenticocloud.com/v2/reference#taxonomy-group-object">
      *                              KenticoCloud API reference - Taxonomy group model</a>
      */
     public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) {

@@ -34,15 +34,15 @@ import java.util.Map;
 /**
  * Object model description of a single content item object.
  *
- * @see <a href="https://developer.kenticocloud.com/v1/reference#content-item-object">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
  *      KenticoCloud API reference - Content item object</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-@lombok.EqualsAndHashCode(exclude = {"modularContentProvider", "stronglyTypedContentItemConverter"})
-@lombok.ToString(exclude = {"modularContentProvider", "stronglyTypedContentItemConverter"})
+@lombok.EqualsAndHashCode(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
+@lombok.ToString(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
 public class ContentItem {
 
     /**
@@ -65,7 +65,7 @@ public class ContentItem {
     Map<String, Element> elements;
 
     @JsonIgnore
-    ModularContentProvider modularContentProvider;
+    LinkedItemProvider linkedItemProvider;
 
     @JsonIgnore
     private StronglyTypedContentItemConverter stronglyTypedContentItemConverter;
@@ -119,18 +119,18 @@ public class ContentItem {
     }
 
     /**
-     * Convenience method to retrieve the ContentItem from modular content.
+     * Convenience method to retrieve the ContentItem from linked items.
      *
-     * @param codename  The {@link ContentItem} codename of the modular content.
+     * @param codename  The {@link ContentItem} codename of the linked item.
      * @return          The {@link ContentItem}.  Returns null if it was not included in the response.
      */
-    public ContentItem getModularContent(String codename) {
+    public ContentItem getLinkedItem(String codename) {
         //This shouldn't happen if this is de-serialized from Jackson, but protecting against the NPE for unexpected
         //usages.
-        if (modularContentProvider == null) {
+        if (linkedItemProvider == null) {
             return null;
         }
-        return modularContentProvider.getModularContent().get(codename);
+        return linkedItemProvider.getLinkedItems().get(codename);
     }
 
     /**
@@ -156,7 +156,7 @@ public class ContentItem {
      * @see             StronglyTypedContentItemConverter
      */
     public <T> T castTo(Class<T> tClass) {
-        return stronglyTypedContentItemConverter.convert(this, modularContentProvider.getModularContent(), tClass);
+        return stronglyTypedContentItemConverter.convert(this, linkedItemProvider.getLinkedItems(), tClass);
     }
 
     /**
@@ -199,11 +199,11 @@ public class ContentItem {
      */
     public Object castTo(String contentItemSystemType) {
         return stronglyTypedContentItemConverter.convert(
-                this, modularContentProvider.getModularContent(), contentItemSystemType);
+            this, linkedItemProvider.getLinkedItems(), contentItemSystemType);
     }
 
-    void setModularContentProvider(ModularContentProvider modularContentProvider) {
-        this.modularContentProvider = modularContentProvider;
+    void setLinkedItemProvider(LinkedItemProvider linkedItemProvider) {
+        this.linkedItemProvider = linkedItemProvider;
     }
 
     void setStronglyTypedContentItemConverter(StronglyTypedContentItemConverter stronglyTypedContentItemConverter) {

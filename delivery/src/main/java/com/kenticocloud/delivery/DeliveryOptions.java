@@ -30,13 +30,13 @@ import lombok.Builder;
  * Keeps settings which are provided by customer or have default values, used in {@link DeliveryClient}.
  *
  * @see DeliveryClient
- * @see <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#authentication">
  *      KenticoCloud API reference - Authentication</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#delivery-api">
  *      KenticoCloud API reference - Delivery API</a>
- * @see <a href="https://developer.kenticocloud.com/v1/reference#secure-access">
+ * @see <a href="https://developer.kenticocloud.com/v2/reference#secure-access">
  *      KenticoCloud API reference - Secure access</a>
- * @see <a href="https://developer.kenticocloud.com/v1/docs/securing-public-access">
+ * @see <a href="https://developer.kenticocloud.com/v2/docs/securing-public-access">
  *      KenticoCloud API reference - Securing public access</a>
  */
 @lombok.Data
@@ -54,7 +54,7 @@ public class DeliveryOptions {
      * @param productionEndpoint    New value for the productionEndpoint in this DeliveryOptions instance.
      * @return                      The value of the pstring used as the production endpoint to
      *                              KenticoCloud.
-     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see                     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                          KenticoCloud API reference - Production vs. preview</a>
      * @see                         java.util.Formatter
      */
@@ -69,7 +69,7 @@ public class DeliveryOptions {
      *
      * @param previewEndpoint   New value for the productionEndpoint in this DeliveryOptions instance.
      * @return                  The value of the string used as the preview endpoint to KenticoCloud.
-     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see                     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                          KenticoCloud API reference - Production vs. preview</a>
      * @see                     java.util.Formatter
      */
@@ -82,7 +82,7 @@ public class DeliveryOptions {
      * @param projectId The Project ID associated with your Kentico Cloud account.  Must be in the format of an
      *                  {@link java.util.UUID}.
      * @return          The Project identifier set in this DeliveryOptions instance.
-     * @see             <a href="https://developer.kenticocloud.com/v1/reference#delivery-api">
+     * @see             <a href="https://developer.kenticocloud.com/v2/reference#delivery-api">
      *                  KenticoCloud API reference - Delivery API</a>
      */
     String projectId;
@@ -92,7 +92,7 @@ public class DeliveryOptions {
      *
      * @param productionApiKey  Sets the value of the production API key in this DeliveryOptions instance.
      * @return                  The value of the production API key in this DeliveryOptions instance.
-     * @see                     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see                     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                          KenticoCloud API reference - Production vs. preview</a>
      */
     @Builder.Default
@@ -102,9 +102,9 @@ public class DeliveryOptions {
      * The Preview API key configured with your Kentico Cloud account.
      *
      * @return  The value of the preview API key in this DeliveryOptions instance.
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *          KenticoCloud API reference - Production vs. preview</a>
-     * @see     <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+     * @see     <a href="https://developer.kenticocloud.com/v2/reference#authentication">
      *          KenticoCloud API reference - Authentication</a>
      */
     String previewApiKey;
@@ -116,7 +116,7 @@ public class DeliveryOptions {
      * @param usePreviewApi Whether the preview API should be used instead of the production API.  Defaults to 'false'.
      * @return              Whether this DeliveryOptions instance is set to use the preview API instead of the
      *                      production API.
-     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                      KenticoCloud API reference - Production vs. preview</a>
      */
     @Builder.Default
@@ -173,9 +173,9 @@ public class DeliveryOptions {
      *
      * @param previewApiKey Sets the value of the preview API key in this DeliveryOptions instance.  If not null,
      *                      automatically sets {@link #setUsePreviewApi(boolean)} to 'true'.
-     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#section-production-vs-preview">
+     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#section-production-vs-preview">
      *                      KenticoCloud API reference - Production vs. preview</a>
-     * @see                 <a href="https://developer.kenticocloud.com/v1/reference#authentication">
+     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#authentication">
      *                      KenticoCloud API reference - Authentication</a>
      */
     public void setPreviewApiKey(String previewApiKey) {

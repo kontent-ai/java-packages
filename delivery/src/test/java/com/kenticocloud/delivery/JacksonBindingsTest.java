@@ -57,12 +57,12 @@ public class JacksonBindingsTest {
         ContentItemsListingResponse response3 = ContentItemsListingResponse.builder()
                 .items(response.getItems())
                 .pagination(response.getPagination())
-                .modularContent(response.getModularContent())
+                .linkedItems(response.getLinkedItems())
                 .build();
         Assert.assertEquals(response, response3);
         Assert.assertEquals(response.hashCode(), response3.hashCode());
 
-        Assert.assertEquals(2, response.getModularContent().size());
+        Assert.assertEquals(2, response.getLinkedItems().size());
         Pagination pagination = response.getPagination();
         Assert.assertNotNull(pagination);
         Assert.assertNotNull(pagination.toString());
@@ -88,12 +88,12 @@ public class JacksonBindingsTest {
         Assert.assertEquals(response.hashCode(), response2.hashCode());
         ContentItemResponse response3 = ContentItemResponse.builder()
                 .item(response.getItem())
-                .modularContent(response.getModularContent())
+                .linkedItems(response.getLinkedItems())
                 .build();
         Assert.assertEquals(response, response3);
         Assert.assertEquals(response.hashCode(), response3.hashCode());
 
-        Assert.assertEquals(2, response.getModularContent().size());
+        Assert.assertEquals(2, response.getLinkedItems().size());
 
         ContentItem contentItem = response.getItem();
         Assert.assertNotNull(contentItem);
@@ -131,8 +131,8 @@ public class JacksonBindingsTest {
         Assert.assertEquals(0, contentItem.getAssets("non_existent").size());
         Assert.assertEquals(0, contentItem.getAssets("post_date").size());
 
-        Assert.assertNotNull(contentItem.getModularContent("coffee_processing_techniques"));
-        Assert.assertNull(contentItem.getModularContent("non_existent"));
+        Assert.assertNotNull(contentItem.getLinkedItem("coffee_processing_techniques"));
+        Assert.assertNull(contentItem.getLinkedItem("non_existent"));
     }
 
     @Test
@@ -237,8 +237,8 @@ public class JacksonBindingsTest {
         Assert.assertEquals("article", link.getType());
         Assert.assertEquals("on_roasts", link.getCodename());
         Assert.assertEquals("", link.getUrlSlug());
-        Assert.assertEquals(1, richTextElement.getModularContent().size());
-        Assert.assertEquals("coffee_processing_techniques", richTextElement.getModularContent().get(0));
+        Assert.assertEquals(1, richTextElement.getLinkedItems().size());
+        Assert.assertEquals("coffee_processing_techniques", richTextElement.getLinkedItems().get(0));
     }
 
     @Test
@@ -325,18 +325,18 @@ public class JacksonBindingsTest {
     }
 
     @Test
-    public void testModularContentElementDeserialization() throws IOException {
-        ModularContentElement modularContentElement = objectMapper.readValue(
-                this.getClass().getResource("SampleModularContentElement.json"), ModularContentElement.class);
-        ModularContentElement modularContentElement2 = objectMapper.readValue(
-                this.getClass().getResource("SampleModularContentElement.json"), ModularContentElement.class);
-        Assert.assertNotNull("object failed deserialization", modularContentElement);
-        Assert.assertNotNull(modularContentElement.toString());
-        Assert.assertEquals(modularContentElement, modularContentElement2);
-        Assert.assertEquals(modularContentElement.hashCode(), modularContentElement2.hashCode());
-        Assert.assertEquals("Facts", modularContentElement.getName());
-        Assert.assertEquals(3, modularContentElement.getValue().size());
-        Assert.assertEquals("our_philosophy", modularContentElement.getValue().get(0));
+    public void testLinkedItemsElementDeserialization() throws IOException {
+        LinkedItem linkedItem = objectMapper.readValue(
+                this.getClass().getResource("SampleLinkedItem.json"), LinkedItem.class);
+        LinkedItem linkedItem1 = objectMapper.readValue(
+                this.getClass().getResource("SampleLinkedItem.json"), LinkedItem.class);
+        Assert.assertNotNull("object failed deserialization", linkedItem);
+        Assert.assertNotNull(linkedItem.toString());
+        Assert.assertEquals(linkedItem, linkedItem1);
+        Assert.assertEquals(linkedItem.hashCode(), linkedItem1.hashCode());
+        Assert.assertEquals("Facts", linkedItem.getName());
+        Assert.assertEquals(3, linkedItem.getValue().size());
+        Assert.assertEquals("our_philosophy", linkedItem.getValue().get(0));
     }
 
     @Test
