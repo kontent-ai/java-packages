@@ -106,7 +106,7 @@ public class SimpleInMemoryCacheManager implements CacheManager {
         tags.add(new CacheTag(contentItem));
 
         tags.addAll(
-                contentItem.getModularContentProvider().getModularContent().values().stream()
+                contentItem.getLinkedItemProvider().getLinkedItems().values().stream()
                         .map(CacheTag::new)
                         .collect(Collectors.toSet())
         );
