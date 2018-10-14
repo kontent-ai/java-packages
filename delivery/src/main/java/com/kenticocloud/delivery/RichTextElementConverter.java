@@ -68,38 +68,8 @@ public class RichTextElementConverter {
     */
     private Pattern linkPattern = Pattern.compile("<a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*>");
 
-    /*
-    Regex prior to the Java \ escapes:
-    <object type=\"application\/kenticocloud" data-type=\"(?<type>[^\"]+\") data-codename=\"(?<codename>[^\"]+\")><\/object>
-
-    Regex explanation:
-    <object type= matches the characters <object type= literally (case sensitive)
-    \" matches the character " literally (case sensitive)
-    application matches the characters application literally (case sensitive)
-    \/ matches the character / literally (case sensitive)
-    kenticocloud" data-type= matches the characters kenticocloud" data-type= literally (case sensitive)
-    \" matches the character " literally (case sensitive)
-        Named Capture Group type (?<type>[^\"]+\")
-            Match a single character not present in the list below [^\"]+
-                + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
-                \" matches the character " literally (case sensitive)
-    \" matches the character " literally (case sensitive)
-     data-codename= matches the characters  data-codename= literally (case sensitive)
-    \" matches the character " literally (case sensitive)
-        Named Capture Group codename (?<codename>[^\"]+\")
-            Match a single character not present in the list below [^\"]+
-                + Quantifier — Matches between one and unlimited times, as many times as possible, giving back as needed (greedy)
-                \" matches the character " literally (case sensitive)
-    \" matches the character " literally (case sensitive)
-    >< matches the characters >< literally (case sensitive)\/ matches the character / literally (case sensitive)
-    object> matches the characters object> literally (case sensitive)
-        Global pattern flags
-            g modifier: global. All matches (don't return after first match)
-     */
-    private Pattern linkedItemPattern = Pattern.compile(
-            "<object type=\"application/kenticocloud\" data-type=\"" +
-                    "(?<type>[^\"]+)\" data-codename=\"" +
-                    "(?<codename>[^\"]+)\"></object>");
+    private Pattern linkedItemPattern = Pattern.compile("<object type=\"application/kenticocloud\" " +
+            "(?<attrs>[^>]+)></object>");
 
     public RichTextElementConverter(
             ContentLinkUrlResolver contentLinkUrlResolver,
@@ -179,7 +149,9 @@ public class RichTextElementConverter {
         StringBuffer buffer = new StringBuffer();
 
         while (matcher.find()) {
-            String codename = matcher.group("codename");
+            String attrs = matcher.group("attrs");
+            InlineModularContentDataAttributes dataAttributes = InlineModularContentDataAttributes.fromAttrs(attrs);
+            String codename = dataAttributes.getCodename();
             ContentItem linkedItem = element.getParent().getLinkedItem(codename);
             InternalInlineContentItemResolver resolver = null;
             // Check to see if we encountered a cycle in our tree, if so, halt resolution
@@ -259,5 +231,38 @@ public class RichTextElementConverter {
 
     private interface InternalInlineContentItemResolver {
         String resolve();
+    }
+
+    @lombok.Getter
+    @lombok.Setter
+    @lombok.Builder
+    private static class InlineModularContentDataAttributes {
+        private static Pattern DATA_ATTRIBUTE_PATTERN = Pattern.compile("(data-\\w+)=\"(\\w+)\"");
+
+        private String type;
+        private String rel;
+        private String codename;
+
+        private static InlineModularContentDataAttributes fromAttrs(String attrs) {
+            Matcher matcher = DATA_ATTRIBUTE_PATTERN.matcher(attrs);
+            InlineModularContentDataAttributesBuilder builder = InlineModularContentDataAttributes.builder();
+            while (matcher.find()) {
+                String key = matcher.group(1);
+                String value = matcher.group(2);
+                switch (key) {
+                    case "data-type":
+                        builder.type(value);
+                        break;
+                    case "data-rel":
+                        builder.rel(value);
+                        break;
+                    case "data-codename":
+                        builder.codename(value);
+                    default:
+                        break;
+                }
+            }
+            return builder.build();
+        }
     }
 }
