@@ -67,46 +67,6 @@ public class MultipleChoiceElement extends Element<List<Option>> {
     @JsonProperty("options")
     List<Option> options;
 
-    /**
-     * Gets the name from the value property
-     *
-     * @param Since the value is a list, you must send the option index
-     * @see             Option
-     */
-    public String nameFromOptionValue(int index) {
-        return value.get(index).name;
-    }
-
-    /**
-     * Gets the codename from the value property
-     *
-     * @param Since the value is a list, you must send the option index
-     * @see             Option
-     */
-    public String codenameFromOptionValue(int index) {
-        return value.get(index).codename;
-    }
-
-    /**
-     * Gets the name from the options property
-     *
-     * @param Since the options is a list, you must send the option index
-     * @see             Option
-     */
-    public String nameFromOptions(int index) {
-        return value.get(index).name;
-    }
-
-    /**
-     * Gets the codename from the options property
-     *
-     * @param Since the options is a list, you must send the option index
-     * @see             Option
-     */
-    public String codenameFromOptions(int index) {
-        return value.get(index).codename;
-    }
-
     public MultipleChoiceElement() {
         setType(TYPE_VALUE);
     }
