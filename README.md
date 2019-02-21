@@ -77,7 +77,7 @@ ContentItemsListingResponse response = client.getItems(
         .projection("image", "price", "product_status", "processing")
         .page(null, 10)
         .orderByAsc("elements.product_name")
-        .build();
+        .build()
 );
 ```
 
