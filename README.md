@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    compile('com.kenticocloud:delivery:2.0.2')
+    implementation 'com.kenticocloud:delivery:2.0.2'
 }
 ```
 
