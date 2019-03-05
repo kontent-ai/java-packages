@@ -6,10 +6,15 @@
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
 [![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
 <<<<<<< HEAD
+<<<<<<< HEAD
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-cloud)
 
 =======
 [![Stack Overflow](https://img.shields.io/stackexchange/stackoverflow/t/kentico%2dcloud.svg?label=Stack%20Overflow)](https://stackoverflow.com/tags/kentico-cloud)
+>>>>>>> Update README.md
+=======
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-cloud)
+
 >>>>>>> Update README.md
 ## Summary
 
