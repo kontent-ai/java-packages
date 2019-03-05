@@ -5,8 +5,7 @@
 [![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery.svg)](http://javadoc.io/doc/com.kenticocloud/delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=com.kenticocloud%3Adelivery-sdk-java)
 [![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
-[![Forums](https://img.shields.io/badge/chat-on%20forums-orange.svg)](https://forums.kenticocloud.com)
-
+[![Stack Overflow](https://img.shields.io/stackexchange/stackoverflow/t/kentico%2dcloud.svg?label=Stack%20Overflow)](https://stackoverflow.com/tags/kentico-cloud)
 ## Summary
 
 The Kentico Cloud Delivery Java SDK is a client library used for retrieving content from Kentico Cloud. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/kenticocloud/).
