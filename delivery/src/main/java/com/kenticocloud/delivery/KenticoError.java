@@ -68,7 +68,8 @@ public class KenticoError {
 
     /**
      * Returns the HTTP error code returned by Kentico.
-     * <table summary="HTTP error codes">
+     * <table>
+     * <caption>HTTP error codes</caption>
      * <tr><td>400 - Bad Request</td><td>The request was not understood. Check for a missing required parameter, or an
      * invalid parameter value.</td></tr>
      * <tr><td>401 - Unauthorized</td><td>The provided API key is invalid or missing. See
