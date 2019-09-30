@@ -9,5 +9,6 @@
       "description": null,
       "url": "https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg"
     }
-  ]
+  ],
+  "testing_unknown_field_does_not_break_jackson": true
 }
