@@ -24,6 +24,7 @@
 
 package com.kenticocloud.delivery;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -90,7 +91,8 @@ public class AsyncDeliveryClient implements Closeable {
 
     private static final String URL_CONCAT = "%s/%s";
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private DeliveryOptions deliveryOptions;
 
     private ContentLinkUrlResolver contentLinkUrlResolver;
@@ -525,7 +527,8 @@ public class AsyncDeliveryClient implements Closeable {
     }
 
     private void reconfigureDeserializer() {
-        objectMapper = new ObjectMapper();
+        objectMapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         SimpleModule module = new SimpleModule();
         objectMapper.registerModule(new JSR310Module());
