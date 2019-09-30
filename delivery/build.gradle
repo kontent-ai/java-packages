@@ -46,6 +46,10 @@ lombok {
     sha256 = ""
 }
 
+jacoco {
+    toolVersion = "0.8.4"
+}
+
 dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
 
