@@ -25,6 +25,7 @@
 package kentico.kontent.delivery;
 
 import lombok.Builder;
+import org.asynchttpclient.proxy.ProxyServer;
 
 /**
  * Keeps settings which are provided by customer or have default values, used in {@link DeliveryClient}.
@@ -142,6 +143,15 @@ public class DeliveryOptions {
      */
     @Builder.Default
     int retryAttempts = 3;
+
+    /**
+     * Sets the proxy server used by the http client.  See {@link ProxyServer.Builder}.
+     *
+     * @param proxyServer The {@link ProxyServer} instance to use with the client each request.
+     * @return            The ProxyServer configured for this instance, or null.
+     */
+    @Builder.Default
+    ProxyServer proxyServer = null;
 
     /**
      * Constructs a setting instance of {@link DeliveryOptions} using your Kentico Cloud Project identifier.

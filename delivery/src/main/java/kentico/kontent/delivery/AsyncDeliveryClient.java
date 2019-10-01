@@ -38,9 +38,11 @@ import io.reactivex.MaybeSource;
 import lombok.extern.slf4j.Slf4j;
 import org.asynchttpclient.AsyncHttpClient;
 import org.asynchttpclient.Request;
+import org.asynchttpclient.RequestBuilder;
 import org.asynchttpclient.Response;
 import org.asynchttpclient.extras.rxjava2.DefaultRxHttpClient;
 import org.asynchttpclient.extras.rxjava2.RxHttpClient;
+import org.asynchttpclient.proxy.ProxyServer;
 import org.reactivestreams.Publisher;
 
 import java.io.Closeable;
@@ -102,6 +104,7 @@ public class AsyncDeliveryClient implements Closeable {
             new StronglyTypedContentItemConverter();
     private TemplateEngineConfig templateEngineConfig;
 
+    private ProxyServer proxyServer;
     private AsyncHttpClient asyncHttpClient;
     private RxHttpClient rxHttpClient;
 
@@ -157,6 +160,10 @@ public class AsyncDeliveryClient implements Closeable {
             this.templateEngineConfig = templateEngineConfig;
         }
         reconfigureDeserializer();
+
+        if (deliveryOptions.getProxyServer() != null) {
+            this.proxyServer = deliveryOptions.getProxyServer();
+        }
 
         // TODO: max connections (20)
         asyncHttpClient = asyncHttpClient(config());
@@ -398,7 +405,11 @@ public class AsyncDeliveryClient implements Closeable {
     }
 
     private Request buildNewRequest(String url) {
-        final Request request = get(url).build();
+        RequestBuilder requestBuilder = get(url);
+        if (this.proxyServer != null) {
+            requestBuilder.setProxyServer(this.proxyServer);
+        }
+        final Request request = requestBuilder.build();
 
         request.getHeaders()
                 .add("Accept", "application/json")
