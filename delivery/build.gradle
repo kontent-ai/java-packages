@@ -27,7 +27,7 @@ plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
-group 'com.kenticocloud'
+group 'kentico.kontent'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -76,7 +76,7 @@ dependencies {
 
 if (isCI()) {
     processResources {
-        filesMatching('com/kenticocloud/delivery/build.properties') {
+        filesMatching('kentico/kontent/delivery/build.properties') {
             filter { String line ->
                 line.replace "0.0.0", project.version.toString()
             }
@@ -215,11 +215,11 @@ def customizePom(pom) {
         root.children().last() + {
             resolveStrategy = DELEGATE_FIRST
 
-            description 'Kentico Cloud Delivery Java SDK https://kenticocloud.com/'
+            description 'Kentico Cloud Delivery Java SDK https://kontent.ai/'
             name 'delivery'
             url 'https://github.com/Kentico/delivery-sdk-java'
             organization {
-                name 'com.kenticocloud'
+                name 'kentico.kontent'
                 url 'https://github.com/Kentico'
             }
             scm {
