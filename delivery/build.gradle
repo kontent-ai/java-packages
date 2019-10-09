@@ -27,7 +27,7 @@ plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
-group 'kentico.kontent'
+group 'com.github.kentico'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -219,7 +219,7 @@ def customizePom(pom) {
             name 'delivery'
             url 'https://github.com/Kentico/delivery-sdk-java'
             organization {
-                name 'kentico.kontent'
+                name 'com.github.kentico'
                 url 'https://github.com/Kentico'
             }
             scm {
