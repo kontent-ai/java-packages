@@ -20,16 +20,16 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.kenticocloud:delivery:2.0.2'
+    implementation 'com.github.kentico:delivery:3.0.0'
 }
 ```
 
 Or via your Maven POM:
 ```xml
 <dependency>
-    <groupId>com.kenticocloud</groupId>
+    <groupId>com.github.kentico</groupId>
     <artifactId>delivery</artifactId>
-    <version>2.0.2</version>
+    <version>3.0.0</version>
 </dependency>
 ```
 
