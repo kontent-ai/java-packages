@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.kentico:delivery:3.0.0'
+    implementation 'com.github.kentico:kontent-delivery:3.0.0'
 }
 ```
 
@@ -28,7 +28,7 @@ Or via your Maven POM:
 ```xml
 <dependency>
     <groupId>com.github.kentico</groupId>
-    <artifactId>delivery</artifactId>
+    <artifactId>kontent-delivery</artifactId>
     <version>3.0.0</version>
 </dependency>
 ```
