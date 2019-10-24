@@ -1,6 +1,6 @@
 # Kentico Kontent Delivery Java SDK
 
-[![Build Status](https://travis-ci.org/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.org/Kentico/kontent-delivery-sdk-java)
+[![Build Status](https://travis-ci.com/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.com/Kentico/kontent-delivery-sdk-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.github.kentico/delivery.svg)](http://javadoc.io/doc/com.github.kentico/delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Adelivery)
