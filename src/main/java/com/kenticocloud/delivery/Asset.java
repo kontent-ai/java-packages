@@ -46,12 +46,19 @@ public class Asset {
     @JsonProperty("url")
     String url;
 
+    @JsonProperty("width")
+    String width;
+
+    @JsonProperty("height")
+    String height;
+
     Asset() {
         //Default constructor
     }
 
     /**
      * File name of the asset
+     *
      * @return file name
      */
     public String getName() {
@@ -64,6 +71,7 @@ public class Asset {
 
     /**
      * MIME type of the asset
+     *
      * @return MIME type
      */
     public String getType() {
@@ -76,6 +84,7 @@ public class Asset {
 
     /**
      * Size of the asset in bytes
+     *
      * @return number of bytes
      */
     public Integer getSize() {
@@ -88,6 +97,7 @@ public class Asset {
 
     /**
      * Description of the asset
+     *
      * @return asset description
      */
     public String getDescription() {
@@ -100,6 +110,7 @@ public class Asset {
 
     /**
      * Absolute URL for the asset
+     *
      * @return URL for the asset, hosted by Kentico
      */
     public String getUrl() {
@@ -108,5 +119,21 @@ public class Asset {
 
     void setUrl(String url) {
         this.url = url;
+    }
+
+    public String getWidth() {
+        return width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
     }
 }
