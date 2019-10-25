@@ -2,14 +2,14 @@
 
 [![Build Status](https://travis-ci.com/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.com/Kentico/kontent-delivery-sdk-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Javadocs](http://javadoc.io/badge/com.github.kentico/delivery.svg)](http://javadoc.io/doc/com.github.kentico/delivery)
-[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Adelivery)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/delivery/)
+[![Javadocs](http://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](http://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 ## Summary
 
-The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from Kentico Kontent. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/github/kentico/).
+The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from Kentico Kontent. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/github/kentico/kontent-delivery/).
 
 You can add this to your Gradle project by the following:
 
@@ -44,7 +44,7 @@ To create an instance of the class, you need to provide a [project ID](https://d
 DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
 ```
 
-You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](https://github.com/Kentico/kontent-delivery-sdk-java/blob/master/delivery/src/main/java/kentico/kontent/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
+You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](https://github.com/Kentico/kontent-delivery-sdk-java/blob/master/kontent-delivery/src/main/java/kentico/kontent/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
 
 * `setPreviewApiKey(String)` – sets the Delivery Preview API key.
 * `setProductionApiKey(String)` - sets the Delivery Client key for secured access.
