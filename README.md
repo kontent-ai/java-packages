@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](http://javadoc.io/doc/com.github.kentico/kontent-delivery)
 [![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-3.0.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 ## Summary
