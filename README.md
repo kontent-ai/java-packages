@@ -1,15 +1,15 @@
-# Kentico Cloud Delivery Java SDK
+# Kentico Kontent Delivery Java SDK
 
 [![Build Status](https://travis-ci.com/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.com/Kentico/kontent-delivery-sdk-java)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Javadocs](http://javadoc.io/badge/com.kenticocloud/delivery.svg)](http://javadoc.io/doc/com.kenticocloud/delivery)
-[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Adelivery)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-2.0.2-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/kenticocloud/delivery/)
-[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-cloud)
+[![Javadocs](http://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](http://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
+[![MavenCentral](http://img.shields.io/badge/Maven_Central-3.0.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 ## Summary
 
-The Kentico Cloud Delivery Java SDK is a client library used for retrieving content from Kentico Cloud. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/kenticocloud/).
+The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from Kentico Kontent. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/github/kentico/kontent-delivery/).
 
 You can add this to your Gradle project by the following:
 
@@ -35,22 +35,22 @@ Or via your Maven POM:
 
 ## Using the DeliveryClient
 
-The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Cloud projects.
+The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Kontent projects.
 
-To create an instance of the class, you need to provide a [project ID](https://developer.kenticocloud.com/v2/docs/getting-content#section-getting-content-items).
+To create an instance of the class, you need to provide a [project ID](https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content#a-getting-content-items).
 
 ```java
 // Initializes an instance of the DeliveryClient client
 DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
 ```
 
-You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](https://github.com/Kentico/delivery-sdk-java/blob/master/src/main/java/com/kenticocloud/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
+You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](https://github.com/Kentico/kontent-delivery-sdk-java/blob/master/kontent-delivery/src/main/java/kentico/kontent/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
 
 * `setPreviewApiKey(String)` – sets the Delivery Preview API key.
 * `setProductionApiKey(String)` - sets the Delivery Client key for secured access.
 * `setProjectId(String)` – sets the project identifier.
 * `setUsePreviewApi(boolean)` – determines whether to use the Delivery Preview API.
-* `setWaitForLoadingNewContent(boolean)` – makes the client instance wait while fetching updated content, useful when acting upon [webhook calls](https://developer.kenticocloud.com/docs/webhooks#section-requesting-new-content).
+* `setWaitForLoadingNewContent(boolean)` – makes the client instance wait while fetching updated content, useful when acting upon [webhook calls](https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates#a-getting-the-latest-content).
 
 The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
 
@@ -65,7 +65,7 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 
 ### Filtering retrieved data
 
-The SDK supports full scale of the API querying and filtering capabilities as described in the [API reference](https://developer.kenticocloud.com/reference#content-filtering).
+The SDK supports full scale of the API querying and filtering capabilities as described in the [API reference](https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content).
 
 ```java
 // Retrieves a list of the specified elements from the first 10 content items of
@@ -83,7 +83,7 @@ ContentItemsListingResponse response = client.getItems(
 
 ### Previewing unpublished content
 
-To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key. Each Kentico Cloud project has its own Preview API key. 
+To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key. Each Kentico Kontent project has its own Preview API key. 
 
 ```Java
 // Note: Within a single project, we recommend that you work with only
@@ -91,7 +91,7 @@ To retrieve unpublished content, you need to create a `DeliveryClient` with both
 DeliveryClient client = new DeliveryClient("YOUR_PROJECT_ID", "YOUR_PREVIEW_API_KEY");
 ```
 
-For more details, see [Previewing unpublished content using the Delivery API](https://developer.kenticocloud.com/docs/preview-content-via-api).
+For more details, see [Previewing unpublished content using the Delivery API](https://docs.kontent.ai/tutorials/write-and-collaborate/preview-content/previewing-unpublished-content).
 
 ## Basic querying
 
@@ -107,7 +107,7 @@ ContentItemsListingResponse listingResponse = client.getItems();
 
 ## Response structure
 
-For full description of single and multiple content item JSON response formats, see our [API reference](https://developer.kenticocloud.com/reference#response-structure).
+For full description of single and multiple content item JSON response formats, see our [API reference](https://docs.kontent.ai/reference/delivery-api#section/Content-item-object).
 
 ### Single content item response
 
@@ -160,7 +160,7 @@ For text elements, you can use the `getString` method.
 articleItem.getString("body_copy")
 ```
 
-The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/delivery-sdk-java/wiki/Resolving-links-to-content-items) for more details.
+The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/kontent-delivery-sdk-java/wiki/Resolving-links-to-content-items) for more details.
 
 ### Asset
 
@@ -208,7 +208,7 @@ articleItem.getLinkedItems("related_articles")
 
 ## Further information
 
-For more developer resources, visit the Kentico Cloud Developer Hub at <https://developer.kenticocloud.com>.
+For more developer resources, visit the Kentico Kontent Docs at <https://docs.kontent.ai>.
 
 ### Building the sources
 
@@ -227,7 +227,7 @@ Optional:
 
 ## Feedback & Contributing
 
-Check out the [contributing](https://github.com/Kentico/delivery-sdk-net/blob/master/CONTRIBUTING.md) page to see the best places to file issues, start discussions, and begin contributing.
+Check out the [contributing](https://github.com/Kentico/kontent-delivery-sdk-net/blob/master/CONTRIBUTING.md) page to see the best places to file issues, start discussions, and begin contributing.
 
 ### Wall of Fame
 We would like to express our thanks to the following people who contributed and made the project possible:
@@ -236,6 +236,6 @@ We would like to express our thanks to the following people who contributed and 
 - [Tommaso Garuglieri](https://github.com/GaruGaru)
 - [Gabriel Cunha](https://github.com/cunhazera)
 
-Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/delivery-sdk-java/issues) and send us a pull request!
+Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/kontent-delivery-sdk-java/issues) and send us a pull request!
 
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/delivery-sdk-java?pixel)
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-delivery-sdk-java?pixel)
