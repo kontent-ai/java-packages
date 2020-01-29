@@ -82,4 +82,22 @@ public class Asset {
      */
     @JsonProperty("url")
     String url;
+
+    /**
+     * Height of the asset in bytes.
+     *
+     * @param height  New value for the height of this asset in pixel.
+     * @return      The height of this asset in pixel.
+     */
+    @JsonProperty("height")
+    Integer height;
+
+    /**
+     * Width of the asset in bytes.
+     *
+     * @param width  New value for the width of this asset in pixel.
+     * @return      The width of this asset in pixel.
+     */
+    @JsonProperty("width")
+    Integer width;
 }
