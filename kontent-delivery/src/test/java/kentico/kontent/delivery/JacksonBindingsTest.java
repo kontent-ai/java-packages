@@ -314,6 +314,8 @@ public class JacksonBindingsTest {
                 .size(asset.getSize())
                 .url(asset.getUrl())
                 .type(asset.getType())
+                .height(asset.getHeight())
+                .width(asset.getWidth())
                 .build();
         Assert.assertEquals(asset, asset2);
         Assert.assertEquals(asset.hashCode(), asset2.hashCode());
