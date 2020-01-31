@@ -121,6 +121,12 @@ public class Asset {
         this.url = url;
     }
 
+    /**
+     * Width of the asset
+     *
+     * @return Width of the asset
+     */
+
     public String getWidth() {
         return width;
     }
@@ -128,6 +134,12 @@ public class Asset {
     public void setWidth(String width) {
         this.width = width;
     }
+
+    /**
+     * Height of the asset
+     *
+     * @return Height of the asset
+     */
 
     public String getHeight() {
         return height;
