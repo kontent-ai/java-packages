@@ -30,7 +30,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Object model for Asset elements.
  *
  * @see AssetsElement
- * @see <a href="https://developer.kenticocloud.com/v2/reference#section-asset">KenticoCloud API reference - Asset</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Asset-element">KenticoKontent API reference - Asset</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor

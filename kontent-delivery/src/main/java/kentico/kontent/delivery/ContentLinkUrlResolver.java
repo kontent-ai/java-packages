@@ -40,10 +40,10 @@ package kentico.kontent.delivery;
  * deliveryClient.setContentLinkUrlResolver(link -> String.format("/%s/%s", link.getType(), link.getUrlSlug()));
  * }</pre>
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#section-link-to-a-content-item">
- *      KenticoCloud API reference - Link to a content item</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#section-rich-text-links">
- *      KenticoCloud API reference - Rich text links</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+ *      KenticoKontent API reference - Link to a content item</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Rich-text-element/links-single-object">
+ *      KenticoKontent API reference - Rich text links</a>
  * @see Link
  * @see RichTextElementConverter
  * @see RichTextElement

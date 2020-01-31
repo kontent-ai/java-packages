@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package com.kenticocloud.delivery;
+package kentico.kontent.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

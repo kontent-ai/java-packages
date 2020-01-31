@@ -5,7 +5,7 @@
     "14mio": {
       "image_id": "14mio",
       "description": "Roasting coffee beans",
-      "url": "https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg"
+      "url": "https://assets-us-01.kc-usercontent.com/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg"
     }
   },
   "links": {
@@ -18,5 +18,5 @@
   "modular_content": [
     "coffee_processing_techniques"
   ],
-  "value": "<p>We operate our own roasteries, one on every continent we cover, from where we distribute right to the shops. This allows you to experience every cup as if you were right at the very farm it originated from. To achieve this, we use a refurbished 1920s Probat coffee roasters.</p>\n<figure data-image-id=\"14mio\"><img src=\"https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg\" alt=\"Roasting coffee beans\" data-image-id=\"14mio\"></figure><p>We know that roasting is something you must keep on constantly perfecting. Each coffee requires a different roast to get the aroma and taste just right. That’s why our experts fine tune the way we <a data-item-id=\"f4b3fc05-e988-4dae-9ac1-a94aba566474\" href=\"\">roast coffees</a> every day. It’s a constant struggle.</p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"coffee_processing_techniques\"></object>"
+  "value": "<p>We operate our own roasteries, one on every continent we cover, from where we distribute right to the shops. This allows you to experience every cup as if you were right at the very farm it originated from. To achieve this, we use a refurbished 1920s Probat coffee roasters.</p>\n<figure data-image-id=\"14mio\"><img src=\"https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg\" alt=\"Roasting coffee beans\" data-image-id=\"14mio\"></figure><p>We know that roasting is something you must keep on constantly perfecting. Each coffee requires a different roast to get the aroma and taste just right. That’s why our experts fine tune the way we <a data-item-id=\"f4b3fc05-e988-4dae-9ac1-a94aba566474\" href=\"\">roast coffees</a> every day. It’s a constant struggle.</p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"coffee_processing_techniques\"></object>"
 }

@@ -63,7 +63,7 @@ import java.util.Locale;
  * {@code .filterEquals("system.type", your_mapped_type} will automatically be added prior to the request if
  * 'system_type' is not part of any other parameter in the request already.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#content-filtering">Filtering Operators</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content">Filtering Operators</a>
  * <p>
  * When retrieving a list of content items from your project with {@link DeliveryClient#getItems(List)} and/or
  * {@link DeliveryClient#getItems(Class, List)}, you can filter large sets of content items by building query operators
@@ -72,7 +72,7 @@ import java.util.Locale;
  * <p>
  * If you want to limit the listing response only to certain elements, see {@link #projection(String...)}.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-by-system-values">Filtering by system
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-by-system-values">Filtering by system
  * values</a>
  * <p>
  * To filter by system attribute values, you need to use a query attribute in the {@code 'system.<attribute_name>'}
@@ -80,7 +80,7 @@ import java.util.Locale;
  * example, to retrieve only content items based on the Article content type, you can use
  * {@code .filterEquals("system.type", "article"} as a query operator.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-by-element-values">Filtering by element
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-by-element-values">Filtering by element
  * values</a>
  * <p>
  * To filter by content element values, you need to use a query attribute in the
@@ -88,7 +88,7 @@ import java.util.Locale;
  * {@link NumberElement} named 'Price' has a value of 16, you can use {@code .filterEquals("elements.price", "13"} as
  * a query operator.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">Filtering operators</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">Filtering operators</a>
  * <p>
  * You can use the following filtering operators both with the system attributes and element values:
  * <ul>
@@ -107,16 +107,16 @@ import java.util.Locale;
  *     <li>{@link #filterAll(String, Collection)}</li>
  * </ul>
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">Arrays vs. simple types</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">Arrays vs. simple types</a>
  * <p>
  * You can use the {@link #filterContains(String, String)}, {@link #filterAny(String, String...)},
  * {@link #filterAny(String, Collection)}, {@link #filterAny(String, String...)}, and
- * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kentico Cloud
+ * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kentico Kontent
  * include the sitemap locations system object ({@link System#getSitemapLocations()}), and the {@link AssetsElement},
  * {@link LinkedItem}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
  * other system attributes and content type elements are simple types, such as strings or numbers.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">Comparing values</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">Comparing values</a>
  * <p>
  * The filtering operators {@link #filterLessThan(String, String)}, {@link #filterLessThanEquals(String, String)},
  * {@link #filterGreaterThan(String, String)}, {@link #filterGreaterThanEquals(String, String)}, and
@@ -128,25 +128,7 @@ import java.util.Locale;
  * example, to retrieve content items modified during February and March you'd need to use a query such as
  * {@code .filterRange("system.last_modified", "2018-02-01", "2018-03-31")}, specifying both the start and end dates.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">Ordering operators</a>
- * <p>
- * Sort the content in a listing response.
- * <p>
- * You can sort the {@link ContentItemsListingResponse} by using the order query operators {@link #orderByAsc(String)}
- * and {@link #orderByDesc(String)}. As with filtering, you can use both the 'system' and 'elements' attributes to sort
- * data.
- * <p>
- * To sort content items in the ascending order, add the {@code .orderByAsc("your_attribute")} query operator.
- * Similarly, to sort in the descending order, you can use the {@code .orderByDesc("your_attribute")} operator.
- * <p>
- * Examples:
- * <ul>
- *     <li>Sort by date - {@code .orderByAsc("system.last_modified")}</li>
- *     <li>Sort by content item name - {@code .orderByAsc("system.name")}</li>
- *     <li>Sort by element value - {@code .orderByDesc("your_element_codename"}</li>
- * </ul>
- * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">Paging</a>
+ * Paging
  * You can get only a small subset of a large collection of content items with the {@link #page(Integer, Integer)}
  * operator.  The first argument is the number of pages to skip, with the second being the page size.  Using these
  * argument, you can display a specific page of results and iterate over a list of content items or types.
@@ -156,14 +138,14 @@ import java.util.Locale;
  * <p>
  * For details about the pagination data in each listing response, see the {@link Pagination} object.
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#projection">Projection</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#tag/Projection">Projection</a>
  * <p>
  * Choose which parts of content to retrieve with the {@link #projection(String...)} operator.
  * <p>
  * For example, to retrieve only the elements with codenames 'title', 'summary', and 'related_articles':
  * {@code .projection("title", "summary", "related_articles")}
  * <p>
- * <a href="https://developer.kenticocloud.com/v2/reference#linked-items">Linked items</a>
+ * <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">Linked items</a>
  * <p>
  * Content items might reference linked items using the {@link LinkedItem}. Recursively, these
  * linked items can reference another {@link LinkedItem} element. By default, only one level of
@@ -176,8 +158,8 @@ import java.util.Locale;
  * <p>
  * Note: When retrieving content items, linked items cannot be filtered.
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#listing-response">
- *      KenticoCloud API reference - Listing response</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
+ *      KenticoKontent API reference - Listing response</a>
  */
 public class DeliveryParameterBuilder {
 
@@ -218,7 +200,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterEquals(String attribute, String value) {
@@ -234,9 +216,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThan(String attribute, String value) {
@@ -252,9 +234,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThanEquals(String attribute, String value) {
@@ -270,9 +252,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThan(String attribute, String value) {
@@ -288,9 +270,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThanEquals(String attribute, String value) {
@@ -307,9 +289,9 @@ public class DeliveryParameterBuilder {
      * @param lower     The lower bound value.
      * @param upper     The upper bound value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-comparing-values">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
      *                  More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterRange(String attribute, String lower, String upper) {
@@ -327,7 +309,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(String attribute, String... values) {
@@ -343,7 +325,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
@@ -356,9 +338,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param value     The value.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterContains(String attribute, String value) {
@@ -374,9 +356,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(String attribute, String... values) {
@@ -392,9 +374,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(String attribute, Collection<String> values) {
@@ -407,9 +389,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(String attribute, String... values) {
@@ -425,9 +407,9 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @param values    The values.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-filtering-operators">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *                  More in Filtering operators.</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#section-arrays-vs-simple-types">
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *                  More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(String attribute, Collection<String> values) {
@@ -440,7 +422,7 @@ public class DeliveryParameterBuilder {
      *
      * @param attribute The attribute to sort on.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">
+     * @see             <a href="https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
      *                  More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByAsc(String attribute) {
@@ -456,7 +438,7 @@ public class DeliveryParameterBuilder {
      *
      * @param attribute The attribute to sort on.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#content-ordering">
+     * @see             <a href="https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
      *                  More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByDesc(String attribute) {
@@ -477,7 +459,7 @@ public class DeliveryParameterBuilder {
      * @return      This DeliveryParameterBuilder with the added operator.
      * @see         Pagination
      * @see         Page
-     * @see         <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">More on Paging</a>
+     * @see         <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">More on Paging</a>
      */
     public DeliveryParameterBuilder page(Integer skip, Integer limit) {
         if (skip != null) {
@@ -498,7 +480,7 @@ public class DeliveryParameterBuilder {
      *
      * @param elements  The elements to retrieve.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/reference#projection">More on Projection</a>
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Projection">More on Projection</a>
      */
     public DeliveryParameterBuilder projection(String... elements) {
         if (elements != null) {
@@ -512,7 +494,7 @@ public class DeliveryParameterBuilder {
      *
      * @param depth The number of levels of depth to return.
      * @return      This DeliveryParameterBuilder with the added operator.
-     * @see         <a href="https://developer.kenticocloud.com/v2/reference#section-linked-items">
+     * @see         <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
      *              More on Linked items</a>
      */
     public DeliveryParameterBuilder linkedItemsDepth(Integer depth) {
@@ -526,7 +508,7 @@ public class DeliveryParameterBuilder {
      * Excludes all linked items.  Analogous to {@code .linkedItemsDepth(0)}
      *
      * @return  This DeliveryParameterBuilder with the added operator.
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">More on Linked items</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">More on Linked items</a>
      */
     public DeliveryParameterBuilder excludeLinkedItems() {
         nameValuePairs.add(new NameValuePair(DEPTH, "0"));
@@ -540,8 +522,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization">More on Localization</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization#section-language-fallbacks">
+     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent">More on Localization</a>
+     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(String language) {
@@ -558,8 +540,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization">More on Localization</a>
-     * @see             <a href="https://developer.kenticocloud.com/v2/docs/localization#section-language-fallbacks">
+     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent">More on Localization</a>
+     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(Locale language) {

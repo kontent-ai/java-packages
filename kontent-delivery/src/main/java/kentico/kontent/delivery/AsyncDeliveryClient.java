@@ -131,7 +131,7 @@ public class AsyncDeliveryClient implements Closeable {
             throw new IllegalArgumentException("The Delivery options object is not specified.");
         }
         if (deliveryOptions.getProjectId() == null || deliveryOptions.getProjectId().isEmpty()) {
-            throw new IllegalArgumentException("Kentico Cloud project identifier is not specified.");
+            throw new IllegalArgumentException("Kentico Kontent project identifier is not specified.");
         }
         try {
             UUID.fromString(deliveryOptions.getProjectId());

@@ -515,7 +515,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         final SimpleInMemoryCacheManager testCache = new SimpleInMemoryCacheManager();
         client.setCacheManager(testCache);
 
-        testCache.put("https://deliver.kenticocloud.com/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", jsonNode, null);
+        testCache.put("https://deliver.kontent.ai/02a70003-e864-464e-b62c-e0ede97deb8c/items/on_roasts", jsonNode, null);
 
         ContentItemResponse item = client.getItem("on_roasts");
         Assert.assertNotNull(item);
@@ -1323,7 +1323,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to null Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kentico Cloud project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kentico Kontent project identifier is not specified.", e.getMessage());
         }
     }
 
@@ -1335,7 +1335,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         try (DeliveryClient client = new DeliveryClient(deliveryOptions)) {
             Assert.fail("Expected IllegalArgumentException due to empty Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kentico Cloud project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kentico Kontent project identifier is not specified.", e.getMessage());
         }
     }
 

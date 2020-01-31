@@ -34,10 +34,10 @@ import java.util.Map;
  * Content item listing response from an invocation of {@link DeliveryClient#getItem(String)}, or
  * {@link DeliveryClient#getItem(String, List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
- *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
- *      KenticoCloud API reference - View a content item</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ *      KenticoKontent API reference - Content item object</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
+ *      KenticoKontent API reference - View a content item</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
  * @see DeliveryClient#getItem(String, List)
@@ -53,10 +53,10 @@ public class ContentItemResponse implements LinkedItemProvider {
     /**
      * The {@link ContentItem} returned by this ContentItemResponse.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
-     *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
-     *          KenticoCloud API reference - View a content item</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+     *          KenticoKontent API reference - Content item object</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
+     *          KenticoKontent API reference - View a content item</a>
      * @return  The {@link ContentItem} of this ContentItemResponse.
      */
     @JsonProperty("item")
@@ -65,12 +65,12 @@ public class ContentItemResponse implements LinkedItemProvider {
     /**
      * A map of content items used in linked item and Rich text elements.
      *
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
-     *          KenticoCloud API reference - Linked items</a>
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
-     *          KenticoCloud API reference - Content item object</a>
-     * @see     <a href="https://developer.kenticocloud.com/v2/reference#view-a-content-item">
-     *          KenticoCloud API reference - View a content item</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+     *          KenticoKontent API reference - Linked items</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+     *          KenticoKontent API reference - Content item object</a>
+     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
+     *          KenticoKontent API reference - View a content item</a>
      * @return  The linked {@link ContentItem}s referenced in this response.
      */
     @JsonProperty("modular_content")
