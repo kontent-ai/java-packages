@@ -1,6 +1,6 @@
 .gradle
-/build/
-/out/
+build/
+out/
 signing.gpg
 deploy_key
 deploy_key.pub
@@ -37,9 +37,21 @@ hs_err_pid*
 .idea/gradle.xml
 .idea/workspace.xml
 .idea/jsLibraryMappings.xml
+.idea/usage.statistics.xml
 .idea/tasks.xml
 .idea/sonarlint/
 .idea/dataSources.*
 .idea/dataSources/
 .idea/dictionaries/*
+!.idea/dictionaries/kentico.xml
 .idea/shelf/
+.idea/modules.xml
+.idea/uiDesigner.xml
+*.iml
+
+# Visual Studio Code #
+/bin/
+.classpath
+.project
+/.settings
+/.vscode
