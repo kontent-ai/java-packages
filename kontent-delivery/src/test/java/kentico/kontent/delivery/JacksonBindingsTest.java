@@ -74,7 +74,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(3, pagination.getLimit().intValue());
         Assert.assertEquals(3, pagination.getCount().intValue());
         Assert.assertEquals(
-                "https://deliver.kenticocloud.com/975bf280-fd91-488c-994c-2f04416e5ee3/items?system.type=article&elements=title%2csummary%2cpost_date%2cteaser_image&order=elements.post_date%5bdesc%5d&depth=0&limit=3&skip=3",
+                "https://deliver.kontent.ai/975bf280-fd91-488c-994c-2f04416e5ee3/items?system.type=article&elements=title%2csummary%2cpost_date%2cteaser_image&order=elements.post_date%5bdesc%5d&depth=0&limit=3&skip=3",
                 pagination.getNextPage());
     }
 
@@ -224,7 +224,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(richTextElement.hashCode(), richTextElement2.hashCode());
         Assert.assertEquals("Description", richTextElement.getName());
         Assert.assertEquals(
-                "<p>We operate our own roasteries, one on every continent we cover, from where we distribute right to the shops. This allows you to experience every cup as if you were right at the very farm it originated from. To achieve this, we use a refurbished 1920s Probat coffee roasters.</p>\n<figure data-image-id=\"14mio\"><img src=\"https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg\" alt=\"Roasting coffee beans\" data-image-id=\"14mio\"></figure><p>We know that roasting is something you must keep on constantly perfecting. Each coffee requires a different roast to get the aroma and taste just right. That’s why our experts fine tune the way we <a data-item-id=\"f4b3fc05-e988-4dae-9ac1-a94aba566474\" href=\"\">roast coffees</a> every day. It’s a constant struggle.</p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"coffee_processing_techniques\"></object>",
+                "<p>We operate our own roasteries, one on every continent we cover, from where we distribute right to the shops. This allows you to experience every cup as if you were right at the very farm it originated from. To achieve this, we use a refurbished 1920s Probat coffee roasters.</p>\n<figure data-image-id=\"14mio\"><img src=\"https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg\" alt=\"Roasting coffee beans\" data-image-id=\"14mio\"></figure><p>We know that roasting is something you must keep on constantly perfecting. Each coffee requires a different roast to get the aroma and taste just right. That's why our experts fine tune the way we <a data-item-id=\"f4b3fc05-e988-4dae-9ac1-a94aba566474\" href=\"\">roast coffees</a> every day. It's a constant struggle.</p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"coffee_processing_techniques\"></object>",
                 richTextElement.getValue());
         Assert.assertEquals(1, richTextElement.getImages().size());
         Image image = richTextElement.getImages().get("14mio");
@@ -232,7 +232,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals("14mio", image.getImageId());
         Assert.assertEquals("Roasting coffee beans", image.getDescription());
         Assert.assertEquals(
-                "https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg",
+                "https://assets-us-01.kc-usercontent.com/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/237362b4-5f2b-480e-a1d3-0ad5a6d5f8bd/roaster.jpg",
                 image.getUrl());
         Assert.assertEquals(1, richTextElement.getLinks().size());
         Link link = richTextElement.getLinks().get("f4b3fc05-e988-4dae-9ac1-a94aba566474");
@@ -324,7 +324,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(90895, asset.getSize().longValue());
         Assert.assertNull(asset.getDescription());
         Assert.assertEquals(
-                "https://assets.kenticocloud.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg",
+                "https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg",
                 asset.getUrl());
     }
 

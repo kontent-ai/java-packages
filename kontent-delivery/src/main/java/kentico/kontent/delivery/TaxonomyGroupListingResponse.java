@@ -32,10 +32,10 @@ import java.util.List;
  * Content type listing response from an invocation of {@link DeliveryClient#getTypes()}, or
  * {@link DeliveryClient#getTypes(List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#list-taxonomy-groups">
- *      KenticoCloud API reference - List taxonomy groups</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#taxonomy-group-object">
- *      KenticoCloud API reference - Taxonomy group model</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-taxonomy-groups">
+ *      KenticoKontent API reference - List taxonomy groups</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
+ *      KenticoKontent API reference - Taxonomy group model</a>
  * @see ContentType
  * @see DeliveryClient#getTypes()
  * @see DeliveryClient#getTypes(List)

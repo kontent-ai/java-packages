@@ -34,8 +34,8 @@ import java.util.Map;
 /**
  * Object model description of a single content item object.
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
- *      KenticoCloud API reference - Content item object</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ *      KenticoKontent API reference - Content item object</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor
@@ -57,7 +57,7 @@ public class ContentItem {
     /**
      * Content type elements in the content item.  These are keyed by the codename of the element.
      * <p>
-     * Note: The order of the {@link Element} objects might not match the order in the KenticoCloud UI.
+     * Note: The order of the {@link Element} objects might not match the order in the KenticoKontent UI.
      *
      * @return Map of this ContentItem's {@link Element} objects.
      */
@@ -73,7 +73,7 @@ public class ContentItem {
     /**
      * Content type elements in the content item.  These are keyed by the codename of the element.
      * <p>
-     * Note: The order of the {@link Element} objects might not match the order in the KenticoCloud UI.
+     * Note: The order of the {@link Element} objects might not match the order in the KenticoKontent UI.
      *
      * @param elements New value for this ContentItem's {@link Element} objects.
      */

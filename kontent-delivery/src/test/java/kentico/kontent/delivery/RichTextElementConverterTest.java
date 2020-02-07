@@ -95,7 +95,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-rel=\"link\" data-codename=\"donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-rel=\"link\" data-codename=\"donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>Please donate with us.</p>",
@@ -140,7 +140,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-codename=\"donate_with_us\" new-value=\"unexpected\" data-new=\"unexpected\" data-type=\"item\" data-rel=\"link\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-codename=\"donate_with_us\" new-value=\"unexpected\" data-new=\"unexpected\" data-type=\"item\" data-rel=\"link\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>Please donate with us.</p>",
@@ -185,7 +185,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"customer_winner\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"customer_winner\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>You are our 1 millionth customer. Click here to claim your $1,000,000!</p>",
@@ -217,7 +217,7 @@ public class RichTextElementConverterTest {
             parentSystem.setType("item");
             parentDonateWithUs.setSystem(parentSystem);
             RichTextElement parentTextElement = new RichTextElement();
-            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            parentTextElement.setValue("<object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
@@ -244,7 +244,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p>Please donate with us.</p>",
@@ -276,7 +276,7 @@ public class RichTextElementConverterTest {
             parentSystem.setType("item");
             parentDonateWithUs.setSystem(parentSystem);
             RichTextElement parentTextElement = new RichTextElement();
-            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            parentTextElement.setValue("<object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
@@ -308,7 +308,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p><p>Each AeroPress comes with a <a href=\"/test me/&#34;&#60;&#62;&#38;&#128;\" data-item-id=\"65832c4e-8e9c-445f-a001-b9528d13dac8\">pack of filters</a> included in the <a href=\"/404\" data-item-id=\"not-found\">box</a>.</p></p>",
@@ -338,10 +338,10 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>",
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>",
                 converted.getValue());
     }
 
@@ -399,7 +399,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p><custom>Please donate with us.</custom></p>",
@@ -433,7 +433,7 @@ public class RichTextElementConverterTest {
             parentSystem.setType("item");
             parentDonateWithUs.setSystem(parentSystem);
             RichTextElement parentTextElement = new RichTextElement();
-            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            parentTextElement.setValue("<object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
@@ -460,7 +460,7 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
                 "<p><custom><custom>Please donate with us.</custom></custom></p>",
@@ -494,7 +494,7 @@ public class RichTextElementConverterTest {
             parentSystem.setType("item");
             parentDonateWithUs.setSystem(parentSystem);
             RichTextElement parentTextElement = new RichTextElement();
-            parentTextElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
+            parentTextElement.setValue("<object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"donate_with_us\"></object>");
             HashMap<String, Element> parentElements = new HashMap<>();
             parentElements.put("message_text", parentTextElement);
             parentDonateWithUs.setElements(parentElements);
@@ -506,7 +506,7 @@ public class RichTextElementConverterTest {
             system.setType("item");
             donateWithUs.setSystem(system);
             TextElement textElement = new TextElement();
-            textElement.setValue("<object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object>");
+            textElement.setValue("<object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object>");
             HashMap<String, Element> elements = new HashMap<>();
             elements.put("message_text", textElement);
             donateWithUs.setElements(elements);
@@ -521,10 +521,10 @@ public class RichTextElementConverterTest {
         contentItem.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter);
         original.parent = contentItem;
         original.setValue(
-                "<p><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
+                "<p><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></p>");
         RichTextElement converted = converter.convert(original);
         Assert.assertEquals(
-                "<p><custom><custom><object type=\"application/kenticocloud\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></custom></custom></p>",
+                "<p><custom><custom><object type=\"application/kenticokontent\" data-type=\"item\" data-codename=\"parent_donate_with_us\"></object></custom></custom></p>",
                 converted.getValue());
     }
 }

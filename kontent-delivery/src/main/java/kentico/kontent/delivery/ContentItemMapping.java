@@ -86,12 +86,10 @@ import java.lang.annotation.Target;
  * @see ElementMapping
  * @see LinkedItem
  * @see StronglyTypedContentItemConverter
- * @see <a href="https://developer.kenticocloud.com/v2/reference#content-item-object">
- *      KenticoCloud API reference - Content item object</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#linked-items">
- *      KenticoCloud API reference - Linked items</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#section-linked-items">
- *      KenticoCloud API reference - More on Linked items</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ *      KenticoKontent API reference - Content item object</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+ *      KenticoKontent API reference - Linked items</a>
  */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

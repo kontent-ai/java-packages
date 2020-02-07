@@ -215,7 +215,7 @@ def customizePom(pom) {
         root.children().last() + {
             resolveStrategy = DELEGATE_FIRST
 
-            description 'Kentico Cloud Delivery Java SDK https://kontent.ai/'
+            description 'Kentico Kontent Delivery Java SDK https://kontent.ai/'
             name 'delivery'
             url 'https://github.com/Kentico/delivery-sdk-java'
             organization {

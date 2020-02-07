@@ -32,10 +32,10 @@ import java.util.List;
  * Content type listing response from an invocation of {@link DeliveryClient#getTypes()}, or
  * {@link DeliveryClient#getTypes(List)}.
  *
- * @see <a href="https://developer.kenticocloud.com/v2/reference#list-content-types">
- *      KenticoCloud API reference - List content types</a>
- * @see <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
- *      KenticoCloud API reference - Content type object</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-types">
+ *      KenticoKontent API reference - List content types</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
+ *      KenticoKontent API reference - Content type object</a>
  * @see ContentType
  * @see DeliveryClient#getTypes()
  * @see DeliveryClient#getTypes(List)
@@ -49,10 +49,10 @@ public class ContentTypesListingResponse {
     /**
      * The {@link ContentType}s returned by this ContentTypesListingResponse.
      *
-     * @see         <a href="https://developer.kenticocloud.com/v2/reference#list-content-types">
-     *              KenticoCloud API reference - List content types</a>
-     * @see         <a href="https://developer.kenticocloud.com/v2/reference#content-type-object">
-     *              KenticoCloud API reference - Content type object</a>
+     * @see         <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-types">
+     *              KenticoKontent API reference - List content types</a>
+     * @see         <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
+     *              KenticoKontent API reference - Content type object</a>
      * @see         ContentType
      * @param types New value for the {@link ContentType}s of this ContentTypesListingResponse.
      * @return      The {@link ContentType}s of this ContentTypesListingResponse.
@@ -63,10 +63,10 @@ public class ContentTypesListingResponse {
     /**
      * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
      *
-     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#listing-response-paging">
-     *                      KenticoCloud API reference - Listing response paging</a>
-     * @see                 <a href="https://developer.kenticocloud.com/v2/reference#section-pagination-object">
-     *                      KenticoCloud API reference - Pagination object</a>
+     * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
+     *                      KenticoKontent API reference - Listing response paging</a>
+     * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
+     *                      KenticoKontent API reference - Pagination object</a>
      * @param pagination    New value for the {@link Pagination} of this ContentTypesListingResponse
      * @return              The {@link Pagination} for this ContentTypesListingResponse identifying the current page.
      */
