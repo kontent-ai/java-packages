@@ -35,6 +35,7 @@ import org.apache.commons.beanutils.PropertyUtilsBean;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -184,7 +185,7 @@ public class StronglyTypedContentItemConverter {
                 item.getElements().get(contentItemMapping.value()) instanceof LinkedItem) {
             LinkedItem linkedItemElement =
                     (LinkedItem) item.getElements().get(contentItemMapping.value());
-            Map<String, ContentItem> referencedLinkedItems = new HashMap<>();
+            Map<String, ContentItem> referencedLinkedItems = new LinkedHashMap<>();
             for (String codename : linkedItemElement.getValue()) {
                 referencedLinkedItems.put(codename, linkedItems.get(codename));
             }
