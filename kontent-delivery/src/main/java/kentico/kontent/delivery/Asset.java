@@ -29,6 +29,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Object model for Asset elements
  */
+@lombok.Data
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
 public class Asset {
 
     @JsonProperty("name")
@@ -52,9 +56,6 @@ public class Asset {
     @JsonProperty("height")
     String height;
 
-    Asset() {
-        //Default constructor
-    }
 
     /**
      * File name of the asset
