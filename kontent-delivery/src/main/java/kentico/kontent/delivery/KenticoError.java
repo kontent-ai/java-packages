@@ -46,7 +46,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class KenticoError {
+public class KenticoError implements java.io.Serializable {
 
     /**
      * Returns the error message provided by Kentico detailing the error.

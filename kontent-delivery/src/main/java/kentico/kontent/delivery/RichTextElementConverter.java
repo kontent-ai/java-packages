@@ -258,6 +258,7 @@ public class RichTextElementConverter {
                         break;
                     case "data-codename":
                         builder.codename(value);
+                        break;
                     default:
                         break;
                 }
