@@ -68,7 +68,7 @@ public class RichTextElementConverter {
     */
     private Pattern linkPattern = Pattern.compile("<a[^>]+?data-item-id=\"(?<id>[^\"]+)\"[^>]*>");
 
-    private Pattern linkedItemPattern = Pattern.compile("<object type=\"application/kenticokontent\" " +
+    private Pattern linkedItemPattern = Pattern.compile("<object type=\"application/kenticocloud\" " +
             "(?<attrs>[^>]+)></object>");
 
     public RichTextElementConverter(
