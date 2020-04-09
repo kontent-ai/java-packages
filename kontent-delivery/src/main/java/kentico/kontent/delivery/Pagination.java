@@ -57,22 +57,22 @@ public class Pagination {
     Integer limit;
 
     /**
-     * Number of total items matching the search criteria
-     *
-     * @param count Sets total_count on this.
-     * @return      Number of total items.
-     */
-    @JsonProperty("count")
-    Integer count;
-
-    /**
      * Number of retrieved content items
      * <p>
      * If the limit and skip query parameters ({@link DeliveryParameterBuilder#page(Integer, Integer)}) aren't set, the
      * count attribute will contain the total number of content items matching the specified filtering parameters.
      *
-     * @param totalCount Sets count on this.
+     * @param count Sets count on this.
      * @return      Number of retrieved content items.
+     */
+    @JsonProperty("count")
+    Integer count;
+
+    /**
+     * Number of total items matching the search criteria
+     *
+     * @param totalCount    Sets total_count on this.
+     * @return              Number of total content items matching the search criteria.
      */
     @JsonProperty("total_count")
     Integer totalCount;
