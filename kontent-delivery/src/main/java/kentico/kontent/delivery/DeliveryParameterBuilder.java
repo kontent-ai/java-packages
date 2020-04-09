@@ -169,6 +169,7 @@ public class DeliveryParameterBuilder {
     static final String DEPTH = "depth";
     static final String SKIP = "skip";
     static final String LIMIT = "limit";
+    static final String INCLUDE_TOTAL_COUNT = "includeTotalCount";
 
     static final String LESS_THAN = "[lt]";
     static final String LESS_THAN_OR_EQUALS = "[lte]";
@@ -548,6 +549,21 @@ public class DeliveryParameterBuilder {
         if (language != null) {
             nameValuePairs.add(new NameValuePair(LANGUAGE, language.toString().replace('_', '-')));
         }
+        return this;
+    }
+
+    /**
+     * Adds the information about the total number of content items matching your query.
+     * The number doesn't include linked items returned as part of the modular_content property.
+     * For the total number of items returned within the response, see the X-Request-Charge header.
+     *
+     * When set to true, the pagination object returned in the API response contains an additional total_count property.
+     *
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">Content items</a>
+     */
+    public DeliveryParameterBuilder includeTotalCount() {
+        nameValuePairs.add(new NameValuePair(INCLUDE_TOTAL_COUNT, "true"));
         return this;
     }
 
