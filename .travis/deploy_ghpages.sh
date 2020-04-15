@@ -28,8 +28,8 @@ cd ..
 rm -rf out/**/* || exit 0
 
 # Copy our docs
-cp -Rvf delivery/build/docs out
-cp -Rvf delivery/build/reports out
+cp -Rvf kontent-delivery/build/docs out
+cp -Rvf kontent-delivery/build/reports out
 
 # Now let's go have some fun with the cloned repo
 cd out
