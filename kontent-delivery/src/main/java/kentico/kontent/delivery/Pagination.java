@@ -70,9 +70,11 @@ public class Pagination {
 
     /**
      * Number of total items matching the search criteria
+     * <p>
+     * Is set only when {@link DeliveryParameterBuilder#includeTotalCount()} used for loading {@link ContentItemsListingResponse}.
      *
      * @param totalCount    Sets total_count on this.
-     * @return              Number of total content items matching the search criteria.
+     * @return              Number of total content items matching the search criteria or null.
      */
     @JsonProperty("total_count")
     Integer totalCount;
