@@ -557,6 +557,8 @@ public class DeliveryParameterBuilder {
      * The number doesn't include linked items returned as part of the modular_content property.
      * For the total number of items returned within the response, see the X-Request-Charge header.
      *
+     * Asking for the total number of content items might increase the response time.
+     *
      * When set to true, the pagination object returned in the API response contains an additional total_count property.
      *
      * @return          This DeliveryParameterBuilder with the added operator.
