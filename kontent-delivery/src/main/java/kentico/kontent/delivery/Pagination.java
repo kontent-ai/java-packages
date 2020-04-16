@@ -69,6 +69,15 @@ public class Pagination {
     Integer count;
 
     /**
+     * Number of total items matching the search criteria
+     *
+     * @param totalCount    Sets total_count on this.
+     * @return              Number of total content items matching the search criteria.
+     */
+    @JsonProperty("total_count")
+    Integer totalCount;
+
+    /**
      * URL to the next page of results.  Generally speaking, this value will not be needed.
      * Consider using {@link DeliveryClient#getNextPage(Page)}.
      *

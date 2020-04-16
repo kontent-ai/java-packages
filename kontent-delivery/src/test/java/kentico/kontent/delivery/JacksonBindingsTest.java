@@ -73,6 +73,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(0, pagination.getSkip().intValue());
         Assert.assertEquals(3, pagination.getLimit().intValue());
         Assert.assertEquals(3, pagination.getCount().intValue());
+        Assert.assertEquals(10, pagination.getTotalCount().intValue());
         Assert.assertEquals(
                 "https://deliver.kontent.ai/975bf280-fd91-488c-994c-2f04416e5ee3/items?system.type=article&elements=title%2csummary%2cpost_date%2cteaser_image&order=elements.post_date%5bdesc%5d&depth=0&limit=3&skip=3",
                 pagination.getNextPage());

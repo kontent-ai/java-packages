@@ -121,6 +121,7 @@ When retrieving a list of content items, you get an instance of the `ContentItem
   * `getSkip()`: requested number of content items to skip
   * `getLimit()`: requested page size
   * `getCount()`: the total number of retrieved content items
+  * `getTotalCount()`: total number of content items matching the search criteria
   * `getNextPage()`: the URL of the next page
 * A list of the requested content items
 
