@@ -322,6 +322,14 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testIncludeTotalCount() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().includeTotalCount().build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("includeTotalCount", params.get(0).getName());
+        Assert.assertEquals("true", params.get(0).getValue());
+    }
+
+    @Test
     @SuppressWarnings("all")
     public void testLanguageNull() {
         String nullValue = null;
