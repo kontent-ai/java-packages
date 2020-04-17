@@ -1,10 +1,10 @@
 # Kentico Kontent Delivery Java SDK
 
 [![Build Status](https://travis-ci.com/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.com/Kentico/kontent-delivery-sdk-java)
-[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
+[![SonarQube](https://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Javadocs](http://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](http://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
@@ -15,6 +15,8 @@ The Kentico Kontent Delivery Java SDK is a client library used for retrieving co
 
 You can add this to your Gradle project by the following:
 
+Substitute `#VERSION#` by ![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery?color=%23a5a5a5&label=&style=flat-square) (without "v" prefix)
+
 ```groovy
 
 repositories {
@@ -22,7 +24,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.kentico:kontent-delivery:3.2.0'
+    implementation 'com.github.kentico:kontent-delivery:#VERSION#'
 }
 ```
 
@@ -31,7 +33,7 @@ Or via your Maven POM:
 <dependency>
     <groupId>com.github.kentico</groupId>
     <artifactId>kontent-delivery</artifactId>
-    <version>3.2.0</version>
+    <version>#VERSION#</version>
 </dependency>
 ```
 
