@@ -31,5 +31,11 @@ cache:
 before_install:
   - ".travis/unpack_deploy_keys.sh"
 
-after_success:
-  - ".travis/deploy_ghpages.sh"
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN  # https://docs.travis-ci.com/user/deployment/pages/#setting-the-github-token
+  keep_history: true
+  local_dir: kontent-delivery/build/doc/javadoc
+  on:
+    branch: master
