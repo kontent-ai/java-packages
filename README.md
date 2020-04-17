@@ -1,15 +1,17 @@
 # Kentico Kontent Delivery Java SDK
 
 [![Build Status](https://travis-ci.com/Kentico/kontent-delivery-sdk-java.svg?branch=master)](https://travis-ci.com/Kentico/kontent-delivery-sdk-java)
+[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Javadocs](http://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](http://javadoc.io/doc/com.github.kentico/kontent-delivery)
-[![SonarQube](http://img.shields.io/badge/SonarQube-Results-blue.svg)](https://sonarcloud.io/dashboard?id=delivery-sdk-java%3Akontent-delivery)
-[![MavenCentral](http://img.shields.io/badge/Maven_Central-3.0.0-yellow.svg)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
+
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 ## Summary
 
-The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from Kentico Kontent. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/github/kentico/kontent-delivery/).
+The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from Kentico Kontent. You can use the SDK in the form of a [Maven dependency](https://oss.sonatype.org/content/repositories/snapshots/com/github/kentico/kontent-delivery/) from snapshots storage build from all mater commits.
 
 You can add this to your Gradle project by the following:
 
@@ -20,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.kentico:kontent-delivery:3.0.0'
+    implementation 'com.github.kentico:kontent-delivery:3.2.0'
 }
 ```
 
@@ -29,7 +31,7 @@ Or via your Maven POM:
 <dependency>
     <groupId>com.github.kentico</groupId>
     <artifactId>kontent-delivery</artifactId>
-    <version>3.0.0</version>
+    <version>3.2.0</version>
 </dependency>
 ```
 
@@ -70,6 +72,8 @@ The SDK supports full scale of the API querying and filtering capabilities as de
 ```java
 // Retrieves a list of the specified elements from the first 10 content items of
 // the 'brewer' content type, ordered by the 'product_name' element value
+// also includes total number of items stored in kentico i.e. for pagination purposes
+
 ContentItemsListingResponse response = client.getItems(
     DeliveryParameterBuilder.params()
         .language("es-ES")
@@ -77,6 +81,7 @@ ContentItemsListingResponse response = client.getItems(
         .projection("image", "price", "product_status", "processing")
         .page(null, 10)
         .orderByAsc("elements.product_name")
+        .includeTotalCount()
         .build()
 );
 ```
@@ -228,9 +233,10 @@ Optional:
 
 ## Feedback & Contributing
 
-Check out the [contributing](https://github.com/Kentico/kontent-delivery-sdk-net/blob/master/CONTRIBUTING.md) page to see the best places to file issues, start discussions, and begin contributing.
+Check out the [contributing](CONTRIBUTING.md) page to see the best places to file issues, start discussions, and begin contributing.
 
 ### Wall of Fame
+
 We would like to express our thanks to the following people who contributed and made the project possible:
 
 - [Adam J. Weigold](https://github.com/aweigold)
