@@ -36,6 +36,6 @@ deploy:
   skip_cleanup: true
   github_token: $GITHUB_TOKEN  # https://docs.travis-ci.com/user/deployment/pages/#setting-the-github-token
   keep_history: true
-  local_dir: kontent-delivery/build/doc/javadoc
+  local_dir: kontent-delivery/build/docs/javadoc
   on:
     branch: master
