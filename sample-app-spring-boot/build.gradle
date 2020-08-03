@@ -5,10 +5,17 @@ import kentico.kontent.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
-        jcenter()
+        // TODO switch after first release
+        maven {
+            url "https://dl.bintray.com/simply007/kontent-java-monorepo"
+        }
+//        jcenter()
     }
+    //
     dependencies {
-        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+        // TODO switch after first release
+        classpath('com.github.simply007:kontent-delivery-generators:latest.release')
+//        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
     }
 }
 
@@ -32,7 +39,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-     compile project(':kontent-delivery')
+    compile project(':kontent-delivery')
 }
 
 test {
