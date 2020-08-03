@@ -1,5 +1,0 @@
-rootProject.name = 'delivery-sdk-java'
-
-include "kontent-delivery"
-
-enableFeaturePreview('STABLE_PUBLISHING')
