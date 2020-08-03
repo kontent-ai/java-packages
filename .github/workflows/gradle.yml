@@ -1,0 +1,40 @@
+# This workflow will build a Java project with Gradle
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-gradle
+
+name: Java CI with Gradle
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    env:
+      JFROG_CLI_LOG_LEVEL: DEBUG
+      CI: true
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      with:
+        java-version: 1.8
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Build with Gradle
+      run: ./gradlew build --stacktrace --info
+    - name: Setup JFrog CLI
+      uses: jfrog/setup-jfrog-cli@v1.0.5
+      # with:
+        # JFrog CLI Version
+        # version: # optional, default is 1.35.5
+    - name: jFrog version
+      run: jfrog --version
+#    - name: publish kontent delivery jar
+#      run: jfrog bt upload "kontent-delivery/build/libs/*" Kentico/kontent-java-packages/kontent-delivery/0.0.1 --key=${{ secrets.JFROG_BINTRAY_API_KEY }}
+#

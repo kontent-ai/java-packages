@@ -1,0 +1,9 @@
+{
+  "type": "modular_content",
+  "name": "Facts",
+  "value": [
+    "our_philosophy",
+    "how_we_source_our_coffees",
+    "how_we_roast_our_coffees"
+  ]
+}

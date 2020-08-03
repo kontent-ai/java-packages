@@ -1,0 +1,10 @@
+plugins {
+    id 'application'
+}
+
+mainClassName = 'kentico.kontent.delivery.testing.app.Main' 
+
+dependencies {
+    compile project(':kontent-delivery')
+    testCompile("junit:junit:4.12")
+}

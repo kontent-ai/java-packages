@@ -1,0 +1,22 @@
+<div th:switch="${model.videoHost[0].codename}" xmlns:th="http://www.thymeleaf.org">
+    <iframe th:case="vimeo"
+            th:src="'https://player.vimeo.com/video/' + ${model.videoId} + '?title=0&byline=0&portrait=0'"
+            class="hosted-video__wrapper"
+            width="640"
+            height="360"
+            frameborder="0"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowfullscreen
+    >
+    </iframe>
+    <iframe th:case="youtube"
+            th:src="'https://www.youtube.com/embed/' + ${model.videoId}"
+            class="hosted-video__wrapper"
+            width="560"
+            height="315"
+            frameborder="0"
+            allowfullscreen
+    >
+    </iframe>
+</div>

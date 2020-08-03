@@ -1,0 +1,1 @@
+<custom th:utext="${model.messageText}"></custom>
