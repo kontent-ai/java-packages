@@ -90,13 +90,15 @@ public class DeliveryOptions {
     String projectId;
 
     /**
-     * The Production API key configured with your Kentico Kontent account.
-     * // TODO add mention about secured API
+     * The Production API key (Secured access API key) configured with your Kentico Kontent account.
+     * 
      *
-     * @param productionApiKey  Sets the value of the production API key in this DeliveryOptions instance.
+     * @param productionApiKey  Sets the value of the production API key (Secured access API key) in this DeliveryOptions instance.
      * @return                  The value of the production API key in this DeliveryOptions instance.
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
      *                          KenticoKontent API reference - Production vs. preview</a>
+     * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#tag/Secure-access">
+     *                          Secure access</a>
      */
     @Builder.Default
     String productionApiKey = null;

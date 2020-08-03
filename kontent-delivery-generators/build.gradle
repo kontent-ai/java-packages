@@ -45,6 +45,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+def packageSummary = 'Kontent model generator.'
+def packageDescription = 'Generators producing strongly-typed models based on content types in a Kentico Kontent project.'
+
+
 publishing {
     publications {
         BintrayPublication(MavenPublication) {
@@ -63,8 +67,8 @@ publishing {
             }
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', 'Generators producing strongly-typed models based on Content Types in a Kentico Kontent project.')
-                root.appendNode('name', 'Kontent model generator.')
+                root.appendNode('description', packageDescription)
+                root.appendNode('name', packageSummary)
                 root.appendNode('url', 'https://kontent.ai')
                 root.children().last() + pomConfig
             }
@@ -79,17 +83,22 @@ bintray {
     publish = true
     publications = ['BintrayPublication']
     pkg {
-        repo = 'kontent-java-monorepo'
+        repo = 'kontent-java-packages'
         name = 'kontent-delivery-generators'
-        publicDownloadNumbers = true
+        userOrg = 'kentico'
+        desc = packageDescription
+        issueTrackerUrl =  repoUrl + '/issues'
+        vcsUrl = repoVcsUrl
         licenses = ['MIT']
-        vcsUrl = 'https://github.com/Simply007/kontent-java-monorepo.git'
+        publicDownloadNumbers = true
+        labels = ['kentico', 'kontent', 'model generator', 'generator', 'caas']
+        githubRepo = 'Kentico/kontent-java-packages'
         version {
             name = version.name
-            desc = 'Generators producing strongly-typed models based on Content Types in a Kentico Kontent project.'
             released = new Date()
+            desc = packageDescription
+            vcsTag = version.name
             desc = version
-            vcsTag = version
             gpg {
                 sign = true
                 passphrase = bintrayGpg

@@ -8,20 +8,20 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.2/524e0a697e9d62950b2f763d88d35cd8dc82a9a1/lombok-1.18.2.jar" />
         </processorPath>
-        <module name="kontent-java-monorepo.kontent-delivery-generators.main" />
+        <module name="kontent-java-packages.kontent-delivery-generators.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="kontent-java-monorepo.kontent-delivery-generators-core.main" target="1.8" />
-      <module name="kontent-java-monorepo.kontent-delivery-generators-core.test" target="1.8" />
-      <module name="kontent-java-monorepo.kontent-delivery-generators-gradle.main" target="1.8" />
-      <module name="kontent-java-monorepo.kontent-delivery-generators-gradle.test" target="1.8" />
-      <module name="kontent-java-monorepo.kontent-delivery-generators-groovy.main" target="1.8" />
-      <module name="kontent-java-monorepo.kontent-delivery-generators-groovy.test" target="1.8" />
-      <module name="kontent-java-monorepo.sample-app-models.main" target="1.8" />
-      <module name="kontent-java-monorepo.sample-app-models.test" target="1.8" />
-      <module name="kontent-java-monorepo.test-app.main" target="1.8" />
-      <module name="kontent-java-monorepo.test-app.test" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-core.main" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-core.test" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-gradle.main" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-gradle.test" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-groovy.main" target="1.8" />
+      <module name="kontent-java-packages.kontent-delivery-generators-groovy.test" target="1.8" />
+      <module name="kontent-java-packages.sample-app-models.main" target="1.8" />
+      <module name="kontent-java-packages.sample-app-models.test" target="1.8" />
+      <module name="kontent-java-packages.test-app.main" target="1.8" />
+      <module name="kontent-java-packages.test-app.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

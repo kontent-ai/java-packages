@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![Javadocs](https://javadoc.io/badge/com.github.simply007/kontent-delivery-generators.svg)](https://javadoc.io/doc/com.github.simply007/kontent-delivery-generators)
-[![Download](https://api.bintray.com/packages/simply007/kontent-java-monorepo/kontent-delivery-generators/images/download.svg)](https://bintray.com/simply007/kontent-java-monorepo/kontent-delivery-generators/_latestVersion)
+[![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery-generators.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery-generators)
+[![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery-generators/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery-generators/_latestVersion)
 
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
@@ -18,7 +18,7 @@ The usage is pretty easy.
     ```java
     CodeGenerator generator = new CodeGenerator(
     "975bf280-fd91-488c-994c-2f04416e5ee3",
-    'com.simply007.test.springapp.models',
+    'com.kentico.kontent.test.springapp.models',
     file('src/main/java')
     );
     ```
@@ -50,7 +50,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath('com.github.simply007:kontent-delivery-generators:latest.release')
+        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
     }
 }
 
@@ -66,7 +66,7 @@ task generateModels {
 
         CodeGenerator generator = new CodeGenerator(
             options.getProjectId(),
-            'com.simply007.test.springapp.models',
+            'com.kentico.kontent.test.springapp.models',
             file('src/main/java')
         );
         List<JavaFile> sources = generator.generateSources(client);

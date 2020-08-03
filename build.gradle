@@ -23,6 +23,8 @@ if (propertiesFile.exists()) {
 ext.bintrayUser = properties.getProperty('BINTRAY_USER') != null ? properties.getProperty('BINTRAY_USER') : System.getenv('API_TOKEN')
 ext.bintrayKey = properties.getProperty('BINTRAY_KEY') != null ? properties.getProperty('BINTRAY_KEY') : System.getenv('API_TOKEN')
 ext.bintrayGpg = properties.getProperty('BINTRAY_GPG') != null ? properties.getProperty('BINTRAY_GPG') : System.getenv('BINTRAY_GPG')
+ext.repoVcsUrl = 'https://github.com/Kentico/kontent-java-packages.git'
+ext.repoUrl = 'https://github.com/Kentico/kontent-java-packages'
 
 ext.pomConfig = {
     developers {
@@ -35,12 +37,12 @@ ext.pomConfig = {
     licenses {
         license {
             name "MIT"
-            url "https://github.com/Simply007/kontent-java-monorepo/blob/master/LICENSE.md"
+            url "https://github.com/Kentico/kontent-java-packages/blob/master/LICENSE.md"
             distribution "repo"
         }
     }
     scm {
-        url "git@github.com:Simply007/kontent-java-monorepo.git"
+        url "git@github.com:Kentico/kontent-java-packages.git"
     }
 }
 
@@ -64,7 +66,7 @@ allprojects {
 
 
 subprojects {
-    version = '0.0.2-beta.12'
-    ext.repoGroupId = 'com.github.simply007'
-    group = 'com.github.simply007'
+    version = '4.0.0-beta.1'
+    ext.repoGroupId = 'com.github.kentico'
+    group = 'com.github.kentico'
 }

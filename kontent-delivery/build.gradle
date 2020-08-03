@@ -56,6 +56,10 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+def packageSummary = 'Kontent Delivery SDK client.'
+def packageDescription = 'Java client around Kentico Kontent Delivery REST API.'
+
+
 publishing {
     publications {
         BintrayPublication(MavenPublication) {
@@ -74,8 +78,8 @@ publishing {
             }
             pom.withXml {
                 def root = asNode()
-                root.appendNode('description', 'Java client around Kentico Kontent Delivery REST API.')
-                root.appendNode('name', 'Kontent Delivery SDK client.')
+                root.appendNode('description', packageDescription)
+                root.appendNode('name', packageSummary)
                 root.appendNode('url', 'https://kontent.ai')
                 root.children().last() + pomConfig
             }
@@ -90,17 +94,21 @@ bintray {
     publish = true
     publications = ['BintrayPublication']
     pkg {
-        repo = 'kontent-java-monorepo'
+        repo = 'kontent-java-packages'
         name = 'kontent-delivery'
-        publicDownloadNumbers = true
+        userOrg = 'kentico'
+        desc = packageDescription
+        issueTrackerUrl =  repoUrl + '/issues'
+        vcsUrl = repoVcsUrl
         licenses = ['MIT']
-        vcsUrl = 'https://github.com/Simply007/kontent-java-monorepo.git'
+        labels = ['kentico', 'kontent', 'delivery client', 'SDK', 'caas']
+        githubRepo = 'Kentico/kontent-java-packages'
+        publicDownloadNumbers = true
         version {
             name = version.name
-            desc = 'Java client around Kentico Kontent Delivery REST API.'
             released = new Date()
-            desc = version
-            vcsTag = version
+            desc = packageDescription
+            vcsTag = version.name
             gpg {
                 sign = true
                 passphrase = bintrayGpg

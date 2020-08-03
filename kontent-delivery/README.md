@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![Javadocs](https://javadoc.io/badge/com.github.simply007/kontent-delivery.svg)](https://javadoc.io/doc/com.github.simply007/kontent-delivery)
-[![Download](https://api.bintray.com/packages/simply007/kontent-java-monorepo/kontent-delivery/images/download.svg)](https://bintray.com/simply007/kontent-java-monorepo/kontent-delivery/_latestVersion)
+[![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery/_latestVersion)
 
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.simply007:kontent-delivery:latest.release'
+  implementation 'com.github.kentico:kontent-delivery:latest.release'
 }
 ```
 
@@ -32,7 +32,7 @@ dependencies {
 
 ```xml
 <dependency>
-  <groupId>com.github.simply007</groupId>
+  <groupId>com.github.kentico</groupId>
   <artifactId>kontent-delivery</artifactId>
   <version>[0.0.2-beta.12,)</version>
   <type>pom</type>

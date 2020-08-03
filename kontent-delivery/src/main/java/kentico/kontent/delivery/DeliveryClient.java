@@ -44,8 +44,6 @@ import java.util.stream.Collectors;
 
 // TODO: add JavaDoc
 
-// TODO not Closeable?
-
 @Slf4j
 public class DeliveryClient {
 
@@ -476,8 +474,7 @@ public class DeliveryClient {
                     int wait = (int) (100 * Math.pow(2, retryTurn));
                     log.info("Reattempting request after {}ms (re-attempt {} out of max {})",
                             wait, counter.get(), deliveryOptions.getRetryAttempts());
-                    // TODO why this is not async?
-                    // https://stackoverflow.com/questions/58707689/is-it-possible-to-schedule-a-completablefuture
+
                     try {
                         return CompletableFuture.supplyAsync(
                                 () -> {
