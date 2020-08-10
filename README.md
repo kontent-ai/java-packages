@@ -31,12 +31,14 @@ Java 8 SDK (Oracle & OpenJDK both tested and supported)
 
 - Enter the cloned repository and build the project via the provided Gradle wrapper.
 
-  > This command will build whole solution and run all tests in this monorepo.
+  >  To grant execution rights for `gradlew` binary, you could use `chmod a+x ./gradlew` which allows execution to everybody.
 
   ```sh
   cd kontent-java-packages
   ./gradlew clean build
   ```
+
+  > The command will build whole solution and run all tests in this monorepo.
 
 > :bulb: Then ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-app-spring-boot#readme) or load the project in In IDE ([IntelliJ IDEA](https://www.jetbrains.com/idea/) recommended) and run/debug tests in [Kontent Delivery Java SDK](/kontent-delivery#readme).
 
