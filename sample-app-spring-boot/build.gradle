@@ -6,9 +6,6 @@ import kentico.kontent.delivery.generators.CodeGenerator
 buildscript {
     repositories {
         jcenter()
-        maven {	
-            url "https://dl.bintray.com/kentico/kontent-java-packages"	
-        }
     }
     dependencies {
         classpath('com.github.kentico:kontent-delivery-generators:latest.release')
