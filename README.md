@@ -40,7 +40,9 @@ Java 8 SDK (Oracle & OpenJDK both tested and supported)
 
   > The command will build whole solution and run all tests in this monorepo.
 
-> :bulb: Then ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-app-spring-boot#readme) or load the project in In IDE ([IntelliJ IDEA](https://www.jetbrains.com/idea/) recommended) and run/debug tests in [Kontent Delivery Java SDK](/kontent-delivery#readme).
+#### :bulb: Next steps
+
+The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-app-spring-boot#readme) or load the project in In IDE ([IntelliJ IDEA](https://www.jetbrains.com/idea/) recommended) and run/debug tests in [Kontent Delivery Java SDK](/kontent-delivery#readme).
 
 ## Publishing
 
