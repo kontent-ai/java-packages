@@ -5,10 +5,13 @@ import kentico.kontent.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
-       jcenter()
+        jcenter()
+        maven {	
+            url "https://dl.bintray.com/kentico/kontent-java-packages"	
+        }
     }
     dependencies {
-       classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
     }
 }
 
@@ -32,9 +35,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    // compile project(':kontent-delivery')
-    classpath('com.github.kentico:kontent-delivery:latest.release')
-
+    compile project(':kontent-delivery')
 }
 
 test {
