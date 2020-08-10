@@ -50,4 +50,4 @@ Java 8 SDK (Oracle & OpenJDK both tested and supported)
 1. Rebuild the solution `./gradlew clean build`.
 1. Run `./gradlew bintrayUpload`.
 
-// TODO add analytics
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages?pixel)

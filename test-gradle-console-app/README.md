@@ -19,4 +19,4 @@ Which brewing fits you?
 About us
 ```
 
-// TODO analytics
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/test-gradle-console-app?pixel)
