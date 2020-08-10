@@ -69,4 +69,4 @@ The following guides illustrate how to use some features concretely:
 - [Serving Web Content with Spring MVC](https://spring.io/guides/gs/serving-web-content/)
 - [Building REST services with Spring](https://spring.io/guides/tutorials/bookmarks/)
 
-// TODO analytics
+![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/sample-app-spring-boot?pixel)

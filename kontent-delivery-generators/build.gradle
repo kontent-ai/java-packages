@@ -76,7 +76,6 @@ publishing {
     }
 }
 
-// TODO adjust before final release (do not forget userOrg set to Kentico + labels -> https://github.com/bintray/gradle-bintray-plugin#buildgradle)
 bintray {
     user = bintrayUser
     key = bintrayKey

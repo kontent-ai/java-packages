@@ -1,4 +1,4 @@
-# Changes in this version
+# Changes in v3 -> v4
 
 * Delivery client now returns `CompletionStage` and it is async by default
   * Internally [OkHttpClient](https://square.github.io/okhttp/4.x/okhttp/okhttp3/-ok-http-client/) is used to handle network requests

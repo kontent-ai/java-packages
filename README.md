@@ -42,6 +42,12 @@ Java 8 SDK (Oracle & OpenJDK both tested and supported)
 
 ## Publishing
 
-// TODO finish publishing
+> If you want to publish the new version, you need to have an access to [Bintray's Kentico organization](https://bintray.com/kentico).
+
+1. Copy the `local.properties.template` file in this directory to `local.properties` (which will be idnored by Git)).
+1. Set each variable on `local.properties` from the password manager, or contact @Kentico/developer-relations team to get them.
+1. Set version you want to publish in [`build.gradle`](./build.gradle#L69).
+1. Rebuild the solution `./gradlew clean build`.
+1. Run `./gradlew bintrayUpload`.
 
 // TODO add analytics
