@@ -97,7 +97,6 @@ bintray {
             released = new Date()
             desc = packageDescription
             vcsTag = version.name
-            desc = version
             gpg {
                 sign = true
                 passphrase = bintrayGpg
