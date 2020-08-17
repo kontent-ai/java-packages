@@ -120,7 +120,7 @@ ContentItemResponse response = client.getItem("about_us")
   .get();
 
 // Retrieves a list of all content items
-CompletionStage<ContentItemsListingResponse> listingResponse = client.getItems()
+ContentItemsListingResponse listingResponse = client.getItems()
   .toCompletableFuture()
   .get();
 ```
