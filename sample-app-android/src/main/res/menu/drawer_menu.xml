@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright 2017 Kentico s.r.o. and Richard Sustek
+  ~
+  ~  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+  ~
+  ~  The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+  ~
+  ~  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/articles"
+            android:icon="@drawable/ic_list"
+            android:title="@string/main_menu_articles" />
+        <item
+            android:id="@+id/coffees"
+            android:icon="@drawable/ic_local_drink"
+            android:title="@string/main_menu_coffees" />
+        <item
+            android:id="@+id/cafes"
+            android:icon="@drawable/ic_local_cafe"
+            android:title="@string/main_menu_cafes" />
+
+    </group>
+
+    <item android:title="@string/main_menu_extra">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="@string/main_menu_contact" />
+            <item
+                android:id="@+id/test"
+                android:icon="@drawable/ic_settings"
+                android:title="@string/main_menu_test" />
+        </menu>
+    </item>
+
+</menu>
