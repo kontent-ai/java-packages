@@ -15,11 +15,13 @@ import android.support.annotation.NonNull;
 import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Article;
 import kentico.kontent.delivery.DeliveryClient;
+import kentico.kontent.delivery.DeliveryOptions;
+import kentico.kontent.delivery.DeliveryParameterBuilder;
 
 public class ArticlesKontentSource implements ArticlesDataSource {
 
     private static ArticlesKontentSource INSTANCE;
-    private static DeliveryClient client = new DeliveryClient(AppConfig.KONTENT_PROJECT_ID);
+    private static DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
 
 
     public static ArticlesKontentSource getInstance(@NonNull Context context) {
@@ -31,7 +33,7 @@ public class ArticlesKontentSource implements ArticlesDataSource {
 
     @Override
     public void getArticles(@NonNull final LoadArticlesCallback callback) {
-        client.getItems(Article.class)
+        client.getItems(Article.class, DeliveryParameterBuilder.params().filterEquals("system.type", "article").build())
                 .thenAccept(items -> {
                     if (items == null || items.size() == 0) {
                         callback.onDataNotAvailable();
@@ -41,46 +43,11 @@ public class ArticlesKontentSource implements ArticlesDataSource {
                 }).exceptionally(ex -> {
             callback.onError(ex);
             return null;
-
         });
-
-//        this.deliveryService.<Article>items()
-//                .type(Article.TYPE)
-//                .getObservable()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<DeliveryItemListingResponse<Article>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(DeliveryItemListingResponse<Article> response) {
-//                        List<Article> items = (response.getItems());
-//
-//                        if (items == null || items.size() == 0) {
-//                            callback.onDataNotAvailable();
-//                            return;
-//                        }
-//
-//                        callback.onItemsLoaded(items);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        callback.onError(e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
     }
 
     @Override
     public void getArticle(@NonNull String codename, @NonNull final LoadArticleCallback callback) {
-
         client.getItem(codename, Article.class)
                 .thenAccept(item -> {
                     if (item == null) {
@@ -88,35 +55,5 @@ public class ArticlesKontentSource implements ArticlesDataSource {
                     }
                     callback.onItemLoaded(item);
                 });
-
-//        this.deliveryService.<Article>item(codename)
-//                .getObservable()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<DeliveryItemResponse<Article>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(DeliveryItemResponse<Article> response) {
-//                        if (response.getItem() == null) {
-//                            callback.onDataNotAvailable();
-//                        }
-//
-//                        callback.onItemLoaded(response.getItem());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        callback.onError(e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
     }
 }

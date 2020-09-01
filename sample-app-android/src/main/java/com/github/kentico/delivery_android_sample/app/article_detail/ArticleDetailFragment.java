@@ -16,7 +16,6 @@ import android.text.Html;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.github.kentico.delivery_android_sample.R;
 import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
 import com.github.kentico.delivery_android_sample.data.models.Article;
@@ -74,7 +73,7 @@ public class ArticleDetailFragment extends BaseFragment<ArticleDetailContract.Pr
 
         // image
         final ImageView teaserIV = (ImageView) view.findViewById(R.id.articleDetailTeaserIV);
-        Picasso.with(view.getContext()).load(article.getTeaserImageUrl()).into(teaserIV);
+        Picasso.with(view.getContext()).load(article.getTeaserImage().get(0).getUrl()).into(teaserIV);
 
         // release date
         TextView postDateTV = (TextView) view.findViewById(R.id.articleDetailPostDateTV);

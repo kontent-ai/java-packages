@@ -11,10 +11,9 @@
 package com.github.kentico.delivery_android_sample.data.source.articles;
 
 import android.support.annotation.NonNull;
-
-import com.github.kentico.kontent_delivery_core.callbacks.IMultipleCallback;
-import com.github.kentico.kontent_delivery_core.callbacks.ISingleCallback;
 import com.github.kentico.delivery_android_sample.data.models.Article;
+import com.github.kentico.delivery_android_sample.data.source.IMultipleCallback;
+import com.github.kentico.delivery_android_sample.data.source.ISingleCallback;
 
 public interface ArticlesDataSource {
 

@@ -158,7 +158,7 @@ public class CoffeesFragment extends BaseFragment<CoffeesContract.Presenter> imp
 
             // image
             final ImageView imageIV = (ImageView) rowView.findViewById(R.id.coffeeImageIV);
-            Picasso.with(viewGroup.getContext()).load(coffee.getImageUrl()).into(imageIV);
+            Picasso.with(viewGroup.getContext()).load(coffee.getImage().get(0).getUrl()).into(imageIV);
 
 
             rowView.setOnClickListener(new View.OnClickListener() {

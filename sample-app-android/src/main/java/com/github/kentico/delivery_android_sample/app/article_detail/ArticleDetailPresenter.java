@@ -11,7 +11,6 @@
 package com.github.kentico.delivery_android_sample.app.article_detail;
 
 import android.support.annotation.NonNull;
-
 import com.github.kentico.delivery_android_sample.data.models.Article;
 import com.github.kentico.delivery_android_sample.data.source.articles.ArticlesDataSource;
 import com.github.kentico.delivery_android_sample.data.source.articles.ArticlesRepository;

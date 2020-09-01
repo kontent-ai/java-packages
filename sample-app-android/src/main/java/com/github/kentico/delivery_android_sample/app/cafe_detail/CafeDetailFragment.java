@@ -20,18 +20,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.github.kentico.delivery_android_sample.R;
+import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
+import com.github.kentico.delivery_android_sample.data.models.Cafe;
+import com.github.kentico.delivery_android_sample.util.Location.LocationHelper;
+import com.github.kentico.delivery_android_sample.util.Location.LocationInfo;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.github.kentico.delivery_android_sample.R;
-import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
-import com.github.kentico.delivery_android_sample.data.models.Cafe;
-import com.github.kentico.delivery_android_sample.util.Location.LocationHelper;
-import com.github.kentico.delivery_android_sample.util.Location.LocationInfo;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -95,7 +94,7 @@ public class CafeDetailFragment extends BaseFragment<CafeDetailContract.Presente
 
         // image
         final ImageView teaserIV = (ImageView) view.findViewById(R.id.cafeDetailTeaserIV);
-        Picasso.with(view.getContext()).load(cafe.getPhotoUrl()).into(teaserIV);
+        Picasso.with(view.getContext()).load(cafe.getPhoto().get(0).getUrl()).into(teaserIV);
 
         TextView streetLineTV = (TextView) view.findViewById(R.id.cafeStreetLineTV);
         streetLineTV.setText(cafe.getStreet());

@@ -17,21 +17,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.github.kentico.delivery_android_sample.R;
 import com.github.kentico.delivery_android_sample.app.article_detail.ArticleDetailActivity;
 import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
 import com.github.kentico.delivery_android_sample.app.shared.CommunicationHub;
 import com.github.kentico.delivery_android_sample.data.models.Article;
-import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -155,26 +150,26 @@ public class ArticlesFragment extends BaseFragment<ArticlesContract.Presenter> i
             // title
             TextView titleTV = (TextView) rowView.findViewById(R.id.articleTitleTV);
             titleTV.setText(article.getTitle());
-
-            // image
-            final ImageView teaserIV = (ImageView) rowView.findViewById(R.id.articleTeaserIV);
-            Picasso.with(viewGroup.getContext()).load(article.getTeaserImageUrl()).into(teaserIV);
-
-            // release date
-            TextView postDateTV = (TextView) rowView.findViewById(R.id.articlePostDateTV);
-            SimpleDateFormat postDf = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
-            postDateTV.setText(postDf.format(article.getPostDate()));
-
-            // summary
-            TextView summaryTV = (TextView) rowView.findViewById(R.id.articleSummaryTV);
-            summaryTV.setText(article.getSummary());
-
-            rowView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    _articleItemListener.onArticleClick(article);
-                }
-            });
+//
+//            // image
+//            final ImageView teaserIV = (ImageView) rowView.findViewById(R.id.articleTeaserIV);
+//            Picasso.with(viewGroup.getContext()).load(article.getTeaserImage().get(0).getUrl()).into(teaserIV);
+//
+//            // release date
+//            TextView postDateTV = (TextView) rowView.findViewById(R.id.articlePostDateTV);
+//            SimpleDateFormat postDf = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
+//            postDateTV.setText(postDf.format(article.getPostDate()));
+//
+//            // summary
+//            TextView summaryTV = (TextView) rowView.findViewById(R.id.articleSummaryTV);
+//            summaryTV.setText(article.getSummary());
+//
+//            rowView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    _articleItemListener.onArticleClick(article);
+//                }
+//            });
 
             return rowView;
         }

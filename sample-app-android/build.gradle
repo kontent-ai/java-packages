@@ -30,13 +30,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion 27
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 29
+    buildToolsVersion "28.0.3"
     defaultConfig {
         // Enabling multidex support. See https://stackoverflow.com/questions/38714651/android-studio-dexindexoverflowexception-method-id-not-in/38715060
         multiDexEnabled true
-        minSdkVersion 24
-        targetSdkVersion 27
+        minSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -64,6 +64,10 @@ android {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
+//    compileOptions {
+//        sourceCompatibility = 1.8
+//        targetCompatibility = 1.8
+//    }
 }
 
 dependencies {
@@ -84,8 +88,9 @@ dependencies {
     api 'com.google.firebase:firebase-core:11.4.2'
     api 'com.google.firebase:firebase-messaging:11.4.2'
     testImplementation 'junit:junit:4.12'
-    implementation 'com.github.kentico:kontent-delivery-core:4.0.1'
-    implementation 'com.github.kentico:kontent-delivery:4.0.0-beta.6'
+//    implementation 'com.github.kentico:kontent-delivery-core:4.0.1'
+//    implementation 'com.github.kentico:kontent-delivery:4.0.0-beta.6'
+    implementation project(':kontent-delivery')
 }
 
 apply plugin: 'com.google.gms.google-services'

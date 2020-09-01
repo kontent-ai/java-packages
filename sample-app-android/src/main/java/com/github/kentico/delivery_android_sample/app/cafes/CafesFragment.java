@@ -21,7 +21,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.github.kentico.delivery_android_sample.R;
 import com.github.kentico.delivery_android_sample.app.cafe_detail.CafeDetailActivity;
 import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
@@ -159,7 +158,7 @@ public class CafesFragment extends BaseFragment<CafesContract.Presenter> impleme
             titleTV.setText(cafe.getCity());
 
             final ImageView teaserIV = (ImageView) rowView.findViewById(R.id.cafeTeaserIV);
-            Picasso.with(viewGroup.getContext()).load(cafe.getPhotoUrl()).into(teaserIV);
+            Picasso.with(viewGroup.getContext()).load(cafe.getPhoto().get(0).getUrl()).into(teaserIV);
 
             TextView streetLineTV = (TextView) rowView.findViewById(R.id.cafeStreetLineTV);
             streetLineTV.setText(cafe.getStreet());

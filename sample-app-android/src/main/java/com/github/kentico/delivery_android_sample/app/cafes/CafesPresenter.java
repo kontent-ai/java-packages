@@ -11,7 +11,6 @@
 package com.github.kentico.delivery_android_sample.app.cafes;
 
 import android.support.annotation.NonNull;
-
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import com.github.kentico.delivery_android_sample.data.source.cafes.CafesDataSource;
 import com.github.kentico.delivery_android_sample.data.source.cafes.CafesRepository;

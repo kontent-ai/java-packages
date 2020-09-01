@@ -95,7 +95,7 @@ public class CoffeeDetailFragment extends BaseFragment<CoffeeDetailContract.Pres
 
         // image
         final ImageView teaserIV = (ImageView) view.findViewById(R.id.coffeeDetailTeaserIV);
-        Picasso.with(view.getContext()).load(coffee.getImageUrl()).into(teaserIV);
+        Picasso.with(view.getContext()).load(coffee.getImage().get(0).getUrl()).into(teaserIV);
 
         TextView teaserLineTV = (TextView) view.findViewById(R.id.coffeeDetailTeaserLineTV);
         teaserLineTV.setText(coffee.getCountry());
