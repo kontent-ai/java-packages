@@ -352,6 +352,10 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
     }
 
+    public void registerDefaultInlineContentItemsResolver(InlineContentItemsResolver<ContentItem> resolver) {
+        stronglyTypedContentItemConverter.registerDefaultContentItemsResolver(resolver);
+    }
+
     @SuppressWarnings("WeakerAccess")
     public void scanClasspathForMappings(String basePackage) {
         stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);

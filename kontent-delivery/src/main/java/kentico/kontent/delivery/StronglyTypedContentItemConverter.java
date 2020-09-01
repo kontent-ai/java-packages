@@ -42,6 +42,8 @@ public class StronglyTypedContentItemConverter {
     private HashMap<String, String> contentTypeToClassNameMapping = new HashMap<>();
     private HashMap<String, String> classNameToContentTypeMapping = new HashMap<>();
     private HashMap<String, InlineContentItemsResolver> typeNameToInlineResolverMapping = new HashMap<>();
+    private InlineContentItemsResolver<ContentItem> defaultInlineContentItemsResolver;
+
 
     protected StronglyTypedContentItemConverter() {
         //protected constructor
@@ -73,6 +75,10 @@ public class StronglyTypedContentItemConverter {
         typeNameToInlineResolverMapping.put(resolver.getType().getTypeName(), resolver);
     }
 
+    protected void registerDefaultContentItemsResolver(InlineContentItemsResolver<ContentItem> resolver) {
+        defaultInlineContentItemsResolver = resolver;
+    }
+
     protected InlineContentItemsResolver getResolverForType(String contentType) {
         if (contentTypeToClassNameMapping.containsKey(contentType) &&
                 typeNameToInlineResolverMapping.containsKey(contentTypeToClassNameMapping.get(contentType))) {
@@ -87,6 +93,10 @@ public class StronglyTypedContentItemConverter {
             return getResolverForType(system.getType());
         }
         return null;
+    }
+
+    public InlineContentItemsResolver<ContentItem> getDefaultResolver() {
+        return defaultInlineContentItemsResolver;
     }
 
     protected void scanClasspathForMappings(String basePackage) {
