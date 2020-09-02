@@ -24,592 +24,636 @@
 
 package kentico.kontent.delivery;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import kentico.kontent.delivery.template.TemplateEngineConfig;
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
-import io.reactivex.internal.operators.completable.CompletableFromRunnable;
+import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 
-import java.io.Closeable;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
-/**
- * Executes requests against the Kentico Kontent Delivery API.
- *
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Authentication">
- *      KenticoKontent API reference - Authentication</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api">
- *      KenticoKontent API reference - Delivery API</a>
- */
-@lombok.extern.slf4j.Slf4j
-public class DeliveryClient implements Closeable {
 
-    private AsyncDeliveryClient asyncDeliveryClient;
+// TODO: add JavaDoc
 
-    /**
-     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     *
-     * @param deliveryOptions   The settings of the Kentico Kontent project.
-     * @throws                  IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are
-     *                          invalid.
-     * @see                     DeliveryOptions
-     */
+@Slf4j
+public class DeliveryClient {
+
+    private static final String HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT = "X-KC-Wait-For-Loading-New-Content";
+    private static String sdkId;
+
+    static {
+        try {
+            Properties buildProps = new Properties();
+            buildProps.load(DeliveryClient.class.getResourceAsStream("build.properties"));
+            String repositoryHost = buildProps.getProperty("Repository-Host");
+            String version = buildProps.getProperty("Implementation-Version");
+            String packageId = buildProps.getProperty("Package-Id");
+            repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
+            version = version == null ? "0.0.0" : version;
+            packageId = packageId == null ? "kentico.kontent:delivery" : packageId;
+            sdkId = String.format(
+                    "%s;%s;%s",
+                    repositoryHost,
+                    packageId,
+                    version);
+            log.info("SDK ID: {}", sdkId);
+        } catch (IOException e) {
+            log.info("Jar manifest read error, setting developer build SDK ID");
+            sdkId = "localBuild;kentico.kontent:delivery;0.0.0";
+        }
+    }
+
+    private static final String ITEMS = "items";
+    private static final String TYPES = "types";
+    private static final String ELEMENTS = "elements";
+    private static final String TAXONOMIES = "taxonomies";
+
+    private static final String URL_CONCAT = "%s/%s";
+
+    private static final List<Integer> RETRY_STATUSES = Collections.unmodifiableList(Arrays.asList(408, 429, 500, 502, 503, 504));
+
+    private ObjectMapper objectMapper = new ObjectMapper()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private DeliveryOptions deliveryOptions;
+
+    private ContentLinkUrlResolver contentLinkUrlResolver;
+    private BrokenLinkUrlResolver brokenLinkUrlResolver;
+    private RichTextElementResolver richTextElementResolver = new DelegatingRichTextElementResolver();
+    private StronglyTypedContentItemConverter stronglyTypedContentItemConverter =
+            new StronglyTypedContentItemConverter();
+    private TemplateEngineConfig templateEngineConfig;
+
+    private OkHttpClient httpClient;
+
+    private AsyncCacheManager cacheManager = new AsyncCacheManager() {
+        @Override
+        public CompletionStage<JsonNode> get(String url) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        @Override
+        public CompletionStage put(String url, JsonNode jsonNode, List<ContentItem> containedContentItems) {
+            return CompletableFuture.completedFuture(null);
+        }
+    };
+
+    static final ScheduledExecutorService SCHEDULER = new ScheduledThreadPoolExecutor(0);
+
+    @SuppressWarnings("WeakerAccess")
     public DeliveryClient(DeliveryOptions deliveryOptions) {
         this(deliveryOptions, new TemplateEngineConfig());
     }
 
-    /**
-     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     *
-     * @param deliveryOptions       The settings of the Kentico Kontent project.
-     * @param templateEngineConfig  Configuration object used for customization of template render engines for inline
-     *                              content
-     * @throws                      IllegalArgumentException Thrown if the arguments in the {@link DeliveryOptions} are
-     *                              invalid.
-     * @see                         DeliveryOptions
-     * @see                         TemplateEngineConfig
-     */
+    @SuppressWarnings({"ResultOfMethodCallIgnored", "WeakerAccess"})
     public DeliveryClient(DeliveryOptions deliveryOptions, TemplateEngineConfig templateEngineConfig) {
-        this.asyncDeliveryClient = new AsyncDeliveryClient(deliveryOptions, templateEngineConfig);
+        if (deliveryOptions == null) {
+            throw new IllegalArgumentException("The Delivery options object is not specified.");
+        }
+        if (deliveryOptions.getProjectId() == null || deliveryOptions.getProjectId().isEmpty()) {
+            throw new IllegalArgumentException("Kentico Kontent project identifier is not specified.");
+        }
+        try {
+            UUID.fromString(deliveryOptions.getProjectId());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    String.format(
+                            "Provided string is not a valid project identifier (%s).  Have you accidentally passed " +
+                                    "the Preview API key instead of the project identifier?",
+                            deliveryOptions.getProjectId()),
+                    e);
+        }
+        if (deliveryOptions.isUsePreviewApi() &&
+                (deliveryOptions.getPreviewApiKey() == null || deliveryOptions.getPreviewApiKey().isEmpty())) {
+            throw new IllegalArgumentException("The Preview API key is not specified.");
+        }
+        if (deliveryOptions.isUsePreviewApi() && deliveryOptions.getProductionApiKey() != null) {
+            throw new IllegalArgumentException("Cannot provide both a preview API key and a production API key.");
+        }
+        if (deliveryOptions.getRetryAttempts() < 0) {
+            throw new IllegalArgumentException("Cannot retry connections less than 0 times.");
+        }
+        this.deliveryOptions = deliveryOptions;
+
+        if (templateEngineConfig != null) {
+            templateEngineConfig.init();
+            this.templateEngineConfig = templateEngineConfig;
+        }
+        reconfigureDeserializer();
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (deliveryOptions.getProxyServer() != null) {
+            builder.proxy(deliveryOptions.getProxyServer());
+        }
+
+        this.httpClient = builder.build();
     }
 
-    /**
-     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project.
-     *
-     * @param projectId The Project ID associated with your Kentico Kontent account.  Must be in the format of an
-     *                  {@link java.util.UUID}.
-     * @throws          IllegalArgumentException Thrown if the Project id is invalid.
-     */
+    @SuppressWarnings("unused")
     public DeliveryClient(String projectId) {
-        this.asyncDeliveryClient = new AsyncDeliveryClient(new DeliveryOptions(projectId));
+        this(new DeliveryOptions(projectId));
     }
 
-    /**
-     * Initializes a new instance of the {@link DeliveryClient} class for retrieving content of the specified project,
-     * and configures the preview API.
-     * <p>
-     * An API key (which comes in the form of a verified <a href="https://jwt.io/">JSON Web Token</a>) provides
-     * read-only access to a single project.  You can find the API keys for your project in the API keys section in the
-     * <a href="https://app.kontent.ai">Kentico Kontent</a> app.
-     *
-     * @param projectId     The Project ID associated with your Kentico Kontent account.  Must be in the format of an
-     *                      {@link java.util.UUID}.
-     * @param previewApiKey The Preview API key configured with your Kentico Kontent account.
-     * @throws              IllegalArgumentException Thrown if the Project id is invalid.
-     */
+    @SuppressWarnings("unused")
     public DeliveryClient(String projectId, String previewApiKey) {
-        this.asyncDeliveryClient = new AsyncDeliveryClient(new DeliveryOptions(projectId, previewApiKey));
+        this(new DeliveryOptions(projectId, previewApiKey));
     }
 
-    /**
-     * Returns a {@link ContentItemsListingResponse} for all items in the project.  Beware, this is an incredibly
-     * expensive operation on a big project, you were forewarned.
-     *
-     * @return  A {@link ContentItemsListingResponse} for all items in the project.
-     * @throws  KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see     ContentItem
-     * @see     ContentItemsListingResponse
-     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *          KenticoKontent API reference - List content items</a>
-     */
-    public ContentItemsListingResponse getItems() {
+    public CompletionStage<ContentItemsListingResponse> getItems() {
         return getItems(Collections.emptyList());
     }
 
-    /**
-     * Returns a {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.
-     *
-     * @param params    The query parameters to use for this listing request.
-     * @return          A {@link ContentItemsListingResponse} for items matching the query parameters.
-     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see             DeliveryParameterBuilder
-     * @see             ContentItem
-     * @see             ContentItemsListingResponse
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *                  KenticoKontent API reference - Listing response</a>
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *                  KenticoKontent API reference - List content items</a>
-     */
-    public ContentItemsListingResponse getItems(List<NameValuePair> params) {
-        return asyncDeliveryClient.getItems(params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<ContentItemsListingResponse> getItems(List<NameValuePair> params) {
+        return executeRequest(ITEMS, params, ContentItemsListingResponse.class)
+                .thenApply(contentItemsListingResponse ->
+                        contentItemsListingResponse
+                                .setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter))
+                .thenApply(response -> {
+                    createRichTextElementConverter().process(response.items);
+                    return response;
+                });
     }
 
-    /**
-     * Returns a new instance of {@code List<T>} by mapping fields to elements from a
-     * {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.  For performance reasons, if there are is a {@link System#type} registered with T, then
-     * the 'system.type=YOUR_TYPE' query parameter will be added automatically if 'system.type' is not part of the
-     * query.
-     * <p>
-     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
-     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     *
-     * @param tClass    The class which a new instance should be returned from.
-     * @param <T>       The type of class.
-     * @param params    The query parameters to use for this listing request.
-     * @return          An instance of {@code List<T>} with data mapped from the {@link ContentItem} list in this
-     *                  response.
-     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent
-     * @see             DeliveryParameterBuilder
-     * @see             ContentItemsListingResponse#castTo(Class)
-     * @see             ContentItemMapping
-     * @see             ElementMapping
-     * @see             #registerType(Class)
-     * @see             #registerType(String, Class)
-     */
-    public <T> List<T> getItems(Class<T> tClass, List<NameValuePair> params) {
-        return asyncDeliveryClient.getItems(tClass, params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public <T> CompletionStage<List<T>> getItems(Class<T> tClass, List<NameValuePair> params) {
+        return getItems(addTypeParameterIfNecessary(tClass, params))
+                .thenApply(contentItemsListingResponse -> contentItemsListingResponse.castTo(tClass));
     }
 
-    /**
-     * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
-     * {@link System#codename}.
-     *
-     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
-     * @return                      A {@link ContentItemResponse} for the {@link ContentItem} in the project.
-     * @throws                      KenticoIOException If an {@link IOException} is thrown connecting to Kentico.
-     * @see                         ContentItem
-     * @see                         ContentItemResponse
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *                              KenticoKontent API reference - View a content item</a>
-     */
-    public ContentItemResponse getItem(String contentItemCodename) {
+    @SuppressWarnings("unused")
+    public CompletionStage<ContentItemResponse> getItem(String contentItemCodename) {
         return getItem(contentItemCodename, Collections.emptyList());
     }
 
-    /**
-     * Returns a new instance of {@code List<T>} by mapping fields to elements from a
-     * {@link ContentItemsListingResponse}.  Beware, this is an incredibly expensive operation on a big project, you
-     * were forewarned.  It is recommended to use {@link #getItems(Class, List)} using a
-     * {@link DeliveryParameterBuilder} instead.  For performance reasons, if there are is a {@link System#type}
-     * registered with T, then the 'system.type=YOUR_TYPE' query parameter will be added automatically.
-     * <p>
-     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
-     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     *
-     * @param tClass    The class which a new instance should be returned from.
-     * @param <T>       The type of class.
-     * @return          An instance of {@code List<T>} with data mapped from the {@link ContentItem} list in this
-     *                  response.
-     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see             DeliveryParameterBuilder
-     * @see             ContentItemsListingResponse#castTo(Class)
-     * @see             ContentItemMapping
-     * @see             ElementMapping
-     * @see             #registerType(Class)
-     * @see             #registerType(String, Class)
-     */
-    public <T> List<T> getItems(Class<T> tClass) {
+    @SuppressWarnings("unused")
+    public <T> CompletionStage<List<T>> getItems(Class<T> tClass) {
         return getItems(tClass, Collections.emptyList());
     }
 
-    /**
-     * Returns {@link Page} containing a new instance of {@code List<T>} by mapping fields to elements from a
-     * {@link ContentItemsListingResponse} using the query provided.  For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.
-     * <p>
-     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
-     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     *
-     * @param tClass    The class which a new instance should be returned from.
-     * @param <T>       The type of class.
-     * @param params    The query parameters to use for this listing request.
-     * @return          An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in this
-     *                  response.
-     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see             Page
-     * @see             Pagination
-     * @see             DeliveryParameterBuilder
-     * @see             ContentItemsListingResponse#castTo(Class)
-     * @see             ContentItemMapping
-     * @see             ElementMapping
-     * @see             #registerType(Class)
-     * @see             #registerType(String, Class)
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *                  KenticoKontent API reference - Listing response paging</a>
-     */
-    public <T> Page<T> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
-        return asyncDeliveryClient.getPageOfItems(tClass, params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public <T> CompletionStage<Page<T>> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
+        return getItems(params)
+                .thenApply(response ->
+                        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter))
+                .thenApply(response -> new Page<>(response, tClass));
     }
 
-    /**
-     * Returns the next {@link Page} of results.
-     *
-     * @param currentPage   The instance of the {@link Page} preceding the {@link Page} being requested.
-     * @param <T>           The type of class.
-     * @return              An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in this
-     *                      response.
-     * @throws              KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see                 Page
-     * @see                 Pagination
-     * @see                 DeliveryParameterBuilder
-     * @see                 ContentItemsListingResponse#castTo(Class)
-     * @see                 ContentItemMapping
-     * @see                 ElementMapping
-     * @see                 #registerType(Class)
-     * @see                 #registerType(String, Class)
-     * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *                      KenticoKontent API reference - Listing response paging</a>
-     */
-    public <T> Page<T> getNextPage(Page<T> currentPage) {
-        return asyncDeliveryClient.getNextPage(currentPage).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public <T> CompletionStage<Page<T>> getNextPage(Page<T> currentPage) {
+        final Pagination pagination = currentPage.getPagination();
+        if (pagination.getNextPage() == null || pagination.getNextPage().isEmpty()) {
+            return CompletableFuture.completedFuture(null);
+        }
+
+        return executeRequest(pagination.getNextPage(), ContentItemsListingResponse.class)
+                .thenApply(response -> response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter))
+                .thenApply(response -> {
+                    createRichTextElementConverter().process(response.items);
+                    return response;
+                })
+                .thenApply(response -> new Page<>(response, currentPage.getType()));
     }
 
-    /**
-     * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
-     * {@link System#codename}.
-     * <p>
-     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
-     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     *
-     * @param tClass                The class which a new instance should be returned from.
-     * @param <T>                   The type of class.
-     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
-     * @return                      An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in
-     *                              this response.
-     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
-     *                              KenticoKontent.
-     * @see                         ContentItem
-     * @see                         ContentItemResponse#castTo(Class)
-     * @see                         ContentItemMapping
-     * @see                         ElementMapping
-     * @see                         #registerType(Class)
-     * @see                         #registerType(String, Class)
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *                              KenticoKontent API reference - View a content item</a>
-     */
-    public <T> T getItem(String contentItemCodename, Class<T> tClass) {
+    @SuppressWarnings("unused")
+    public <T> CompletionStage<T> getItem(String contentItemCodename, Class<T> tClass) {
         return getItem(contentItemCodename, tClass, Collections.emptyList());
     }
 
-    /**
-     * Returns a {@link ContentItemResponse} for the {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
-     * depth or to apply a projection. For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.
-     *
-     * @param contentItemCodename   The {@link System#codename} for the {@link ContentItem} requested.
-     * @param params                The query parameters to use for this ContentItemResponse request.
-     * @return                      A {@link ContentItemResponse} for the {@link ContentItem} in the project.
-     * @throws                      KenticoIOException If an {@link IOException} is thrown connecting to Kentico.
-     * @see                         DeliveryParameterBuilder
-     * @see                         ContentItem
-     * @see                         ContentItemResponse
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *                              KenticoKontent API reference - View a content item</a>
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *                              KenticoKontent API reference - Listing response</a>
-     */
-    public ContentItemResponse getItem(String contentItemCodename, List<NameValuePair> params) {
-        return asyncDeliveryClient.getItem(contentItemCodename, params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<ContentItemResponse> getItem(String contentItemCodename, List<NameValuePair> params) {
+        final String apiCall = String.format(URL_CONCAT, ITEMS, contentItemCodename);
+        return executeRequest(apiCall, params, ContentItemResponse.class)
+                .thenApply(response ->
+                        response.setStronglyTypedContentItemConverter(stronglyTypedContentItemConverter))
+                .thenApply(response -> {
+                    createRichTextElementConverter().process(response.item);
+                    return response;
+                });
     }
 
-    /**
-     * Returns new instance of T by mapping fields to elements from a {@link ContentItem} in the project with the given
-     * {@link System#codename}.  Query parameters can be provided, which can be used to change linked item
-     * depth or to apply a projection. For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.
-     * <p>
-     * Element fields are mapped by automatically CamelCasing and checking for equality, unless otherwise annotated by
-     * an {@link ElementMapping} annotation.  T must have a default constructor and have standard setter methods.
-     *
-     * @param contentItemCodename   The {@link System#getCodename()} for the {@link ContentItem} requested.
-     * @param tClass                The class which a new instance should be returned from.
-     * @param <T>                   The type of class.
-     * @param params                The query parameters to use for this ContentItemResponse request.
-     * @return                      An instance of {@code Page<T>} with data mapped from the {@link ContentItem} list in
-     *                              this response.
-     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
-     *                              KenticoKontent.
-     * @see                         ContentItem
-     * @see                         ContentItemResponse#castTo(Class)
-     * @see                         ContentItemMapping
-     * @see                         ElementMapping
-     * @see                         #registerType(Class)
-     * @see                         #registerType(String, Class)
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *                              KenticoKontent API reference - View a content item</a>
-     */
-    public <T> T getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) {
-        return asyncDeliveryClient.getItem(contentItemCodename, tClass, params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public <T> CompletionStage<T> getItem(String contentItemCodename, Class<T> tClass, List<NameValuePair> params) {
+        return getItem(contentItemCodename, addTypeParameterIfNecessary(tClass, params))
+                .thenApply(contentItemResponse -> contentItemResponse.castTo(tClass));
     }
 
-    /**
-     * Returns a {@link ContentTypesListingResponse} detailing all {@link ContentType}s in the project.
-     *
-     * @return  A ContentTypesListingResponse containing all {@link ContentType}s in the project.
-     * @throws  KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see     ContentType
-     * @see     DeliveryClient#getTypes()
-     * @see     DeliveryClient#getTypes(List)
-     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-types">
-     *          KenticoKontent API reference - List content types</a>
-     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
-     *          KenticoKontent API reference - Content type object</a>
-     */
-    public ContentTypesListingResponse getTypes() {
+    public CompletionStage<ContentTypesListingResponse> getTypes() {
         return getTypes(Collections.emptyList());
     }
 
-    /**
-     * Returns a {@link ContentTypesListingResponse} detailing all {@link ContentType}s in the project.  Query
-     * parameters can be provided, which can be used for paging. For simplicity, it is recommended to use
-     * {@link DeliveryParameterBuilder#params()} followed by {@link DeliveryParameterBuilder#build()} to generate the
-     * query parameters.
-     *
-     * @param params    The query parameters to use for this ContentItemResponse request.
-     * @return          A ContentTypesListingResponse containing a page or all {@link ContentType}s.
-     * @throws          KenticoIOException If an {@link IOException} is thrown interacting with KenticoKontent.
-     * @see             Pagination
-     * @see             ContentType
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-types">
-     *                  KenticoKontent API reference - List content types</a>
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
-     *                  KenticoKontent API reference - Content type object</a>
-     */
-    public ContentTypesListingResponse getTypes(List<NameValuePair> params) {
-        return asyncDeliveryClient.getTypes(params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<ContentTypesListingResponse> getTypes(List<NameValuePair> params) {
+        return executeRequest(TYPES, params, ContentTypesListingResponse.class);
     }
 
-    /**
-     * Returns the {@link ContentType} with a {@link System#codename}.
-     *
-     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
-     * @return                      The ContentType matching {@link System#codename}.
-     * @throws                      KenticoIOException If an {@link IOException} is thrown interacting with
-     *                              KenticoKontent.
-     * @see                         ContentType
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-type">
-     *                              KenticoKontent API reference - View a content type</a>
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
-     *                              KenticoKontent API reference - Content type object</a>
-     */
-    public ContentType getType(String contentTypeCodeName) {
-        return asyncDeliveryClient.getType(contentTypeCodeName).blockingGet();
+    public CompletionStage<ContentType> getType(String contentTypeCodeName) {
+        final String apiCall = String.format(URL_CONCAT, TYPES, contentTypeCodeName);
+        return executeRequest(apiCall, Collections.emptyList(), ContentType.class);
     }
 
-    /**
-     * Retrieve a specific {@link ContentType} {@link Element} by specifying its codename and its parent content type.
-     *
-     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
-     * @param elementCodeName       The codename for the Element.
-     * @return                      The Element for the ContentType requested.
-     * @see                         <a
-     *                              href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-type-element">
-     *                              KenticoKontent API reference - View a content type element</a>
-     * @see                         <a
-     *                              href="https://docs.kontent.ai/tutorials/set-up-projects/define-content-models/content-type-elements-reference">
-     *                              KenticoKontent API reference - Content element model</a>
-     */
-    public Element getContentTypeElement(String contentTypeCodeName, String elementCodeName) {
+    @SuppressWarnings("unused")
+    public CompletionStage<Element> getContentTypeElement(String contentTypeCodeName, String elementCodeName) {
         return getContentTypeElement(contentTypeCodeName, elementCodeName, Collections.emptyList());
     }
 
-    /**
-     * Retrieve a specific {@link ContentType} {@link Element} by specifying its codename and its parent content type.
-     * Generally you will want to use {@link #getContentTypeElement(String, String)} instead, but this allows
-     * specification of query parameters.
-     *
-     * @param contentTypeCodeName   The {@link System#codename} for the ContentType request.
-     * @param elementCodeName       The codename for the Element.
-     * @param params                Query params to add to the request.
-     * @return                      The Element for the ContentType requested.
-     * @see                         #getContentTypeElement(String, String)
-     * @see                         <a
-     *                              href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-type-element">
-     *                              KenticoKontent API reference - View a content type element</a>
-     * @see                         <a
-     *                              href="https://docs.kontent.ai/tutorials/set-up-projects/define-content-models/content-type-elements-reference">
-     *                              KenticoKontent API reference - Content element model</a>
-     */
-    public Element getContentTypeElement(
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<Element> getContentTypeElement(
             String contentTypeCodeName, String elementCodeName, List<NameValuePair> params) {
-        return asyncDeliveryClient.getContentTypeElement(contentTypeCodeName, elementCodeName, params)
-                .blockingGet();
+        final String apiCall = String.format("%s/%s/%s/%s", TYPES, contentTypeCodeName, ELEMENTS, elementCodeName);
+        return executeRequest(apiCall, params, Element.class);
     }
 
-    /**
-     * Retrieve all {@link TaxonomyGroup} in your project.  Returns them ordered alphabetically by codename.
-     *
-     * @return  A response object containing all {@link TaxonomyGroup} in the project.
-     * @see     TaxonomyGroup
-     * @see     Taxonomy
-     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-taxonomy-groups">
-     *          KenticoKontent API reference - List taxonomy groups</a>
-     * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
-     *          KenticoKontent API reference - Taxonomy group model</a>
-     */
-    public TaxonomyGroupListingResponse getTaxonomyGroups() {
+    @SuppressWarnings("unused")
+    public CompletionStage<TaxonomyGroupListingResponse> getTaxonomyGroups() {
         return getTaxonomyGroups(Collections.emptyList());
     }
 
-    /**
-     * Retrieve a page of {@link TaxonomyGroup} in your project.
-     * Use {@link DeliveryParameterBuilder#page(Integer, Integer)}.
-     *
-     * @param params    Built from {@link DeliveryParameterBuilder#page(Integer, Integer)}
-     * @return          A response object containing all {@link TaxonomyGroup} in the project.
-     * @see             TaxonomyGroup
-     * @see             Taxonomy
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-taxonomy-groups">
-     *                  KenticoKontent API reference - List taxonomy groups</a>
-     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
-     *                  KenticoKontent API reference - Taxonomy group model</a>
-     */
-    public TaxonomyGroupListingResponse getTaxonomyGroups(List<NameValuePair> params) {
-        return asyncDeliveryClient.getTaxonomyGroups(params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<TaxonomyGroupListingResponse> getTaxonomyGroups(List<NameValuePair> params) {
+        return executeRequest(TAXONOMIES, params, TaxonomyGroupListingResponse.class);
     }
 
-    /**
-     * Retrieve a specific {@link TaxonomyGroup} from your project by specifying its codename.
-     *
-     * @param taxonomyGroupCodename The codename of a specfic taxonomy group.
-     * @return                      The {@link TaxonomyGroup}.
-     * @see                         TaxonomyGroup
-     * @see                         Taxonomy
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-taxonomy-group">
-     *                              KenticoKontent API reference - View a taxonomy group</a>
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
-     *                              KenticoKontent API reference - Taxonomy group model</a>
-     */
-    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename) {
+    @SuppressWarnings("unused")
+    public CompletionStage<TaxonomyGroup> getTaxonomyGroup(String taxonomyGroupCodename) {
         return getTaxonomyGroup(taxonomyGroupCodename, Collections.emptyList());
     }
 
-    /**
-     * Retrieve a specific {@link TaxonomyGroup} from your project by specifying its codename.  Generally you will want
-     * to use {@link #getTaxonomyGroup(String)} instead, but this allows specification of query parameters.
-     *
-     * @param taxonomyGroupCodename The codename of a specfic taxonomy group.
-     * @param params                Query params to add to the request.
-     * @return                      The {@link TaxonomyGroup}.
-     * @see                         TaxonomyGroup
-     * @see                         Taxonomy
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-taxonomy-group">
-     *                              KenticoKontent API reference - View a taxonomy group</a>
-     * @see                         <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
-     *                              KenticoKontent API reference - Taxonomy group model</a>
-     */
-    public TaxonomyGroup getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) {
-        return asyncDeliveryClient.getTaxonomyGroup(taxonomyGroupCodename, params).blockingGet();
+    @SuppressWarnings("WeakerAccess")
+    public CompletionStage<TaxonomyGroup> getTaxonomyGroup(String taxonomyGroupCodename, List<NameValuePair> params) {
+        final String apiCall = String.format(URL_CONCAT, TAXONOMIES, taxonomyGroupCodename);
+        return executeRequest(apiCall, params, TaxonomyGroup.class);
     }
 
-    /**
-     * Retrieve the currently configured {@link ContentLinkUrlResolver} for this client.
-     *
-     * @return  This client's {@link ContentLinkUrlResolver}
-     * @see     ContentLinkUrlResolver
-     */
+    @SuppressWarnings("WeakerAccess")
     public ContentLinkUrlResolver getContentLinkUrlResolver() {
-        return asyncDeliveryClient.getContentLinkUrlResolver();
+        return contentLinkUrlResolver;
     }
 
-    /**
-     * Sets the {@link ContentLinkUrlResolver} for this client.
-     *
-     * @param contentLinkUrlResolver    Sets the ContentLinkResolver of this client.
-     * @see                             ContentLinkUrlResolver
-     */
+    @SuppressWarnings("WeakerAccess")
     public void setContentLinkUrlResolver(ContentLinkUrlResolver contentLinkUrlResolver) {
-        asyncDeliveryClient.setContentLinkUrlResolver(contentLinkUrlResolver);
+        this.contentLinkUrlResolver = contentLinkUrlResolver;
     }
 
-    /**
-     * Retrieve the currently configured {@link BrokenLinkUrlResolver} for this client.
-     *
-     * @return  This client's {@link BrokenLinkUrlResolver}
-     * @see     BrokenLinkUrlResolver
-     */
+    @SuppressWarnings("WeakerAccess")
     public BrokenLinkUrlResolver getBrokenLinkUrlResolver() {
-        return asyncDeliveryClient.getBrokenLinkUrlResolver();
+        return brokenLinkUrlResolver;
     }
 
-    /**
-     * Sets the {@link BrokenLinkUrlResolver} for this client.
-     *
-     * @param brokenLinkUrlResolver Sets the BrokenLinkUrlResolver of this client.
-     * @see                         BrokenLinkUrlResolver
-     */
+    @SuppressWarnings("WeakerAccess")
     public void setBrokenLinkUrlResolver(BrokenLinkUrlResolver brokenLinkUrlResolver) {
-        asyncDeliveryClient.setBrokenLinkUrlResolver(brokenLinkUrlResolver);
+        this.brokenLinkUrlResolver = brokenLinkUrlResolver;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public RichTextElementResolver getRichTextElementResolver() {
-        return asyncDeliveryClient.getRichTextElementResolver();
+        return richTextElementResolver;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void setRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
-        asyncDeliveryClient.setRichTextElementResolver(richTextElementResolver);
+        this.richTextElementResolver = richTextElementResolver;
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void addRichTextElementResolver(RichTextElementResolver richTextElementResolver) {
-        asyncDeliveryClient.addRichTextElementResolver(richTextElementResolver);
+        if (this.richTextElementResolver instanceof DelegatingRichTextElementResolver) {
+            ((DelegatingRichTextElementResolver) this.richTextElementResolver).addResolver(richTextElementResolver);
+        } else if (this.richTextElementResolver == null) {
+            setRichTextElementResolver(richTextElementResolver);
+        } else {
+            DelegatingRichTextElementResolver delegatingResolver = new DelegatingRichTextElementResolver();
+            delegatingResolver.addResolver(this.richTextElementResolver);
+            delegatingResolver.addResolver(richTextElementResolver);
+            setRichTextElementResolver(delegatingResolver);
+        }
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void registerType(String contentType, Class<?> clazz) {
-        asyncDeliveryClient.registerType(contentType, clazz);
+        stronglyTypedContentItemConverter.registerType(contentType, clazz);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void registerType(Class<?> clazz) {
-        asyncDeliveryClient.registerType(clazz);
+        stronglyTypedContentItemConverter.registerType(clazz);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void registerInlineContentItemsResolver(InlineContentItemsResolver resolver) {
-        asyncDeliveryClient.registerInlineContentItemsResolver(resolver);
+        stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
     }
 
+    @SuppressWarnings("WeakerAccess")
     public void scanClasspathForMappings(String basePackage) {
-        asyncDeliveryClient.scanClasspathForMappings(basePackage);
+        stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void setCacheManager(AsyncCacheManager cacheManager) {
+        this.cacheManager = cacheManager;
     }
 
     /**
      * Sets the {@link CacheManager} for this client.
      *
-     * @param cacheManager  A {@link CacheManager} implementation for this client to use.
-     * @see                 CacheManager
+     * @param cacheManager A {@link CacheManager} implementation for this client to use.
+     * @see CacheManager
      */
     public void setCacheManager(final CacheManager cacheManager) {
         final AsyncCacheManager bridgedCacheManager = new AsyncCacheManager() {
             @Override
-            public Maybe<JsonNode> get(String url) {
-                return Maybe.create(emitter -> {
-                    try {
-                        final JsonNode jsonNode = cacheManager.get(url);
-                        if (jsonNode != null) {
-                            emitter.onSuccess(jsonNode);
-                        }
-                        emitter.onComplete();
-                    } catch (Exception e) {
-                        emitter.onError(e);
-                    }
-                });
+            public CompletionStage<JsonNode> get(String url) {
+
+                return CompletableFuture.supplyAsync(() ->
+                        cacheManager.get(url)
+                );
             }
 
             @Override
-            public Completable put(String url, JsonNode jsonNode, List<ContentItem> containedContentItems) {
-                return new CompletableFromRunnable(() -> cacheManager.put(url, jsonNode, containedContentItems));
+            public CompletionStage put(String url, JsonNode jsonNode, List<ContentItem> containedContentItems) {
+                return CompletableFuture.runAsync(() -> cacheManager.put(url, jsonNode, containedContentItems));
             }
         };
-        asyncDeliveryClient.setCacheManager(bridgedCacheManager);
+        this.setCacheManager(bridgedCacheManager);
+    }
+
+    private <T> CompletionStage<T> executeRequest(final String apiCall, final List<NameValuePair> queryParams, Class<T> tClass) {
+        return executeRequest(createUrl(apiCall, queryParams), tClass);
+    }
+
+    private <T> CompletionStage<T> executeRequest(final String url, Class<T> tClass) {
+        final Request request = buildNewRequest(url);
+        log.debug("Request to url: {}", url);
+        final boolean skipCache = Optional.ofNullable(request.header(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT))
+                .map(Boolean::valueOf)
+                .orElse(false);
+
+
+        if (skipCache) {
+            return retrieveFromKentico(request, url, tClass, 0);
+        } else {
+            return cacheManager.get(url).thenApply(jsonNode -> {
+                try {
+                    if (jsonNode == null) {
+                        return null;
+                    }
+                    return objectMapper.treeToValue(jsonNode, tClass);
+                } catch (JsonProcessingException e) {
+                    log.error("JsonProcessingException parsing Kentico object: {}", e.toString());
+                }
+                return null;
+            }).thenCompose(result -> {
+                if (result != null) {
+                    return CompletableFuture.completedFuture(result);
+                } else {
+                    return retrieveFromKentico(request, url, tClass, 0);
+                }
+            });
+        }
+    }
+
+    private <T> CompletionStage<T> retrieveFromKentico(Request request, final String url, Class<T> tClass, int retryTurn) {
+        return send(request)
+                .thenApply(this::logResponseInfo)
+                .thenApply(this::handleErrorIfNecessary)
+                .thenApply(Response::body)
+                .thenApply((responseBody) -> {
+                    try {
+                        return responseBody.string();
+                    } catch (IOException e) {
+                        log.error("IOException when converting responseBody to body string: {}", e.toString());
+                        throw new CompletionException(e);
+                    }
+                })
+                .thenApply((bodyString) -> {
+                    try {
+                        return objectMapper.readValue(bodyString, JsonNode.class);
+                    } catch (IOException e) {
+                        log.error("IOException when mapping body string to the JsonNode: {}", e.toString());
+                        throw new CompletionException(e);
+                    }
+                })
+                .thenCompose((jsonNode) -> {
+                    try {
+                        return convertAndPutInCache(url, tClass, jsonNode);
+                    } catch (JsonProcessingException e) {
+                        log.error("JsonProcessingException when converting JsonNode to typed class: {}", e.toString());
+                        throw new CompletionException(e);
+                    }
+                })
+                .exceptionally((error) -> {
+                    final AtomicInteger counter = new AtomicInteger(retryTurn);
+
+                    if (error instanceof CompletionException) {
+                        Throwable cause = error.getCause();
+
+                        // Don't retry when when not KenticoException or not set to retry
+                        boolean retry = cause instanceof KenticoException && ((KenticoException) cause).shouldRetry();
+
+                        if (!retry) {
+                            throw (CompletionException) error;
+                        }
+                    }
+
+                    if (counter.incrementAndGet() > deliveryOptions.getRetryAttempts()) {
+                        KenticoRetryException ex = new KenticoRetryException(deliveryOptions.getRetryAttempts());
+                        ex.initCause(error.getCause());
+                        throw ex;
+                    }
+
+                    //Perform a binary exponential backoff
+                    int wait = (int) (100 * Math.pow(2, retryTurn));
+                    log.info("Reattempting request after {}ms (re-attempt {} out of max {})",
+                            wait, counter.get(), deliveryOptions.getRetryAttempts());
+
+                    try {
+                        return CompletableFuture.supplyAsync(
+                                () -> {
+                                    try {
+                                        return retrieveFromKentico(request, url, tClass, counter.get())
+                                                .toCompletableFuture().get();
+                                    } catch (InterruptedException e) {
+                                        log.error(String.format("InterruptedException have been raised on retial no. %d", counter.get()));
+                                        throw new CompletionException(e);
+                                    } catch (ExecutionException e) {
+                                        log.error(String.format("ExecutionException have been raised on retrial no. %d", counter.get()));
+                                        if (e.getCause() instanceof KenticoRetryException) {
+                                            KenticoRetryException exception = new KenticoRetryException(((KenticoRetryException) e.getCause()).getMaxRetryAttempts());
+                                            exception.initCause(error.getCause());
+                                            throw exception;
+                                        }
+                                        throw new CompletionException(e);
+                                    }
+                                },
+                                r -> SCHEDULER.schedule(
+                                        () -> ForkJoinPool.commonPool().execute(r), wait, TimeUnit.MILLISECONDS)
+                        ).toCompletableFuture()
+                                .get();
+                    } catch (InterruptedException e) {
+                        log.error("InterruptedException have been raised for timeout");
+                        throw new CompletionException(e);
+                    } catch (ExecutionException e) {
+                        log.error("ExecutionException have been raised for timeout");
+                        if (e.getCause() instanceof KenticoRetryException) {
+                            KenticoRetryException exception = new KenticoRetryException(((KenticoRetryException) e.getCause()).getMaxRetryAttempts());
+                            exception.initCause(error.getCause());
+                            throw exception;
+                        }
+
+                        throw new CompletionException(e);
+                    }
+                });
+    }
+
+    private Response handleErrorIfNecessary(Response response) throws KenticoIOException, KenticoErrorException {
+        final int status = response.code();
+        if (RETRY_STATUSES.contains(status)) {
+            log.error("Kentico API retry status returned: {} (one of {})", status, RETRY_STATUSES.toString());
+            try {
+                KenticoError kenticoError = objectMapper.readValue(response.body().bytes(), KenticoError.class);
+                throw new KenticoErrorException(kenticoError, true);
+            } catch (IOException e) {
+                log.error("IOException when trying to parse the error response body: {}", e.toString());
+                throw new KenticoIOException(String.format("Kentico API retry status returned: %d (one of %s)", status, RETRY_STATUSES.toString()), true);
+            }
+        } else if (status >= 500) {
+            log.error("Kentico API server error, status: {}", status);
+            log.info("Request URL: ", response.request().url().toString());
+            String message =
+                    String.format(
+                            "Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: %s",
+                            status);
+            throw new CompletionException(new KenticoIOException(message, false));
+        } else if (status >= 400) {
+            log.error("Kentico API server error, status: {}", status);
+            try {
+                KenticoError kenticoError = objectMapper.readValue(response.body().bytes(), KenticoError.class);
+                throw new CompletionException(new KenticoErrorException(kenticoError, false));
+            } catch (IOException e) {
+                log.error("IOException connecting to Kentico: {}", e.toString());
+                throw new CompletionException(new KenticoIOException(e, false));
+            }
+        }
+
+        return response;
+    }
+
+    private CompletionStage<Response> send(Request request) {
+        final CompletableFuture<Response> future = new CompletableFuture<>();
+        httpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                log.error("Request call failed with IO Exception: {}", e.getMessage());
+                future.completeExceptionally(e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                log.debug("Request call succeeded with response message:", response.message());
+                future.complete(response);
+            }
+        });
+        return future;
+    }
+
+    private Request buildNewRequest(String url) {
+        Request.Builder requestBuilder = new Request.Builder().url(url);
+        requestBuilder.header("Accept", "applications/json");
+        requestBuilder.header("X-KC-SDKID", sdkId);
+
+        if (deliveryOptions.getProductionApiKey() != null) {
+            requestBuilder.header("Authorization", String.format("Bearer %s", deliveryOptions.getProductionApiKey()));
+        } else if (deliveryOptions.isUsePreviewApi()) {
+            requestBuilder.header("Authorization", String.format("Bearer %s", deliveryOptions.getPreviewApiKey()));
+        }
+        if (deliveryOptions.isWaitForLoadingNewContent()) {
+            requestBuilder.header(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT, "true");
+        }
+        return requestBuilder.build();
+
+    }
+
+    private String createUrl(final String apiCall, final List<NameValuePair> queryParams) {
+
+        final String queryStr = Optional.ofNullable(queryParams)
+                .filter(params -> !params.isEmpty())
+                .map(params -> params.stream()
+                        .map(pair -> String.format("%s=%s", pair.getName(), pair.getValue()))
+                        .collect(Collectors.joining("&")))
+                .map("?"::concat)
+                .orElse("");
+
+        final String endpoint = deliveryOptions.isUsePreviewApi() ?
+                deliveryOptions.getPreviewEndpoint() : deliveryOptions.getProductionEndpoint();
+
+        return String.format("%s/%s/%s%s", endpoint, deliveryOptions.getProjectId(), apiCall, queryStr);
+    }
+
+    private Response logResponseInfo(Response response) {
+        log.info("{} - {}", response.message(), response.request().url());
+        log.debug("{} - {}:\n{}", response.code(), response.request().url(), response.body());
+        return response;
+    }
+
+    private <T> CompletionStage<T> convertAndPutInCache(String url, Class<T> tClass, JsonNode jsonNode) throws JsonProcessingException {
+        final T t = objectMapper.treeToValue(jsonNode, tClass);
+        final List<ContentItem> containedContentItems;
+        if (t instanceof ContentItemResponse) {
+            containedContentItems = Collections.singletonList(((ContentItemResponse) t).getItem());
+        } else if (t instanceof ContentItemsListingResponse) {
+            containedContentItems = new ArrayList<>(((ContentItemsListingResponse) t).getItems());
+        } else {
+            containedContentItems = Collections.emptyList();
+        }
+        return cacheManager.put(url, jsonNode, containedContentItems)
+                .thenApply((result) -> t);
+    }
+
+    private List<NameValuePair> addTypeParameterIfNecessary(Class tClass, List<NameValuePair> params) {
+        Optional<NameValuePair> any = params.stream()
+                .filter(nameValuePair -> nameValuePair.getName().equals("system.type"))
+                .findAny();
+        if (!any.isPresent()) {
+            String contentType = stronglyTypedContentItemConverter.getContentType(tClass);
+            if (contentType != null) {
+                List<NameValuePair> updatedParams = new ArrayList<>(params);
+                updatedParams.add(new NameValuePair("system.type", contentType));
+                return updatedParams;
+            }
+        }
+        return params;
+    }
+
+    private void reconfigureDeserializer() {
+        objectMapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        SimpleModule module = new SimpleModule();
+        objectMapper.registerModule(new JSR310Module());
+        objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        objectMapper.registerModule(module);
+    }
+
+    private RichTextElementConverter createRichTextElementConverter() {
+        return new RichTextElementConverter(
+                getContentLinkUrlResolver(),
+                getBrokenLinkUrlResolver(),
+                getRichTextElementResolver(),
+                templateEngineConfig,
+                stronglyTypedContentItemConverter);
     }
 
     DeliveryOptions getDeliveryOptions() {
-        return asyncDeliveryClient.getDeliveryOptions();
-    }
-
-    /**
-     * Cleans up the underlying http client resources
-     */
-    @Override
-    public void close() {
-        asyncDeliveryClient.close();
+        return deliveryOptions;
     }
 }

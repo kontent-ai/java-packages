@@ -198,7 +198,7 @@ public class RichTextElementConverter {
                 Object linkedItemModel = linkedItem.castToDefault();
                 TemplateEngineModel model = new TemplateEngineModel();
                 model.setInlineContentItem(linkedItemModel);
-                //TODO: Add support for adding Locale from query if it exists
+                // TODO: Add support for adding Locale from query if it exists
                 model.addVariable("parent", element);
                 model.addVariables(templateEngineConfig.getDefaultModelVariables());
                 supportedResolver = getTemplateResolver(model);

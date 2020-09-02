@@ -1,0 +1,106 @@
+plugins {
+    id "io.franzbecker.gradle-lombok" version "1.14"
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+dependencies {
+    compile('com.squareup:javapoet:1.9.0')
+    compile('com.google.guava:guava:23.0')
+    compile project(':kontent-delivery')
+
+    testCompile("junit:junit:4.12");
+    testCompile("org.apache.httpcomponents:httpclient:4.5.3:tests");
+    testCompile("org.apache.httpcomponents:httpclient:4.5.3");
+}
+
+lombok {
+    version = "1.18.2"
+    sha256 = ""
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
+    from sourceSets.main.allJava
+}
+
+import io.franzbecker.gradle.lombok.task.DelombokTask
+task delombok(type: DelombokTask, dependsOn: compileJava) {
+    ext.outputDir = file("$buildDir/delombok")
+    outputs.dir(outputDir)
+    sourceSets.main.java.srcDirs.each { dir ->
+        inputs.dir(dir)
+        args(dir, "-d", outputDir)
+    }
+}
+
+javadoc {
+    dependsOn delombok
+    source = delombok.outputDir
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+def packageSummary = 'Kontent model generator.'
+def packageDescription = 'Generators producing strongly-typed models based on content types in a Kentico Kontent project.'
+
+
+publishing {
+    publications {
+        BintrayPublication(MavenPublication) {
+            from components.java
+            artifact sourcesJar
+            artifact javadocJar
+            artifactId = 'kontent-delivery-generators'
+            groupId = repoGroupId
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', packageDescription)
+                root.appendNode('name', packageSummary)
+                root.appendNode('url', 'https://kontent.ai')
+                root.children().last() + pomConfig
+            }
+        }
+    }
+}
+
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publish = true
+    publications = ['BintrayPublication']
+    pkg {
+        repo = 'kontent-java-packages'
+        name = 'kontent-delivery-generators'
+        userOrg = 'kentico'
+        desc = packageDescription
+        issueTrackerUrl =  repoUrl + '/issues'
+        vcsUrl = repoVcsUrl
+        licenses = ['MIT']
+        publicDownloadNumbers = true
+        labels = ['kentico', 'kontent', 'model generator', 'generator', 'caas']
+        githubRepo = 'Kentico/kontent-java-packages'
+        version {
+            name = version.name
+            released = new Date()
+            desc = packageDescription
+            vcsTag = version.name
+            gpg {
+                sign = true
+                passphrase = bintrayGpg
+            }
+        }
+    }
+}

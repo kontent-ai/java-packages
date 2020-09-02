@@ -28,15 +28,24 @@ import java.io.IOException;
 
 /**
  * Thrown when an {@link IOException} is thrown when executing against the KenticoKontent API.  Generally means
- * connectivity problems with Kentico.
+ * connectivity problems with Kentico of problem parsing {@link KenticoError} from body.
  */
-public class KenticoIOException extends RuntimeException {
+public class KenticoIOException extends RuntimeException implements KenticoException {
 
-    KenticoIOException(String message) {
+    private boolean shouldRetry;
+
+    KenticoIOException(String message, boolean shouldRetry) {
         super(message);
+        this.shouldRetry = shouldRetry;
     }
 
-    KenticoIOException(IOException cause) {
+    KenticoIOException(IOException cause, boolean shouldRetry) {
         super(cause);
+        this.shouldRetry = shouldRetry;
+    }
+
+    @Override
+    public boolean shouldRetry() {
+        return this.shouldRetry;
     }
 }

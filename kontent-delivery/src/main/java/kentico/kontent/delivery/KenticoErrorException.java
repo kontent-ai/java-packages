@@ -29,25 +29,34 @@ package kentico.kontent.delivery;
  *
  * @see KenticoError
  */
-public class KenticoErrorException extends RuntimeException {
+public class KenticoErrorException extends RuntimeException implements KenticoException {
 
     private final KenticoError kenticoError;
+    private boolean shouldRetry;
 
     /**
      * Thrown to indicate failure of a Kentico request
+     *
      * @param kenticoError The original KenticoError
      */
-    public KenticoErrorException(KenticoError kenticoError) {
+    public KenticoErrorException(KenticoError kenticoError, boolean shouldRetry) {
         super(kenticoError.getMessage());
         this.kenticoError = kenticoError;
+        this.shouldRetry = shouldRetry;
     }
 
     /**
      * Returns the original error provided by Kentico.  Useful for debugging.
+     *
      * @return The original KenticoError
      * @see KenticoError
      */
     public KenticoError getKenticoError() {
         return kenticoError;
+    }
+
+    @Override
+    public boolean shouldRetry() {
+        return this.shouldRetry;
     }
 }

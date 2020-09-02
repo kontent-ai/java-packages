@@ -27,6 +27,7 @@ package kentico.kontent.delivery;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -41,6 +42,7 @@ import java.util.stream.Collectors;
  * Do not use this cache manager when your application is deployed as multiple replicas!
  * In that case a centralized cache (e.g. Redis) is advisable.
  */
+@Slf4j
 public class SimpleInMemoryCacheManager implements CacheManager {
 
     final protected Map<String, JsonNode> cache = Collections.synchronizedMap(new HashMap<>());
@@ -53,9 +55,12 @@ public class SimpleInMemoryCacheManager implements CacheManager {
 
     @Override
     public JsonNode get(final String url) {
+        log.debug("Cache get");
         queries.incrementAndGet();
 
+
         JsonNode jsonNode = cache.computeIfPresent(url, (key, val) -> {
+            log.debug("Cache hit");
             hits.incrementAndGet();
             return val;
         });

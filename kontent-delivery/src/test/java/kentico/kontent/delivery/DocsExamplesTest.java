@@ -24,7 +24,7 @@
 
 package kentico.kontent.delivery;
 
-import org.apache.http.*;
+import org.apache.http.HttpHost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.localserver.LocalServerTestBase;
 import org.junit.Assert;
@@ -55,9 +55,11 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        List<kentico.kontent.delivery.NameValuePair> params = DeliveryParameterBuilder.params().language("es-ES").build();
+        List<NameValuePair> params = DeliveryParameterBuilder.params().language("es-ES").build();
 
-        ArticleItem item = client.getItem("on_roasts", ArticleItem.class, params);
+        ArticleItem item = client.getItem("on_roasts", ArticleItem.class, params)
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(item);
     }
 
@@ -74,11 +76,12 @@ public class DocsExamplesTest extends LocalServerTestBase {
                 ));
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
+        client.registerType(ArticleItem.class);
 
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        List<kentico.kontent.delivery.NameValuePair> params = DeliveryParameterBuilder.params()
+        List<NameValuePair> params = DeliveryParameterBuilder.params()
             .filterEquals("system.type", "article")
             .projection("title", "summary", "post_date", "teaser_image")
             .filterContains("elements.personas", "coffee_lover")
@@ -87,7 +90,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
             .page(null, 3)
             .build();
 
-        List<ArticleItem> items = client.getItems(ArticleItem.class);
+        List<ArticleItem> items = client.getItems(ArticleItem.class, params)
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(items);
     }
 
@@ -108,9 +113,11 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        List<kentico.kontent.delivery.NameValuePair> params = DeliveryParameterBuilder.params().projection("title", "summary", "post_date", "teaser_image", "related_articles").build();
+        List<NameValuePair> params = DeliveryParameterBuilder.params().projection("title", "summary", "post_date", "teaser_image", "related_articles").build();
 
-        ArticleItem item = client.getItem("on_roasts", ArticleItem.class, params);
+        ArticleItem item = client.getItem("on_roasts", ArticleItem.class, params)
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(item);
     }
 
@@ -131,8 +138,10 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        List<kentico.kontent.delivery.NameValuePair> params = DeliveryParameterBuilder.params().page(null, 3).build();
-        ContentTypesListingResponse types = client.getTypes(params);
+        List<NameValuePair> params = DeliveryParameterBuilder.params().page(null, 3).build();
+        ContentTypesListingResponse types = client.getTypes(params)
+                .toCompletableFuture()
+                .get();
 
         Assert.assertNotNull(types);
     }
@@ -154,7 +163,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        ContentType type = client.getType("coffee");
+        ContentType type = client.getType("coffee")
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(type);
     }
 
@@ -175,7 +186,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        Element element = client.getContentTypeElement("coffee", "processing");
+        Element element = client.getContentTypeElement("coffee", "processing")
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(element);
         Assert.assertEquals("processing", element.getCodeName());
         Assert.assertTrue(element instanceof MultipleChoiceElement);
@@ -200,7 +213,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
 
         List<NameValuePair> params = DeliveryParameterBuilder.params().page(null, 3).build();
 
-        TaxonomyGroupListingResponse response = client.getTaxonomyGroups(params);
+        TaxonomyGroupListingResponse response = client.getTaxonomyGroups(params)
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(response);
         Assert.assertEquals(3, response.taxonomies.size());
     }
@@ -222,7 +237,9 @@ public class DocsExamplesTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-        TaxonomyGroup taxonomyGroup = client.getTaxonomyGroup("personas");
+        TaxonomyGroup taxonomyGroup = client.getTaxonomyGroup("personas")
+                .toCompletableFuture()
+                .get();
         Assert.assertNotNull(taxonomyGroup);
     }
 

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<section xmlns:th="http://www.thymeleaf.org"
+         th:fragment="banner(model)"
+         class="banner-section"
+         th:style="${'background-image: url(&quot;' + model.background.url + '&quot;);'}"
+         th:alt="${model.background.name}">
+    <h2 class="banner-heading" th:text="${model.primaryText}"/>
+    <div class="banner-text" th:utext="${model.secondaryText}"/>
+</section>

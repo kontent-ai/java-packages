@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head"></head>
+
+<body>
+<div th:replace="fragments/layout :: header(${model != null} ? ${model.layout})">Dancing Goat</div>
+
+<div class="container">
+
+    <article class="article-detail col-lg-9 col-md-12 article-detail-related-box">
+        <h2 th:text="${article.getTitle()}"></h2>
+        <div class="article-detail-datetime"
+             th:text="${article.getPostDate()}"/>
+
+        <div class="row">
+            <div class="article-detail-image col-md-push-2 col-md-8">
+                <img class="img-responsive"
+                     th:alt="${article.getTitle()}"
+                     th:title="${article.getTitle()}"
+                     th:src="${article.getTeaserImage().get(0).getUrl()}">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="article-detail-content"
+                 th:utext="${article.bodyCopy}"/>
+        </div>
+    </article>
+</div>
+
+<div th:replace="fragments/layout :: footer">&copy; 2020 The Static Templates</div>
+</body>
+
+</html>

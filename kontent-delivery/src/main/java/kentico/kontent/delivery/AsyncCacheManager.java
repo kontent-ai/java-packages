@@ -25,17 +25,16 @@
 package kentico.kontent.delivery;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.reactivex.Completable;
-import io.reactivex.Maybe;
 
 import java.util.List;
+import java.util.concurrent.CompletionStage;
 
 // TODO: JavaDoc
 public interface AsyncCacheManager {
 
     // TODO: JavaDoc
-    Maybe<JsonNode> get(final String url);
+    CompletionStage<JsonNode> get(final String url);
 
     // TODO: JavaDoc
-    Completable put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);
+    CompletionStage put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);
 }

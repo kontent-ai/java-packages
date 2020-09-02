@@ -25,7 +25,8 @@
 package kentico.kontent.delivery;
 
 import lombok.Builder;
-import org.asynchttpclient.proxy.ProxyServer;
+
+import java.net.Proxy;
 
 /**
  * Keeps settings which are provided by customer or have default values, used in {@link DeliveryClient}.
@@ -89,12 +90,15 @@ public class DeliveryOptions {
     String projectId;
 
     /**
-     * The Production API key configured with your Kentico Kontent account.
+     * The Production API key (Secured access API key) configured with your Kentico Kontent account.
+     * 
      *
-     * @param productionApiKey  Sets the value of the production API key in this DeliveryOptions instance.
+     * @param productionApiKey  Sets the value of the production API key (Secured access API key) in this DeliveryOptions instance.
      * @return                  The value of the production API key in this DeliveryOptions instance.
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
      *                          KenticoKontent API reference - Production vs. preview</a>
+     * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#tag/Secure-access">
+     *                          Secure access</a>
      */
     @Builder.Default
     String productionApiKey = null;
@@ -136,7 +140,8 @@ public class DeliveryOptions {
     boolean waitForLoadingNewContent = false;
 
     /**
-     * Sets the number of retry attempts the client should make when a request to the API fails.  Defaults to 3.
+     * Sets the number of retry attempts the client should make when a request to the API fails.
+     * Defaults to 3, meaning 1 normal request + 3 retrials.
      *
      * @param retryAttempts New value for this DeliveryOptions instance.
      * @return              The number of retry attempts configured per request in this DeliveryOptions instance.
@@ -145,13 +150,13 @@ public class DeliveryOptions {
     int retryAttempts = 3;
 
     /**
-     * Sets the proxy server used by the http client.  See {@link ProxyServer.Builder}.
+     * Sets the proxy server used by the http client.  See {@link Proxy}.
      *
-     * @param proxyServer The {@link ProxyServer} instance to use with the client each request.
+     * @param proxyServer The {@link Proxy} instance to use with the client each request.
      * @return            The ProxyServer configured for this instance, or null.
      */
     @Builder.Default
-    ProxyServer proxyServer = null;
+    Proxy proxyServer = null;
 
     /**
      * Constructs a setting instance of {@link DeliveryOptions} using your Kentico Kontent Project identifier.

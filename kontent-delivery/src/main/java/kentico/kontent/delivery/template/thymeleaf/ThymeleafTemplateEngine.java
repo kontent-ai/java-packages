@@ -26,7 +26,6 @@ package kentico.kontent.delivery.template.thymeleaf;
 
 import kentico.kontent.delivery.ContentItem;
 import kentico.kontent.delivery.ContentItemMapping;
-import kentico.kontent.delivery.System;
 import kentico.kontent.delivery.template.TemplateEngine;
 import kentico.kontent.delivery.template.TemplateEngineModel;
 import kentico.kontent.delivery.template.ViewResolverConfiguration;
@@ -131,8 +130,8 @@ public class ThymeleafTemplateEngine implements TemplateEngine {
         }
         try {
             Object system = PropertyUtils.getProperty(model, "system");
-            if (system instanceof System) {
-                return ((System) system).getType();
+            if (system instanceof  kentico.kontent.delivery.System) {
+                return ((kentico.kontent.delivery.System) system).getType();
             }
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             logger.debug("Unable to find System property on model", e);

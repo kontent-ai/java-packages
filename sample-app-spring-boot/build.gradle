@@ -1,0 +1,58 @@
+import com.squareup.javapoet.JavaFile
+import kentico.kontent.delivery.DeliveryClient
+import kentico.kontent.delivery.DeliveryOptions
+import kentico.kontent.delivery.generators.CodeGenerator
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.3.1.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+    id 'java'
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    compile project(':kontent-delivery')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task generateModels {
+    doLast {
+
+        DeliveryOptions options = new DeliveryOptions();
+        options.setProjectId("975bf280-fd91-488c-994c-2f04416e5ee3");
+        DeliveryClient client = new DeliveryClient(options);
+
+        CodeGenerator generator = new CodeGenerator(
+                options.getProjectId(),
+                'kentico.kontent.delivery.sample.dancinggoat.models',
+                file('src/main/java')
+        );
+        List<JavaFile> sources = generator.generateSources(client);
+        generator.writeSources(sources);
+    }
+}
+

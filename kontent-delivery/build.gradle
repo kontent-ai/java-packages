@@ -1,44 +1,29 @@
-/*
- * MIT License
- *
- * Copyright (c) 2018
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 plugins {
-    id "org.sonarqube" version "2.6.2"
     id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
-group 'com.github.kentico'
-
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
+apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
 
-sourceCompatibility = 1.8
 
-repositories {
-    mavenCentral()
+dependencies {
+    implementation("org.slf4j:slf4j-api:1.7.25")
+
+    implementation("com.fasterxml.jackson.core:jackson-core:2.8.9")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.8.9")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
+
+    implementation("commons-beanutils:commons-beanutils:1.9.3")
+    implementation("io.github.classgraph:classgraph:4.2.12")
+
+    implementation("com.squareup.okhttp3:okhttp:4.5.0")
+
+    compileOnly("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
+    testCompile("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
+
+    testCompile("junit:junit:4.12")
+    testCompile("org.apache.httpcomponents:httpclient:4.5.3:tests")
+    testCompile("org.apache.httpcomponents:httpclient:4.5.3")
 }
 
 lombok {
@@ -46,56 +31,9 @@ lombok {
     sha256 = ""
 }
 
-jacoco {
-    toolVersion = "0.8.4"
-}
-
-dependencies {
-    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
-
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.8.9'
-    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.9'
-    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.4.0'
-
-    compile group: 'org.asynchttpclient', name: 'async-http-client', version: '2.5.3'
-    compile group: 'org.asynchttpclient', name: 'async-http-client-extras-rxjava2', version: '2.5.3'
-
-    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
-
-    compile group: 'io.github.classgraph', name: 'classgraph', version: '4.2.12'
-
-    compileOnly group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'
-    testCompile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.0.RELEASE'
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3', classifier: 'tests'
-    testCompile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.3'
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
-
-}
-
-if (isCI()) {
-    processResources {
-        filesMatching('kentico/kontent/delivery/build.properties') {
-            filter { String line ->
-                line.replace "0.0.0", project.version.toString()
-            }
-            filter { String line ->
-                line.replace "localBuild", isCI() ? "maven.org" : "localBuild"
-            }
-        }
-    }
-}
-if (isCI()) {
-    test {
-        // show standard out and standard error of the test JVM(s) on the console on CI server
-        testLogging.showStandardStreams = true
-    }
-}
-
-task sourcesJar(type: Jar) {
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier = 'sources'
     from sourceSets.main.allJava
-    classifier = 'sources'
 }
 
 import io.franzbecker.gradle.lombok.task.DelombokTask
@@ -114,162 +52,66 @@ javadoc {
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
+    archiveClassifier = 'javadoc'
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives jar
-    archives sourcesJar
-    archives javadocJar
-}
+def packageSummary = 'Kontent Delivery SDK client.'
+def packageDescription = 'Java client around Kentico Kontent Delivery REST API.'
 
-tasks.withType(Jar) {
-    from(project.rootProject.projectDir) {
-        include 'LICENSE'
-        into 'META-INF'
-    }
-}
-
-// There are a few things in tests that we purposely have bad code.  This suppresses the compiler warnings.
-compileTestJava.options.warnings=false
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            customizePom(pom)
-
+        BintrayPublication(MavenPublication) {
             from components.java
-
-            artifact(sourcesJar) {
-                classifier = 'sources'
-            }
-            artifact(javadocJar) {
-                classifier = 'javadoc'
-            }
-
-            // create the signed artifacts
-            afterEvaluate {
-                if (enableSigning()) {
-                    // create the sign pom artifact
-                    pom.withXml {
-                        def pomFile = file("${project.buildDir}/generated-pom.xml")
-                        writeTo(pomFile)
-                        def pomAscFile = signing.sign(pomFile).signatureFiles[0]
-                        artifact(pomAscFile) {
-                            classifier = null
-                            extension = 'pom.asc'
-                        }
-                    }
-
-                    project.tasks.signArchives.signatureFiles.each {
-                        artifact(it) {
-                            def matcher = it.file =~ /-(sources|javadoc)\.jar\.asc$/
-                            if (matcher.find()) {
-                                classifier = matcher.group(1)
-                            } else {
-                                classifier = null
-                            }
-                            extension = 'jar.asc'
-                        }
-                    }
+            artifact sourcesJar
+            artifact javadocJar
+            artifactId = 'kontent-delivery'
+            groupId = repoGroupId
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
                 }
             }
-        }
-    }
-    repositories {
-        afterEvaluate {
-            if (enableSigning()) {
-                maven {
-                    if (project.getVersion().toString().endsWith('SNAPSHOT')) {
-                        url "https://oss.sonatype.org/content/repositories/snapshots/"
-                    } else {
-                        url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
-                    }
-                    credentials {
-                        username nexusUsername
-                        password nexusPassword
-                    }
-                }
+            pom.withXml {
+                def root = asNode()
+                root.appendNode('description', packageDescription)
+                root.appendNode('name', packageSummary)
+                root.appendNode('url', 'https://kontent.ai')
+                root.children().last() + pomConfig
             }
         }
     }
 }
 
-if (enableSigning()) {
-    signing {
-        sign configurations.archives
-    }
-}
-
-def customizePom(pom) {
-    pom.withXml {
-        def root = asNode()
-
-        // eliminate test-scoped dependencies (no need in maven central POMs)
-        root.dependencies.removeAll { dep ->
-            dep.scope == "test"
-        }
-
-        // add all items necessary for maven central publication
-        root.children().last() + {
-            resolveStrategy = DELEGATE_FIRST
-
-            description 'Kentico Kontent Delivery Java SDK https://kontent.ai/'
-            name 'delivery'
-            url 'https://github.com/Kentico/delivery-sdk-java'
-            organization {
-                name 'com.github.kentico'
-                url 'https://github.com/Kentico'
-            }
-            scm {
-                url 'https://github.com/Kentico/delivery-sdk-java'
-                connection 'scm:git:git://github.com/Kentico/delivery-sdk-java.git'
-                developerConnection 'scm:git:ssh://git@github.com:Kentico/delivery-sdk-java.git'
-            }
-            issueManagement {
-                system 'GitHub'
-                url 'https://github.com/Kentico/delivery-sdk-java/issues'
-            }
-            licenses {
-                license {
-                    name 'MIT License'
-                    url 'http://www.opensource.org/licenses/mit-license.php'
-                    distribution 'repo'
-                }
-            }
-            developers {
-                developer {
-                    id 'aweigold'
-                    name 'Adam J. Weigold'
-                    email 'adam@adamweigold.com'
-                }
+bintray {
+    user = bintrayUser
+    key = bintrayKey
+    publish = true
+    publications = ['BintrayPublication']
+    pkg {
+        repo = 'kontent-java-packages'
+        name = 'kontent-delivery'
+        userOrg = 'kentico'
+        desc = packageDescription
+        issueTrackerUrl =  repoUrl + '/issues'
+        vcsUrl = repoVcsUrl
+        licenses = ['MIT']
+        labels = ['kentico', 'kontent', 'delivery client', 'SDK', 'caas']
+        githubRepo = 'Kentico/kontent-java-packages'
+        publicDownloadNumbers = true
+        version {
+            name = version.name
+            released = new Date()
+            desc = packageDescription
+            vcsTag = version.name
+            gpg {
+                sign = true
+                passphrase = bintrayGpg
             }
         }
     }
-}
-
-if (enableSigning()) {
-    model {
-        tasks.generatePomFileForMavenJavaPublication {
-            destination = file("$buildDir/generated-pom.xml")
-        }
-        tasks.publishMavenJavaPublicationToMavenLocal {
-            dependsOn project.tasks.signArchives
-        }
-        tasks.publishMavenJavaPublicationToMavenRepository {
-            dependsOn project.tasks.signArchives
-        }
-    }
-}
-
-boolean enableSigning() {
-    return project.hasProperty("enable.signing") &&
-            project.property("enable.signing").toString().toBoolean() &&
-            isCI()
-}
-
-boolean isCI() {
-    return System.getenv('CONTINUOUS_INTEGRATION') != null ?
-            System.getenv('CONTINUOUS_INTEGRATION').toBoolean() : false
 }
