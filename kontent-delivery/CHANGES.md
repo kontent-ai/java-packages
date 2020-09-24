@@ -6,3 +6,27 @@
   * `kentico/templates/`, `META-INF/kentico/templates/`, `kentico/kontent/templates/`, `META-INF/kentico/kontent/templates/` (last two are new)
 * Retry codes are now set statically in DeliveryClient: `408, 429, 500, 502, 503, 504`
   * If the retry response is not parsable to KenticoError.class - retry is not performed - https://docs.kontent.ai/reference/delivery-api#section/Errors/Resolving-errors
+* Accessing linked items element data was simplified
+  * from
+  
+    ```java
+    List<String> relatedArticleItemCodename = 
+      ((ModularContentElement) contentItem.getElements().get("related_article"))
+        .getValue();
+
+    if (!relatedArticlesItemCodenames.isEmpty()) {                 
+      Article article = contentItem.getModularContent(relatedArticlesItemCodenames.get(0))
+        .castTo(Article.class);                 
+    }
+    ```
+  
+  * to
+  
+    ```java
+    ContentItem relatedArticle = contentItem.getLinkedItem("related_article");
+
+    if (relatedArticle != null) {
+        Article article = relatedArticle.castTo(Article.class);
+    }
+    ```
+  
