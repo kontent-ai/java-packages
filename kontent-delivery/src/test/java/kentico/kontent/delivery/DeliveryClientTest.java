@@ -1464,7 +1464,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
-    public void testRichTextWithTableFoesNotFails() throws Exception {
+    public void testRichTextWithTableFoesNotFail() throws Exception {
         final String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
@@ -1490,7 +1490,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
-    public void testRichTextWithEmptyValueNotFails() throws Exception {
+    public void testRichTextWithEmptyValueNotFail() throws Exception {
         final String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
@@ -1511,7 +1511,11 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 .get();
         Assert.assertEquals(
                 "",
-                response.item.elements.get("body_copy").getValue()
+                response.item.elements.get("empty_value").getValue()
+        );
+        Assert.assertEquals(
+                "<p><br></p>",
+                response.item.elements.get("no_content").getValue()
         );
     }
 

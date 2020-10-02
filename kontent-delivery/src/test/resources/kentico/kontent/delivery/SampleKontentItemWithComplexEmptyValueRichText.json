@@ -10,13 +10,21 @@
       "last_modified": "2018-01-01T00:00:00.0000000Z"
     },
     "elements": {
-      "body_copy": {
+      "empty_value": {
         "type": "rich_text",
-        "name": "Body Copy",
+        "name": "Empty value",
         "images": {},
         "links": {},
         "modular_content": [],
         "value": ""
+      },
+      "no_content": {
+        "type": "rich_text",
+        "name": "No Content",
+        "images": {},
+        "links": {},
+        "modular_content": [],
+        "value": "<p><br></p>"
       }
     }
   },
