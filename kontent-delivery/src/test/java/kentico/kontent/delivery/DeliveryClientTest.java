@@ -1489,6 +1489,32 @@ public class DeliveryClientTest extends LocalServerTestBase {
         );
     }
 
+    @Test
+    public void testRichTextWithEmptyValueNotFails() throws Exception {
+        final String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/test_empty_value"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleKontentItemWithComplexEmptyValueRichText.json")
+                        )
+                ));
+        final HttpHost httpHost = this.start();
+        final DeliveryClient client = new DeliveryClient(projectId);
+
+        final String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+        final ContentItemResponse response = client.getItem("test_empty_value")
+                .toCompletableFuture()
+                .get();
+        Assert.assertEquals(
+                "",
+                response.item.elements.get("body_copy").getValue()
+        );
+    }
+
     private Map<String, String> convertNameValuePairsToMap(List<NameValuePair> nameValuePairs) {
         HashMap<String, String> map = new HashMap<>();
         for (NameValuePair nameValuePair : nameValuePairs) {
