@@ -33,11 +33,28 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JSR310Module;
 import kentico.kontent.delivery.template.TemplateEngineConfig;
 import lombok.extern.slf4j.Slf4j;
-import okhttp3.*;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -197,6 +214,17 @@ public class DeliveryClient {
     @SuppressWarnings("unused")
     public <T> CompletionStage<List<T>> getItems(Class<T> tClass) {
         return getItems(tClass, Collections.emptyList());
+    }
+
+    public <T> List<T> getItemsSync(Class<T> tClass) {
+        try {
+            return getItems(tClass, Collections.emptyList()).toCompletableFuture().get();
+        } catch (InterruptedException e) {
+            log.error("Error converting completion stage: {}", e.getMessage());
+        } catch (ExecutionException e) {
+            log.error("Error converting completion stage: {}", e.getMessage());
+        }
+        return Arrays.asList();
     }
 
     @SuppressWarnings("WeakerAccess")

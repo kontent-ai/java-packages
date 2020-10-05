@@ -1043,9 +1043,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
             }
         });
 
-        List<ArticleItem> items = client.getItems(ArticleItem.class)
-                .toCompletableFuture()
-                .get();
+        List<ArticleItem> items = client.getItemsSync(ArticleItem.class);
         Assert.assertNotNull(items);
         Assert.assertFalse(items.get(1).getDescription().contains("<object"));
         Assert.assertTrue(items.get(1).getDescription().contains("WE REPLACED SUCCESSFULLY"));
