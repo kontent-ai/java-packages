@@ -24,15 +24,13 @@
 
 package kentico.kontent.delivery;
 
+import com.madrobot.beans.IntrospectionException;
+import com.madrobot.beans.PropertyDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.BeanUtilsBean;
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.beanutils.PropertyUtilsBean;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.*;
 import java.util.*;
 
@@ -162,13 +160,16 @@ public class StronglyTypedContentItemConverter {
             for (Field field : fields) {
                 Object value = getValueForField(item, linkedItems, bean, field);
                 if (value != null) {
-                    BeanUtils.setProperty(bean, field.getName(), value);
+                    com.madrobot.beans.BeanInfo beanInfo = com.madrobot.beans.Introspector.getBeanInfo(bean.getClass());
+                    PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
+                    Optional<PropertyDescriptor> propertyDescriptor = Arrays.stream(properties).filter(descriptor -> descriptor.getName().equals(field.getName())).findFirst();
+
+                    if(propertyDescriptor.isPresent()) {
+                        propertyDescriptor.get().getWriteMethod().invoke(bean, value);
+                    }
                 }
             }
-        } catch (NoSuchMethodException |
-                IllegalAccessException |
-                InvocationTargetException |
-                InstantiationException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IntrospectionException e) {
             handleReflectionException(e);
         }
         //Return bean
@@ -303,21 +304,24 @@ public class StronglyTypedContentItemConverter {
 
     private static Type getType(Object bean, Field field) {
         //Because of type erasure, we will find the setter method and get the generic types off it's arguments
-        PropertyUtilsBean propertyUtils = BeanUtilsBean.getInstance().getPropertyUtils();
-        PropertyDescriptor propertyDescriptor = null;
+        Optional<PropertyDescriptor> propertyDescriptor = null;
+
         try {
-            propertyDescriptor = propertyUtils.getPropertyDescriptor(bean, field.getName());
-        } catch (IllegalAccessException |
-                InvocationTargetException |
-                NoSuchMethodException e) {
-            handleReflectionException(e);
+            com.madrobot.beans.BeanInfo beanInfo = com.madrobot.beans.Introspector.getBeanInfo(bean.getClass());
+            PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
+            propertyDescriptor = Arrays.stream(properties).filter(descriptor -> descriptor.getName().equals(field.getName())).findFirst();
+
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
         }
-        if (propertyDescriptor == null) {
+
+        if(!propertyDescriptor.isPresent()){
             //Likely no accessors
             log.debug("Property descriptor for object {} with field {} is null", bean, field);
             return null;
         }
-        Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
+
+        Method writeMethod = propertyDescriptor.get().getWriteMethod();
         if (writeMethod == null) {
             log.debug("No write method for property {}", propertyDescriptor);
             return null;
@@ -332,7 +336,37 @@ public class StronglyTypedContentItemConverter {
                 String.format("%s#%s", bean.getClass().getSimpleName(), field.getName()));
 
         return type;
-
+//
+//        java.beans.PropertyDescriptor propertyDescriptor = null;
+//
+//        PropertyUtilsBean propertyUtils = BeanUtilsBean.getInstance().getPropertyUtils();
+//        try {
+//            propertyDescriptor = propertyUtils.getPropertyDescriptor(bean, field.getName());
+//        } catch (IllegalAccessException |
+//                InvocationTargetException |
+//                NoSuchMethodException e) {
+//            handleReflectionException(e);
+//        }
+//        if (propertyDescriptor == null) {
+//            //Likely no accessors
+//            log.debug("Property descriptor for object {} with field {} is null", bean, field);
+//            return null;
+//        }
+//        Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
+//        if (writeMethod == null) {
+//            log.debug("No write method for property {}", propertyDescriptor);
+//            return null;
+//        }
+//        Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0])
+//                .getActualTypeArguments();
+//
+//        Type type = (Map.class.isAssignableFrom(field.getType())) ? actualTypeArguments[1] : actualTypeArguments[0];
+//
+//        log.debug("Got type {} from {}",
+//                type.getTypeName(),
+//                String.format("%s#%s", bean.getClass().getSimpleName(), field.getName()));
+//
+//        return type;
     }
 
     private static void handleReflectionException(Exception ex) {
