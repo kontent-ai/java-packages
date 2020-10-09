@@ -14,11 +14,12 @@ import android.support.annotation.NonNull;
 import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import kentico.kontent.delivery.DeliveryClient;
+import kentico.kontent.delivery.DeliveryOptions;
 
 public class CafesKontentSource implements CafesDataSource {
 
     private static CafesKontentSource INSTANCE;
-    private static DeliveryClient client = new DeliveryClient(AppConfig.KONTENT_PROJECT_ID);
+    private static DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
 
 
     public static CafesKontentSource getInstance() {
