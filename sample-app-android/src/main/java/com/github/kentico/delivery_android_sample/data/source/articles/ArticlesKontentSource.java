@@ -12,24 +12,21 @@ package com.github.kentico.delivery_android_sample.data.source.articles;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Article;
+import com.github.kentico.delivery_android_sample.data.source.DeliveryClientProvider;
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryOptions;
-import kentico.kontent.delivery.DeliveryParameterBuilder;
 
 import java.util.List;
 
 public class ArticlesKontentSource implements ArticlesDataSource {
 
     private static ArticlesKontentSource INSTANCE;
-    private static DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
-
+    private static DeliveryClient client = DeliveryClientProvider.getClient();
 
     public static ArticlesKontentSource getInstance(@NonNull Context context) {
         if (INSTANCE == null) {
@@ -40,11 +37,7 @@ public class ArticlesKontentSource implements ArticlesDataSource {
 
     @Override
     public void getArticles(@NonNull final LoadArticlesCallback callback) {
-        Observable.fromCompletionStage(
-                client.getItems(
-                        Article.class,
-                        DeliveryParameterBuilder.params()
-                                .filterEquals("system.type", "article").build()))
+        Observable.fromCompletionStage(client.getItems(Article.class))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<List<Article>>() {

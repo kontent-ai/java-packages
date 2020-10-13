@@ -27,13 +27,15 @@ import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
 import com.github.kentico.delivery_android_sample.app.shared.CommunicationHub;
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import com.squareup.picasso.Picasso;
+import kentico.kontent.delivery.Asset;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class CafesFragment extends BaseFragment<CafesContract.Presenter> implements CafesContract.View{
+public class CafesFragment extends BaseFragment<CafesContract.Presenter> implements CafesContract.View {
 
     private CafesAdapter adapter;
 
@@ -46,12 +48,12 @@ public class CafesFragment extends BaseFragment<CafesContract.Presenter> impleme
     }
 
     @Override
-    protected int getFragmentId(){
+    protected int getFragmentId() {
         return R.layout.cafes_frag;
     }
 
     @Override
-    protected int getViewId(){
+    protected int getViewId() {
         return R.id.cafesLL;
     }
 
@@ -158,7 +160,10 @@ public class CafesFragment extends BaseFragment<CafesContract.Presenter> impleme
             titleTV.setText(cafe.getCity());
 
             final ImageView teaserIV = (ImageView) rowView.findViewById(R.id.cafeTeaserIV);
-            Picasso.with(viewGroup.getContext()).load(cafe.getPhoto().get(0).getUrl()).into(teaserIV);
+            final Optional<List<Asset>> cafePhotos = Optional.ofNullable(cafe.getPhoto());
+            if (cafePhotos.isPresent() && cafePhotos.get().size() > 0) {
+                Picasso.with(viewGroup.getContext()).load(cafePhotos.get().get(0).getUrl()).into(teaserIV);
+            }
 
             TextView streetLineTV = (TextView) rowView.findViewById(R.id.cafeStreetLineTV);
             streetLineTV.setText(cafe.getStreet());
@@ -167,10 +172,9 @@ public class CafesFragment extends BaseFragment<CafesContract.Presenter> impleme
             cityLineTV.setText(cafe.getZipCode() + ", " + cafe.getCity());
 
             TextView cafeCountryLineTV = (TextView) rowView.findViewById(R.id.cafeCountryLineTV);
-            if (TextUtils.isEmpty(cafe.getState())){
+            if (TextUtils.isEmpty(cafe.getState())) {
                 cafeCountryLineTV.setText(cafe.getCountry());
-            }
-            else{
+            } else {
                 cafeCountryLineTV.setText(cafe.getCountry() + ", " + cafe.getState());
             }
 

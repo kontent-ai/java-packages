@@ -11,16 +11,21 @@
 package com.github.kentico.delivery_android_sample.data.source.cafes;
 
 import android.support.annotation.NonNull;
-import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
+import com.github.kentico.delivery_android_sample.data.source.DeliveryClientProvider;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryOptions;
+
+import java.util.List;
 
 public class CafesKontentSource implements CafesDataSource {
 
     private static CafesKontentSource INSTANCE;
-    private static DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
-
+    private static DeliveryClient client = DeliveryClientProvider.getClient();
 
     public static CafesKontentSource getInstance() {
         if (INSTANCE == null) {
@@ -31,91 +36,66 @@ public class CafesKontentSource implements CafesDataSource {
 
     @Override
     public void getCafes(@NonNull final LoadCafesCallback callback) {
-        client.getItems(Cafe.class)
-                .thenAccept(items -> {
-                    if (items == null || items.size() == 0) {
-                        callback.onDataNotAvailable();
-                        return;
-                    }
-                    callback.onItemsLoaded(items);
-                }).exceptionally(ex -> {
-            callback.onError(ex);
-            return null;
-        });
+        Observable.fromCompletionStage(client.getItems(Cafe.class))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Cafe>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
 
-//        this.deliveryService.<Cafe>items()
-//                .type(Cafe.TYPE)
-//                .getObservable()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<DeliveryItemListingResponse<Cafe>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(DeliveryItemListingResponse<Cafe> response) {
-//                        List<Cafe> items = (response.getItems());
-//
-//                        if (items == null || items.size() == 0){
-//                            callback.onDataNotAvailable();
-//                            return;
-//                        }
-//
-//                        callback.onItemsLoaded(items);
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                        callback.onError(e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
+                    }
+
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull List<Cafe> cafes) {
+                        if (cafes == null || cafes.size() == 0) {
+                            callback.onDataNotAvailable();
+                            return;
+                        }
+
+                        callback.onItemsLoaded(cafes);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getCafe(@NonNull String codename, @NonNull final LoadCafeCallback callback) {
-        client.getItem(codename, Cafe.class)
-                .thenAccept(item -> {
-                    if (item == null) {
-                        callback.onDataNotAvailable();
+        Observable.fromCompletionStage(client.getItem(codename, Cafe.class))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Cafe>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
                     }
-                    callback.onItemLoaded(item);
+
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull Cafe cafe) {
+                        if (cafe == null) {
+                            callback.onDataNotAvailable();
+                        }
+
+                        callback.onItemLoaded(cafe);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
-
-
-//        this.deliveryService.<Cafe>item(codename)
-//                .getObservable()
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Observer<DeliveryItemResponse<Cafe>>() {
-//                    @Override
-//                    public void onSubscribe(Disposable d) {
-//                    }
-//
-//                    @Override
-//                    public void onNext(DeliveryItemResponse<Cafe> response) {
-//                        if (response.getItem() == null) {
-//                            callback.onDataNotAvailable();
-//                        }
-//
-//                        callback.onItemLoaded(response.getItem());
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//                        callback.onError(e);
-//                    }
-//
-//                    @Override
-//                    public void onComplete() {
-//
-//                    }
-//                });
     }
 }
