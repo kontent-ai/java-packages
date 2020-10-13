@@ -53,7 +53,7 @@ public class TemplateEngineConfig {
         if (isAutoRegister()) {
             try (ScanResult scanResult = new ClassGraph()
                     .enableAllInfo()
-                    .whitelistPackages(getPathsToScan().toArray(new String[0]))
+                    .acceptPackages(getPathsToScan().toArray(new String[0]))
                     .scan()) {
                 ClassInfoList resolvers =
                         scanResult.getClassesImplementing(TemplateEngineInlineContentItemsResolver.class.getName());

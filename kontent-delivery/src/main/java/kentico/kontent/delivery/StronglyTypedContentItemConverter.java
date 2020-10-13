@@ -90,7 +90,7 @@ public class StronglyTypedContentItemConverter {
     protected void scanClasspathForMappings(String basePackage) {
         try (ScanResult scanResult = new ClassGraph()
                 .enableAllInfo()
-                .whitelistPackages(basePackage)
+                .acceptPackages(basePackage)
                 .scan()) {
             ClassInfoList mappings = scanResult.getClassesWithAnnotation(ContentItemMapping.class.getName());
             mappings.loadClasses().forEach(classWithAnnotation -> {
