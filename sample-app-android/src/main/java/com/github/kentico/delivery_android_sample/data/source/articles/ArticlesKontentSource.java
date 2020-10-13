@@ -14,9 +14,16 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Article;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 import kentico.kontent.delivery.DeliveryClient;
 import kentico.kontent.delivery.DeliveryOptions;
 import kentico.kontent.delivery.DeliveryParameterBuilder;
+
+import java.util.List;
 
 public class ArticlesKontentSource implements ArticlesDataSource {
 
@@ -33,27 +40,70 @@ public class ArticlesKontentSource implements ArticlesDataSource {
 
     @Override
     public void getArticles(@NonNull final LoadArticlesCallback callback) {
-        client.getItems(Article.class, DeliveryParameterBuilder.params().filterEquals("system.type", "article").build())
-                .thenAccept(items -> {
-                    if (items == null || items.size() == 0) {
-                        callback.onDataNotAvailable();
-                        return;
+        Observable.fromCompletionStage(
+                client.getItems(
+                        Article.class,
+                        DeliveryParameterBuilder.params()
+                                .filterEquals("system.type", "article").build()))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<Article>>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
                     }
-                    callback.onItemsLoaded(items);
-                }).exceptionally(ex -> {
-            callback.onError(ex);
-            return null;
-        });
+
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull List<Article> articles) {
+                        if (articles == null || articles.size() == 0) {
+                            callback.onDataNotAvailable();
+                            return;
+                        }
+
+                        callback.onItemsLoaded(articles);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
     @Override
     public void getArticle(@NonNull String codename, @NonNull final LoadArticleCallback callback) {
-        client.getItem(codename, Article.class)
-                .thenAccept(item -> {
-                    if (item == null) {
-                        callback.onDataNotAvailable();
+        Observable.fromCompletionStage(client.getItem(codename, Article.class))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Article>() {
+                    @Override
+                    public void onSubscribe(@io.reactivex.rxjava3.annotations.NonNull Disposable d) {
+
                     }
-                    callback.onItemLoaded(item);
+
+                    @Override
+                    public void onNext(@io.reactivex.rxjava3.annotations.NonNull Article article) {
+                        if (article == null) {
+                            callback.onDataNotAvailable();
+                        }
+
+                        callback.onItemLoaded(article);
+                    }
+
+                    @Override
+                    public void onError(@io.reactivex.rxjava3.annotations.NonNull Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
                 });
     }
 }

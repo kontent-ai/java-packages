@@ -21,8 +21,7 @@ import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
 import com.github.kentico.delivery_android_sample.data.models.Article;
 import com.squareup.picasso.Picasso;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+import java.time.format.DateTimeFormatter;
 
 public class ArticleDetailFragment extends BaseFragment<ArticleDetailContract.Presenter> implements ArticleDetailContract.View {
 
@@ -77,8 +76,8 @@ public class ArticleDetailFragment extends BaseFragment<ArticleDetailContract.Pr
 
         // release date
         TextView postDateTV = (TextView) view.findViewById(R.id.articleDetailPostDateTV);
-        SimpleDateFormat postDf = new SimpleDateFormat("dd MMMM yyyy", Locale.ENGLISH);
-        postDateTV.setText(postDf.format(article.getPostDate()));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        postDateTV.setText(article.getPostDate().format(formatter));
 
         // text
         TextView bodyCopyTV = (TextView) view.findViewById(R.id.articleDetailBodyCopyTV);

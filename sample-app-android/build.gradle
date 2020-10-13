@@ -91,6 +91,8 @@ dependencies {
 //    implementation 'com.github.kentico:kontent-delivery-core:4.0.1'
 //    implementation 'com.github.kentico:kontent-delivery:4.0.0-beta.6'
     implementation project(':kontent-delivery')
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'
