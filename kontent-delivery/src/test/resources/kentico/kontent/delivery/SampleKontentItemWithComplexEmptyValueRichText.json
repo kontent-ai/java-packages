@@ -1,0 +1,32 @@
+{
+  "item": {
+    "system": {
+      "id": "00000000-0000-0000-0000-000000000001",
+      "name": "Fake item 1",
+      "codename": "test_empty_value",
+      "language": "en-US",
+      "type": "fake_type_1",
+      "sitemap_locations": [],
+      "last_modified": "2018-01-01T00:00:00.0000000Z"
+    },
+    "elements": {
+      "empty_value": {
+        "type": "rich_text",
+        "name": "Empty value",
+        "images": {},
+        "links": {},
+        "modular_content": [],
+        "value": ""
+      },
+      "no_content": {
+        "type": "rich_text",
+        "name": "No Content",
+        "images": {},
+        "links": {},
+        "modular_content": [],
+        "value": "<p><br></p>"
+      }
+    }
+  },
+  "modular_content": {}
+}
