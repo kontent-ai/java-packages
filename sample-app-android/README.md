@@ -19,6 +19,16 @@ Application is showcasing listing-detail screens wit three content types `Articl
 
 > This application is about to demonstrate it is possible to load data from Kentico Kontent using Java SDK. It is not meant to be used as a boilerplate.
 
+### Instantiating Delivery client
+
+It is important to instantiate the delivery with the constructor that disables Template engine. The template engine is meant to be used on the web platform. **Use constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set second parameter to `null**`** for Android development.
+
+Use following constructor (see the [sample](./src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)):
+
+```java
+DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
+```
+
 ### Data loading using RxJava
 
 All the data loaded from Kentico Kontent is using [RxJava](https://github.com/ReactiveX/RxJava) approach. Basically the `CompletionStage` returned from Kontent Java SDK is wrapped to the `Observable`. This allows to easily synchronize IO and UI operation with proper thread. Take a look i.e. to [`ArticlesKontentSource#getArticles` method](./src/main/java/com/github/kentico/delivery_android_sample/data/source/articles/ArticlesKontentSource.java#L40) to see the actual implementation using `io.reactivex.rxjava3:rxjava` and `io.reactivex.rxjava3:rxandroid` packages.
