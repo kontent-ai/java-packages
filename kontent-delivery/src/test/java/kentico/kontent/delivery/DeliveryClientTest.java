@@ -1464,7 +1464,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
     }
 
     @Test
-    public void testRichTextWithTableFoesNotFails() throws Exception {
+    public void testRichTextWithTableFoesNotFail() throws Exception {
         final String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
@@ -1486,6 +1486,36 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertEquals(
                 "<p>Hello world</p>\n<figure data-asset-id=\"bf509e0d-d9ed-4925-968e-29a1f6a561c4\" data-image-id=\"bf509e0d-d9ed-4925-968e-29a1f6a561c4\"><img src=\"https://qa-assets-us-01.global.ssl.fastly.net:443/34aaa010-a788-0004-ce89-a1c49a062a65/625c11f0-9783-47d3-b80e-2afafb8862e3/pikachu.jpg\" data-asset-id=\"bf509e0d-d9ed-4925-968e-29a1f6a561c4\" data-image-id=\"bf509e0d-d9ed-4925-968e-29a1f6a561c4\" alt=\"\"></figure>\n<p>Hello <a data-item-id=\"3ce384e6-ba4b-49c4-993a-ae4ee1e0a1cc\" href=\"\">world</a></p>\n<p><a data-item-id=\"5e1997a2-9f9b-43ba-92f3-3cb36409d811\" href=\"\">Hello </a>world</p>\n<table><tbody>\n  <tr><td><h1>Beautiful table on steroids</h1>\n<h2>Which was changed BTW</h2>\n<p>Supports</p>\n<ul>\n  <li>Lists</li>\n  <li><strong>Formatting</strong></li>\n  <li>Images\n    <ol>\n      <li>Yes, <a data-item-id=\"4ffc70ea-62f6-4726-a5bf-39896d7c91c4\" href=\"\">totally</a></li>\n      <li>Really</li>\n      <li><a data-item-id=\"3120ec15-a4a2-47ec-8ccd-c85ac8ac5ba5\" href=\"\">Wanna </a>see?</li>\n    </ol>\n  </li>\n</ul>\n<figure data-asset-id=\"a0c1b647-e0b1-478a-b7bd-8df80b55e9f7\" data-image-id=\"a0c1b647-e0b1-478a-b7bd-8df80b55e9f7\"><img src=\"https://qa-assets-us-01.global.ssl.fastly.net:443/34aaa010-a788-0004-ce89-a1c49a062a65/d74603bb-2109-4d45-885d-ff15c6ed9582/likeaboss.jpg\" data-asset-id=\"a0c1b647-e0b1-478a-b7bd-8df80b55e9f7\" data-image-id=\"a0c1b647-e0b1-478a-b7bd-8df80b55e9f7\" alt=\"\"></figure>\n<p><em>Thanks for watching!</em></p>\n</td><td>with</td><td>some</td></tr>\n  <tr><td>text</td><td>in</td><td>various</td></tr>\n  <tr><td>table</td><td>cells</td><td>!</td></tr>\n</tbody></table>\n<p>z</p>\n<p>dd</p>\n<table><tbody>\n  <tr><td>d</td><td>f</td><td>g</td></tr>\n  <tr><td>g</td><td>g</td><td>gg</td></tr>\n  <tr><td>g</td><td>g</td><td>g</td></tr>\n</tbody></table>\n<p>x</p>",
                 response.item.elements.get("rich_text").getValue()
+        );
+    }
+
+    @Test
+    public void testRichTextWithEmptyValueNotFail() throws Exception {
+        final String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/test_empty_value"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleKontentItemWithComplexEmptyValueRichText.json")
+                        )
+                ));
+        final HttpHost httpHost = this.start();
+        final DeliveryClient client = new DeliveryClient(projectId);
+
+        final String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+        final ContentItemResponse response = client.getItem("test_empty_value")
+                .toCompletableFuture()
+                .get();
+        Assert.assertEquals(
+                "",
+                response.item.elements.get("empty_value").getValue()
+        );
+        Assert.assertEquals(
+                "<p><br></p>",
+                response.item.elements.get("no_content").getValue()
         );
     }
 
