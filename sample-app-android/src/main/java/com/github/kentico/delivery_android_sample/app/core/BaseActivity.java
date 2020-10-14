@@ -24,12 +24,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
-
 import com.github.kentico.delivery_android_sample.R;
 import com.github.kentico.delivery_android_sample.app.articles.ArticlesActivity;
 import com.github.kentico.delivery_android_sample.app.cafes.CafesActivity;
 import com.github.kentico.delivery_android_sample.app.coffees.CoffeesActivity;
-import com.github.kentico.delivery_android_sample.app.test.TestActivity;
 import com.github.kentico.delivery_android_sample.util.NetworkHelper;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -162,10 +160,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                                 case R.id.coffees:
                                     Intent coffeesIntent = new Intent(navigationView.getContext(), CoffeesActivity.class);
                                     startActivity(coffeesIntent);
-                                    break;
-                                case R.id.test:
-                                    Intent testIntent = new Intent(navigationView.getContext(), TestActivity.class);
-                                    startActivity(testIntent);
                                     break;
                             }
                         }

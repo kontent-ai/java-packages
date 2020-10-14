@@ -44,9 +44,6 @@
                   android:theme="@style/AppTheme.NoActionBar"
                   android:parentActivityName="com.github.kentico.delivery_android_sample.app.coffees.CoffeesActivity">
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.test.TestActivity"
-                  android:theme="@style/AppTheme.NoActionBar">
-        </activity>
         <uses-library
                 android:name="org.apache.http.legacy"
                 android:required="false"/>

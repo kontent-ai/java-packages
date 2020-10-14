@@ -27,7 +27,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="navigation_drawer_title">Dancing Goat</string>
-    <string name="navigation_drawer_subtitle">kontent@kentico.com</string>
+    <string name="navigation_drawer_subtitle">kontent.ai</string>
 
     <!-- main menu items -->
     <string name="main_menu_cafes">Cafes</string>
