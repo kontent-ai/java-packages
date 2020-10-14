@@ -4,12 +4,13 @@ Monorepo with Java Kontent packages.
 
 ## Packages
 
-|                               Package                                | Summary                                                                                                                          |                                                                                                             Version                                                                                                             |
-| :------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------- | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|                               Package                                | Summary                                                                                                                          |                                                                                                           Version                                                                                                           |
+| :------------------------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
 |        [Kontent Delivery Java SDK](/kontent-delivery#readme)         | The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from [Kentico Kontent](https://kontent.ai) |            [![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery/_latestVersion)            |
 |      [Kontent Generators](/kontent-delivery-generators#readme)       | This tool generates strongly-typed models based on Content Types in a Kentico Kontent project.                                   | [![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery-generators/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery-generators/_latestVersion) |
-|   [Kontent Sample Spring Boot app](/sample-app-spring-boot#readme)   | Showcase of the [Spring boot](https://spring.io/projects/spring-boot) application displaying data from Kontent.                  |                                                                                           [source](/sample-app-spring-boot/README.md)                                                                                           |
-| [Kontent Sample Gradle Console app](/test-gradle-console-app#readme) | Simple Java console application showcasing how to load data from Kontent.                                                        |                                                                                          [source](/test-gradle-console-app/README.md)                                                                                           |
+|   [Kontent Sample Spring Boot app](/sample-app-spring-boot#readme)   | Showcase of the [Spring boot](https://spring.io/projects/spring-boot) application displaying data from Kontent.                  |                                                                                         [source](/sample-app-spring-boot/README.md)                                                                                         |
+| [Kontent Sample Gradle Console app](/test-gradle-console-app#readme) | Simple Java console application showcasing how to load data from Kontent.                                                        |                                                                                        [source](/test-gradle-console-app/README.md)                                                                                         |
+|   [Kontent Sample Android app (Java)](/sample-app-android#readme)    | Showcase of the [Android](https://www.android.com/) application written in Java displaying data from Kontent.                    |                                                                                           [source](/sample-app-android/README.md)                                                                                           |
 
 ## Development
 
@@ -31,7 +32,7 @@ Java 8 SDK (Oracle & OpenJDK both tested and supported)
 
 - Enter the cloned repository and build the project via the provided Gradle wrapper.
 
-  >  To grant execution rights for `gradlew` binary, you could use `chmod a+x ./gradlew` which allows execution to everybody.
+  > To grant execution rights for `gradlew` binary, you could use `chmod a+x ./gradlew` which allows execution to everybody.
 
   ```sh
   cd kontent-java-packages
