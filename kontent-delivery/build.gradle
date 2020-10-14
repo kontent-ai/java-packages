@@ -17,7 +17,6 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
 
     implementation("com.madrobot:madrobotbeans:0.1")
-    implementation("commons-beanutils:commons-beanutils:1.9.3")
     implementation("io.github.classgraph:classgraph:4.8.90")
 
     implementation("com.squareup.okhttp3:okhttp:4.5.0")
