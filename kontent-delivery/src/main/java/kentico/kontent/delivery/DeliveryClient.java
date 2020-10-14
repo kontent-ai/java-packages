@@ -352,6 +352,11 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
     }
 
+    /**
+     * @apiNote Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
+     * Register by scanning the classpath for annotated classes by {@link ContentItemMapping} annotation.
+     * @param basePackage name of the base package
+     */
     @SuppressWarnings("WeakerAccess")
     public void scanClasspathForMappings(String basePackage) {
         stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);

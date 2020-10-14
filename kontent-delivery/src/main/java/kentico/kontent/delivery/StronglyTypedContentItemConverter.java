@@ -87,11 +87,14 @@ public class StronglyTypedContentItemConverter {
         return null;
     }
 
+    /**
+     * @apiNote Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
+     * @param basePackage name of the base package
+     */
     protected void scanClasspathForMappings(String basePackage) {
         try (ScanResult scanResult = new ClassGraph()
                 .enableAllInfo()
                 .acceptPackages(basePackage)
-                .verbose()
                 .scan()) {
             ClassInfoList mappings = scanResult.getClassesWithAnnotation(ContentItemMapping.class.getName());
             mappings.loadClasses().forEach(classWithAnnotation -> {
