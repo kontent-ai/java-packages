@@ -9,7 +9,7 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="kentico.kontent.delivery.sample.dancinggoat.MainActivity">
+        <activity android:name="kentico.kontent.delivery.sample.dancinggoat.app.articles.ArticlesActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
