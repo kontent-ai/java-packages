@@ -29,7 +29,6 @@ import kentico.kontent.delivery.ContentItemMapping;
 import kentico.kontent.delivery.template.TemplateEngine;
 import kentico.kontent.delivery.template.TemplateEngineModel;
 import kentico.kontent.delivery.template.ViewResolverConfiguration;
-import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.thymeleaf.context.Context;
@@ -40,7 +39,6 @@ import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 import org.thymeleaf.templateresolver.ITemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolution;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -129,11 +127,11 @@ public class ThymeleafTemplateEngine implements TemplateEngine {
             return contentItemMapping.value();
         }
         try {
-            Object system = PropertyUtils.getProperty(model, "system");
+            Object system =  model.getClass().getDeclaredField("system").get(model);
             if (system instanceof  kentico.kontent.delivery.System) {
                 return ((kentico.kontent.delivery.System) system).getType();
             }
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (IllegalAccessException | NoSuchFieldException e) {
             logger.debug("Unable to find System property on model", e);
         }
         return null;

@@ -24,12 +24,14 @@
 
 package kentico.kontent.delivery;
 
+import com.madrobot.beans.BeanInfo;
 import com.madrobot.beans.IntrospectionException;
+import com.madrobot.beans.Introspector;
 import com.madrobot.beans.PropertyDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import org.apache.commons.beanutils.ConstructorUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.*;
 import java.util.*;
@@ -87,10 +89,14 @@ public class StronglyTypedContentItemConverter {
         return null;
     }
 
+    /**
+     * @param basePackage name of the base package
+     * @apiNote Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
+     */
     protected void scanClasspathForMappings(String basePackage) {
         try (ScanResult scanResult = new ClassGraph()
                 .enableAllInfo()
-                .whitelistPackages(basePackage)
+                .acceptPackages(basePackage)
                 .scan()) {
             ClassInfoList mappings = scanResult.getClassesWithAnnotation(ContentItemMapping.class.getName());
             mappings.loadClasses().forEach(classWithAnnotation -> {
@@ -101,7 +107,7 @@ public class StronglyTypedContentItemConverter {
             ClassInfoList inlineResolvers = scanResult.getSubclasses(InlineContentItemsResolver.class.getName());
             inlineResolvers.loadClasses(InlineContentItemsResolver.class).forEach(subclass -> {
                 try {
-                    registerInlineContentItemsResolver(ConstructorUtils.invokeConstructor(subclass, null));
+                    registerInlineContentItemsResolver(subclass.getConstructor().newInstance());
                 } catch (NoSuchMethodException |
                         IllegalAccessException |
                         InvocationTargetException |
@@ -151,7 +157,7 @@ public class StronglyTypedContentItemConverter {
         T bean = null;
         try {
             //Invoke the default constructor
-            bean = ConstructorUtils.invokeConstructor(tClass, null);
+            bean = tClass.getConstructor().newInstance();
 
             //Get the bean properties
             Field[] fields = tClass.getDeclaredFields();
@@ -160,16 +166,13 @@ public class StronglyTypedContentItemConverter {
             for (Field field : fields) {
                 Object value = getValueForField(item, linkedItems, bean, field);
                 if (value != null) {
-                    com.madrobot.beans.BeanInfo beanInfo = com.madrobot.beans.Introspector.getBeanInfo(bean.getClass());
-                    PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
-                    Optional<PropertyDescriptor> propertyDescriptor = Arrays.stream(properties).filter(descriptor -> descriptor.getName().equals(field.getName())).findFirst();
-
-                    if(propertyDescriptor.isPresent()) {
+                    Optional<PropertyDescriptor> propertyDescriptor = getPropertyDescriptor(bean, field);
+                    if (propertyDescriptor.isPresent()) {
                         propertyDescriptor.get().getWriteMethod().invoke(bean, value);
                     }
                 }
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException | IntrospectionException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
             handleReflectionException(e);
         }
         //Return bean
@@ -304,18 +307,8 @@ public class StronglyTypedContentItemConverter {
 
     private static Type getType(Object bean, Field field) {
         //Because of type erasure, we will find the setter method and get the generic types off it's arguments
-        Optional<PropertyDescriptor> propertyDescriptor = null;
-
-        try {
-            com.madrobot.beans.BeanInfo beanInfo = com.madrobot.beans.Introspector.getBeanInfo(bean.getClass());
-            PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
-            propertyDescriptor = Arrays.stream(properties).filter(descriptor -> descriptor.getName().equals(field.getName())).findFirst();
-
-        } catch (IntrospectionException e) {
-            e.printStackTrace();
-        }
-
-        if(!propertyDescriptor.isPresent()){
+        Optional<PropertyDescriptor> propertyDescriptor = getPropertyDescriptor(bean, field);
+        if (!propertyDescriptor.isPresent()) {
             //Likely no accessors
             log.debug("Property descriptor for object {} with field {} is null", bean, field);
             return null;
@@ -336,37 +329,20 @@ public class StronglyTypedContentItemConverter {
                 String.format("%s#%s", bean.getClass().getSimpleName(), field.getName()));
 
         return type;
-//
-//        java.beans.PropertyDescriptor propertyDescriptor = null;
-//
-//        PropertyUtilsBean propertyUtils = BeanUtilsBean.getInstance().getPropertyUtils();
-//        try {
-//            propertyDescriptor = propertyUtils.getPropertyDescriptor(bean, field.getName());
-//        } catch (IllegalAccessException |
-//                InvocationTargetException |
-//                NoSuchMethodException e) {
-//            handleReflectionException(e);
-//        }
-//        if (propertyDescriptor == null) {
-//            //Likely no accessors
-//            log.debug("Property descriptor for object {} with field {} is null", bean, field);
-//            return null;
-//        }
-//        Method writeMethod = propertyUtils.getWriteMethod(propertyDescriptor);
-//        if (writeMethod == null) {
-//            log.debug("No write method for property {}", propertyDescriptor);
-//            return null;
-//        }
-//        Type[] actualTypeArguments = ((ParameterizedType) writeMethod.getGenericParameterTypes()[0])
-//                .getActualTypeArguments();
-//
-//        Type type = (Map.class.isAssignableFrom(field.getType())) ? actualTypeArguments[1] : actualTypeArguments[0];
-//
-//        log.debug("Got type {} from {}",
-//                type.getTypeName(),
-//                String.format("%s#%s", bean.getClass().getSimpleName(), field.getName()));
-//
-//        return type;
+    }
+
+    @NotNull
+    private static Optional<PropertyDescriptor> getPropertyDescriptor(Object bean, Field field) {
+        BeanInfo beanInfo = null;
+        try {
+            beanInfo = Introspector.getBeanInfo(bean.getClass());
+        } catch (IntrospectionException e) {
+            log.debug("IntrospectionException from com.madrobot.beans for object {} with field {} is null", bean, field);
+            return null;
+        }
+        PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
+        Optional<PropertyDescriptor> propertyDescriptor = Arrays.stream(properties).filter(descriptor -> descriptor.getName().equals(field.getName())).findFirst();
+        return propertyDescriptor;
     }
 
     private static void handleReflectionException(Exception ex) {
@@ -380,6 +356,7 @@ public class StronglyTypedContentItemConverter {
         if (ex instanceof RuntimeException) {
             throw (RuntimeException) ex;
         }
+
         throw new UndeclaredThrowableException(ex);
     }
 }

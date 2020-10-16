@@ -27,7 +27,6 @@ package kentico.kontent.delivery.template;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
-import org.apache.commons.beanutils.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,14 +52,15 @@ public class TemplateEngineConfig {
         if (isAutoRegister()) {
             try (ScanResult scanResult = new ClassGraph()
                     .enableAllInfo()
-                    .whitelistPackages(getPathsToScan().toArray(new String[0]))
+                    .acceptPackages(getPathsToScan().toArray(new String[0]))
                     .scan()) {
                 ClassInfoList resolvers =
                         scanResult.getClassesImplementing(TemplateEngineInlineContentItemsResolver.class.getName());
                 resolvers.loadClasses(TemplateEngineInlineContentItemsResolver.class).forEach(implementingClass -> {
                     try {
                         TemplateEngineInlineContentItemsResolver resolver =
-                                ConstructorUtils.invokeConstructor(implementingClass, null);
+                            implementingClass.getConstructor().newInstance();
+
                         resolver.getTemplateEngine().setViewResolverConfiguration(getViewResolverConfiguration());
                         addResolvers(resolver);
                         logger.info("Registered inline content template resolver: {}", resolver.getClass().getName());
