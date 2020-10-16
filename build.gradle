@@ -63,7 +63,7 @@ allprojects {
 
 
 subprojects {
-    version = '4.1.0-beta.1'
+    version = '4.1.0-beta.2'
     ext.repoGroupId = 'com.github.kentico'
     group = 'com.github.kentico'
 }
