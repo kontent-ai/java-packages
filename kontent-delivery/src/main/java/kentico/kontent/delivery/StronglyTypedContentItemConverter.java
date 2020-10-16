@@ -90,8 +90,8 @@ public class StronglyTypedContentItemConverter {
     }
 
     /**
+     * Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
      * @param basePackage name of the base package
-     * @apiNote Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
      */
     protected void scanClasspathForMappings(String basePackage) {
         try (ScanResult scanResult = new ClassGraph()
