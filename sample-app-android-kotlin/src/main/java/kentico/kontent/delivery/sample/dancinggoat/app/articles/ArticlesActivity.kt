@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import kentico.kontent.delivery.*
 import kentico.kontent.delivery.sample.dancinggoat.R
+import kentico.kontent.delivery.sample.dancinggoat.data.DeliveryClientProvider
 import kentico.kontent.delivery.sample.dancinggoat.models.Article
 import kotlinx.coroutines.*
 import kotlinx.coroutines.future.await
@@ -33,8 +34,7 @@ class ArticlesActivity : AppCompatActivity() {
 
     @WorkerThread
     private suspend fun loadArticles(): MutableList<Article> {
-        val client = DeliveryClient(DeliveryOptions("975bf280-fd91-488c-994c-2f04416e5ee3"), null)
-        client.registerType(Article::class.java)
+        val client = DeliveryClientProvider.client;
 
         val params = DeliveryParameterBuilder.params().filterEquals("system.type", "article").build()
         return client.getItems(Article::class.java, params).await();
