@@ -9,4 +9,4 @@
 
 rootProject.name = 'kontent-java-packages'
 
-include 'test-gradle-console-app', 'kontent-delivery', 'sample-app-spring-boot', 'kontent-delivery-generators'
+include 'test-gradle-console-app', 'kontent-delivery', 'sample-app-spring-boot', 'kontent-delivery-generators', ':sample-app-android'

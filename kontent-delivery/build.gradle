@@ -2,9 +2,12 @@ plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
+apply plugin: 'java'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 dependencies {
     implementation("org.slf4j:slf4j-api:1.7.25")
@@ -13,8 +16,8 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.8.9")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
 
-    implementation("commons-beanutils:commons-beanutils:1.9.3")
-    implementation("io.github.classgraph:classgraph:4.2.12")
+    implementation("com.madrobot:madrobotbeans:0.1")
+    implementation("io.github.classgraph:classgraph:4.8.90")
 
     implementation("com.squareup.okhttp3:okhttp:4.5.0")
 
