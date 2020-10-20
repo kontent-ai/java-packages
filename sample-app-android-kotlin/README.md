@@ -17,7 +17,8 @@ First, [build the whole monorepo](../README.md#Build-and-Test), and then you cou
 
 Application is showcasing a simple listing screen with `Article` content type.
 
-> This application is about to demonstrate it is possible to load data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
+> This application is about to demonstrate loading data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
+
 
 ### Instantiating Delivery client
 
