@@ -53,13 +53,13 @@ public class DeliveryClient {
     static {
         try {
             Properties buildProps = new Properties();
-            buildProps.load(DeliveryClient.class.getResourceAsStream("build.properties"));
-            String repositoryHost = buildProps.getProperty("Repository-Host");
-            String version = buildProps.getProperty("Implementation-Version");
-            String packageId = buildProps.getProperty("Package-Id");
+            buildProps.load(DeliveryClient.class.getResourceAsStream("version.properties"));
+            String repositoryHost = buildProps.getProperty("repository-host");
+            String version = buildProps.getProperty("version");
+            String packageId = buildProps.getProperty("package-id");
             repositoryHost = repositoryHost == null ? "localBuild" : repositoryHost;
             version = version == null ? "0.0.0" : version;
-            packageId = packageId == null ? "kentico.kontent:delivery" : packageId;
+            packageId = packageId == null ? "com.github.kentico:kontent-delivery" : packageId;
             sdkId = String.format(
                     "%s;%s;%s",
                     repositoryHost,
@@ -67,8 +67,8 @@ public class DeliveryClient {
                     version);
             log.info("SDK ID: {}", sdkId);
         } catch (IOException e) {
-            log.info("Jar manifest read error, setting developer build SDK ID");
-            sdkId = "localBuild;kentico.kontent:delivery;0.0.0";
+            log.info("Jar manifest redeliveryad error, setting developer build SDK ID");
+            sdkId = "localBuild;com.github.kentico:kontent-delivery;0.0.0";
         }
     }
 

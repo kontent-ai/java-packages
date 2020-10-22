@@ -51,6 +51,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeliveryClientTest extends LocalServerTestBase {
 
+    // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+    private static String SEMVER_REGEX = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$";
+
     @Test
     public void testSdkIdHeader() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
@@ -59,9 +62,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
-                    Assert.assertEquals(
-                            3,
-                            request.getHeaders("X-KC-SDKID")[0].getValue().split(";").length);
+                    String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
+                    Assert.assertEquals(3, trackingHeaderValueParts.length);
+                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
+                    Assert.assertTrue("Tracking header version value does not contain comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
+
                     response.setEntity(
                             new InputStreamEntity(
                                     this.getClass().getResourceAsStream("SampleContentItem.json")
