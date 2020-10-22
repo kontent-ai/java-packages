@@ -2,13 +2,17 @@ plugins {
     id "io.franzbecker.gradle-lombok" version "1.14"
 }
 
+apply plugin: 'java'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
 
 dependencies {
     compile('com.squareup:javapoet:1.9.0')
     compile('com.google.guava:guava:23.0')
-    compile project(':kontent-delivery')
+    implementation project(':kontent-delivery')
 
     testCompile("junit:junit:4.12");
     testCompile("org.apache.httpcomponents:httpclient:4.5.3:tests");
