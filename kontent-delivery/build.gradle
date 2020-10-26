@@ -40,6 +40,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 import io.franzbecker.gradle.lombok.task.DelombokTask
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
 task delombok(type: DelombokTask, dependsOn: compileJava) {
     ext.outputDir = file("$buildDir/delombok")
     outputs.dir(outputDir)
@@ -122,7 +126,9 @@ bintray {
 
 task createTrackingHeaderProperties(dependsOn: processResources) {
     doLast {
-        new File("$buildDir/resources/main/kentico/kontent/delivery/version.properties").withWriter { w ->
+        def propertiesPath = "$buildDir/resources/main/kentico/kontent/delivery"
+        Files.createDirectories(Paths.get(propertiesPath))
+        new File("$propertiesPath/version.properties").withWriter { w ->
             Properties p = new Properties()
             p['version'] = version.toString()
             p['package-id'] = repoGroupId.toString() + ':' + repoArtifactId.toString()
