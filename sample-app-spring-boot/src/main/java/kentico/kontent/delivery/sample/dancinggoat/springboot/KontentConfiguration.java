@@ -17,7 +17,6 @@ public class KontentConfiguration {
         DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
         client.scanClasspathForMappings("kentico.kontent.delivery.sample.dancinggoat.models");
 
-
         client.registerInlineContentItemsResolver(new InlineContentItemsResolver<Tweet>() {
             @Override
             public String resolve(Tweet item) {

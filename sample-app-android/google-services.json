@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "570480954854",
+    "firebase_url": "https://kenticosampleandroiddg-178508.firebaseio.com",
+    "project_id": "kenticosampleandroiddg-178508",
+    "storage_bucket": "kenticosampleandroiddg-178508.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:570480954854:android:43635e8f375869fe",
+        "android_client_info": {
+          "package_name": "com.github.kentico.delivery_android_sample"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "570480954854-kebeh99nj79dprfqq700a6t8rehg1o4h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.github.kentico.delivery_android_sample",
+            "certificate_hash": "8aa02fc7b18bd37f617c08eaf96edd5c788872ba"
+          }
+        },
+        {
+          "client_id": "570480954854-d2d05vmjgivl688nc9u63bqrhqm81si1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvjiw-96-O_a4Rm6E7f7eEyb5VwxJ5y2w"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "570480954854-d2d05vmjgivl688nc9u63bqrhqm81si1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

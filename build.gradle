@@ -8,9 +8,11 @@
 buildscript {
     repositories {
         jcenter()
+        google()
     }
     dependencies {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
+        classpath 'com.android.tools.build:gradle:4.0.2'
     }
 }
 
@@ -57,16 +59,11 @@ allprojects {
             url 'https://oss.sonatype.org/content/repositories/snapshots'
         }
     }
-
-    apply plugin: 'java'
-
-    sourceCompatibility = "1.8"
-    targetCompatibility = "1.8"
 }
 
 
 subprojects {
-    version = '4.0.0'
+    version = '4.1.0'
     ext.repoGroupId = 'com.github.kentico'
     group = 'com.github.kentico'
 }

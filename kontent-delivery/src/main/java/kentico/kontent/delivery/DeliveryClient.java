@@ -125,6 +125,11 @@ public class DeliveryClient {
 
     static final ScheduledExecutorService SCHEDULER = new ScheduledThreadPoolExecutor(0);
 
+    /**
+     * Please use this constructor when you need to initialize client with default template configuration - so when you are using template engine. For i.e. Android platform use {@link DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)} and set second parameter to null.
+     *
+     * @param deliveryOptions delivery options {@link DeliveryOptions}
+     */
     @SuppressWarnings("WeakerAccess")
     public DeliveryClient(DeliveryOptions deliveryOptions) {
         this(deliveryOptions, new TemplateEngineConfig());
@@ -380,6 +385,12 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
     }
 
+    /**
+     * Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
+     * Register by scanning the classpath for annotated classes by {@link ContentItemMapping} annotation.
+     * 
+     * @param basePackage name of the base package
+     */
     @SuppressWarnings("WeakerAccess")
     public void scanClasspathForMappings(String basePackage) {
         stronglyTypedContentItemConverter.scanClasspathForMappings(basePackage);
