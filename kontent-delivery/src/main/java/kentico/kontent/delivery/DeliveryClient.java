@@ -67,7 +67,7 @@ public class DeliveryClient {
                     version);
             log.info("SDK ID: {}", sdkId);
         } catch (IOException e) {
-            log.info("Jar manifest redeliveryad error, setting developer build SDK ID");
+            log.info("Jar manifest read error, setting developer build SDK ID");
             sdkId = "localBuild;com.github.kentico:kontent-delivery;0.0.0";
         }
     }
