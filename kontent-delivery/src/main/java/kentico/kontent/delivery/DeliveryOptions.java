@@ -27,6 +27,7 @@ package kentico.kontent.delivery;
 import lombok.Builder;
 
 import java.net.Proxy;
+import java.util.List;
 
 /**
  * Keeps settings which are provided by customer or have default values, used in {@link DeliveryClient}.
@@ -157,6 +158,12 @@ public class DeliveryOptions {
      */
     @Builder.Default
     Proxy proxyServer = null;
+
+    /**
+     * Include custom request headers. Headers with name {@link DeliveryClient#HEADER_ACCEPT}, {@link DeliveryClient#HEADER_AUTHORIZATION}, {@link DeliveryClient#HEADER_X_KC_SDK_ID}, {@link DeliveryClient#HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT} will be ignored.
+     */
+    @Builder.Default
+    List<Header> customHeaders = null;
 
     /**
      * Constructs a setting instance of {@link DeliveryOptions} using your Kentico Kontent Project identifier.

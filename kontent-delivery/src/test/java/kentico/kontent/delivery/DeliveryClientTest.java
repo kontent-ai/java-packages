@@ -42,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,6 +78,51 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
+
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts").toCompletableFuture().get();
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testCustomHeadersPropagatedWithSdkIdHeader() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String previewApiKey = "preview_api_key";
+        String headerName = "test-header-name";
+        String headerValue = "test-header-value";
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
+                    Assert.assertEquals(3, trackingHeaderValueParts.length);
+                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
+                    Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
+
+                    Assert.assertEquals(headerValue, request.getHeaders(headerName)[0].getValue());
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(
+                DeliveryOptions
+                        .builder()
+                        .projectId(projectId)
+                        .previewApiKey(previewApiKey)
+                        .usePreviewApi(true)
+                        .customHeaders(Arrays.asList(
+                                new Header(headerName, headerValue)
+                        ))
+                        .build()
+        );
 
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
