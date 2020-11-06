@@ -40,6 +40,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 import io.franzbecker.gradle.lombok.task.DelombokTask
+
+import java.nio.file.Files
+import java.nio.file.Paths
+
 task delombok(type: DelombokTask, dependsOn: compileJava) {
     ext.outputDir = file("$buildDir/delombok")
     outputs.dir(outputDir)
@@ -61,6 +65,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 def packageSummary = 'Kontent Delivery SDK client.'
 def packageDescription = 'Java client around Kentico Kontent Delivery REST API.'
+def repoArtifactId = 'kontent-delivery'
 
 
 publishing {
@@ -69,7 +74,7 @@ publishing {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            artifactId = 'kontent-delivery'
+            artifactId = repoArtifactId
             groupId = repoGroupId
             versionMapping {
                 usage('java-api') {
@@ -117,4 +122,22 @@ bintray {
             }
         }
     }
+}
+
+task createTrackingHeaderProperties(dependsOn: processResources) {
+    doLast {
+        def propertiesPath = "$buildDir/resources/main/kentico/kontent/delivery"
+        Files.createDirectories(Paths.get(propertiesPath))
+        new File("$propertiesPath/version.properties").withWriter { w ->
+            Properties p = new Properties()
+            p['version'] = version.toString()
+            p['package-id'] = repoGroupId.toString() + ':' + repoArtifactId.toString()
+            p['repository-host'] = repositoryHost.toString()
+            p.store w, null
+        }
+    }
+}
+
+classes {
+    dependsOn createTrackingHeaderProperties
 }
