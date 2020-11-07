@@ -51,7 +51,7 @@ public class DeliveryClient {
     public static final String HEADER_X_KC_SDK_ID = "X-KC-SDKID";
     public static final String HEADER_AUTHORIZATION = "Authorization";
     public static final String HEADER_ACCEPT = "Accept";
-    private static final String[] RESERVED_HEADERS = new String[] {HEADER_ACCEPT, HEADER_X_KC_SDK_ID, HEADER_AUTHORIZATION, HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT};
+    private static final String[] RESERVED_HEADERS = new String[]{HEADER_ACCEPT, HEADER_X_KC_SDK_ID, HEADER_AUTHORIZATION, HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT};
     private static String sdkId;
 
     static {
@@ -364,7 +364,7 @@ public class DeliveryClient {
     /**
      * Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
      * Register by scanning the classpath for annotated classes by {@link ContentItemMapping} annotation.
-     * 
+     *
      * @param basePackage name of the base package
      */
     @SuppressWarnings("WeakerAccess")
@@ -594,11 +594,13 @@ public class DeliveryClient {
             requestBuilder.header(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT, "true");
         }
 
-        for (Header header: deliveryOptions.getCustomHeaders()) {
-            if(Arrays.stream(RESERVED_HEADERS).anyMatch(header.getName()::equals)) {
-                log.info("Custom header with name {} will be ignored", header.getName());
-            } else {
-                requestBuilder.header(header.getName(), header.getValue());
+        if (deliveryOptions.getCustomHeaders() != null){
+            for (Header header : deliveryOptions.getCustomHeaders()) {
+                if (Arrays.stream(RESERVED_HEADERS).anyMatch(header.getName()::equals)) {
+                    log.info("Custom header with name {} will be ignored", header.getName());
+                } else {
+                    requestBuilder.header(header.getName(), header.getValue());
+                }
             }
         }
 
