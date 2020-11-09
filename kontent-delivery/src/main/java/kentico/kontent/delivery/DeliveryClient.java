@@ -47,7 +47,11 @@ import java.util.stream.Collectors;
 @Slf4j
 public class DeliveryClient {
 
-    private static final String HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT = "X-KC-Wait-For-Loading-New-Content";
+    public static final String HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT = "X-KC-Wait-For-Loading-New-Content";
+    public static final String HEADER_X_KC_SDK_ID = "X-KC-SDKID";
+    public static final String HEADER_AUTHORIZATION = "Authorization";
+    public static final String HEADER_ACCEPT = "Accept";
+    private static final String[] RESERVED_HEADERS = new String[]{HEADER_ACCEPT, HEADER_X_KC_SDK_ID, HEADER_AUTHORIZATION, HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT};
     private static String sdkId;
 
     static {
@@ -360,7 +364,7 @@ public class DeliveryClient {
     /**
      * Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
      * Register by scanning the classpath for annotated classes by {@link ContentItemMapping} annotation.
-     * 
+     *
      * @param basePackage name of the base package
      */
     @SuppressWarnings("WeakerAccess")
@@ -578,17 +582,28 @@ public class DeliveryClient {
 
     private Request buildNewRequest(String url) {
         Request.Builder requestBuilder = new Request.Builder().url(url);
-        requestBuilder.header("Accept", "applications/json");
-        requestBuilder.header("X-KC-SDKID", sdkId);
+        requestBuilder.header(HEADER_ACCEPT, "applications/json");
+        requestBuilder.header(HEADER_X_KC_SDK_ID, sdkId);
 
         if (deliveryOptions.getProductionApiKey() != null) {
-            requestBuilder.header("Authorization", String.format("Bearer %s", deliveryOptions.getProductionApiKey()));
+            requestBuilder.header(HEADER_AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getProductionApiKey()));
         } else if (deliveryOptions.isUsePreviewApi()) {
-            requestBuilder.header("Authorization", String.format("Bearer %s", deliveryOptions.getPreviewApiKey()));
+            requestBuilder.header(HEADER_AUTHORIZATION, String.format("Bearer %s", deliveryOptions.getPreviewApiKey()));
         }
         if (deliveryOptions.isWaitForLoadingNewContent()) {
             requestBuilder.header(HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT, "true");
         }
+
+        if (deliveryOptions.getCustomHeaders() != null){
+            for (Header header : deliveryOptions.getCustomHeaders()) {
+                if (Arrays.stream(RESERVED_HEADERS).anyMatch(header.getName()::equals)) {
+                    log.info("Custom header with name {} will be ignored", header.getName());
+                } else {
+                    requestBuilder.header(header.getName(), header.getValue());
+                }
+            }
+        }
+
         return requestBuilder.build();
 
     }
