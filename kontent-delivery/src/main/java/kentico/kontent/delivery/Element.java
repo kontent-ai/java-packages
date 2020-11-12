@@ -46,7 +46,8 @@ import java.util.List;
     @JsonSubTypes.Type(value = AssetsElement.class, name = AssetsElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = LinkedItem.class, name = LinkedItem.TYPE_VALUE),
     @JsonSubTypes.Type(value = TaxonomyElement.class, name = TaxonomyElement.TYPE_VALUE),
-    @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE)
+    @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = CustomElement.class, name = CustomElement.TYPE_VALUE)
 })
 @lombok.Getter
 @lombok.Setter

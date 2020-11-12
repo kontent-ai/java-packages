@@ -405,6 +405,20 @@ public class JacksonBindingsTest {
     }
 
     @Test
+    public void testCustomElementDeserialization() throws IOException {
+        CustomElement textElement = objectMapper.readValue(
+                this.getClass().getResource("SampleCustomElement.json"), CustomElement.class);
+        CustomElement textElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleCustomElement.json"), CustomElement.class);
+        Assert.assertNotNull("object failed deserialization", textElement);
+        Assert.assertNotNull(textElement.toString());
+        Assert.assertEquals(textElement, textElement2);
+        Assert.assertEquals(textElement.hashCode(), textElement2.hashCode());
+        Assert.assertEquals("Some Custom Element", textElement.getName());
+        Assert.assertEquals("custom element value", textElement.getValue());
+    }
+
+    @Test
     public void testKenticoErrorDeserialization() throws IOException {
         KenticoError kenticoError = objectMapper.readValue(
                 this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
