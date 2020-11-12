@@ -6,6 +6,7 @@
       "codename": "on_roasts",
       "language": "default",
       "type": "article",
+      "collection": "default",
       "sitemap_locations": [
         "articles"
       ],

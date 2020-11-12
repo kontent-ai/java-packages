@@ -7,6 +7,7 @@
         "codename": "a_chemex_method",
         "language": "en-US",
         "type": "hosted_video",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T12:56:41.1882715Z"
       },
@@ -35,6 +36,7 @@
         "codename": "about_us",
         "language": "en-US",
         "type": "about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -64,6 +66,7 @@
         "codename": "aeropress",
         "language": "en-US",
         "type": "brewer",
+        "collection": "default",
         "sitemap_locations": [
           "brewers"
         ],
@@ -139,6 +142,7 @@
         "codename": "aeropress_filters",
         "language": "en-US",
         "type": "accessory",
+        "collection": "default",
         "sitemap_locations": [
           "accessories"
         ],
@@ -209,6 +213,7 @@
         "codename": "allendale",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -273,6 +278,7 @@
         "codename": "americano",
         "language": "en-US",
         "type": "tweet",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T13:00:08.2735049Z"
       },
@@ -311,6 +317,7 @@
         "codename": "boston",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -375,6 +382,7 @@
         "codename": "brazil_natural_barra_grande",
         "language": "en-US",
         "type": "coffee",
+        "collection": "default",
         "sitemap_locations": [
           "coffee"
         ],
@@ -470,6 +478,7 @@
         "codename": "coffee_beverages_explained",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -555,6 +564,7 @@
         "codename": "coffee_processing_techniques",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -655,6 +665,7 @@
         "codename": "donate_with_us",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -737,6 +748,7 @@
         "codename": "hario_buono_kettle",
         "language": "en-US",
         "type": "accessory",
+        "collection": "default",
         "sitemap_locations": [
           "accessories"
         ],
@@ -807,6 +819,7 @@
         "codename": "hario_mini_mill_slim",
         "language": "en-US",
         "type": "grinder",
+        "collection": "default",
         "sitemap_locations": [
           "grinders"
         ],
@@ -877,6 +890,7 @@
         "codename": "hario_v60",
         "language": "en-US",
         "type": "brewer",
+        "collection": "default",
         "sitemap_locations": [
           "brewers"
         ],
@@ -947,6 +961,7 @@
         "codename": "home",
         "language": "en-US",
         "type": "home",
+        "collection": "default",
         "sitemap_locations": [
           "home"
         ],
@@ -1011,6 +1026,7 @@
         "codename": "home_page_hero_unit",
         "language": "en-US",
         "type": "hero_unit",
+        "collection": "default",
         "sitemap_locations": [
           "home"
         ],
@@ -1052,6 +1068,7 @@
         "codename": "home_page_promotion",
         "language": "en-US",
         "type": "hero_unit",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-03-22T12:40:16.8440029Z"
       },
@@ -1091,6 +1108,7 @@
         "codename": "how_to_make_a_cappuccino",
         "language": "en-US",
         "type": "hosted_video",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T12:57:16.7333276Z"
       },
@@ -1119,6 +1137,7 @@
         "codename": "how_we_roast_our_coffees",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -1166,6 +1185,7 @@
         "codename": "how_we_source_our_coffees",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -1207,6 +1227,7 @@
         "codename": "kenya_gakuyuni_aa",
         "language": "en-US",
         "type": "coffee",
+        "collection": "default",
         "sitemap_locations": [
           "coffee"
         ],
@@ -1307,6 +1328,7 @@
         "codename": "london_",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "europe"
@@ -1371,6 +1393,7 @@
         "codename": "los_angeles",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -1435,6 +1458,7 @@
         "codename": "madrid",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "europe"
@@ -1499,6 +1523,7 @@
         "codename": "new_york",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -1563,6 +1588,7 @@
         "codename": "on_roasts",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -1652,6 +1678,7 @@
         "codename": "origins_of_arabica_bourbon",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -1738,6 +1765,7 @@
         "codename": "our_philosophy",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -1779,6 +1807,7 @@
         "codename": "our_story",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -1826,6 +1855,7 @@
         "codename": "paper_filters_for_chemex",
         "language": "en-US",
         "type": "accessory",
+        "collection": "default",
         "sitemap_locations": [
           "accessories"
         ],
@@ -1896,6 +1926,7 @@
         "codename": "porlex_tall_ceramic_burr_grinder",
         "language": "en-US",
         "type": "grinder",
+        "collection": "default",
         "sitemap_locations": [
           "grinders"
         ],
@@ -1966,6 +1997,7 @@
         "codename": "which_brewing_fits_you_",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2063,6 +2095,7 @@
         "codename": "new_york",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -2127,6 +2160,7 @@
         "codename": "boston",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -2191,6 +2225,7 @@
         "codename": "home_page_promotion",
         "language": "en-US",
         "type": "hero_unit",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-03-22T12:40:16.8440029Z"
       },
@@ -2230,6 +2265,7 @@
         "codename": "our_story",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -2277,6 +2313,7 @@
         "codename": "origins_of_arabica_bourbon",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2363,6 +2400,7 @@
         "codename": "which_brewing_fits_you_",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2458,6 +2496,7 @@
         "codename": "on_roasts",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2547,6 +2586,7 @@
         "codename": "how_we_source_our_coffees",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -2588,6 +2628,7 @@
         "codename": "allendale",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -2652,6 +2693,7 @@
         "codename": "los_angeles",
         "language": "en-US",
         "type": "cafe",
+        "collection": "default",
         "sitemap_locations": [
           "cafes",
           "north_america"
@@ -2716,6 +2758,7 @@
         "codename": "how_we_roast_our_coffees",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -2763,6 +2806,7 @@
         "codename": "coffee_beverages_explained",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2848,6 +2892,7 @@
         "codename": "donate_with_us",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -2930,6 +2975,7 @@
         "codename": "coffee_processing_techniques",
         "language": "en-US",
         "type": "article",
+        "collection": "default",
         "sitemap_locations": [
           "articles"
         ],
@@ -3030,6 +3076,7 @@
         "codename": "home_page_hero_unit",
         "language": "en-US",
         "type": "hero_unit",
+        "collection": "default",
         "sitemap_locations": [
           "home"
         ],
@@ -3071,6 +3118,7 @@
         "codename": "our_philosophy",
         "language": "en-US",
         "type": "fact_about_us",
+        "collection": "default",
         "sitemap_locations": [
           "about_us"
         ],
@@ -3112,6 +3160,7 @@
         "codename": "americano",
         "language": "en-US",
         "type": "tweet",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T13:00:08.2735049Z"
       },
@@ -3150,6 +3199,7 @@
         "codename": "a_chemex_method",
         "language": "en-US",
         "type": "hosted_video",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T12:56:41.1882715Z"
       },
@@ -3178,6 +3228,7 @@
         "codename": "how_to_make_a_cappuccino",
         "language": "en-US",
         "type": "hosted_video",
+        "collection": "default",
         "sitemap_locations": [],
         "last_modified": "2017-06-27T12:57:16.7333276Z"
       },
