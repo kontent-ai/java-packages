@@ -44,6 +44,10 @@
         "meta_description": {
           "type": "text",
           "name": "Meta description"
+        },
+        "color": {
+          "type": "custom",
+          "name": "#ff0000"
         }
       }
     },
