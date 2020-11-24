@@ -118,7 +118,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(1, system.getSitemapLocations().size());
         Assert.assertEquals("articles", system.getSitemapLocations().get(0));
 
-        Assert.assertEquals(5, contentItem.elements.size());
+        Assert.assertEquals(6, contentItem.elements.size());
         Element title = contentItem.elements.get("title");
         Assert.assertNotNull(title);
         Assert.assertNotNull(title.toString());
@@ -136,6 +136,13 @@ public class JacksonBindingsTest {
 
         Assert.assertNotNull(contentItem.getLinkedItem("coffee_processing_techniques"));
         Assert.assertNull(contentItem.getLinkedItem("non_existent"));
+
+        Element themeColor = contentItem.elements.get("theme_color");
+        Assert.assertNotNull(themeColor);
+        Assert.assertNotNull(themeColor.toString());
+        Assert.assertEquals("custom", themeColor.getType());
+        Assert.assertEquals("#ff0000", themeColor.getValue());
+
     }
 
     @Test
