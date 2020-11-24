@@ -28,13 +28,3 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build --stacktrace --info
-    - name: Setup JFrog CLI
-      uses: jfrog/setup-jfrog-cli@v1.0.5
-      # with:
-        # JFrog CLI Version
-        # version: # optional, default is 1.35.5
-    - name: jFrog version
-      run: jfrog --version
-#    - name: publish kontent delivery jar
-#      run: jfrog bt upload "kontent-delivery/build/libs/*" Kentico/kontent-java-packages/kontent-delivery/0.0.1 --key=${{ secrets.JFROG_BINTRAY_API_KEY }}
-#
