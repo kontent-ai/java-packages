@@ -6,13 +6,29 @@ import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import com.github.kentico.delivery_android_sample.data.models.Coffee;
 import kentico.kontent.delivery.DeliveryClient;
 import kentico.kontent.delivery.DeliveryOptions;
+import kentico.kontent.delivery.Header;
+
+import java.util.Arrays;
 
 public class DeliveryClientProvider {
+    // https://github.com/Kentico/Home/wiki/Guidelines-for-Kontent-related-tools#analytics
+    private static final String TRACKING_HEADER_NAME = "X-KC-SOURCE";
+    private static final String TRACKING_HEADER_VALUE = "com.github.kentico.delivery_android_sample;1.0.0";
+
     private static DeliveryClient INSTANCE;
 
     public static DeliveryClient getClient() {
         if (INSTANCE == null) {
-            DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
+            DeliveryClient client = new DeliveryClient(
+                    DeliveryOptions
+                            .builder()
+                            .projectId(AppConfig.KONTENT_PROJECT_ID)
+                            .customHeaders(Arrays.asList(
+                                    new Header(TRACKING_HEADER_NAME, TRACKING_HEADER_VALUE)
+                            ))
+                            .build(),
+                    null
+            );
             client.registerType(Article.class);
             client.registerType(Cafe.class);
             client.registerType(Coffee.class);

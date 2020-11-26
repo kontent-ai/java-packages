@@ -61,9 +61,11 @@ allprojects {
     }
 }
 
+def repoGroupIdVal = 'com.github.kentico';
 
 subprojects {
-    version = '4.1.0'
-    ext.repoGroupId = 'com.github.kentico'
-    group = 'com.github.kentico'
+    version = '4.2.0'
+    ext.repoGroupId = repoGroupIdVal
+    group = repoGroupIdVal
+    ext.repositoryHost = 'jCenter'
 }
