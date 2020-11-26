@@ -14,6 +14,10 @@ import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -62,7 +66,15 @@ public class CodeGeneratorTest extends LocalServerTestBase {
         Assert.assertEquals(2, files.size());
         Assert.assertTrue(files.contains("Article.java"));
         Assert.assertTrue(files.contains("Brewer.java"));
-        // TODO extend check for files content
+
+        Assert.assertEquals(
+                readResource("Article.java"),
+                readFile(new File(outputDir, "com/dancinggoat/models/Article.java"))
+        );
+        Assert.assertEquals(
+                readResource("Brewer.java"),
+                readFile(new File(outputDir, "com/dancinggoat/models/Brewer.java"))
+        );
     }
 
     @Test
@@ -91,5 +103,15 @@ public class CodeGeneratorTest extends LocalServerTestBase {
                     ex.getMessage());
         }
 
+    }
+
+    String readFile(File file) throws IOException {
+        byte[] encoded = Files.readAllBytes(file.toPath());
+        return new String(encoded, StandardCharsets.UTF_8);
+    }
+
+    String readResource(String resourceName) throws IOException, URISyntaxException {
+        byte[] encoded = Files.readAllBytes(Paths.get(this.getClass().getResource(resourceName).toURI()));
+        return new String(encoded, StandardCharsets.UTF_8);
     }
 }

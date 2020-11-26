@@ -248,6 +248,13 @@ for (Option option : element.getOptions()) {
 articleItem.getLinkedItems("related_articles")
 ```
 
+### Custom items
+
+```java
+// Retrieves the value of the custom element 'color'
+String customElementValue = ((CustomElement) articleItem.getElements().get("color")).getValue();
+```
+
 ## Further information
 
 For more developer resources, visit the Kentico Kontent Docs at <https://docs.kontent.ai>.
