@@ -48,6 +48,11 @@
           "coffee_processing_techniques",
           "origins_of_arabica_bourbon"
         ]
+      },
+      "theme_color": {
+        "type": "custom",
+        "name": "Theme color",
+        "value": "#ff0000"
       }
     }
   },

@@ -104,6 +104,7 @@ public class CodeGenerator {
                 case "text" :
                 case "rich_text" :
                 case "url_slug" :
+                case "custom" :
                     typeName = ClassName.get(String.class);
                     break;
                 case "number" :
