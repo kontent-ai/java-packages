@@ -11,8 +11,6 @@ This tool generates strongly-typed models based on Content Types in a Kentico Ko
 
 ## Get started
 
-The usage is pretty easy.
-
 1. Create a new instance of Code generator
 
     ```java
