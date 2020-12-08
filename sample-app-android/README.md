@@ -17,9 +17,9 @@ First, [build the whole monorepo](../README.md#Build-and-Test) and then you coul
 
 Application is showcasing listing-detail screens with three content types `Article`, `Coffee`, and `Cafe`. The listings are selectable in the Menu.
 
-This application is about to demonstrate it is possible to load data from Kentico Kontent using Java SDK. It is not meant to be used as a boilerplate.
+This application demonstrates it is possible to load data from Kentico Kontent using Java SDK. It is not meant to be used as a boilerplate.
 
->⚠ There are two Android-specific rules of the Delivery SDK you need to follow in order to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#Instantiating-Delivery-client) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#Registering-strongly-typed-models).
+>⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#1-initialize-the-delivery-client-for-android-development) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#2-register-strongly-typed-models).
 
 ### Data loading using RxJava
 
