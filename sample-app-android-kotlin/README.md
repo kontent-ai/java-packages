@@ -17,13 +17,13 @@ First, [build the whole monorepo](../README.md#Build-and-Test), and then you cou
 
 Application is showcasing a simple listing screen with `Article` content type.
 
- This application is about to demonstrate loading data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
+This application demonstrates loading data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
 
->⚠ There are two Android-specific rules of the Delivery SDK you need to follow in order to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#Instantiating-Delivery-client) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#Registering-strongly-typed-models).
+>⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#1-initialize-the-delivery-client-for-android-development) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#2-register-strongly-typed-models).
 
 ### Data loading using Kotlin coroutines
 
-The data from Kentico Kontent is fetched using the [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). Basically, the `CompletionStage` returned from the Java SDK is using `org.jetbrains.kotlinx:kotlinx-coroutines-jdk8` package to integrate with Kotlin coroutines API. The `org.jetbrains.kotlinx:kotlinx-coroutines-android` package is used to provide a simple API to synchronize the coroutines and Android lifecycle. This allows to easily synchronize IO and UI operations with proper thread. Take a look at [`ArticlesActivity::onCreate` method](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/app/articles/ArticlesActivity.kt#L25) to see the actual implementation.
+The data from Kentico Kontent is fetched using the [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). The `CompletionStage` returned from the Java SDK is using `org.jetbrains.kotlinx:kotlinx-coroutines-jdk8` package to integrate with Kotlin coroutines API. The `org.jetbrains.kotlinx:kotlinx-coroutines-android` package is used to provide a simple API to synchronize the coroutines and Android lifecycle. This allows to easily synchronize IO and UI operations with proper thread. Take a look at [`ArticlesActivity::onCreate` method](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/app/articles/ArticlesActivity.kt#L25) to see the actual implementation.
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
