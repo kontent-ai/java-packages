@@ -262,25 +262,28 @@ String customElementValue = ((CustomElement) articleItem.getElements().get("colo
  * [Android Java sample application](../sample-app-android#readme)
  * [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
 
-⚠ There are two Android-specific rules of the Delivery SDK you need to follow in order to work correctly. First is to disable template engine integration when instantiating the client and the second is to avoid using `scanClasspathForMappings` method.
+⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly.
 
-### Instantiating Delivery client
+1. Disable template engine integration when initializing the Delivery client.
+1. Avoid using the `scanClasspathForMappings` method.
 
-It is important to instantiate the delivery with the constructor that disables the template engine. The template engine is meant to be used on the web platform. **Use constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set second parameter to `null`** for Android development.
+### 1. Initialize the Delivery client for Android development
 
-Use the following constructor (see the [sample](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)):
+You need to instantiate the Delivery client with the constructor that disables the template engine. The template engine is meant to be used with the web platform only. For Android development, use the constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set the second parameter to `null`.
 
 ```java
 DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
 ```
 
-### Registering strongly-typed models
+See it [used in a sample app](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)).
 
-Android application should register the the models using `registerType` method to as you can see in the [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
+### 2. Register strongly-typed models
+
+Android applications must register the models using the `registerType` method. See a usage example in [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
 
 You can still use the [model generator](../kontent-delivery-generators/README.md) for generating the models.
 
-> ⚠ Method `scanClasspathForMappings` does not work in the Android environment, because of the differences in Android Dalvik VM vs. Java VM the scanning library is not usable here. That is why `registerType` method should be used instead.
+> ⚠ The `scanClasspathForMappings` method does not work in the Android environment. Because of the differences between Android Dalvik VM and Java VM, the scanning library is not usable here. That's why you need to use the `registerType` method instead.
 
 ## Further information
 
