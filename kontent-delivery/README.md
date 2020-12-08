@@ -255,6 +255,33 @@ articleItem.getLinkedItems("related_articles")
 String customElementValue = ((CustomElement) articleItem.getElements().get("color")).getValue();
 ```
 
+## Android development
+
+ To use this SDK for [Android](https://developer.android.com/) development, you can use any approach compatible with [Java CompletionStage API](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html). Most common is to use [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for Android applications written in Kotlin and [Java RX](https://github.com/ReactiveX/RxJava) for Android applications written in Java. Both of these approaches are showcased in this repository:
+ 
+ * [Android Java sample application](../sample-app-android#readme)
+ * [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
+
+⚠ There are two Android-specific rules of the Delivery SDK you need to follow in order to work correctly. First is to disable template engine integration when instantiating the client and the second is to avoid using `scanClasspathForMappings` method.
+
+### Instantiating Delivery client
+
+It is important to instantiate the delivery with the constructor that disables the template engine. The template engine is meant to be used on the web platform. **Use constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set second parameter to `null`** for Android development.
+
+Use the following constructor (see the [sample](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)):
+
+```java
+DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
+```
+
+### Registering strongly-typed models
+
+Android application should register the the models using `registerType` method to as you can see in the [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
+
+You can still use the [model generator](../kontent-delivery-generators/README.md) for generating the models.
+
+> ⚠ Method `scanClasspathForMappings` does not work in the Android environment, because of the differences in Android Dalvik VM vs. Java VM the scanning library is not usable here. That is why `registerType` method should be used instead.
+
 ## Further information
 
 For more developer resources, visit the Kentico Kontent Docs at <https://docs.kontent.ai>.

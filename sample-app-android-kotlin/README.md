@@ -17,18 +17,9 @@ First, [build the whole monorepo](../README.md#Build-and-Test), and then you cou
 
 Application is showcasing a simple listing screen with `Article` content type.
 
-> This application is about to demonstrate loading data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
+ This application is about to demonstrate loading data from Kentico Kontent using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
 
-
-### Instantiating Delivery client
-
-It is important to instantiate the delivery with the constructor that disables the template engine. The template engine is meant to be used on the web platform. **Use constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set second parameter to `null**`** for Android development.
-
-Use the following constructor (see the [sample](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/data/DeliveryClientProvider.kt)):
-
-```java
-DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
-```
+>⚠ There are two Android-specific rules of the Delivery SDK you need to follow in order to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#Instantiating-Delivery-client) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#Registering-strongly-typed-models).
 
 ### Data loading using Kotlin coroutines
 
@@ -57,13 +48,5 @@ private suspend fun loadArticles(): MutableList<Article> {
     return client.getItems(Article::class.java, params).await();
 }
 ```
-
-### Strongly-typed models with models
-
-This showcase is using a model for `Article` type. You could use the [model generator](../kontent-delivery-generators/README.md) for generating models like that.
-
-The app is registering these models in [DeliveryClientProvider.java](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/data/DeliveryClientProvider.kt) and it is using `registerType` method to register the model to the client.
-
-> ⚠ Method `scanClasspathForMappings` does not work in the Android environment, because of the differences in Android Dalvik VM vs. Java VM the scanning library is not usable here. That is why `registerType` method should be used instead.
 
 ![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/sample-app-android-kotlin?pixel)
