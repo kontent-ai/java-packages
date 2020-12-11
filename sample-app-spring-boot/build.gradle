@@ -31,7 +31,9 @@ configurations {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // Needs to be excluded beacuse of https://stackoverflow.com/questions/826319/classcastexception-when-casting-to-the-same-class -> to be able to use "x instanceOf Tweet" example
+    // It is possible to specify the classloader (dozer) to use the same class loader, but it is irelevant for this sample
+    // developmentOnly 'org.springframework.boot:spring-boot-devtools'
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }

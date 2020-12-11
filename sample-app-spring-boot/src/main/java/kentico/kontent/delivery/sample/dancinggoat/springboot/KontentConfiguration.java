@@ -1,7 +1,10 @@
 package kentico.kontent.delivery.sample.dancinggoat.springboot;
 
-import kentico.kontent.delivery.*;
+import kentico.kontent.delivery.DeliveryClient;
+import kentico.kontent.delivery.DeliveryOptions;
+import kentico.kontent.delivery.Header;
 import kentico.kontent.delivery.sample.dancinggoat.models.Tweet;
+import kentico.kontent.delivery.template.*;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +12,71 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.Map;
+
+class CustomTemplateEngine implements  TemplateEngine {
+
+    private ViewResolverConfiguration viewResolverConfiguration;
+
+    @Override
+    public void setViewResolverConfiguration(ViewResolverConfiguration viewResolverConfiguration) {
+        this.viewResolverConfiguration = viewResolverConfiguration;
+    }
+
+    @Override
+    public String process(TemplateEngineModel data) {
+        // You can use viewResolverConfiguration if you need it as well
+        if(data.getInlineContentItem() instanceof Tweet) {
+            Tweet item = (Tweet) data.getInlineContentItem();
+            String theme = item.getTheme().get(0).getName().toLowerCase();
+            Boolean hideThread = item
+                    .getDisplayOptions()
+                    .stream()
+                    .filter(o -> o.getCodename().equals("hide_thread"))
+                    .findFirst()
+                    .isPresent();
+            Boolean hideMedia = item
+                    .getDisplayOptions()
+                    .stream()
+                    .filter(o -> o.getCodename().equals("hide_media"))
+                    .findFirst()
+                    .isPresent();
+
+            String options = String.format("&hide_thread=%b&hide_media=%b", hideThread, hideMedia);
+            String tweetLink = item.getTweetLink();
+            String url = String.format("https://publish.twitter.com/oembed?url=%s&theme=%s%s", tweetLink, theme, options);
+
+            RestTemplate restTemplate = new RestTemplate();
+            String responseBody = restTemplate.getForObject(url, String.class);
+            Map<String, Object> object = JsonParserFactory.getJsonParser().parseMap(responseBody);
+            return (String) object.get("html");
+        }
+        else {
+            // Or raise exception
+            return "UNKNOWN COMPONENT!";
+        }
+    }
+}
+
+class CustomTemplateConfiguration extends TemplateEngineConfig {
+
+    @Override
+    public void init() {
+        super.init();
+        this.addResolvers(new TemplateEngineInlineContentItemsResolver() {
+            @Override
+            public boolean supports(TemplateEngineModel data) {
+                // Define supported content items
+                return data.getInlineContentItem() instanceof Tweet;
+            }
+
+            @Override
+            public TemplateEngine getTemplateEngine() {
+                return new CustomTemplateEngine();
+            }
+        });
+    }
+}
+
 
 @Configuration
 public class KontentConfiguration {
@@ -26,51 +94,42 @@ public class KontentConfiguration {
                         .customHeaders(Arrays.asList(
                                 new Header(TRACKING_HEADER_NAME, TRACKING_HEADER_VALUE)
                         ))
-                        .build()
+                        .build(),
+                new CustomTemplateConfiguration()
         );
 
         client.scanClasspathForMappings("kentico.kontent.delivery.sample.dancinggoat.models");
-      
-        // Currently not used, because there is no other component type to be resolved
-        // Tweet is resolved by inline resolver, Hosted Video by default Template config
-        client.registerDefaultInlineContentItemsResolver(new InlineContentItemsResolver<ContentItem>() {
-            @Override
-            public String resolve(ContentItem data) {
-                // TODO think about default template engine configuration
 
-                // Current priority --> strongly typed Inline Content Item Resolver, Template Engine resolver, Default resolver, Nothing
 
-                return "<h1>" + data.getSystem().getType() + "</h1>";
-            }
-        });
-
-        client.registerInlineContentItemsResolver(new InlineContentItemsResolver<Tweet>() {
-            @Override
-            public String resolve(Tweet item) {
-                String theme = item.getTheme().get(0).getName().toLowerCase();
-                Boolean hideThread = item
-                        .getDisplayOptions()
-                        .stream()
-                        .filter(o -> o.getCodename().equals("hide_thread"))
-                        .findFirst()
-                        .isPresent();
-                Boolean hideMedia = item
-                        .getDisplayOptions()
-                        .stream()
-                        .filter(o -> o.getCodename().equals("hide_media"))
-                        .findFirst()
-                        .isPresent();
-
-                String options = String.format("&hide_thread=%b&hide_media=%b", hideThread, hideMedia);
-                String tweetLink = item.getTweetLink();
-                String url = String.format("https://publish.twitter.com/oembed?url=%s&theme=%s%s", tweetLink, theme, options);
-
-                RestTemplate restTemplate = new RestTemplate();
-                String responseBody = restTemplate.getForObject(url, String.class);
-                Map<String, Object> object = JsonParserFactory.getJsonParser().parseMap(responseBody);
-                return (String) object.get("html");
-            }
-        });
+//        client.registerInlineContentItemsResolver(new InlineContentItemsResolver<Tweet>() {
+//            @Override
+//            public String resolve(Tweet item) {
+//
+//                return "<h1>" + item.toString() + "</h1>";
+//                String theme = item.getTheme().get(0).getName().toLowerCase();
+//                Boolean hideThread = item
+//                        .getDisplayOptions()
+//                        .stream()
+//                        .filter(o -> o.getCodename().equals("hide_thread"))
+//                        .findFirst()
+//                        .isPresent();
+//                Boolean hideMedia = item
+//                        .getDisplayOptions()
+//                        .stream()
+//                        .filter(o -> o.getCodename().equals("hide_media"))
+//                        .findFirst()
+//                        .isPresent();
+//
+//                String options = String.format("&hide_thread=%b&hide_media=%b", hideThread, hideMedia);
+//                String tweetLink = item.getTweetLink();
+//                String url = String.format("https://publish.twitter.com/oembed?url=%s&theme=%s%s", tweetLink, theme, options);
+//
+//                RestTemplate restTemplate = new RestTemplate();
+//                String responseBody = restTemplate.getForObject(url, String.class);
+//                Map<String, Object> object = JsonParserFactory.getJsonParser().parseMap(responseBody);
+//                return (String) object.get("html");
+//            }
+//        });
         return client;
     }
 }
