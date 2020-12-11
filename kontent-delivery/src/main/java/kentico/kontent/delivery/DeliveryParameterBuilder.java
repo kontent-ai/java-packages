@@ -171,6 +171,7 @@ public class DeliveryParameterBuilder {
     static final String LIMIT = "limit";
     static final String INCLUDE_TOTAL_COUNT = "includeTotalCount";
 
+    static final String NOT_EQUALS = "[neq]";
     static final String LESS_THAN = "[lt]";
     static final String LESS_THAN_OR_EQUALS = "[lte]";
     static final String GREATER_THAN = "[gt]";
@@ -210,6 +211,24 @@ public class DeliveryParameterBuilder {
         }
         return this;
     }
+
+    /**
+     * Attribute value is not the same as the specified value.
+     *
+     * @param attribute The attribute.
+     * @param value     The value.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotEquals(String attribute, String value) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_EQUALS), value));
+        }
+        return this;
+    }
+
+
 
     /**
      * Attribute value is less than the specified value.

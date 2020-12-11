@@ -42,6 +42,20 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testNotEqualsNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEquals(null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testNotEquals() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEquals("foo", "bar").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[neq]", params.get(0).getName());
+        Assert.assertEquals("bar", params.get(0).getValue());
+    }
+
+    @Test
     public void testEqualsNullAttr() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterEquals(null, null).build();
         Assert.assertEquals(0, params.size());
