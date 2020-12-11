@@ -613,7 +613,9 @@ public class DeliveryClient {
         final String queryStr = Optional.ofNullable(queryParams)
                 .filter(params -> !params.isEmpty())
                 .map(params -> params.stream()
-                        .map(pair -> String.format("%s=%s", pair.getName(), pair.getValue()))
+                        .map(pair -> pair.getValue() != null
+                                ? String.format("%s=%s", pair.getName(), pair.getValue())
+                                : pair.getName())
                         .collect(Collectors.joining("&")))
                 .map("?"::concat)
                 .orElse("");
