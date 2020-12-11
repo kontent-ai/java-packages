@@ -24,6 +24,7 @@
 
 package kentico.kontent.delivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -46,7 +47,8 @@ import java.util.List;
     @JsonSubTypes.Type(value = AssetsElement.class, name = AssetsElement.TYPE_VALUE),
     @JsonSubTypes.Type(value = LinkedItem.class, name = LinkedItem.TYPE_VALUE),
     @JsonSubTypes.Type(value = TaxonomyElement.class, name = TaxonomyElement.TYPE_VALUE),
-    @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE)
+    @JsonSubTypes.Type(value = UrlSlugElement.class, name = UrlSlugElement.TYPE_VALUE),
+    @JsonSubTypes.Type(value = CustomElement.class, name = CustomElement.TYPE_VALUE)
 })
 @lombok.Getter
 @lombok.Setter
@@ -95,6 +97,7 @@ public abstract class Element<T> {
      * @param parent    the parent to this
      * @return          the parent to this
      */
+    @JsonIgnore 
     ContentItem parent;
 
     /**

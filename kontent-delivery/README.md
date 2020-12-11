@@ -63,6 +63,7 @@ You can also provide the project ID and other parameters by passing the [`Delive
 - `setProductionEndpoint(String)` - sets the production endpoint address. Mainly useful to change for mocks in unit tests, or if you are establishing a proxy.
 - `setPreviewEndpoint(String)` - sets the preview endpoint address. Mainly useful to change for mocks in unit tests, or if you are establishing a proxy.
 - `setProxyServer(java.net.Proxy)` - sets the proxy server used by the http client. Mainly used to complex Proxy scenarios.
+- `setCustomHeaders(java.utils.List<kentico.kontent.delivery.Header>)` - sets custom headers to be included in the request. *Check the reserved header names in method remarks. These will be ignored.*
 
 The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
 
@@ -246,6 +247,43 @@ for (Option option : element.getOptions()) {
 // Retrieves related articles
 articleItem.getLinkedItems("related_articles")
 ```
+
+### Custom items
+
+```java
+// Retrieves the value of the custom element 'color'
+String customElementValue = ((CustomElement) articleItem.getElements().get("color")).getValue();
+```
+
+## Android development
+
+ To use this SDK for [Android](https://developer.android.com/) development, you can use any approach compatible with [Java CompletionStage API](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html). Most common is to use [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for Android applications written in Kotlin and [Java RX](https://github.com/ReactiveX/RxJava) for Android applications written in Java. Both of these approaches are showcased in this repository:
+ 
+ * [Android Java sample application](../sample-app-android#readme)
+ * [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
+
+⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly.
+
+1. Disable template engine integration when initializing the Delivery client.
+1. Avoid using the `scanClasspathForMappings` method.
+
+### 1. Initialize the Delivery client for Android development
+
+You need to instantiate the Delivery client with the constructor that disables the template engine. The template engine is meant to be used with the web platform only. For Android development, use the constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set the second parameter to `null`.
+
+```java
+DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
+```
+
+See it [used in a sample app](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)).
+
+### 2. Register strongly-typed models
+
+Android applications must register the models using the `registerType` method. See a usage example in [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
+
+You can still use the [model generator](../kontent-delivery-generators/README.md) for generating the models.
+
+> ⚠ The `scanClasspathForMappings` method does not work in the Android environment. Because of the differences between Android Dalvik VM and Java VM, the scanning library is not usable here. That's why you need to use the `registerType` method instead.
 
 ## Further information
 

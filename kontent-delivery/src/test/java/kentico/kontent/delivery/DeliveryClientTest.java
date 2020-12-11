@@ -42,6 +42,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class DeliveryClientTest extends LocalServerTestBase {
 
+    // https://semver.org/#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
+    private static String SEMVER_REGEX = "^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-((?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\\.(?:0|[1-9]\\d*|\\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\\+([0-9a-zA-Z-]+(?:\\.[0-9a-zA-Z-]+)*))?$";
+
     @Test
     public void testSdkIdHeader() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
@@ -59,9 +63,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
-                    Assert.assertEquals(
-                            3,
-                            request.getHeaders("X-KC-SDKID")[0].getValue().split(";").length);
+                    String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
+                    Assert.assertEquals(3, trackingHeaderValueParts.length);
+                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
+                    Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
+
                     response.setEntity(
                             new InputStreamEntity(
                                     this.getClass().getResourceAsStream("SampleContentItem.json")
@@ -71,6 +78,97 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
         HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId, previewApiKey);
+
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts").toCompletableFuture().get();
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testCustomHeadersPropagatedWithSdkIdHeader() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String previewApiKey = "preview_api_key";
+        List<Header> headers = Arrays.asList(
+            new Header("test-header-name1", "test-header-value1"),
+            new Header("test-header-name2", "test-header-value2")
+        );
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
+                    Assert.assertEquals(3, trackingHeaderValueParts.length);
+                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
+                    Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
+
+                    Assert.assertEquals(headers.get(0).getValue(), request.getHeaders(headers.get(0).getName())[0].getValue());
+                    Assert.assertEquals(headers.get(1).getValue(), request.getHeaders(headers.get(1).getName())[0].getValue());
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(
+                DeliveryOptions
+                        .builder()
+                        .projectId(projectId)
+                        .previewApiKey(previewApiKey)
+                        .usePreviewApi(true)
+                        .customHeaders(headers)
+                        .build()
+        );
+
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
+
+        ContentItemResponse item = client.getItem("on_roasts").toCompletableFuture().get();
+        Assert.assertNotNull(item);
+    }
+
+    @Test
+    public void testCustomHeadersDoNotOverwriteReservedHeaders() throws Exception {
+        String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
+        String previewApiKey = "preview_api_key";
+        String customHeaderValue = "CUSTOM_VALUE_TO_BE_IGNORED";
+        List<Header> headers = Arrays.asList(
+                new Header(DeliveryClient.HEADER_AUTHORIZATION, customHeaderValue),
+                new Header(DeliveryClient.HEADER_ACCEPT, customHeaderValue),
+                new Header(DeliveryClient.HEADER_X_KC_SDK_ID, customHeaderValue),
+                new Header(DeliveryClient.HEADER_X_KC_WAIT_FOR_LOADING_NEW_CONTENT, customHeaderValue)
+        );
+
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/on_roasts"),
+                (request, response, context) -> {
+                    Assert.assertNotEquals(headers.get(0).getValue(), request.getHeaders(headers.get(0).getName())[0].getValue());
+                    Assert.assertNotEquals(headers.get(1).getValue(), request.getHeaders(headers.get(1).getName())[0].getValue());
+                    Assert.assertNotEquals(headers.get(2).getValue(), request.getHeaders(headers.get(2).getName())[0].getValue());
+                    Assert.assertArrayEquals(new Header[] {}, request.getHeaders(headers.get(3).getName()));
+
+                    response.setEntity(
+                            new InputStreamEntity(
+                                    this.getClass().getResourceAsStream("SampleContentItem.json")
+                            )
+                    );
+                });
+
+        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(
+                DeliveryOptions
+                        .builder()
+                        .projectId(projectId)
+                        .previewApiKey(previewApiKey)
+                        .usePreviewApi(true)
+                        .customHeaders(headers)
+                        .build()
+        );
 
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setPreviewEndpoint(testServerUri);
