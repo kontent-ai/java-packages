@@ -361,10 +361,6 @@ public class DeliveryClient {
         stronglyTypedContentItemConverter.registerInlineContentItemsResolver(resolver);
     }
 
-    public void registerDefaultInlineContentItemsResolver(InlineContentItemsResolver<ContentItem> resolver) {
-        stronglyTypedContentItemConverter.registerDefaultContentItemsResolver(resolver);
-    }
-
     /**
      * Not working on Android platform because of JVM and Dalvik differences, please use {@link DeliveryClient#registerType(Class)} instead
      * Register by scanning the classpath for annotated classes by {@link ContentItemMapping} annotation.

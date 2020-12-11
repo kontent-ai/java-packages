@@ -190,7 +190,6 @@ public class RichTextElementConverter {
             }
             InlineContentItemsResolver resolverForType =
                     stronglyTypedContentItemConverter.getResolverForType(linkedItem);
-            InlineContentItemsResolver<ContentItem> defaultResolver = stronglyTypedContentItemConverter.getDefaultResolver();
             if (resolverForType != null) {
                 Object convertedLinkedItem = linkedItem.castTo((Class) resolverForType.getType());
                 return () -> resolverForType.resolve(convertedLinkedItem);
@@ -206,10 +205,6 @@ public class RichTextElementConverter {
                 if (supportedResolver != null) {
                     return () -> supportedResolver.resolve(model);
                 }
-            }
-
-            if (defaultResolver != null) {
-                return () -> defaultResolver.resolve(linkedItem);
             }
         }
         return null;
