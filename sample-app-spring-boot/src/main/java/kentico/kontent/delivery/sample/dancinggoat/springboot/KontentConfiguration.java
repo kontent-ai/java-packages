@@ -1,9 +1,6 @@
 package kentico.kontent.delivery.sample.dancinggoat.springboot;
 
-import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryOptions;
-import kentico.kontent.delivery.Header;
-import kentico.kontent.delivery.InlineContentItemsResolver;
+import kentico.kontent.delivery.*;
 import kentico.kontent.delivery.sample.dancinggoat.models.Tweet;
 import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.context.annotation.Bean;
