@@ -90,6 +90,15 @@ public class System {
     String type;
 
     /**
+     * Codename of the collection
+     *
+     * @param collection    Sets the collection of this.
+     * @return              The collection codename.
+     */
+    @JsonProperty("collection")
+    String collection;
+
+    /**
      * A list of sitemap locations the content item is in
      *
      * @param sitemapLocations  Sets the sitemapLocations of this.
