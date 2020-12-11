@@ -146,6 +146,19 @@ public class JacksonBindingsTest {
     }
 
     @Test
+    public void testContentItemSerialization() throws IOException {
+        ContentItemResponse response = objectMapper.readValue(
+                this.getClass().getResource("SampleContentItem.json"), ContentItemResponse.class);
+
+        String serializedContentItemResponse = objectMapper.writeValueAsString(response);
+
+        ContentItemResponse response2 = objectMapper.readValue(
+                serializedContentItemResponse, ContentItemResponse.class);
+
+        Assert.assertEquals(response, response2);
+    }
+
+    @Test
     public void testContentTypeListDeserialization() throws IOException {
         ContentTypesListingResponse response = objectMapper.readValue(
                 this.getClass().getResource("SampleContentTypeList.json"), ContentTypesListingResponse.class);

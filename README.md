@@ -53,7 +53,7 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 1. Copy the `local.properties.template` file in this directory to `local.properties` (which will be idnored by Git)).
 1. Set each variable on `local.properties` from the password manager, or contact @Kentico/developer-relations team to get them.
 1. Set version you want to publish in [`build.gradle`](./build.gradle#L69).
-1. Rebuild the solution `./gradlew clean build`.
+1. Build the solution `./gradlew build`.
 1. Run `./gradlew bintrayUpload`.
 
 ![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages?pixel)

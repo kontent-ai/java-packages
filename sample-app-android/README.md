@@ -17,17 +17,9 @@ First, [build the whole monorepo](../README.md#Build-and-Test) and then you coul
 
 Application is showcasing listing-detail screens with three content types `Article`, `Coffee`, and `Cafe`. The listings are selectable in the Menu.
 
-> This application is about to demonstrate it is possible to load data from Kentico Kontent using Java SDK. It is not meant to be used as a boilerplate.
+This application demonstrates it is possible to load data from Kentico Kontent using Java SDK. It is not meant to be used as a boilerplate.
 
-### Instantiating Delivery client
-
-It is important to instantiate the delivery with the constructor that disables the template engine. The template engine is meant to be used on the web platform. **Use constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set second parameter to `null**`** for Android development.
-
-Use the following constructor (see the [sample](./src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)):
-
-```java
-DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
-```
+>⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#1-initialize-the-delivery-client-for-android-development) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#2-register-strongly-typed-models).
 
 ### Data loading using RxJava
 
@@ -41,13 +33,3 @@ Observable.fromCompletionStage(client.getItems(Article.class))
           // ...
         });
 ```
-
-### Strongly-typed models with models
-
-This showcase is using models for `Article`, `Coffee`, and `Cafe` type. You could use the [model generator](../kontent-delivery-generators/README.md) for generating models like that.
-
-The app is registering these models in [DeliveryClientProvider.java](./src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java) and it is using `registerType` method to register the model to the client.
-
-> ⚠ Method `scanClasspathForMappings` does not work in the Android environment, because of the differences in Android Dalvik VM vs. Java VM the scanning library is not usable here. That is why `registerType` method should be used instead.
-
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/sample-app-android?pixel)
