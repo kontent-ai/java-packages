@@ -24,6 +24,7 @@
 
 package kentico.kontent.delivery;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -96,6 +97,7 @@ public abstract class Element<T> {
      * @param parent    the parent to this
      * @return          the parent to this
      */
+    @JsonIgnore 
     ContentItem parent;
 
     /**
