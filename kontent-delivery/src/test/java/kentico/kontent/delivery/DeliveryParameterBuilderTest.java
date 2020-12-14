@@ -180,6 +180,25 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testNotIn() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotIn("foo", "bar", "foobar").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nin]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testNotInCollection() {
+        List<String> values = new ArrayList<>();
+        values.add("bar");
+        values.add("foobar");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotIn("foo", values).build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nin]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
     public void testInNullAttr() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterIn(null, null, null).build();
         Assert.assertEquals(0, params.size());

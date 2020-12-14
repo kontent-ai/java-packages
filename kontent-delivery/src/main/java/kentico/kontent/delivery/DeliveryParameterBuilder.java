@@ -180,6 +180,7 @@ public class DeliveryParameterBuilder {
     static final String GREATER_THAN_OR_EQUALS = "[gte]";
     static final String RANGE = "[range]";
     static final String IN = "[in]";
+    static final String NOT_IN = "[nin]";
     static final String CONTAINS = "[contains]";
     static final String ANY = "[any]";
     static final String ALL = "[all]";
@@ -380,6 +381,35 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
         return filterIn(attribute, values.toArray(new String[0]));
+    }
+
+    /**
+     * Attribute value is not in the specified list of values.
+     *
+     * @param attribute The attribute.
+     * @param values    The values.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotIn(String attribute, String... values) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_IN), String.join(",", values)));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is not in the specified list of values.
+     *
+     * @param attribute The attribute.
+     * @param values    The values.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotIn(String attribute, Collection<String> values) {
+        return filterNotIn(attribute, values.toArray(new String[0]));
     }
 
     /**
