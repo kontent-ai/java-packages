@@ -76,6 +76,21 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testNotEmptyNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEmpty(null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testNotEmpty() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEmpty("foo").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nempty]", params.get(0).getName());
+        Assert.assertEquals(null, params.get(0).getValue());
+    }
+
+
+    @Test
     public void testLessThan() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterLessThan("foo", "bar").build();
         Assert.assertEquals(1, params.size());

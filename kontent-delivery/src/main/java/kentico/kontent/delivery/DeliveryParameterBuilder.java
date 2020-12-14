@@ -173,6 +173,7 @@ public class DeliveryParameterBuilder {
 
     static final String NOT_EQUALS = "[neq]";
     static final String EMPTY = "[empty]";
+    static final String NOT_EMPTY = "[nempty]";
     static final String LESS_THAN = "[lt]";
     static final String LESS_THAN_OR_EQUALS = "[lte]";
     static final String GREATER_THAN = "[gt]";
@@ -240,6 +241,21 @@ public class DeliveryParameterBuilder {
     public DeliveryParameterBuilder filterEmpty(String attribute) {
         if (attribute != null) {
             nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, EMPTY), null));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is not empty.
+     *
+     * @param attribute The attribute.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotEmpty(String attribute) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_EMPTY), null));
         }
         return this;
     }
