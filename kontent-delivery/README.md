@@ -171,13 +171,13 @@ When retrieving a list of content items, you get an instance of the `ContentItem
 
 The `ContentItem` class provides the following:
 
-- `getSystem()` returns a `System` object with metadata such as code name, display name, type, or sitemap location.
+- `getSystem()` returns a `System` object with metadata such as code name, display name, type, collection, or sitemap location.
 - `getElements()` returns a Map containing all the elements included in the response keyed by code names.
 - Methods for easier access to certain types of content elements such as linked items, or assets.
 
 ## Getting content item properties
 
-You can access information about a content item (i.e., its ID, codename, name, location in sitemap, date of last modification, and its content type codename) by using the `System` object.
+You can access information about a content item (i.e., its ID, codename, name, location in sitemap, date of last modification, its collection codename, and its content type codename) by using the `System` object.
 
 ```java
 // Retrieves name of an article content item
@@ -186,7 +186,10 @@ articleItem.getSystem().getName()
 // Retrieves codename of an article content item
 articleItem.getSystem().getCodename()
 
-// Retrieves name of the content type of an article content item
+// Retrieves codename of the collection of an article content item
+articleItem.getSystem().getCollection()
+
+// Retrieves codename of the content type of an article content item
 articleItem.getSystem().getType()
 ```
 

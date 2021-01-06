@@ -114,6 +114,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals("on_roasts", system.getCodename());
         Assert.assertEquals("default", system.getLanguage());
         Assert.assertEquals("article", system.getType());
+        Assert.assertEquals("default", system.getCollection());
         Assert.assertEquals(2016, system.getLastModified().getYear());
         Assert.assertEquals(1, system.getSitemapLocations().size());
         Assert.assertEquals("articles", system.getSitemapLocations().get(0));
@@ -206,6 +207,10 @@ public class JacksonBindingsTest {
         Assert.assertEquals("Coffee", system.getName());
         Assert.assertEquals("coffee", system.getCodename());
         Assert.assertEquals(2017, system.getLastModified().getYear());
+        Assert.assertNull(system.getLanguage());
+        Assert.assertNull(system.getCollection());
+        Assert.assertNull(system.getType());
+        Assert.assertNull(system.getSitemapLocations());
 
         Assert.assertEquals(11, contentType.getElements().size());
         Element element = contentType.getElements().get("processing");
