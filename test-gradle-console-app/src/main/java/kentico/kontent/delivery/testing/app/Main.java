@@ -25,6 +25,7 @@ public class Main {
 
         client.getItems(DeliveryParameterBuilder.params()
                 .filterEquals("system.type", "article")
+                .filterEquals("system.collection", "default")
                 .projection("title", "summary", "post_date", "teaser_image")
                 .filterContains("elements.personas", "coffee_lover")
                 .orderByDesc("elements.post_date")
