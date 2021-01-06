@@ -171,12 +171,16 @@ public class DeliveryParameterBuilder {
     static final String LIMIT = "limit";
     static final String INCLUDE_TOTAL_COUNT = "includeTotalCount";
 
+    static final String NOT_EQUALS = "[neq]";
+    static final String EMPTY = "[empty]";
+    static final String NOT_EMPTY = "[nempty]";
     static final String LESS_THAN = "[lt]";
     static final String LESS_THAN_OR_EQUALS = "[lte]";
     static final String GREATER_THAN = "[gt]";
     static final String GREATER_THAN_OR_EQUALS = "[gte]";
     static final String RANGE = "[range]";
     static final String IN = "[in]";
+    static final String NOT_IN = "[nin]";
     static final String CONTAINS = "[contains]";
     static final String ANY = "[any]";
     static final String ALL = "[all]";
@@ -207,6 +211,52 @@ public class DeliveryParameterBuilder {
     public DeliveryParameterBuilder filterEquals(String attribute, String value) {
         if (attribute != null) {
             nameValuePairs.add(new NameValuePair(attribute, value));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is not the same as the specified value.
+     *
+     * @param attribute The attribute.
+     * @param value     The value.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotEquals(String attribute, String value) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_EQUALS), value));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is empty.
+     *
+     * @param attribute The attribute.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterEmpty(String attribute) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, EMPTY), null));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is not empty.
+     *
+     * @param attribute The attribute.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotEmpty(String attribute) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_EMPTY), null));
         }
         return this;
     }
@@ -331,6 +381,35 @@ public class DeliveryParameterBuilder {
      */
     public DeliveryParameterBuilder filterIn(String attribute, Collection<String> values) {
         return filterIn(attribute, values.toArray(new String[0]));
+    }
+
+    /**
+     * Attribute value is not in the specified list of values.
+     *
+     * @param attribute The attribute.
+     * @param values    The values.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotIn(String attribute, String... values) {
+        if (attribute != null) {
+            nameValuePairs.add(new NameValuePair(String.format("%s%s", attribute, NOT_IN), String.join(",", values)));
+        }
+        return this;
+    }
+
+    /**
+     * Attribute value is not in the specified list of values.
+     *
+     * @param attribute The attribute.
+     * @param values    The values.
+     * @return          This DeliveryParameterBuilder with the added operator.
+     * @see             <a href="https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *                  More in Filtering operators.</a>
+     */
+    public DeliveryParameterBuilder filterNotIn(String attribute, Collection<String> values) {
+        return filterNotIn(attribute, values.toArray(new String[0]));
     }
 
     /**

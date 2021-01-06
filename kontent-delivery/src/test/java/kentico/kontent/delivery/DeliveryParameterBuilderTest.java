@@ -48,6 +48,49 @@ public class DeliveryParameterBuilderTest {
     }
 
     @Test
+    public void testNotEqualsNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEquals(null, null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testNotEquals() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEquals("foo", "bar").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[neq]", params.get(0).getName());
+        Assert.assertEquals("bar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testEmptyNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterEmpty(null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testEmpty() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterEmpty("foo").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[empty]", params.get(0).getName());
+        Assert.assertEquals(null, params.get(0).getValue());
+    }
+
+    @Test
+    public void testNotEmptyNullAttr() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEmpty(null).build();
+        Assert.assertEquals(0, params.size());
+    }
+
+    @Test
+    public void testNotEmpty() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotEmpty("foo").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nempty]", params.get(0).getName());
+        Assert.assertEquals(null, params.get(0).getValue());
+    }
+
+
+    @Test
     public void testLessThan() {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterLessThan("foo", "bar").build();
         Assert.assertEquals(1, params.size());
@@ -133,6 +176,25 @@ public class DeliveryParameterBuilderTest {
         List<NameValuePair> params = DeliveryParameterBuilder.params().filterIn("foo", values).build();
         Assert.assertEquals(1, params.size());
         Assert.assertEquals("foo[in]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testNotIn() {
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotIn("foo", "bar", "foobar").build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nin]", params.get(0).getName());
+        Assert.assertEquals("bar,foobar", params.get(0).getValue());
+    }
+
+    @Test
+    public void testNotInCollection() {
+        List<String> values = new ArrayList<>();
+        values.add("bar");
+        values.add("foobar");
+        List<NameValuePair> params = DeliveryParameterBuilder.params().filterNotIn("foo", values).build();
+        Assert.assertEquals(1, params.size());
+        Assert.assertEquals("foo[nin]", params.get(0).getName());
         Assert.assertEquals("bar,foobar", params.get(0).getValue());
     }
 
