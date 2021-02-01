@@ -1,4 +1,4 @@
-# Kontent Sample Spring Android (Kotlink)
+# Kontent Sample Spring Android (Kotlin)
 
 The showcase of the [Android](https://www.android.com/) application written in Kotlin using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for data fetching from Kontent.
 
