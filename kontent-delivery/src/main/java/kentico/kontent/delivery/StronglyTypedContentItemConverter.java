@@ -262,7 +262,8 @@ public class StronglyTypedContentItemConverter {
             contentType = classNameToContentTypeMapping.get(listClass.getName());
         }
         if (contentType != null) {
-            HashMap convertedLinkedItems = new HashMap<>();
+            // This type preserves the order of the insertion, to have the same order as in delivery response
+            LinkedHashMap convertedLinkedItems = new LinkedHashMap();
             for (Map.Entry<String, ContentItem> entry : referencedLinkedItems.entrySet()) {
                 if (entry.getValue() != null && contentType.equals(entry.getValue().getSystem().getType())) {
                     Map<String, ContentItem> linkedItemsForRecursion =
