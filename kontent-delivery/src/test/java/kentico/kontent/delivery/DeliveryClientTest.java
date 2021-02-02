@@ -854,15 +854,6 @@ public class DeliveryClientTest extends LocalServerTestBase {
         String testServerUri = httpHost.toURI();
         client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
-//        List<kentico.kontent.delivery.nestedmodels.Page> items = client.getItems(
-//                kentico.kontent.delivery.nestedmodels.Page.class,
-//                DeliveryParameterBuilder.params()
-//                        .filterEquals("system.type", "page")
-//                        .linkedItemsDepth(2)
-//                        .build()
-//        ).toCompletableFuture()
-//                .get();
-
         kentico.kontent.delivery.nestedmodels.Page item = client.getItem(
                 "sample_page",
                 kentico.kontent.delivery.nestedmodels.Page.class,
