@@ -91,8 +91,8 @@ public class DeliveryClientTest extends LocalServerTestBase {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
         String previewApiKey = "preview_api_key";
         List<Header> headers = Arrays.asList(
-            new Header("test-header-name1", "test-header-value1"),
-            new Header("test-header-name2", "test-header-value2")
+                new Header("test-header-name1", "test-header-value1"),
+                new Header("test-header-name2", "test-header-value2")
         );
 
         this.serverBootstrap.registerHandler(
@@ -150,7 +150,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     Assert.assertNotEquals(headers.get(0).getValue(), request.getHeaders(headers.get(0).getName())[0].getValue());
                     Assert.assertNotEquals(headers.get(1).getValue(), request.getHeaders(headers.get(1).getName())[0].getValue());
                     Assert.assertNotEquals(headers.get(2).getValue(), request.getHeaders(headers.get(2).getName())[0].getValue());
-                    Assert.assertArrayEquals(new Header[] {}, request.getHeaders(headers.get(3).getName()));
+                    Assert.assertArrayEquals(new Header[]{}, request.getHeaders(headers.get(3).getName()));
 
                     response.setEntity(
                             new InputStreamEntity(
@@ -835,6 +835,56 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertEquals(2, item.getAllLinkedItems().size());
         Assert.assertNotNull(item.getAllLinkedItemsMap());
         Assert.assertEquals(2, item.getAllLinkedItemsMap().size());
+    }
+
+    @Test
+    public void testGetStronglyTypedNestedItems() throws Exception {
+        String projectId = "bac6b90c-4f0d-01e9-a3d8-3bc0ec36c3e3";
+
+//        this.serverBootstrap.registerHandler(
+//                String.format("/%s/%s", projectId, "items/sample_page"),
+//                (request, response, context) -> response.setEntity(
+//                        new InputStreamEntity(
+//                                this.getClass().getResourceAsStream("SampleNestedItem.json")
+//                        )
+//                ));
+//        HttpHost httpHost = this.start();
+        DeliveryClient client = new DeliveryClient(projectId);
+
+//        String testServerUri = httpHost.toURI();
+//        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+
+//        List<kentico.kontent.delivery.nestedmodels.Page> items = client.getItems(
+//                kentico.kontent.delivery.nestedmodels.Page.class,
+//                DeliveryParameterBuilder.params()
+//                        .filterEquals("system.type", "page")
+//                        .linkedItemsDepth(2)
+//                        .build()
+//        ).toCompletableFuture()
+//                .get();
+
+        kentico.kontent.delivery.nestedmodels.Page item = client.getItem(
+                "sample_page",
+                kentico.kontent.delivery.nestedmodels.Page.class,
+                DeliveryParameterBuilder.params()
+                        .linkedItemsDepth(2)
+                        .build()
+        ).toCompletableFuture()
+                .get();
+
+        Assert.assertNotNull(item);
+        Assert.assertEquals("Sample page",item.getTitle());
+        Assert.assertEquals(2, item.getSections().size());
+
+        Assert.assertEquals("Section 1", item.getSections().get(0).getHeadline());
+        Assert.assertEquals(2, item.getSections().get(0).getSectionParts().size());
+        Assert.assertEquals("Part 1", item.getSections().get(0).getSectionParts().get(0).getTitle());
+        Assert.assertEquals("Part 2", item.getSections().get(0).getSectionParts().get(1).getTitle());
+
+        Assert.assertEquals("Section 2", item.getSections().get(1).getHeadline());
+        Assert.assertEquals(2, item.getSections().get(1).getSectionParts().size());
+        Assert.assertEquals("Part A", item.getSections().get(1).getSectionParts().get(0).getTitle());
+        Assert.assertEquals("Part B", item.getSections().get(1).getSectionParts().get(1).getTitle());
     }
 
     @Test
