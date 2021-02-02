@@ -841,18 +841,18 @@ public class DeliveryClientTest extends LocalServerTestBase {
     public void testGetStronglyTypedNestedItems() throws Exception {
         String projectId = "bac6b90c-4f0d-01e9-a3d8-3bc0ec36c3e3";
 
-//        this.serverBootstrap.registerHandler(
-//                String.format("/%s/%s", projectId, "items/sample_page"),
-//                (request, response, context) -> response.setEntity(
-//                        new InputStreamEntity(
-//                                this.getClass().getResourceAsStream("SampleNestedItem.json")
-//                        )
-//                ));
-//        HttpHost httpHost = this.start();
+        this.serverBootstrap.registerHandler(
+                String.format("/%s/%s", projectId, "items/sample_page"),
+                (request, response, context) -> response.setEntity(
+                        new InputStreamEntity(
+                                this.getClass().getResourceAsStream("SampleNestedItemWithDepth2.json")
+                        )
+                ));
+        HttpHost httpHost = this.start();
         DeliveryClient client = new DeliveryClient(projectId);
 
-//        String testServerUri = httpHost.toURI();
-//        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
+        String testServerUri = httpHost.toURI();
+        client.getDeliveryOptions().setProductionEndpoint(testServerUri);
 
 //        List<kentico.kontent.delivery.nestedmodels.Page> items = client.getItems(
 //                kentico.kontent.delivery.nestedmodels.Page.class,
