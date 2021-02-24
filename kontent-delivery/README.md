@@ -11,14 +11,14 @@ The Kentico Kontent Delivery Java SDK is a client library used for retrieving co
 
 ## Get started
 
-You can use the SDK in the form of a Apache Maven package from [JCenter](https://bintray.com/bintray/jcenter) - so you need to point your Maven to <https://jcenter.bintray.com>.
+You can use the SDK in the form of a Apache Maven package from [Maven Central](https://repo.maven.apache.org/maven2/com/github/kentico/kontent-delivery/) - so you need to point your Maven to `mavenCentral`
 
 ### Gradle
 
 ```groovy
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {

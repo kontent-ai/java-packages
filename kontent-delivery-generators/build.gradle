@@ -3,8 +3,9 @@ plugins {
 }
 
 apply plugin: 'java'
-apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
 
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
@@ -51,15 +52,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 def packageSummary = 'Kontent model generator.'
 def packageDescription = 'Generators producing strongly-typed models based on content types in a Kentico Kontent project.'
+def repoArtifactId = 'kontent-delivery-generators'
 
 
 publishing {
     publications {
-        BintrayPublication(MavenPublication) {
+        mavenJava(MavenPublication) {
             from components.java
             artifact sourcesJar
             artifact javadocJar
-            artifactId = 'kontent-delivery-generators'
+            artifactId = repoArtifactId
             groupId = repoGroupId
             versionMapping {
                 usage('java-api') {
@@ -78,33 +80,23 @@ publishing {
             }
         }
     }
-}
-
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    publish = true
-    publications = ['BintrayPublication']
-    pkg {
-        repo = 'kontent-java-packages'
-        name = 'kontent-delivery-generators'
-        userOrg = 'kentico'
-        desc = packageDescription
-        issueTrackerUrl =  repoUrl + '/issues'
-        vcsUrl = repoVcsUrl
-        licenses = ['MIT']
-        publicDownloadNumbers = true
-        labels = ['kentico', 'kontent', 'model generator', 'generator', 'caas']
-        githubRepo = 'Kentico/kontent-java-packages'
-        version {
-            name = version.name
-            released = new Date()
-            desc = packageDescription
-            vcsTag = version.name
-            gpg {
-                sign = true
-                passphrase = bintrayGpg
+    repositories {
+        maven {
+            if (project.getVersion().toString().endsWith('SNAPSHOT')) {
+                url "https://oss.sonatype.org/content/repositories/snapshots/"
+            } else {
+                url "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            }
+            credentials {
+                username nexusUsername
+                password nexusPassword
             }
         }
     }
+}
+
+signing {
+    // https://docs.gradle.org/current/userguide/signing_plugin.html#using_in_memory_ascii_armored_openpgp_subkeys
+    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+    sign publishing.publications.mavenJava
 }

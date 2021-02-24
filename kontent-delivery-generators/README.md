@@ -45,7 +45,7 @@ import kentico.kontent.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath('com.github.kentico:kontent-delivery-generators:latest.release')

@@ -7,11 +7,12 @@
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
     dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.+'
         classpath 'com.android.tools.build:gradle:4.0.2'
     }
 }
@@ -22,9 +23,13 @@ if (propertiesFile.exists()) {
     properties.load(propertiesFile.newDataInputStream())
 }
 
-ext.bintrayUser = properties.getProperty('BINTRAY_USER') != null ? properties.getProperty('BINTRAY_USER') : System.getenv('API_TOKEN')
-ext.bintrayKey = properties.getProperty('BINTRAY_KEY') != null ? properties.getProperty('BINTRAY_KEY') : System.getenv('API_TOKEN')
-ext.bintrayGpg = properties.getProperty('BINTRAY_GPG') != null ? properties.getProperty('BINTRAY_GPG') : System.getenv('BINTRAY_GPG')
+ext.nexusUsername = properties.getProperty('nexusUsername') != null ? properties.getProperty('nexusUsername') : System.getenv('NEXUS_USERNAME');
+ext.nexusPassword = properties.getProperty('nexusPassword') != null ? properties.getProperty('nexusPassword') : System.getenv('NEXUS_PASSWORD');
+
+ext.signingKeyId = properties.getProperty('signingKeyId') != null ? properties.getProperty('signingKeyId') : System.getenv('SIGNING_KEY_ID');
+ext.signingKey = properties.getProperty('signingKey') != null ? properties.getProperty('signingKey') : System.getenv('SIGNING_KEY');
+ext.signingPassword = properties.getProperty('signingPassword') != null ? properties.getProperty('signingPassword') : System.getenv('SIGNING_PASSWORD');
+
 ext.repoVcsUrl = 'https://github.com/Kentico/kontent-java-packages.git'
 ext.repoUrl = 'https://github.com/Kentico/kontent-java-packages'
 
@@ -45,27 +50,32 @@ ext.pomConfig = {
     }
     scm {
         url "git@github.com:Kentico/kontent-java-packages.git"
+        connection 'scm:git:git://github.com/Kentico/kontent-java-packages.git'
+        developerConnection 'scm:git:ssh://git@github.com:Kentico/kontent-java-packages.git'
+    }
+    issueManagement {
+        system 'GitHub'
+        url 'https://github.com/Kentico/kontent-java-packages/issues'
+    }
+    organization {
+        name 'com.github.kentico'
+        url 'https://github.com/Kentico'
     }
 }
 
 allprojects {
-
     repositories {
-        jcenter()
-
         mavenCentral()
-
-        maven {
-            url 'https://oss.sonatype.org/content/repositories/snapshots'
-        }
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
     }
 }
 
 def repoGroupIdVal = 'com.github.kentico';
 
 subprojects {
-    version = '4.4.0'
+    version = '4.4.0-SNAPSHOT'
     ext.repoGroupId = repoGroupIdVal
     group = repoGroupIdVal
-    ext.repositoryHost = 'jCenter'
+    ext.repositoryHost = 'maven.org'
 }
