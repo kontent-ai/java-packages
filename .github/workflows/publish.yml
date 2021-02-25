@@ -17,12 +17,12 @@ jobs:
         env:
          GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-        - name: echo var
-         run: |
-           echo version name is: ${{ github.event.release.tag_name }}
-           echo release title is: ${{ github.event.release.name }}
-           echo release body is: ${{ github.event.release.body }}
-           echo repository is: ${{ github.repository }}
+      - name: echo var
+       run: |
+        echo version name is: ${{ github.event.release.tag_name }}
+        echo release title is: ${{ github.event.release.name }}
+        echo release body is: ${{ github.event.release.body }}
+        echo repository is: ${{ github.repository }}
 #      - name: Publish package
 #        run: ./gradlew publish
 #        env:
