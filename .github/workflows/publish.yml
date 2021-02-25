@@ -14,11 +14,11 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Version release
-        run: echo Releasing verion ${{ toJson(github).event.release.tag_name }}
+        run: echo Releasing verion ${{ github.event.release.tag_name }}
       - name: Publish package
         run: ./gradlew publish
         env:
-          RELEASE_TAG: ${{ toJson(github).event.release.tag_name }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
           NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
