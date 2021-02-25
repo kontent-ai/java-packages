@@ -56,4 +56,3 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 1. Build the solution `./gradlew build`.
 1. Run `./gradlew bintrayUpload`.
 
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages?pixel)
