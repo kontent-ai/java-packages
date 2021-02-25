@@ -74,7 +74,7 @@ allprojects {
 def repoGroupIdVal = 'com.github.kentico';
 
 subprojects {
-    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '4.4.1-SNAPSHOT'
+    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '4.4.1'
     ext.repoGroupId = repoGroupIdVal
     group = repoGroupIdVal
     ext.repositoryHost = 'maven.org'
