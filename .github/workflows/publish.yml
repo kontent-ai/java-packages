@@ -13,21 +13,12 @@ jobs:
           java-version: 1.8
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Dump GitHub context
+      - name: Publish package
+        run: ./gradlew publish
         env:
-         GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: echo var
-        run: |
-          echo version name is: ${{ github.event.release.tag_name }}
-          echo release title is: ${{ github.event.release.name }}
-          echo release body is: ${{ github.event.release.body }}
-          echo repository is: ${{ github.repository }}
-#      - name: Publish package
-#        run: ./gradlew publish
-#        env:
-#          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-#          NEXUS_PASSWORD: ${{ secrets.NEXUS_USERNAME }}
-#          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
-#          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
-#          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+          RELEASE_TAG: ${{ toJson(github).release.tag_name }}
+          NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
+          NEXUS_PASSWORD: ${{ secrets.NEXUS_USERNAME }}
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
