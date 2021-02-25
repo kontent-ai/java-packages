@@ -61,6 +61,7 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 1. Select "Staging repositories", verify the repository content (*sometimes it takes a couple of minutes until the repository is visible in the Nexus Repository Manager UI*).
 1. Close the Staging repository
 1. Release the Closed repository
+1. Increase the patch version and append `-SNAPSHOT` in the bottom of `/build.gradle` file (i.e. `4.4.1-SNAPSHOT`).
 
 > 💡 This is just an abbreviated description of the publishing process. If you want to see detailed publishing description, checkout the [wiki page "Publishing process"](https://github.com/Kentico/kontent-java-packages/wiki/Release-process).
 
