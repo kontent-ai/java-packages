@@ -56,7 +56,8 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 
 1. Verify that everything in the branch is ready to be published and the [build and tests](https://github.com/Kentico/kontent-java-packages/actions/workflows/gradle.yml) are passing.
 1. Create new GitHub release - **the tag name of the release will be used as a version**
-    * If you define tag name with "-SNAPSHOT" suffix i.e. `4.4.0-SNAPSHOT` artifact will be published to the `https://oss.sonatype.org/content/repositories/snapshots/`, so that you could use it when you want to test out beta version.
+    * If you define tag name with "-SNAPSHOT" suffix i.e. `4.4.0-SNAPSHOT` artifact will be published to the `https://oss.sonatype.org/content/repositories/snapshots/`, so that you could use it when you want to try out the beta version.
+
     * The creation of a release triggers the [Publish Github workflow](https://github.com/Kentico/kontent-java-packages/actions/workflows/publish.yml) and creates and publishes the artifacts to "Staging" repositories on Nexus repository manager.
 
 1. Log in to the [Nexus Repository Manager](https://oss.sonatype.org/).
