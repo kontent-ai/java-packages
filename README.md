@@ -51,7 +51,8 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 
 ## Publishing
 
-> To publish a new version, it iss required to have write permissions for this repository (to be able to create releases) and access to the [Nexus Repository Manager](https://oss.sonatype.org/).
+> To publish a new version, it is required to have write permissions for this repository (to be able to create releases) and access to the [Nexus Repository Manager](https://oss.sonatype.org/).
+
 
 1. Verify that everything in the branch is ready to be published and the [build and tests](https://github.com/Kentico/kontent-java-packages/actions/workflows/gradle.yml) are passing.
 1. Create new GitHub release - **the tag name of the release will be used as a version**
@@ -65,4 +66,3 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 1. Increase the patch version and append `-SNAPSHOT` in the bottom of `/build.gradle` file (i.e. `4.4.1-SNAPSHOT`).
 
 > 💡 This is just an abbreviated description of the publishing process. If you want to see detailed publishing description, checkout the [wiki page "Publishing process"](https://github.com/Kentico/kontent-java-packages/wiki/Release-process).
-
