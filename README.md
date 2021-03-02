@@ -1,5 +1,8 @@
 # Kontent Java Packages
 
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
+
 Monorepo with Java Kontent packages.
 
 ## Packages
@@ -48,11 +51,19 @@ The ideal next step is to test out the [Kontent Sample Spring Boot app](/sample-
 
 ## Publishing
 
-> If you want to publish the new version, you need to have an access to [Bintray's Kentico organization](https://bintray.com/kentico).
+> To publish a new version, it is required to have write permissions for this repository (to be able to create releases) and access to the [Nexus Repository Manager](https://oss.sonatype.org/).
 
-1. Copy the `local.properties.template` file in this directory to `local.properties` (which will be idnored by Git)).
-1. Set each variable on `local.properties` from the password manager, or contact @Kentico/developer-relations team to get them.
-1. Set version you want to publish in [`build.gradle`](./build.gradle#L69).
-1. Build the solution `./gradlew build`.
-1. Run `./gradlew bintrayUpload`.
 
+1. Verify that everything in the branch is ready to be published and the [build and tests](https://github.com/Kentico/kontent-java-packages/actions/workflows/gradle.yml) are passing.
+1. Create new GitHub release - **the tag name of the release will be used as a version**
+    * If you define tag name with "-SNAPSHOT" suffix i.e. `4.4.0-SNAPSHOT` artifact will be published to the `https://oss.sonatype.org/content/repositories/snapshots/`, so that you could use it when you want to try out the beta version.
+
+    * The creation of a release triggers the [Publish Github workflow](https://github.com/Kentico/kontent-java-packages/actions/workflows/publish.yml) and creates and publishes the artifacts to "Staging" repositories on Nexus repository manager.
+
+1. Log in to the [Nexus Repository Manager](https://oss.sonatype.org/).
+1. Select "Staging repositories", verify the repository content (*sometimes it takes a couple of minutes until the repository is visible in the Nexus Repository Manager UI*).
+1. Close the Staging repository
+1. Release the Closed repository
+1. Increase the patch version and append `-SNAPSHOT` in the bottom of `/build.gradle` file (i.e. `4.4.1-SNAPSHOT`).
+
+> 💡 This is just an abbreviated description of the publishing process. If you want to see the detailed publishing description, checkout the [wiki page "Publishing process"](https://github.com/Kentico/kontent-java-packages/wiki/Release-process).

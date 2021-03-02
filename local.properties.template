@@ -1,3 +1,8 @@
-BINTRAY_USER=
-BINTRAY_KEY=
-BINTRAY_GPG=
+# https://docs.gradle.org/current/userguide/signing_plugin.html#sec:in-memory-keys
+signingKeyId=C1CE3EDA
+signingPassword=
+# Starts with "n-----BEGIN PGP PRIVATE KEY BLOCK-----\n\n"...
+signingKey=
+
+nexusUsername=
+nexusPassword=

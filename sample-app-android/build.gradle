@@ -12,26 +12,26 @@ apply plugin: 'com.android.application'
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
         google()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath 'com.google.gms:google-services:3.1.2'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
 
 repositories {
-    maven {
-        url 'https://maven.google.com'
-    }
+    maven { url 'https://maven.google.com' }
+    maven { url "https://plugins.gradle.org/m2/" }
 }
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    buildToolsVersion "29.0.2"
     defaultConfig {
         // Enabling multidex support. See https://stackoverflow.com/questions/38714651/android-studio-dexindexoverflowexception-method-id-not-in/38715060
         multiDexEnabled true

@@ -3,8 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery-generators.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery-generators)
-[![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery-generators/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery-generators/_latestVersion)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery-generators)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery-generators)
 
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 This tool generates strongly-typed models based on Content Types in a Kentico Kontent project. The models are supposed to be used together with the [Kentico Kontent Delivery SDK for Java](../kontent-delivery/README.md). Please read the [documentation](</wiki/Working-with-Strongly-Typed-Models-(aka-Code-First-Approach)#customizing-the-strong-type-binding-logic>) to see all benefits of this approach.
@@ -45,7 +46,7 @@ import kentico.kontent.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
     }
     dependencies {
         classpath('com.github.kentico:kontent-delivery-generators:latest.release')

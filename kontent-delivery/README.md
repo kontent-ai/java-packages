@@ -2,23 +2,24 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
-[![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery/_latestVersion)
+[![javadoc](https://javadoc.io/badge2/com.github.kentico/kontent-delivery/javadoc.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from [Kentico Kontent](https://kontent.ai).
 
 ## Get started
 
-You can use the SDK in the form of a Apache Maven package from [JCenter](https://bintray.com/bintray/jcenter) - so you need to point your Maven to <https://jcenter.bintray.com>.
+You can use the SDK in the form of a Apache Maven package from [Maven Central](https://repo.maven.apache.org/maven2/com/github/kentico/kontent-delivery/) - so you need to point your Maven to `mavenCentral`
 
 ### Gradle
 
 ```groovy
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
