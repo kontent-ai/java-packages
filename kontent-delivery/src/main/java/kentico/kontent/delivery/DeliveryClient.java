@@ -128,7 +128,7 @@ public class DeliveryClient {
             throw new IllegalArgumentException("The Delivery options object is not specified.");
         }
         if (deliveryOptions.getProjectId() == null || deliveryOptions.getProjectId().isEmpty()) {
-            throw new IllegalArgumentException("Kentico Kontent project identifier is not specified.");
+            throw new IllegalArgumentException("Kontent project identifier is not specified.");
         }
         try {
             UUID.fromString(deliveryOptions.getProjectId());

@@ -111,7 +111,7 @@ import java.util.Locale;
  * <p>
  * You can use the {@link #filterContains(String, String)}, {@link #filterAny(String, String...)},
  * {@link #filterAny(String, Collection)}, {@link #filterAny(String, String...)}, and
- * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kentico Kontent
+ * {@link #filterAny(String, Collection)} filtering operators only with arrays. Array attributes in Kontent
  * include the sitemap locations system object ({@link System#getSitemapLocations()}), and the {@link AssetsElement},
  * {@link LinkedItem}, {@link MultipleChoiceElement}, and {@link TaxonomyElement} content elements. All the
  * other system attributes and content type elements are simple types, such as strings or numbers.
@@ -159,7 +159,7 @@ import java.util.Locale;
  * Note: When retrieving content items, linked items cannot be filtered.
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
- *      KenticoKontent API reference - Listing response</a>
+ *      Kontent API reference - Listing response</a>
  */
 public class DeliveryParameterBuilder {
 

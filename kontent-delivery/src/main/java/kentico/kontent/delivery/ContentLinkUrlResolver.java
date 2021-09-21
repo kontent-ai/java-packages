@@ -41,9 +41,9 @@ package kentico.kontent.delivery;
  * }</pre>
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
- *      KenticoKontent API reference - Link to a content item</a>
+ *      Kontent API reference - Link to a content item</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Rich-text-element/links-single-object">
- *      KenticoKontent API reference - Rich text links</a>
+ *      Kontent API reference - Rich text links</a>
  * @see Link
  * @see RichTextElementConverter
  * @see RichTextElement

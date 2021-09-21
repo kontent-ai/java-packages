@@ -51,7 +51,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 def packageSummary = 'Kontent model generator.'
-def packageDescription = 'Generators producing strongly-typed models based on content types in a Kentico Kontent project.'
+def packageDescription = 'Generators producing strongly-typed models based on content types in a Kontent project.'
 def repoArtifactId = 'kontent-delivery-generators'
 
 

@@ -8,7 +8,7 @@
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
-The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from [Kentico Kontent](https://kontent.ai).
+The Kontent Delivery Java SDK is a client library used for retrieving content from [Kontent by Kentico](https://kontent.ai).
 
 ## Get started
 
@@ -44,7 +44,7 @@ dependencies {
 
 ## Creating the DeliveryClient
 
-The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Kontent projects.
+The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kontent projects.
 
 To create an instance of the class, you need to provide a [project ID](https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content#a-getting-content-items).
 
@@ -82,7 +82,7 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 
 ### Previewing unpublished content
 
-To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kentico Kontent project has its own Preview API key.
+To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent project has its own Preview API key.
 
 ```java
 // Note: Within a single project, we recommend that you work with only
@@ -291,7 +291,7 @@ You can still use the [model generator](../kontent-delivery-generators/README.md
 
 ## Further information
 
-For more developer resources, visit the Kentico Kontent Docs at <https://docs.kontent.ai>.
+For more developer resources, visit the Kontent Docs at <https://docs.kontent.ai>.
 
 ### Showcase
 
