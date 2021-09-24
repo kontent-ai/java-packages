@@ -34,9 +34,9 @@ import java.util.Map;
  * Also serves as the response from an invocation of {@link DeliveryClient#getType(String)}.
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
- *      KenticoKontent API reference - Content type object</a>
+ *      Kontent API reference - Content type object</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-type">
- *      KenticoKontent API reference - View a content type</a>
+ *      Kontent API reference - View a content type</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor
@@ -56,7 +56,7 @@ public class ContentType {
     /**
      * Content type elements in the content type.  These are keyed by the codename of the element.
      * <p>
-     * Note: The order of the {@link Element} objects might not match the order in the KenticoKontent UI.
+     * Note: The order of the {@link Element} objects might not match the order in the Kontent UI.
      *
      * @param elements  New value of this ContentType's {@link Element} objects.
      * @return          Map of this ContentType's {@link Element} objects.

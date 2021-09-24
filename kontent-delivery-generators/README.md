@@ -1,4 +1,4 @@
-# Kentico Kontent model generator for Java
+# Kontent model generator for Java
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
@@ -8,7 +8,7 @@
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
-This tool generates strongly-typed models based on Content Types in a Kentico Kontent project. The models are supposed to be used together with the [Kentico Kontent Delivery SDK for Java](../kontent-delivery/README.md). Please read the [documentation](</wiki/Working-with-Strongly-Typed-Models-(aka-Code-First-Approach)#customizing-the-strong-type-binding-logic>) to see all benefits of this approach.
+This tool generates strongly-typed models based on Content Types in a Kontent by Kentico project. The models are supposed to be used together with the [Kontent Delivery SDK for Java](../kontent-delivery/README.md). Please read the [documentation](</wiki/Working-with-Strongly-Typed-Models-(aka-Code-First-Approach)#customizing-the-strong-type-binding-logic>) to see all benefits of this approach.
 
 ## Get started
 

@@ -27,7 +27,7 @@ package kentico.kontent.delivery;
 import java.io.IOException;
 
 /**
- * Thrown when an {@link IOException} is thrown when executing against the KenticoKontent API.  Generally means
+ * Thrown when an {@link IOException} is thrown when executing against the Kontent API.  Generally means
  * connectivity problems with Kentico of problem parsing {@link KenticoError} from body.
  */
 public class KenticoIOException extends RuntimeException implements KenticoException {
