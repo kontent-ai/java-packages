@@ -44,7 +44,7 @@ You could generate your own Sample project by using [Sample site configuration p
 
 Then use this project in the app:
 
-1. In Kentico Kontent, choose Project settings from the app menu.
+1. In Kontent, choose Project settings from the app menu.
 1. Under Development, choose API keys.
 1. Copy your Project ID.
 1. And then set the project ID to [KontentConfiguration.java](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/springboot/KontentConfiguration.java#L17).

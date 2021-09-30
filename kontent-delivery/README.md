@@ -2,23 +2,24 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
-[![Download](https://api.bintray.com/packages/kentico/kontent-java-packages/kontent-delivery/images/download.svg)](https://bintray.com/kentico/kontent-java-packages/kontent-delivery/_latestVersion)
+[![javadoc](https://javadoc.io/badge2/com.github.kentico/kontent-delivery/javadoc.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
-The Kentico Kontent Delivery Java SDK is a client library used for retrieving content from [Kentico Kontent](https://kontent.ai).
+The Kontent Delivery Java SDK is a client library used for retrieving content from [Kontent by Kentico](https://kontent.ai).
 
 ## Get started
 
-You can use the SDK in the form of a Apache Maven package from [JCenter](https://bintray.com/bintray/jcenter) - so you need to point your Maven to <https://jcenter.bintray.com>.
+You can use the SDK in the form of a Apache Maven package from [Maven Central](https://repo.maven.apache.org/maven2/com/github/kentico/kontent-delivery/) - so you need to point your Maven to `mavenCentral`
 
 ### Gradle
 
 ```groovy
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -43,7 +44,7 @@ dependencies {
 
 ## Creating the DeliveryClient
 
-The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kentico Kontent projects.
+The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kontent projects.
 
 To create an instance of the class, you need to provide a [project ID](https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content#a-getting-content-items).
 
@@ -81,7 +82,7 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 
 ### Previewing unpublished content
 
-To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kentico Kontent project has its own Preview API key.
+To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent project has its own Preview API key.
 
 ```java
 // Note: Within a single project, we recommend that you work with only
@@ -290,7 +291,7 @@ You can still use the [model generator](../kontent-delivery-generators/README.md
 
 ## Further information
 
-For more developer resources, visit the Kentico Kontent Docs at <https://docs.kontent.ai>.
+For more developer resources, visit the Kontent Docs at <https://docs.kontent.ai>.
 
 ### Showcase
 

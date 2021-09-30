@@ -27,7 +27,7 @@ package kentico.kontent.delivery;
 import java.util.List;
 
 /**
- * Represents a page of results from the KenticoKontent API.
+ * Represents a page of results from the Kontent API.
  *
  * @param <T> The type of results.
  */

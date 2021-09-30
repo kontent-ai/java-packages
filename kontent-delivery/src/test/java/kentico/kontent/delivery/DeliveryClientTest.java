@@ -65,7 +65,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 (request, response, context) -> {
                     String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
                     Assert.assertEquals(3, trackingHeaderValueParts.length);
-                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("maven.org", trackingHeaderValueParts[0]);
                     Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
                     Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
 
@@ -100,7 +100,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                 (request, response, context) -> {
                     String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
                     Assert.assertEquals(3, trackingHeaderValueParts.length);
-                    Assert.assertEquals("jCenter", trackingHeaderValueParts[0]);
+                    Assert.assertEquals("maven.org", trackingHeaderValueParts[0]);
                     Assert.assertEquals("com.github.kentico:kontent-delivery", trackingHeaderValueParts[1]);
                     Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
 
@@ -1462,7 +1462,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
             DeliveryClient client = new DeliveryClient(deliveryOptions);
             Assert.fail("Expected IllegalArgumentException due to null Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kentico Kontent project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kontent project identifier is not specified.", e.getMessage());
         }
     }
 
@@ -1475,7 +1475,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
             DeliveryClient client = new DeliveryClient(deliveryOptions);
             Assert.fail("Expected IllegalArgumentException due to empty Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kentico Kontent project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kontent project identifier is not specified.", e.getMessage());
         }
     }
 
