@@ -25,7 +25,7 @@
 package kentico.kontent.delivery;
 
 /**
- * Thrown when retry attempts are is thrown when executing against the KenticoKontent API.  Generally means
+ * Thrown when retry attempts are is thrown when executing against the Kontent API.  Generally means
  * connectivity problems with Kentico.
  */
 public class KenticoRetryException extends RuntimeException implements KenticoException {

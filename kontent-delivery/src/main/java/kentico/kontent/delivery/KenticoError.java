@@ -29,11 +29,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Kentico error response
  * <p>
- * Kentico Kontent returns standard HTTP status codes to indicate success or failure of a request. In general, codes in
+ * Kontent returns standard HTTP status codes to indicate success or failure of a request. In general, codes in
  * the 2xx range indicate a successful request, codes in the 4xx range indicate errors caused by an incorrect input
  * (for example, providing incorrect API key), and codes in the 5xx range indicate an error on our side.
  * <p>
- * For troubleshooting failed requests, the Kentico Kontent APIs provide error messages defined in a consumable format to
+ * For troubleshooting failed requests, the Kontent APIs provide error messages defined in a consumable format to
  * help you identify and fix the issue. For example, when you request a content item that does not exist (e.g., you
  * mistype its codename), the API returns a 404 HTTP error along with a JSON message.
  * <p>

@@ -38,30 +38,30 @@ import java.util.List;
  * however due to varying operations that can be done with the {@link DeliveryParameterBuilder}, it is highly
  * recommended to key off the {@code requestUri}.
  * <p>
- * A CacheManager also can leverage notifications from KenticoKontent's webhooks that can be sent when the project's
+ * A CacheManager also can leverage notifications from Kontent's webhooks that can be sent when the project's
  * content is changed.
  * <p>
  * By default, if no CacheManager is provided, the DeliveryClient will use it's default, which just passes through.
  *
  * @see DeliveryClient#setCacheManager(CacheManager)
  * @see <a href="https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates">
- *      KenticoKontent API reference - Webhooks and notifications</a>
+ *      Kontent API reference - Webhooks and notifications</a>
  */
 public interface CacheManager {
 
     /**
-     * Retrieve an earlier cached response from the KenticoKontentDelivery API.
+     * Retrieve an earlier cached response from the KontentDelivery API.
      *
-     * @param url The url that would be used to retrieve the response from KenticoKontent Delivery API.
+     * @param url The url that would be used to retrieve the response from Kontent Delivery API.
      * @return JsonNode response or null if no value is available in the cache for the given url.
      */
     JsonNode get(final String url);
 
     /**
-     * Cache a response from the KenticoKontentDelivery API.
+     * Cache a response from the KontentDelivery API.
      *
-     * @param url the URL that was used to retrieve the response from the KenticoKontentDelivery API.
-     * @param jsonNode the JsonNode created from the response from the KenticoKontent Delivery API.
+     * @param url the URL that was used to retrieve the response from the KontentDelivery API.
+     * @param jsonNode the JsonNode created from the response from the Kontent Delivery API.
      * @param containedContentItems (null allowed) can be used to inspect the original contents of the JsonNode and allow for precise cache invalidation (if implemented).
      */
     void put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);

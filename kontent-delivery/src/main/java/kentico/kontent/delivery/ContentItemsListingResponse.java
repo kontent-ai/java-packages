@@ -35,9 +35,9 @@ import java.util.Map;
  * Content item listing response from an invocation of {@link DeliveryClient#getItems()}, or
  * {@link DeliveryClient#getItems(List)}.
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      KenticoKontent API reference - Content item object</a>
+ *      Kontent API reference - Content item object</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
- *      KenticoKontent API reference - List content items</a>
+ *      Kontent API reference - List content items</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
  * @see DeliveryClient#getItem(String, List)
@@ -54,9 +54,9 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
      * The {@link ContentItem}s returned by this ContentItemsListingResponse.
      *
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
-     *          KenticoKontent API reference - Content item object</a>
+     *          Kontent API reference - Content item object</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *          KenticoKontent API reference - List content items</a>
+     *          Kontent API reference - List content items</a>
      * @return  The {@link ContentItem}s of this ContentItemsListingResponse.
      */
     @JsonProperty("items")
@@ -66,11 +66,11 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
      * A map of content items used in linked item and Rich text elements.
      *
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
-     *          KenticoKontent API reference - Linked items</a>
+     *          Kontent API reference - Linked items</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
-     *          KenticoKontent API reference - Content item object</a>
+     *          Kontent API reference - Content item object</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *          KenticoKontent API reference - List content items</a>
+     *          Kontent API reference - List content items</a>
      * @return  The linked {@link ContentItem}s referenced in this response.
      */
     @JsonProperty("modular_content")
@@ -80,9 +80,9 @@ public class ContentItemsListingResponse implements LinkedItemProvider {
      * Information about the retrieved page.  Used for iterating a large result set if using limit query parameters.
      *
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *          KenticoKontent API reference - Listing response paging</a>
+     *          Kontent API reference - Listing response paging</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
-     *          KenticoKontent API reference - Pagination object</a>
+     *          Kontent API reference - Pagination object</a>
      * @return  The {@link Pagination} for this ContentItemsListingResponse identifying the current page.
      */
     @JsonProperty("pagination")

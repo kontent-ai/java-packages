@@ -87,9 +87,9 @@ import java.lang.annotation.Target;
  * @see LinkedItem
  * @see StronglyTypedContentItemConverter
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      KenticoKontent API reference - Content item object</a>
+ *      Kontent API reference - Content item object</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
- *      KenticoKontent API reference - Linked items</a>
+ *      Kontent API reference - Linked items</a>
  */
 @Target({ElementType.TYPE, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

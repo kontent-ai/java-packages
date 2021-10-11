@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Generates java source files using the Kentico Kontent Type listing endpoint in the Delivery API
+ * Generates java source files using the Kontent Type listing endpoint in the Delivery API
  */
 public class CodeGenerator {
 
@@ -28,7 +28,7 @@ public class CodeGenerator {
 
     /**
      * Constructs the CodeGenerator
-     * @param projectId the project id from your Kentico Kontent account
+     * @param projectId the project id from your Kontent account
      * @param packageName the package to place the generated models under
      * @param outputDir the source root to place the generated models
      * @throws UnsupportedOperationException when a there is a problem with the outputDir
@@ -48,30 +48,30 @@ public class CodeGenerator {
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kentico Kontent account
+     * Returns a list of specifications of the sources representing the types in your Kontent account
      * @return A list of specifications
-     * @throws ExecutionException when a problem occurs communicating with the Kentico Kontent API
-     * @throws InterruptedException when a problem occurs communicating with the Kentico Kontent API
+     * @throws ExecutionException when a problem occurs communicating with the Kontent API
+     * @throws InterruptedException when a problem occurs communicating with the Kontent API
      */
     public List<JavaFile> generateSources() throws ExecutionException, InterruptedException {
         return generateSources(new DeliveryClient(projectId));
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kentico Kontent account.
+     * Returns a list of specifications of the sources representing the types in your Kontent account.
      * The provided {@link DeliveryClient} param is useful for testing, however in most environments, the default
      * {@link #generateSources()} method should suffice.
      * @param client A DeliveryClient instance to use to generate the sources.
      * @return A list of specifications
-     * @throws ExecutionException when a problem occurs communicating with the Kentico Kontent API
-     * @throws InterruptedException when a problem occurs communicating with the Kentico Kontent API
+     * @throws ExecutionException when a problem occurs communicating with the Kontent API
+     * @throws InterruptedException when a problem occurs communicating with the Kontent API
      */
     public List<JavaFile> generateSources(DeliveryClient client) throws ExecutionException, InterruptedException {
         return generateSources(client.getTypes().toCompletableFuture().get().getTypes());
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kentico Kontent account.
+     * Returns a list of specifications of the sources representing the types in your Kontent account.
      * The provided List of {@link ContentType} param is useful for testing, however in most environments, the default
      * {@link #generateSources()} method should generally be the only method invoking this.
      * @param types A List of ContentType to generate the sources from
@@ -86,7 +86,7 @@ public class CodeGenerator {
     }
 
     /**
-     * Returns a specification of the source representing this type in your Kentico Kontent account.
+     * Returns a specification of the source representing this type in your Kontent account.
      * Invoking this directly may be useful for testing, however in most environments, the default
      * {@link #generateSources()} method should suffice.
      * @param type A ContentType to generate the source from

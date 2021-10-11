@@ -23,7 +23,7 @@
  */
 
 /**
- * The Kentico Kontent Delivery API is read-only. You can retrieve content but not add or modify it.
+ * The Kontent Delivery API is read-only. You can retrieve content but not add or modify it.
  * <p>
  * Production vs Preview
  * You can work with the Delivery API in two ways. Either retrieve published versions of content items or preview their
