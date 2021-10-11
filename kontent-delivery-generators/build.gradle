@@ -1,5 +1,5 @@
 plugins {
-    id "io.franzbecker.gradle-lombok" version "1.14"
+    id "io.franzbecker.gradle-lombok" version "4.0.0"
 }
 
 apply plugin: 'java'
@@ -11,17 +11,17 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 dependencies {
-    compile('com.squareup:javapoet:1.9.0')
-    compile('com.google.guava:guava:23.0')
+    implementation('com.squareup:javapoet:1.13.0')
+    implementation('com.google.guava:guava:24.1-jre')
     implementation project(':kontent-delivery')
 
-    testCompile("junit:junit:4.12");
-    testCompile("org.apache.httpcomponents:httpclient:4.5.3:tests");
-    testCompile("org.apache.httpcomponents:httpclient:4.5.3");
+    testImplementation("junit:junit:4.13.1");
+    testImplementation("org.apache.httpcomponents:httpclient:4.5.13:tests");
+    testImplementation("org.apache.httpcomponents:httpclient:4.5.13");
 }
 
 lombok {
-    version = "1.18.2"
+    version = "1.18.16"
     sha256 = ""
 }
 

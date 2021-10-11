@@ -1,5 +1,5 @@
 plugins {
-    id "io.franzbecker.gradle-lombok" version "1.14"
+    id "io.franzbecker.gradle-lombok" version "4.0.0"
 }
 
 apply plugin: 'java'
@@ -10,27 +10,27 @@ sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
 dependencies {
-    implementation("org.slf4j:slf4j-api:1.7.25")
+    implementation("org.slf4j:slf4j-api:1.7.30")
 
-    implementation("com.fasterxml.jackson.core:jackson-core:2.8.9")
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.8.9")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.4.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.12.0")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.12.0")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
 
     implementation("com.madrobot:madrobotbeans:0.1")
     implementation("io.github.classgraph:classgraph:4.8.90")
 
-    implementation("com.squareup.okhttp3:okhttp:4.5.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
-    compileOnly("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
-    testCompile("org.thymeleaf:thymeleaf:3.0.0.RELEASE")
+    compileOnly("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
+    testImplementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
 
-    testCompile("junit:junit:4.12")
-    testCompile("org.apache.httpcomponents:httpclient:4.5.3:tests")
-    testCompile("org.apache.httpcomponents:httpclient:4.5.3")
+    testImplementation("junit:junit:4.13.1")
+    testImplementation("org.apache.httpcomponents:httpclient:4.5.13:tests")
+    testImplementation("org.apache.httpcomponents:httpclient:4.5.13")
 }
 
 lombok {
-    version = "1.18.2"
+    version = "1.18.16"
     sha256 = ""
 }
 
