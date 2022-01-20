@@ -208,6 +208,18 @@ public class DeliveryClient {
         return getItems(tClass, Collections.emptyList());
     }
 
+    @SuppressWarnings("unused")
+    public <T> T getItemsSynchronously(Class<T> tClass){
+        try {
+            return getItems(tClass).toCompletableFuture().get();
+        } catch (InterruptedException e) {
+            log.error("Error converting completion stage: {}", e.getMessage());
+        } catch (ExecutionException e) {
+            log.error("Error converting completion stage: {}", e.getMessage());
+        }
+        return null;
+    }
+
     @SuppressWarnings("WeakerAccess")
     public <T> CompletionStage<Page<T>> getPageOfItems(Class<T> tClass, List<NameValuePair> params) {
         return getItems(params)
