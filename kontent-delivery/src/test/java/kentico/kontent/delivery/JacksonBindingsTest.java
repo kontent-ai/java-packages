@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 public class JacksonBindingsTest {
@@ -321,7 +322,7 @@ public class JacksonBindingsTest {
     }
 
     @Test
-    public void testAssetElementDeserialization() throws IOException {
+    public void testAssetElementWithoutRenditionsDeserialization() throws IOException {
         AssetsElement assetsElement = objectMapper.readValue(
                 this.getClass().getResource("SampleAssetElement.json"), AssetsElement.class);
         AssetsElement assetsElement2 = objectMapper.readValue(
@@ -352,6 +353,89 @@ public class JacksonBindingsTest {
         Assert.assertEquals(
                 "https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg",
                 asset.getUrl());
+        Assert.assertNull(asset.renditions);
+    }
+
+    @Test
+    public void testAssetElementWithEmptyRenditionsDeserialization() throws IOException {
+        AssetsElement assetsElement = objectMapper.readValue(
+                this.getClass().getResource("SampleAssetElementWithEmptyRendition.json"), AssetsElement.class);
+        AssetsElement assetsElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleAssetElementWithEmptyRendition.json"), AssetsElement.class);
+        Assert.assertNotNull("object failed deserialization", assetsElement);
+        Assert.assertNotNull(assetsElement.toString());
+        Assert.assertEquals(assetsElement, assetsElement2);
+        Assert.assertEquals(assetsElement.hashCode(), assetsElement2.hashCode());
+        Assert.assertEquals("Teaser image", assetsElement.getName());
+        Assert.assertEquals(1, assetsElement.getValue().size());
+        Asset asset = assetsElement.getValue().get(0);
+        Assert.assertNotNull(asset);
+        Asset asset2 = Asset.builder()
+                .name(asset.getName())
+                .description(asset.getDescription())
+                .size(asset.getSize())
+                .url(asset.getUrl())
+                .type(asset.getType())
+                .height(asset.getHeight())
+                .width(asset.getWidth())
+                .renditions(asset.getRenditions())
+                .build();
+        Assert.assertEquals(asset, asset2);
+        Assert.assertEquals(asset.hashCode(), asset2.hashCode());
+        Assert.assertEquals("coffee-beverages-explained-1080px.jpg", asset.getName());
+        Assert.assertEquals("image/jpeg", asset.getType());
+        Assert.assertEquals(90895, asset.getSize().longValue());
+        Assert.assertNull(asset.getDescription());
+        Assert.assertEquals(
+                "https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg",
+                asset.getUrl());
+        Assert.assertNotNull(asset.getRenditions());
+        Assert.assertTrue(asset.getRenditions().isEmpty());
+    }
+
+    @Test
+    public void testAssetElementWithRenditionsDeserialization() throws IOException {
+        AssetsElement assetsElement = objectMapper.readValue(
+                this.getClass().getResource("SampleAssetElementWithRendition.json"), AssetsElement.class);
+        AssetsElement assetsElement2 = objectMapper.readValue(
+                this.getClass().getResource("SampleAssetElementWithRendition.json"), AssetsElement.class);
+        Assert.assertNotNull("object failed deserialization", assetsElement);
+        Assert.assertNotNull(assetsElement.toString());
+        Assert.assertEquals(assetsElement, assetsElement2);
+        Assert.assertEquals(assetsElement.hashCode(), assetsElement2.hashCode());
+        Assert.assertEquals("Teaser image", assetsElement.getName());
+        Assert.assertEquals(1, assetsElement.getValue().size());
+        Asset asset = assetsElement.getValue().get(0);
+        Assert.assertNotNull(asset);
+        Asset asset2 = Asset.builder()
+                .name(asset.getName())
+                .description(asset.getDescription())
+                .size(asset.getSize())
+                .url(asset.getUrl())
+                .type(asset.getType())
+                .height(asset.getHeight())
+                .width(asset.getWidth())
+                .renditions(asset.getRenditions())
+                .build();
+        Assert.assertEquals(asset, asset2);
+        Assert.assertEquals(asset.hashCode(), asset2.hashCode());
+        Assert.assertEquals("coffee-beverages-explained-1080px.jpg", asset.getName());
+        Assert.assertEquals("image/jpeg", asset.getType());
+        Assert.assertEquals(90895, asset.getSize().longValue());
+        Assert.assertNull(asset.getDescription());
+        Assert.assertEquals(
+                "https://assets-us-01.kc-usercontent.com:443/38af179c-40ba-42e7-a5ca-33b8cdcc0d45/e700596b-03b0-4cee-ac5c-9212762c027a/coffee-beverages-explained-1080px.jpg",
+                asset.getUrl());
+        Assert.assertNotNull(asset.getRenditions());
+        Assert.assertEquals(1, asset.getRenditions().size());
+        AssetRendition expectedRendition = new AssetRendition(
+                "dc448f45-161e-4268-8155-b9d9e33497c8",
+                "a6d98cd5-8b2c-4e50-99c9-15192bce2490",
+                "640",
+                "480",
+                "w=640&h=480&fit=clip&rect=146,425,788,590"
+        );
+        Assert.assertEquals(expectedRendition, asset.getRenditions().get("default"));
     }
 
     @Test

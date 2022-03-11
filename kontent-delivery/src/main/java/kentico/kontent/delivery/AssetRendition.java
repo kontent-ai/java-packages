@@ -26,31 +26,20 @@ package kentico.kontent.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Map;
-
 /**
- * Object model for Asset elements
+ * Object model for asset rendition
  */
 @lombok.Data
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-public class Asset {
+public class AssetRendition {
 
-    @JsonProperty("name")
-    String name;
+    @JsonProperty("rendition_id")
+    String renditionId;
 
-    @JsonProperty("type")
-    String type;
-
-    @JsonProperty("size")
-    Integer size;
-
-    @JsonProperty("description")
-    String description;
-
-    @JsonProperty("url")
-    String url;
+    @JsonProperty("preset_id")
+    String presetId;
 
     @JsonProperty("width")
     String width;
@@ -58,78 +47,39 @@ public class Asset {
     @JsonProperty("height")
     String height;
 
-    @JsonProperty("renditions")
-    Map<String, AssetRendition> renditions;
+    @JsonProperty("query")
+    String query;
 
     /**
-     * File name of the asset
+     * Asset rendition ID
      *
-     * @return file name
+     * @return rendition ID
      */
-    public String getName() {
-        return name;
+    public String getRenditionId() {
+        return renditionId;
     }
 
-    void setName(String name) {
-        this.name = name;
+    void setRenditionId(String renditionId) {
+        this.renditionId = renditionId;
     }
 
     /**
-     * MIME type of the asset
+     * Asset rendition preset ID
      *
-     * @return MIME type
+     * @return rendition preset ID
      */
-    public String getType() {
-        return type;
+    public String getPresetId() {
+        return presetId;
     }
 
-    void setType(String type) {
-        this.type = type;
-    }
-
-    /**
-     * Size of the asset in bytes
-     *
-     * @return number of bytes
-     */
-    public Integer getSize() {
-        return size;
-    }
-
-    void setSize(Integer size) {
-        this.size = size;
+    void setPresetId(String presetId) {
+        this.presetId = presetId;
     }
 
     /**
-     * Description of the asset
+     * Width of the asset rendition
      *
-     * @return asset description
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Absolute URL for the asset
-     *
-     * @return URL for the asset, hosted by Kentico
-     */
-    public String getUrl() {
-        return url;
-    }
-
-    void setUrl(String url) {
-        this.url = url;
-    }
-
-    /**
-     * Width of the asset
-     *
-     * @return Width of the asset
+     * @return Width of the asset rendition
      */
 
     public String getWidth() {
@@ -141,9 +91,9 @@ public class Asset {
     }
 
     /**
-     * Height of the asset
+     * Height of the asset rendition
      *
-     * @return Height of the asset
+     * @return Height of the asset rendition
      */
 
     public String getHeight() {
@@ -152,5 +102,18 @@ public class Asset {
 
     public void setHeight(String height) {
         this.height = height;
+    }
+
+    /**
+     * Asset rendition query
+     *
+     * @return rendition query
+     */
+    public String getQuery() {
+        return query;
+    }
+
+    void setQuery(String query) {
+        this.query = query;
     }
 }
