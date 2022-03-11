@@ -26,6 +26,8 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Map;
+
 /**
  * Object model for Asset elements
  */
@@ -59,4 +61,7 @@ public class Asset {
 
     @JsonProperty("height")
     String height;
+
+    @JsonProperty("renditions")
+    Map<String, AssetRendition> renditions;
 }
