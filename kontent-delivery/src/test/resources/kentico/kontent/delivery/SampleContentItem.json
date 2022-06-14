@@ -10,7 +10,8 @@
       "sitemap_locations": [
         "articles"
       ],
-      "last_modified": "2016-10-20T12:03:48.4628352Z"
+      "last_modified": "2016-10-20T12:03:48.4628352Z",
+      "workflow_step": "published"
     },
     "elements": {
       "title": {
