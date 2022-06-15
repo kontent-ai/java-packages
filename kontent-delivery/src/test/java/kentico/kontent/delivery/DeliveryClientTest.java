@@ -832,9 +832,9 @@ public class DeliveryClientTest extends LocalServerTestBase {
         Assert.assertNotNull(item.getArticleItems());
         Assert.assertEquals(2, item.getArticleItems().size());
         Assert.assertNotNull(item.getAllLinkedItems());
-        Assert.assertEquals(2, item.getAllLinkedItems().size());
+        Assert.assertEquals(3, item.getAllLinkedItems().size());
         Assert.assertNotNull(item.getAllLinkedItemsMap());
-        Assert.assertEquals(2, item.getAllLinkedItemsMap().size());
+        Assert.assertEquals(3, item.getAllLinkedItemsMap().size());
     }
 
     @Test

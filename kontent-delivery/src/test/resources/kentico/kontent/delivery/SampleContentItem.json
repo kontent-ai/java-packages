@@ -54,6 +54,16 @@
         "type": "custom",
         "name": "Theme color",
         "value": "#ff0000"
+      },
+      "coffee_component": {
+        "type": "rich_text",
+        "name": "Coffee Component",
+        "images": {},
+        "links": {},
+        "modular_content": [
+          "component_child"
+        ],
+        "value": "<object type=\"application/kenticocloud\" data-type=\"item\" data-rel=\"component\" data-codename=\"component_child\"></object>"
       }
     }
   },
@@ -68,7 +78,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:40:14.6418507Z"
+        "last_modified": "2017-04-04T13:40:14.6418507Z",
+        "workflow_step": "published"
       },
       "elements": {
         "personas": {
@@ -168,7 +179,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:44.1533096Z"
+        "last_modified": "2017-04-04T13:45:44.1533096Z",
+        "workflow_step": "published"
       },
       "elements": {
         "personas": {
@@ -241,6 +253,33 @@
           "type": "url_slug",
           "name": "URL pattern",
           "value": "origins-of-arabica-bourbon"
+        }
+      }
+    },
+    "component_child": {
+      "system": {
+        "id": "da49061f-66d7-5cfe-62d1-fe109f9f6e46",
+        "name": "da49061f-66d7-5cfe-62d1-fe109f9f6e46",
+        "codename": "component_child",
+        "language": "default",
+        "type": "component",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2022-06-15T17:30:08.8489088Z"
+      },
+      "elements": {
+        "text": {
+          "type": "rich_text",
+          "name": "Text",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>I should not have a \"workflow_step\" included in my \"system\".</p>"
+        },
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "I am a Component"
         }
       }
     }

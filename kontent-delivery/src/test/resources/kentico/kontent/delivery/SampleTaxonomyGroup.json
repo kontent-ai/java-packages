@@ -3,7 +3,8 @@
     "id": "f30c7f72-e9ab-8832-2a57-62944a038809",
     "name": "Personas",
     "codename": "personas",
-    "last_modified": "2016-10-20T13:24:00.3200182Z"
+    "last_modified": "2016-10-20T13:24:00.3200182Z",
+    "workflow_step": "published"
   },
   "terms": [
     {

@@ -9,7 +9,8 @@
       "sitemap_locations": [
         "articles"
       ],
-      "last_modified": "2017-07-20T12:18:13.2848024Z"
+      "last_modified": "2017-07-20T12:18:13.2848024Z",
+      "workflow_step": "published"
     },
     "elements": {
       "personas": {
@@ -98,7 +99,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-07-20T12:24:13.379713Z"
+        "last_modified": "2017-07-20T12:24:13.379713Z",
+        "workflow_step": "published"
       },
       "elements": {
         "personas": {
