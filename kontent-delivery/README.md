@@ -18,21 +18,28 @@ You can use the SDK in the form of a Apache Maven package from [Maven Central](h
 ### Gradle
 
 ```groovy  
-  
-repositories {  
- mavenCentral()}  
-  
-dependencies {  
- implementation 'com.github.kentico:kontent-delivery:latest.release'}  
-```  
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+  implementation 'com.github.kentico:kontent-delivery:latest.release'
+}
+```
 
 > You may want to change `latest.release` to specific one (i.e. `0.0.2-beta.12`).
 
 ### Maven
 
 ```xml  
-<dependency>  
- <groupId>com.github.kentico</groupId> <artifactId>kontent-delivery</artifactId> <version>[0.0.2-beta.12,)</version> <type>pom</type></dependency>  
+<dependency>
+  <groupId>com.github.kentico</groupId>
+  
+  <artifactId>kontent-delivery</artifactId> 
+  <version>[0.0.2-beta.12,)</version> 
+  <type>pom</type>
+</dependency>  
 ```  
 
 > You may want to change version specification - `[0.0.2-beta.12,)` - from [range one](https://cwiki.apache.org/confluence/display/MAVENOLD/Dependency+Mediation+and+Conflict+Resolution#DependencyMediationandConflictResolution-DependencyVersionRanges) to specific one (i.e. `0.0.2-beta.12`).
@@ -64,8 +71,14 @@ You can also provide the project ID and other parameters by passing the [`Delive
 The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
 
 ```java  
-DeliveryClient client = new DeliveryClient(  
- DeliveryOptions .builder() .projectId("975bf280-fd91-488c-994c-2f04416e5ee3") .productionApiKey("secured key") .build());  
+DeliveryClient client = new DeliveryClient(
+  DeliveryOptions
+  
+    .builder()
+    .projectId("975bf280-fd91-488c-994c-2f04416e5ee3")
+    .productionApiKey("secured key")
+    .build()
+);  
 ```  
 
 Once you create a `DeliveryClient`, you can start querying your project repository by calling methods on the client instance. See [Basic querying](#basic-querying) for details.
@@ -74,11 +87,13 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 
 To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent project has its own Preview API key.
 
-```java  
-// Note: Within a single project, we recommend that you work with only  
-// either the production or preview Delivery API, not both.  
-DeliveryClient client = new DeliveryClient(  
- "YOUR_PROJECT_ID", "YOUR_PREVIEW_API_KEY");  
+```java
+// Note: Within a single project, we recommend that you work with only
+// either the production or preview Delivery API, not both.
+DeliveryClient client = new DeliveryClient(
+  "YOUR_PROJECT_ID",
+  "YOUR_PREVIEW_API_KEY"
+);
 ```  
 
 For more details, see [Previewing unpublished content using the Delivery API](https://docs.kontent.ai/tutorials/write-and-collaborate/preview-content/previewing-unpublished-content).
@@ -103,27 +118,38 @@ Sometimes, it is necessary to transform asynchronous calls `CompletionStage<T>` 
 
 > Keep in mind this transformation needs to handle possible `ExecutionException` and `InterruptedException` that could be raised when waiting to process the transformation.
 
-```java  
-// Retrieves a single content item  
-ContentItemResponse response = client.getItem("about_us")  
- .toCompletableFuture() .get();  
-// Retrieves a list of all content items  
-ContentItemsListingResponse listingResponse = client.getItems()  
- .toCompletableFuture() .get();  
-```  
+```java
+// Retrieves a single content item
+ContentItemResponse response = client.getItem("about_us")
+  .toCompletableFuture()
+  .get();
+
+// Retrieves a list of all content items
+ContentItemsListingResponse listingResponse = client.getItems()
+  .toCompletableFuture()
+  .get();
+```
 
 ### Filtering retrieved data
 
 The SDK supports full scale of the API querying and filtering capabilities as described in the [API reference](https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content).
 
-```java  
-// Retrieves a list of the specified elements from the first 10 content items of  
-// the 'brewer' content type, ordered by the 'product_name' element value  
-// also includes total number of items stored in kentico i.e. for pagination purposes  
-  
-CompletionsStage<ContentItemsListingResponse> response = client.getItems(  
- DeliveryParameterBuilder.params() .language("es-ES") .filterEquals("system.type", "brewer") .projection("image", "price", "product_status", "processing") .page(null, 10) .orderByAsc("elements.product_name") .includeTotalCount() .build())  
-```  
+```java
+// Retrieves a list of the specified elements from the first 10 content items of
+// the 'brewer' content type, ordered by the 'product_name' element value
+// also includes total number of items stored in kentico i.e. for pagination purposes
+
+CompletionsStage<ContentItemsListingResponse> response = client.getItems(
+  DeliveryParameterBuilder.params()
+    .language("es-ES")
+    .filterEquals("system.type", "brewer")
+    .projection("image", "price", "product_status", "processing")
+    .page(null, 10)
+    .orderByAsc("elements.product_name")
+    .includeTotalCount()
+    .build()
+)
+``` 
 
 ## Response structure
 
@@ -214,12 +240,16 @@ getCodename() | The codename of the option. | `dry__natural_
 
 To put the element's options in a list, you can use the following code:
 
-```java  
-List<SelectListItem> items = new List<>();  
-  
-for (Option option : element.getOptions()) {  
- SelectListItem item = new SelectListItem(); item.setText(option.getName()); item.setValue(option.getCodename()); item.setSelected("semi_dry".equals(option.getCodename()));}  
-```  
+```java
+List<SelectListItem> items = new List<>();
+
+for (Option option : element.getOptions()) {
+    SelectListItem item = new SelectListItem();
+    item.setText(option.getName());
+    item.setValue(option.getCodename());
+    item.setSelected("semi_dry".equals(option.getCodename()));
+}
+``` 
 
 ### Linked items
 
