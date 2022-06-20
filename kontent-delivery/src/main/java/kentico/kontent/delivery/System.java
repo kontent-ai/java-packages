@@ -116,4 +116,12 @@ public class System {
     @JsonProperty("last_modified")
     ZonedDateTime lastModified;
 
+    /**
+     * The codename of the item's current workflow step.
+     *
+     * @param workflowStep  Sets the workflowStep of this.
+     * @return              The workflow step of this.
+     */
+    @JsonProperty("workflow_step")
+    String workflowStep;
 }

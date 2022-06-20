@@ -1,11 +1,12 @@
+
 # Kontent Delivery Java SDK
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![javadoc](https://javadoc.io/badge2/com.github.kentico/kontent-delivery/javadoc.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
+[![javadoc](https://javadoc.io/badge2/com.github.kentico/kontent-delivery/javadoc.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)  
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
 
-[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)  
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
 
 The Kontent Delivery Java SDK is a client library used for retrieving content from [Kontent by Kentico](https://kontent.ai).
@@ -16,7 +17,7 @@ You can use the SDK in the form of a Apache Maven package from [Maven Central](h
 
 ### Gradle
 
-```groovy
+```groovy  
 
 repositories {
     mavenCentral()
@@ -31,14 +32,15 @@ dependencies {
 
 ### Maven
 
-```xml
+```xml  
 <dependency>
   <groupId>com.github.kentico</groupId>
-  <artifactId>kontent-delivery</artifactId>
-  <version>[0.0.2-beta.12,)</version>
+  
+  <artifactId>kontent-delivery</artifactId> 
+  <version>[0.0.2-beta.12,)</version> 
   <type>pom</type>
-</dependency>
-```
+</dependency>  
+```  
 
 > You may want to change version specification - `[0.0.2-beta.12,)` - from [range one](https://cwiki.apache.org/confluence/display/MAVENOLD/Dependency+Mediation+and+Conflict+Resolution#DependencyMediationandConflictResolution-DependencyVersionRanges) to specific one (i.e. `0.0.2-beta.12`).
 
@@ -48,10 +50,10 @@ The `DeliveryClient` class is the main class of the SDK. Using this class, you c
 
 To create an instance of the class, you need to provide a [project ID](https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content#a-getting-content-items).
 
-```java
-// Initializes an instance of the DeliveryClient client
-DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
-```
+```java  
+// Initializes an instance of the DeliveryClient client  
+DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");  
+```  
 
 You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](./src/main/java/kentico/kontent/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
 
@@ -68,15 +70,16 @@ You can also provide the project ID and other parameters by passing the [`Delive
 
 The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
 
-```java
+```java  
 DeliveryClient client = new DeliveryClient(
   DeliveryOptions
+  
     .builder()
     .projectId("975bf280-fd91-488c-994c-2f04416e5ee3")
     .productionApiKey("secured key")
     .build()
-);
-```
+);  
+```  
 
 Once you create a `DeliveryClient`, you can start querying your project repository by calling methods on the client instance. See [Basic querying](#basic-querying) for details.
 
@@ -91,7 +94,7 @@ DeliveryClient client = new DeliveryClient(
   "YOUR_PROJECT_ID",
   "YOUR_PREVIEW_API_KEY"
 );
-```
+```  
 
 For more details, see [Previewing unpublished content using the Delivery API](https://docs.kontent.ai/tutorials/write-and-collaborate/preview-content/previewing-unpublished-content).
 
@@ -99,13 +102,13 @@ For more details, see [Previewing unpublished content using the Delivery API](ht
 
 Once you have a `DeliveryClient` instance, you can start querying your project repository by calling methods on the instance.
 
-```java
-// Retrieves a single content item
-CompletionStage<ContentItemResponse> response = client.getItem("about_us");
-
-// Retrieves a list of all content items
-CompletionStage<ContentItemsListingResponse> listingResponse = client.getItems();
-```
+```java  
+// Retrieves a single content item  
+CompletionStage<ContentItemResponse> response = client.getItem("about_us");  
+  
+// Retrieves a list of all content items  
+CompletionStage<ContentItemsListingResponse> listingResponse = client.getItems();  
+```  
 
 As you may have noticed from the example `DeliveryClient` is returning [`CompletionStage<T>`](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html) that allows you to chain the requests, perform filtering, data transformation, etc.
 
@@ -146,7 +149,7 @@ CompletionsStage<ContentItemsListingResponse> response = client.getItems(
     .includeTotalCount()
     .build()
 )
-```
+``` 
 
 ## Response structure
 
@@ -172,7 +175,7 @@ When retrieving a list of content items, you get an instance of the `ContentItem
 
 The `ContentItem` class provides the following:
 
-- `getSystem()` returns a `System` object with metadata such as code name, display name, type, collection, or sitemap location.
+- `getSystem()` returns a `System` object with metadata such as code name, display name, type, collection, sitemap location, or workflow step.
 - `getElements()` returns a Map containing all the elements included in the response keyed by code names.
 - Methods for easier access to certain types of content elements such as linked items, or assets.
 
@@ -180,19 +183,22 @@ The `ContentItem` class provides the following:
 
 You can access information about a content item (i.e., its ID, codename, name, location in sitemap, date of last modification, its collection codename, and its content type codename) by using the `System` object.
 
-```java
-// Retrieves name of an article content item
-articleItem.getSystem().getName()
+```java  
+// Retrieves name of an article content item  
+articleItem.getSystem().getName()  
+  
+// Retrieves codename of an article content item  
+articleItem.getSystem().getCodename()  
+  
+// Retrieves codename of the collection of an article content item  
+articleItem.getSystem().getCollection()  
+  
+// Retrieves codename of the content type of an article content item  
+articleItem.getSystem().getType()  
 
-// Retrieves codename of an article content item
-articleItem.getSystem().getCodename()
-
-// Retrieves codename of the collection of an article content item
-articleItem.getSystem().getCollection()
-
-// Retrieves codename of the content type of an article content item
-articleItem.getSystem().getType()
-```
+// Retrieves codename of the workflow step of an article content item
+articleItem.getSystem().getWorkflowStep()  
+```  
 
 ## Getting element values
 
@@ -202,37 +208,37 @@ The SDK provides methods for retrieving content from content elements such as As
 
 For text elements, you can use the `getString` method.
 
-```java
-// Retrieves an article text from the 'body_copy' Text element
-articleItem.getString("body_copy")
-```
+```java  
+// Retrieves an article text from the 'body_copy' Text element  
+articleItem.getString("body_copy")  
+```  
 
 The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/kontent-delivery-sdk-java/wiki/Resolving-links-to-content-items) for more details.
 
 ### Asset
 
-```java
-// Retrieves a teaser image URL
-articleItem.getAssets("teaser_image").get(0).getUrl()
-```
+```java  
+// Retrieves a teaser image URL  
+articleItem.getAssets("teaser_image").get(0).getUrl()  
+```  
 
 ### Multiple choice
 
 To get a list of options defined in a Multiple choice content element, you first need to retrieve the content element itself. For this purpose, you can use the `getContentTypeElement` method, which takes the codename of a content type and the codename of a content element.
 
-```java
-// Retrieves the 'processing' element of the 'coffee' content type
-MultipleChoiceElement element = (MultipleChoiceElement) client.getContentTypeElement("coffee", "processing");
-```
+```java  
+// Retrieves the 'processing' element of the 'coffee' content type  
+MultipleChoiceElement element = (MultipleChoiceElement) client.getContentTypeElement("coffee", "processing");  
+```  
 
 After you retrieve the Multiple choice element, you can work with its list of options. Each option has the following methods:
 
 Method | Description | Example
----------|----------|---------
- getName() | The display name of the option. | `Dry (Natural)`
- getCodename() | The codename of the option. | `dry__natural_
+---------|----------|---------  
+getName() | The display name of the option. | `Dry (Natural)`
+getCodename() | The codename of the option. | `dry__natural_
 
- To put the element's options in a list, you can use the following code:
+To put the element's options in a list, you can use the following code:
 
 ```java
 List<SelectListItem> items = new List<>();
@@ -243,28 +249,28 @@ for (Option option : element.getOptions()) {
     item.setValue(option.getCodename());
     item.setSelected("semi_dry".equals(option.getCodename()));
 }
-```
+``` 
 
 ### Linked items
 
-```java
-// Retrieves related articles
-articleItem.getLinkedItems("related_articles")
-```
+```java  
+// Retrieves related articles  
+articleItem.getLinkedItems("related_articles")  
+```  
 
 ### Custom items
 
-```java
-// Retrieves the value of the custom element 'color'
-String customElementValue = ((CustomElement) articleItem.getElements().get("color")).getValue();
-```
+```java  
+// Retrieves the value of the custom element 'color'  
+String customElementValue = ((CustomElement) articleItem.getElements().get("color")).getValue();  
+```  
 
 ## Android development
 
- To use this SDK for [Android](https://developer.android.com/) development, you can use any approach compatible with [Java CompletionStage API](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html). Most common is to use [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for Android applications written in Kotlin and [Java RX](https://github.com/ReactiveX/RxJava) for Android applications written in Java. Both of these approaches are showcased in this repository:
- 
- * [Android Java sample application](../sample-app-android#readme)
- * [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
+To use this SDK for [Android](https://developer.android.com/) development, you can use any approach compatible with [Java CompletionStage API](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html). Most common is to use [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for Android applications written in Kotlin and [Java RX](https://github.com/ReactiveX/RxJava) for Android applications written in Java. Both of these approaches are showcased in this repository:
+
+* [Android Java sample application](../sample-app-android#readme)
+* [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
 
 ⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly.
 
@@ -275,9 +281,9 @@ String customElementValue = ((CustomElement) articleItem.getElements().get("colo
 
 You need to instantiate the Delivery client with the constructor that disables the template engine. The template engine is meant to be used with the web platform only. For Android development, use the constructor `DeliveryClient#DeliveryClient(DeliveryOptions, TemplateEngineConfig)` and set the second parameter to `null`.
 
-```java
-DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);
-```
+```java  
+DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);  
+```  
 
 See it [used in a sample app](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)).
 
@@ -308,7 +314,6 @@ We would like to express our thanks to the following people who contributed and 
 - [Adam J. Weigold](https://github.com/aweigold)
 - [Tommaso Garuglieri](https://github.com/GaruGaru)
 - [Gabriel Cunha](https://github.com/cunhazera)
+- [Jeremy Martin](https://github.com/jerrmartin)
 
 Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/kontent-delivery-sdk-java/issues) and send us a pull request!
-
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/kontent-delivery?pixel)

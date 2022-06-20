@@ -10,7 +10,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-06-27T13:01:54.5735581Z"
+        "last_modified": "2017-06-27T13:01:54.5735581Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -95,7 +96,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:40:14.6418507Z"
+        "last_modified": "2017-04-04T13:40:14.6418507Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -195,7 +197,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:40:29.970377Z"
+        "last_modified": "2017-04-04T13:40:29.970377Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -277,7 +280,8 @@
         "language": "en-US",
         "type": "tweet",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T13:00:08.2735049Z"
+        "last_modified": "2017-06-27T13:00:08.2735049Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "tweet_link": {
@@ -317,7 +321,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:30.7692802Z"
+        "last_modified": "2017-04-04T13:45:30.7692802Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -406,7 +411,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-06-27T13:11:28.3348114Z"
+        "last_modified": "2017-06-27T13:11:28.3348114Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -499,7 +505,8 @@
         "language": "en-US",
         "type": "hosted_video",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T12:57:16.7333276Z"
+        "last_modified": "2017-06-27T12:57:16.7333276Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "video_id": {

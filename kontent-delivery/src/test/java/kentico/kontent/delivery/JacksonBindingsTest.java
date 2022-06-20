@@ -96,7 +96,7 @@ public class JacksonBindingsTest {
         Assert.assertEquals(response, response3);
         Assert.assertEquals(response.hashCode(), response3.hashCode());
 
-        Assert.assertEquals(2, response.getLinkedItems().size());
+        Assert.assertEquals(3, response.getLinkedItems().size());
 
         ContentItem contentItem = response.getItem();
         Assert.assertNotNull(contentItem);
@@ -118,8 +118,9 @@ public class JacksonBindingsTest {
         Assert.assertEquals(2016, system.getLastModified().getYear());
         Assert.assertEquals(1, system.getSitemapLocations().size());
         Assert.assertEquals("articles", system.getSitemapLocations().get(0));
+        Assert.assertEquals("published", system.getWorkflowStep());
 
-        Assert.assertEquals(6, contentItem.elements.size());
+        Assert.assertEquals(7, contentItem.elements.size());
         Element title = contentItem.elements.get("title");
         Assert.assertNotNull(title);
         Assert.assertNotNull(title.toString());
@@ -136,14 +137,19 @@ public class JacksonBindingsTest {
         Assert.assertEquals(0, contentItem.getAssets("post_date").size());
 
         Assert.assertNotNull(contentItem.getLinkedItem("coffee_processing_techniques"));
+        Assert.assertNotNull(contentItem.getLinkedItem("origins_of_arabica_bourbon"));
+        Assert.assertNotNull(contentItem.getLinkedItem("component_child"));
         Assert.assertNull(contentItem.getLinkedItem("non_existent"));
+
+        // Testing that Component does not have a `workflow_step`
+        Assert.assertNotNull(contentItem.getLinkedItem("component_child").getSystem());
+        Assert.assertNull(contentItem.getLinkedItem("component_child").getSystem().getWorkflowStep());
 
         Element themeColor = contentItem.elements.get("theme_color");
         Assert.assertNotNull(themeColor);
         Assert.assertNotNull(themeColor.toString());
         Assert.assertEquals("custom", themeColor.getType());
         Assert.assertEquals("#ff0000", themeColor.getValue());
-
     }
 
     @Test
@@ -211,6 +217,7 @@ public class JacksonBindingsTest {
         Assert.assertNull(system.getCollection());
         Assert.assertNull(system.getType());
         Assert.assertNull(system.getSitemapLocations());
+        Assert.assertNull(system.getWorkflowStep());
 
         Assert.assertEquals(11, contentType.getElements().size());
         Element element = contentType.getElements().get("processing");

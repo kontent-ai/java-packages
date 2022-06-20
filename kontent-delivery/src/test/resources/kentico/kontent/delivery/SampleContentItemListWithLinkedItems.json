@@ -9,7 +9,8 @@
         "type": "hosted_video",
         "collection": "default",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T12:56:41.1882715Z"
+        "last_modified": "2017-06-27T12:56:41.1882715Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "video_id": {
@@ -1398,7 +1399,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:14:00.6640656Z"
+        "last_modified": "2016-09-05T14:14:00.6640656Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -1463,7 +1465,8 @@
           "cafes",
           "europe"
         ],
-        "last_modified": "2016-09-01T08:36:18.0623079Z"
+        "last_modified": "2016-09-01T08:36:18.0623079Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -1528,7 +1531,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:14:08.4285085Z"
+        "last_modified": "2016-09-05T14:14:08.4285085Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -1592,7 +1596,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:30.7692802Z"
+        "last_modified": "2017-04-04T13:45:30.7692802Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -1682,7 +1687,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:44.1533096Z"
+        "last_modified": "2017-04-04T13:45:44.1533096Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -1769,7 +1775,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2016-10-20T12:06:18.3403458Z"
+        "last_modified": "2016-10-20T12:06:18.3403458Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -1811,7 +1818,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2017-04-04T11:49:14.9737715Z"
+        "last_modified": "2017-04-04T11:49:14.9737715Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -1859,7 +1867,8 @@
         "sitemap_locations": [
           "accessories"
         ],
-        "last_modified": "2017-04-04T13:39:15.0306576Z"
+        "last_modified": "2017-04-04T13:39:15.0306576Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "product_name": {
@@ -1930,7 +1939,8 @@
         "sitemap_locations": [
           "grinders"
         ],
-        "last_modified": "2017-04-04T13:52:33.3284917Z"
+        "last_modified": "2017-04-04T13:52:33.3284917Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "product_name": {
@@ -2001,7 +2011,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-06-27T13:11:28.3348114Z"
+        "last_modified": "2017-06-27T13:11:28.3348114Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2100,7 +2111,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:14:08.4285085Z"
+        "last_modified": "2016-09-05T14:14:08.4285085Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -2165,7 +2177,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:12:49.0914134Z"
+        "last_modified": "2016-09-05T14:12:49.0914134Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -2227,7 +2240,8 @@
         "type": "hero_unit",
         "collection": "default",
         "sitemap_locations": [],
-        "last_modified": "2017-03-22T12:40:16.8440029Z"
+        "last_modified": "2017-03-22T12:40:16.8440029Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -2269,7 +2283,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2017-04-04T11:49:14.9737715Z"
+        "last_modified": "2017-04-04T11:49:14.9737715Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -2317,7 +2332,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:44.1533096Z"
+        "last_modified": "2017-04-04T13:45:44.1533096Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2404,7 +2420,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-06-27T13:11:28.3348114Z"
+        "last_modified": "2017-06-27T13:11:28.3348114Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2500,7 +2517,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:45:30.7692802Z"
+        "last_modified": "2017-04-04T13:45:30.7692802Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2590,7 +2608,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2016-10-20T12:47:13.65023Z"
+        "last_modified": "2016-10-20T12:47:13.65023Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -2633,7 +2652,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:13:52.934532Z"
+        "last_modified": "2016-09-05T14:13:52.934532Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -2698,7 +2718,8 @@
           "cafes",
           "north_america"
         ],
-        "last_modified": "2016-09-05T14:14:00.6640656Z"
+        "last_modified": "2016-09-05T14:14:00.6640656Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "street": {
@@ -2762,7 +2783,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2017-04-04T11:48:26.1878079Z"
+        "last_modified": "2017-04-04T11:48:26.1878079Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -2810,7 +2832,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-06-27T13:01:54.5735581Z"
+        "last_modified": "2017-06-27T13:01:54.5735581Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2896,7 +2919,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:40:29.970377Z"
+        "last_modified": "2017-04-04T13:40:29.970377Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -2979,7 +3003,8 @@
         "sitemap_locations": [
           "articles"
         ],
-        "last_modified": "2017-04-04T13:40:14.6418507Z"
+        "last_modified": "2017-04-04T13:40:14.6418507Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "personas": {
@@ -3080,7 +3105,8 @@
         "sitemap_locations": [
           "home"
         ],
-        "last_modified": "2016-10-20T12:15:15.7357761Z"
+        "last_modified": "2016-10-20T12:15:15.7357761Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -3122,7 +3148,8 @@
         "sitemap_locations": [
           "about_us"
         ],
-        "last_modified": "2016-10-20T12:06:18.3403458Z"
+        "last_modified": "2016-10-20T12:06:18.3403458Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "title": {
@@ -3162,7 +3189,8 @@
         "type": "tweet",
         "collection": "default",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T13:00:08.2735049Z"
+        "last_modified": "2017-06-27T13:00:08.2735049Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "tweet_link": {
@@ -3201,7 +3229,8 @@
         "type": "hosted_video",
         "collection": "default",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T12:56:41.1882715Z"
+        "last_modified": "2017-06-27T12:56:41.1882715Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "video_id": {
@@ -3230,7 +3259,8 @@
         "type": "hosted_video",
         "collection": "default",
         "sitemap_locations": [],
-        "last_modified": "2017-06-27T12:57:16.7333276Z"
+        "last_modified": "2017-06-27T12:57:16.7333276Z",
+        "workflow_step": "draft"
       },
       "elements": {
         "video_id": {
