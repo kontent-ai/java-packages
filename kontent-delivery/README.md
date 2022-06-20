@@ -196,7 +196,7 @@ articleItem.getSystem().getCollection()
 // Retrieves codename of the content type of an article content item  
 articleItem.getSystem().getType()  
 
-// Retrieves the Workflow Step of an article content item  
+// Retrieves codename of the workflow step of an article content item
 articleItem.getSystem().getWorkflowStep()  
 ```  
 
