@@ -193,6 +193,8 @@ public class StronglyTypedContentItemConverter {
         }
         //Check to see if this is an explicitly mapped ContentItem
         ContentItemMapping contentItemMapping = field.getAnnotation(ContentItemMapping.class);
+
+        // Modular content mapping - linked items element
         if (contentItemMapping != null &&
                 isListOrMap(field.getType()) &&
                 item.getElements().containsKey(contentItemMapping.value()) &&
@@ -203,8 +205,9 @@ public class StronglyTypedContentItemConverter {
             for (String codename : linkedItemElement.getValue()) {
                 referencedLinkedItems.put(codename, linkedItems.get(codename));
             }
-            return getCastedLinkedItemsForListOrMap(bean, field, referencedLinkedItems);
+            return getCastedLinkedItemsForListOrMap(bean, field, referencedLinkedItems, linkedItems);
         }
+        // Single Linked Item mapping
         if (contentItemMapping != null && linkedItems.containsKey(contentItemMapping.value())) {
             return getCastedLinkedItemsForField(field.getType(), contentItemMapping.value(), linkedItems);
         }
@@ -222,7 +225,7 @@ public class StronglyTypedContentItemConverter {
 
         //Check to see if this is a collection of implicitly mapped ContentItem
         if (isListOrMap(field.getType())) {
-            return getCastedLinkedItemsForListOrMap(bean, field, linkedItems);
+            return getCastedLinkedItemsForListOrMap(bean, field, linkedItems, linkedItems);
         }
         return null;
     }
@@ -239,7 +242,7 @@ public class StronglyTypedContentItemConverter {
     }
 
     private Object getCastedLinkedItemsForListOrMap(
-            Object bean, Field field, Map<String, ContentItem> linkedItems) {
+            Object bean, Field field, Map<String, ContentItem> referencedLinkedItems, Map<String, ContentItem> allLinkedItems) {
         Type type = getType(bean, field);
         if (type == null) {
             // We have failed to get the type, probably due to a missing setter, skip this field
@@ -247,7 +250,7 @@ public class StronglyTypedContentItemConverter {
             return null;
         }
         if (type == ContentItem.class) {
-            return castCollection(field.getType(), linkedItems);
+            return castCollection(field.getType(), referencedLinkedItems);
         }
         Class<?> listClass = (Class<?>) type;
         String contentType = null;
@@ -259,11 +262,12 @@ public class StronglyTypedContentItemConverter {
             contentType = classNameToContentTypeMapping.get(listClass.getName());
         }
         if (contentType != null) {
-            HashMap convertedLinkedItems = new HashMap<>();
-            for (Map.Entry<String, ContentItem> entry : linkedItems.entrySet()) {
+            // This type preserves the order of the insertion, to have the same order as in delivery response
+            LinkedHashMap convertedLinkedItems = new LinkedHashMap();
+            for (Map.Entry<String, ContentItem> entry : referencedLinkedItems.entrySet()) {
                 if (entry.getValue() != null && contentType.equals(entry.getValue().getSystem().getType())) {
                     Map<String, ContentItem> linkedItemsForRecursion =
-                            copyLinkedItemsWithExclusion(linkedItems, entry.getKey());
+                            copyLinkedItemsWithExclusion(allLinkedItems, entry.getKey());
                     convertedLinkedItems.put(entry.getKey(),
                             convert(entry.getValue(), linkedItemsForRecursion, listClass));
                 }

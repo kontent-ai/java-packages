@@ -1,0 +1,193 @@
+{
+  "item": {
+    "system": {
+      "id": "78a6da18-f471-4985-9481-5aa4d5742eaf",
+      "name": "Sample page",
+      "codename": "sample_page",
+      "language": "default",
+      "type": "page",
+      "collection": "default",
+      "sitemap_locations": [],
+      "last_modified": "2021-02-02T09:10:51.3307835Z"
+    },
+    "elements": {
+      "title": {
+        "type": "text",
+        "name": "Title",
+        "value": "Sample page"
+      },
+      "sections": {
+        "type": "modular_content",
+        "name": "Sections",
+        "value": [
+          "section_1",
+          "section_2"
+        ]
+      }
+    }
+  },
+  "modular_content": {
+    "part_1": {
+      "system": {
+        "id": "d540def8-c80b-4a2c-a7a2-29c6d2f7da7f",
+        "name": "Part 1",
+        "codename": "part_1",
+        "language": "default",
+        "type": "section_part",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:10:11.2409499Z"
+      },
+      "elements": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "Part 1"
+        },
+        "content": {
+          "type": "rich_text",
+          "name": "Content",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>Fusce vulputate eleifend sapien. Maecenas ullamcorper, dui et placerat feugiat, eros pede varius nisi, condimentum viverra felis nunc et lorem. Ut varius tincidunt libero. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum. Cras non dolor.</p>"
+        }
+      }
+    },
+    "part_2": {
+      "system": {
+        "id": "41d38e04-f59c-4b11-a99f-6c229cecc52f",
+        "name": "Part 2",
+        "codename": "part_2",
+        "language": "default",
+        "type": "section_part",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:10:36.5025251Z"
+      },
+      "elements": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "Part 2"
+        },
+        "content": {
+          "type": "rich_text",
+          "name": "Content",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>Nunc interdum lacus sit amet orci. Aenean posuere, tortor sed cursus feugiat, nunc augue blandit nunc, eu sollicitudin urna dolor sagittis lacus. Pellentesque auctor neque nec urna. In ac felis quis tortor malesuada pretium. Integer tincidunt.</p>"
+        }
+      }
+    },
+    "part_a": {
+      "system": {
+        "id": "d7c8b378-8cac-44f1-9b05-220bbb089a42",
+        "name": "Part A",
+        "codename": "part_a",
+        "language": "default",
+        "type": "section_part",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:11:12.0549009Z"
+      },
+      "elements": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "Part A"
+        },
+        "content": {
+          "type": "rich_text",
+          "name": "Content",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>Proin sapien ipsum, porta a, auctor quis, euismod ut, mi. Fusce vel dui. Vestibulum rutrum, mi nec elementum vehicula, eros quam gravida nisl, id fringilla neque ante vel mi. Etiam rhoncus. Phasellus blandit leo ut odio.</p>"
+        }
+      }
+    },
+    "part_b": {
+      "system": {
+        "id": "8156372b-9dde-46b1-b285-31d66c440b08",
+        "name": "Part B",
+        "codename": "part_b",
+        "language": "default",
+        "type": "section_part",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:11:27.5097744Z"
+      },
+      "elements": {
+        "title": {
+          "type": "text",
+          "name": "Title",
+          "value": "Part B"
+        },
+        "content": {
+          "type": "rich_text",
+          "name": "Content",
+          "images": {},
+          "links": {},
+          "modular_content": [],
+          "value": "<p>Donec interdum, metus et hendrerit aliquet, dolor diam sagittis ligula, eget egestas libero turpis vel mi. Fusce vel dui. Suspendisse pulvinar, augue ac venenatis condimentum, sem libero volutpat nibh, nec pellentesque velit pede quis nunc. Suspendisse enim turpis, dictum sed, iaculis a, condimentum nec, nisi. Vivamus laoreet.</p>"
+        }
+      }
+    },
+    "section_1": {
+      "system": {
+        "id": "01ac5c49-4229-46b2-8aff-b1c0920fdadd",
+        "name": "Section 1",
+        "codename": "section_1",
+        "language": "default",
+        "type": "section",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:10:18.3461414Z"
+      },
+      "elements": {
+        "headline": {
+          "type": "text",
+          "name": "Headline",
+          "value": "Section 1"
+        },
+        "section_parts": {
+          "type": "modular_content",
+          "name": "Section Parts",
+          "value": [
+            "part_1",
+            "part_2"
+          ]
+        }
+      }
+    },
+    "section_2": {
+      "system": {
+        "id": "00a47be9-bbec-49e9-a479-6afeb893a87f",
+        "name": "Section 2",
+        "codename": "section_2",
+        "language": "default",
+        "type": "section",
+        "collection": "default",
+        "sitemap_locations": [],
+        "last_modified": "2021-02-02T09:11:17.1790928Z"
+      },
+      "elements": {
+        "headline": {
+          "type": "text",
+          "name": "Headline",
+          "value": "Section 2"
+        },
+        "section_parts": {
+          "type": "modular_content",
+          "name": "Section Parts",
+          "value": [
+            "part_a",
+            "part_b"
+          ]
+        }
+      }
+    }
+  }
+}
