@@ -84,7 +84,7 @@ dependencies {
     api 'com.google.firebase:firebase-core:11.4.2'
     api 'com.google.firebase:firebase-messaging:11.4.2'
     testImplementation 'junit:junit:4.12'
-    implementation project(':delivery')
+    implementation project(':delivery-sdk')
     implementation 'io.reactivex.rxjava3:rxjava:3.0.7'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 }

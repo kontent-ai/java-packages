@@ -65,7 +65,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 def packageSummary = 'Kontent Delivery SDK client.'
 def packageDescription = 'Java client around Kontent Delivery REST API.'
-def repoArtifactId = 'delivery'
+def repoArtifactId = 'delivery-sdk'
 
 publishing {
     publications {
