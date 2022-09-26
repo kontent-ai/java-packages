@@ -11,8 +11,8 @@
 package com.github.kentico.delivery_android_sample.data.models;
 
 
-import kentico.kontent.delivery.System;
-import kentico.kontent.delivery.*;
+import kontent.ai.delivery.*;
+import kontent.ai.delivery.System;
 
 import java.util.List;
 

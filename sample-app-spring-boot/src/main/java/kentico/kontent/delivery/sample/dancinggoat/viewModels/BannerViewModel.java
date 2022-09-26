@@ -1,6 +1,6 @@
 package kentico.kontent.delivery.sample.dancinggoat.viewModels;
 
-import kentico.kontent.delivery.Asset;
+import kontent.ai.delivery.Asset;
 import kentico.kontent.delivery.sample.dancinggoat.models.HeroUnit;
 
 public class BannerViewModel {

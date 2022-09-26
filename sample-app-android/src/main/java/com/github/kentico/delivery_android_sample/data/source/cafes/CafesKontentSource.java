@@ -18,7 +18,7 @@ import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import kentico.kontent.delivery.DeliveryClient;
+import kontent.ai.delivery.DeliveryClient;
 
 import java.util.List;
 

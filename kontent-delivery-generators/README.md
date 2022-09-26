@@ -40,8 +40,8 @@ Add to your `build.gradle`
 
 ```groovy
 import com.squareup.javapoet.JavaFile
-import kentico.kontent.delivery.DeliveryClient
-import kentico.kontent.delivery.DeliveryOptions
+import DeliveryClient
+import DeliveryOptions
 import kentico.kontent.delivery.generators.CodeGenerator
 
 buildscript {

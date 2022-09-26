@@ -4,9 +4,9 @@ import com.github.kentico.delivery_android_sample.app.config.AppConfig;
 import com.github.kentico.delivery_android_sample.data.models.Article;
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import com.github.kentico.delivery_android_sample.data.models.Coffee;
-import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryOptions;
-import kentico.kontent.delivery.Header;
+import kontent.ai.delivery.DeliveryClient;
+import kontent.ai.delivery.DeliveryOptions;
+import kontent.ai.delivery.Header;
 
 import java.util.Arrays;
 

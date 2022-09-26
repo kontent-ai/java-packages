@@ -3,12 +3,11 @@ package kentico.kontent.delivery.sample.dancinggoat.app.articles
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.WorkerThread
-import android.widget.ArrayAdapter
 import android.widget.ListView
-import kentico.kontent.delivery.*
 import kentico.kontent.delivery.sample.dancinggoat.R
 import kentico.kontent.delivery.sample.dancinggoat.data.DeliveryClientProvider
 import kentico.kontent.delivery.sample.dancinggoat.models.Article
+import kontent.ai.delivery.DeliveryParameterBuilder
 import kotlinx.coroutines.*
 import kotlinx.coroutines.future.await
 

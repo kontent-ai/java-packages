@@ -66,7 +66,7 @@ You can also provide the project ID and other parameters by passing the [`Delive
 - `setProductionEndpoint(String)` - sets the production endpoint address. Mainly useful to change for mocks in unit tests, or if you are establishing a proxy.
 - `setPreviewEndpoint(String)` - sets the preview endpoint address. Mainly useful to change for mocks in unit tests, or if you are establishing a proxy.
 - `setProxyServer(java.net.Proxy)` - sets the proxy server used by the http client. Mainly used to complex Proxy scenarios.
-- `setCustomHeaders(java.utils.List<kentico.kontent.delivery.Header>)` - sets custom headers to be included in the request. *Check the reserved header names in method remarks. These will be ignored.*
+- `setCustomHeaders(java.utils.List<Header>)` - sets custom headers to be included in the request. *Check the reserved header names in method remarks. These will be ignored.*
 
 The `DeliveryOptions.builder()` can also simplify creating a `DeliveryClient`:
 

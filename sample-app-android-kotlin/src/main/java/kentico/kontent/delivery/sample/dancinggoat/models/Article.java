@@ -9,8 +9,8 @@
  */
 
 package kentico.kontent.delivery.sample.dancinggoat.models;
-import kentico.kontent.delivery.System;
-import kentico.kontent.delivery.*;
+import kontent.ai.delivery.*;
+import kontent.ai.delivery.System;
 
 import java.time.ZonedDateTime;
 import java.util.List;

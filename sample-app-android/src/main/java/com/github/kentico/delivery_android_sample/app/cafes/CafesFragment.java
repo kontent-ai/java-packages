@@ -27,7 +27,7 @@ import com.github.kentico.delivery_android_sample.app.core.BaseFragment;
 import com.github.kentico.delivery_android_sample.app.shared.CommunicationHub;
 import com.github.kentico.delivery_android_sample.data.models.Cafe;
 import com.squareup.picasso.Picasso;
-import kentico.kontent.delivery.Asset;
+import kontent.ai.delivery.Asset;
 
 import java.util.ArrayList;
 import java.util.List;

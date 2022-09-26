@@ -1,8 +1,8 @@
 package kentico.kontent.delivery.testing.app;
 
-import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryOptions;
-import kentico.kontent.delivery.DeliveryParameterBuilder;
+import kontent.ai.delivery.DeliveryClient;
+import kontent.ai.delivery.DeliveryOptions;
+import kontent.ai.delivery.DeliveryParameterBuilder;
 
 import java.util.concurrent.ExecutionException;
 

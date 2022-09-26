@@ -116,7 +116,7 @@ signing {
 
 task createTrackingHeaderProperties(dependsOn: processResources) {
     doLast {
-        def propertiesPath = "$buildDir/resources/main/kentico/kontent/delivery"
+        def propertiesPath = "$buildDir/resources/main/kontent/ai/delivery"
         Files.createDirectories(Paths.get(propertiesPath))
         new File("$propertiesPath/version.properties").withWriter { w ->
             Properties p = new Properties()

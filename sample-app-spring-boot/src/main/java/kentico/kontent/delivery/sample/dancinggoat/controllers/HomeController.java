@@ -1,6 +1,6 @@
 package kentico.kontent.delivery.sample.dancinggoat.controllers;
 
-import kentico.kontent.delivery.DeliveryClient;
+import kontent.ai.delivery.DeliveryClient;
 import kentico.kontent.delivery.sample.dancinggoat.models.Home;
 import kentico.kontent.delivery.sample.dancinggoat.viewModels.HomeViewModel;
 import org.springframework.beans.factory.annotation.Autowired;

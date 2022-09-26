@@ -2,8 +2,9 @@ package kentico.kontent.delivery.generators;
 
 import com.google.common.base.CaseFormat;
 import com.squareup.javapoet.*;
-import kentico.kontent.delivery.*;
-import kentico.kontent.delivery.System;
+import kontent.ai.delivery.*;
+import kontent.ai.delivery.System;
+
 import javax.lang.model.element.Modifier;
 import java.io.File;
 import java.io.IOException;

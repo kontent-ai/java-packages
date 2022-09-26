@@ -1,7 +1,7 @@
 package kentico.kontent.delivery.sample.dancinggoat.controllers;
 
-import kentico.kontent.delivery.DeliveryClient;
-import kentico.kontent.delivery.DeliveryParameterBuilder;
+import kontent.ai.delivery.DeliveryClient;
+import kontent.ai.delivery.DeliveryParameterBuilder;
 import kentico.kontent.delivery.sample.dancinggoat.models.AboutUs;
 import kentico.kontent.delivery.sample.dancinggoat.viewModels.AboutUsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
