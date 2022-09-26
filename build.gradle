@@ -30,8 +30,8 @@ ext.signingKeyId = properties.getProperty('signingKeyId') != null ? properties.g
 ext.signingKey = properties.getProperty('signingKey') != null ? properties.getProperty('signingKey') : System.getenv('SIGNING_KEY');
 ext.signingPassword = properties.getProperty('signingPassword') != null ? properties.getProperty('signingPassword') : System.getenv('SIGNING_PASSWORD');
 
-ext.repoVcsUrl = 'https://github.com/Kentico/kontent-java-packages.git'
-ext.repoUrl = 'https://github.com/Kentico/kontent-java-packages'
+ext.repoVcsUrl = 'https://github.com/kontent-ai/java-packages.git'
+ext.repoUrl = 'https://github.com/kontent-ai/java-packages'
 
 ext.pomConfig = {
     developers {
@@ -44,18 +44,18 @@ ext.pomConfig = {
     licenses {
         license {
             name "MIT"
-            url "https://github.com/Kentico/kontent-java-packages/blob/master/LICENSE.md"
+            url "https://github.com/kontent-ai/java-packages/blob/master/LICENSE.md"
             distribution "repo"
         }
     }
     scm {
-        url "git@github.com:Kentico/kontent-java-packages.git"
-        connection 'scm:git:git://github.com/Kentico/kontent-java-packages.git'
-        developerConnection 'scm:git:ssh://git@github.com:Kentico/kontent-java-packages.git'
+        url "git@github.com:kontent-ai/java-packages.git"
+        connection 'scm:git:git://github.com/kontent-ai/java-packages.git'
+        developerConnection 'scm:git:ssh://git@github.com:kontent-ai/java-packages.git'
     }
     issueManagement {
         system 'GitHub'
-        url 'https://github.com/Kentico/kontent-java-packages/issues'
+        url 'https://github.com/kontent-ai/java-packages/issues'
     }
     organization {
         name 'ai.kontent'
@@ -71,10 +71,10 @@ allprojects {
     }
 }
 
-def repoGroupIdVal = 'com.github.kentico';
+def repoGroupIdVal = 'ai.kontent';
 
 subprojects {
-    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '4.7.0-SNAPSHOT'
+    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '5.0.0-SNAPSHOT'
     ext.repoGroupId = repoGroupIdVal
     group = repoGroupIdVal
     ext.repositoryHost = 'maven.org'

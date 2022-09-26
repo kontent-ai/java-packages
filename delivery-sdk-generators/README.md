@@ -1,9 +1,9 @@
-# Kontent model generator for Java
+# Kontent.ai model generator for Java
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![Javadocs](https://javadoc.io/badge/com.github.kentico/kontent-delivery-generators.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery-generators)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery-generators)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery-generators)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk-generators)](https://oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk-generators)
 
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)

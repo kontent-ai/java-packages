@@ -1,15 +1,15 @@
 
-# Kontent Delivery Java SDK
+# Kontent.ai Delivery Java SDK
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-[![javadoc](https://javadoc.io/badge2/com.github.kentico/kontent-delivery/javadoc.svg)](https://javadoc.io/doc/com.github.kentico/kontent-delivery)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.kentico/kontent-delivery)](https://oss.sonatype.org/content/groups/public/com/github/kentico/kontent-delivery/)
+[![javadoc](https://javadoc.io/badge2/ai.kontent/delivery-sdk/javadoc.svg)](https://javadoc.io/doc/ai.kontent/delivery-sdk)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk)](https://oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk/)
 
-[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kontent-ai)
 [![Discord](https://img.shields.io/discord/821885171984891914?color=%237289DA&label=Kontent.ai%20Discord&logo=discord)](https://discord.gg/SKCxwPtevJ)
 
-The Kontent.ai Delivery Java SDK is a client library used for retrieving content from [Kontent by Kentico](https://kontent.ai).
+The Kontent.ai Delivery Java SDK is a client library used for retrieving content from [Kontent.ai](https://kontent.ai).
 
 ## Get started
 
@@ -24,25 +24,25 @@ repositories {
 }
 
 dependencies {
-  implementation 'com.github.kentico:kontent-delivery:latest.release'
+  implementation 'ai.kontent:delivery-sdk:latest.release'
 }
 ```
 
-> You may want to change `latest.release` to specific one (i.e. `0.0.2-beta.12`).
+> You may want to change `latest.release` to specific one (i.e. `5.0.0`).
 
 ### Maven
 
 ```xml  
 <dependency>
-  <groupId>com.github.kentico</groupId>
+  <groupId>ai.kontent</groupId>
   
-  <artifactId>kontent-delivery</artifactId> 
-  <version>[0.0.2-beta.12,)</version> 
+  <artifactId>delivery-sdk</artifactId> 
+  <version>[5.0.0,)</version> 
   <type>pom</type>
 </dependency>  
 ```  
 
-> You may want to change version specification - `[0.0.2-beta.12,)` - from [range one](https://cwiki.apache.org/confluence/display/MAVENOLD/Dependency+Mediation+and+Conflict+Resolution#DependencyMediationandConflictResolution-DependencyVersionRanges) to specific one (i.e. `0.0.2-beta.12`).
+> You may want to change version specification - `[5.0.0,)` - from [range one](https://cwiki.apache.org/confluence/display/MAVENOLD/Dependency+Mediation+and+Conflict+Resolution#DependencyMediationandConflictResolution-DependencyVersionRanges) to specific one (i.e. `5.0.0`).
 
 ## Creating the DeliveryClient
 
@@ -96,7 +96,7 @@ DeliveryClient client = new DeliveryClient(
 );
 ```  
 
-For more details, see [Previewing unpublished content using the Delivery API](https://docs.kontent.ai/tutorials/write-and-collaborate/preview-content/previewing-unpublished-content).
+For more details, see [Previewing unpublished content using the Delivery API](https://kontent.ai/learn/tutorials/write-and-collaborate/preview-your-content/).
 
 ## Basic querying
 
@@ -132,12 +132,12 @@ ContentItemsListingResponse listingResponse = client.getItems()
 
 ### Filtering retrieved data
 
-The SDK supports full scale of the API querying and filtering capabilities as described in the [API reference](https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content).
+The SDK supports full scale of the API querying and filtering capabilities as described in the [API reference](https://kontent.ai/learn/reference/delivery-api/#tag/Filtering-content).
 
 ```java
 // Retrieves a list of the specified elements from the first 10 content items of
 // the 'brewer' content type, ordered by the 'product_name' element value
-// also includes total number of items stored in kentico i.e. for pagination purposes
+// also includes total number of items stored in Kontent.ai i.e. for pagination purposes
 
 CompletionsStage<ContentItemsListingResponse> response = client.getItems(
   DeliveryParameterBuilder.params()
@@ -153,7 +153,7 @@ CompletionsStage<ContentItemsListingResponse> response = client.getItems(
 
 ## Response structure
 
-For full description of single and multiple content item JSON response formats, see our [API reference](https://docs.kontent.ai/reference/delivery-api#section/Content-item-object).
+For full description of single and multiple content item JSON response formats, see our [API reference](https://kontent.ai/learn/reference/delivery-api/#section/Content-item-object).
 
 ### Single content item response
 
@@ -213,7 +213,7 @@ For text elements, you can use the `getString` method.
 articleItem.getString("body_copy")  
 ```  
 
-The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/Kentico/kontent-delivery-sdk-java/wiki/Resolving-links-to-content-items) for more details.
+The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/kontent-ai/java-packages/wiki/Resolving-links-to-content-items) for more details.
 
 ### Asset
 
@@ -291,13 +291,13 @@ See it [used in a sample app](../sample-app-android/src/main/java/com/github/ken
 
 Android applications must register the models using the `registerType` method. See a usage example in [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
 
-You can still use the [model generator](../kontent-delivery-generators/README.md) for generating the models.
+You can still use the [model generator](../delivery-sdk-generators/README.md) for generating the models.
 
 > ⚠ The `scanClasspathForMappings` method does not work in the Android environment. Because of the differences between Android Dalvik VM and Java VM, the scanning library is not usable here. That's why you need to use the `registerType` method instead.
 
 ## Further information
 
-For more developer resources, visit the Kontent Docs at <https://docs.kontent.ai>.
+For more developer resources, visit the [Kontent.ai Learn portal](https://kontent.ai/learn).
 
 ### Showcase
 
@@ -316,4 +316,4 @@ We would like to express our thanks to the following people who contributed and 
 - [Gabriel Cunha](https://github.com/cunhazera)
 - [Jeremy Martin](https://github.com/jerrmartin)
 
-Would you like to become a hero too? Pick an [issue](https://github.com/Kentico/kontent-delivery-sdk-java/issues) and send us a pull request!
+Would you like to become a hero too? Pick an [issue](https://github.com/kontent-ai/delivery-sdk-java/issues) and send us a pull request!

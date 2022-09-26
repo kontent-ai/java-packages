@@ -1,3 +1,14 @@
+# Changes in v4 -> v5
+
+* Place for templates is by default
+  * `kontent/ai/templates/`, `META-INF/kontent/ai/templates/` - you need to move your templates, use custom path configuration
+* Namespaces of the packages we changed from `kentico.kontent.delivery.*` to `kontent.ai.delivery.*`
+
+TODO
+* Migrate Sample apps
+    * Springboot sample needs to have model generator released first 
+* Migrate wiki
+
 # Changes in v3 -> v4
 
 * Delivery client now returns `CompletionStage` and it is async by default
