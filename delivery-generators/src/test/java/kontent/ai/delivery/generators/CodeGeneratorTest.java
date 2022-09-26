@@ -1,9 +1,10 @@
-package kentico.kontent.delivery.generators;
+package kontent.ai.delivery.generators;
 
 
 import com.squareup.javapoet.JavaFile;
 import kontent.ai.delivery.DeliveryClient;
 import kontent.ai.delivery.DeliveryOptions;
+import kontent.ai.delivery.generators.CodeGenerator;
 import org.apache.http.HttpHost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.localserver.LocalServerTestBase;

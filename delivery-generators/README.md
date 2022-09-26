@@ -42,7 +42,7 @@ Add to your `build.gradle`
 import com.squareup.javapoet.JavaFile
 import DeliveryClient
 import DeliveryOptions
-import kentico.kontent.delivery.generators.CodeGenerator
+import CodeGenerator
 
 buildscript {
     repositories {

@@ -50,9 +50,9 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-def packageSummary = 'Kontent model generator.'
-def packageDescription = 'Generators producing strongly-typed models based on content types in a Kontent project.'
-def repoArtifactId = 'kontent-delivery-generators'
+def packageSummary = 'Kontent.ai model generator.'
+def packageDescription = 'Generators producing strongly-typed models based on content types in a Kontent.ai project.'
+def repoArtifactId = 'delivery-generators'
 
 
 publishing {
