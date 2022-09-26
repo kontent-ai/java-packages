@@ -9,6 +9,6 @@ targetCompatibility = "1.8"
 mainClassName = 'kentico.kontent.delivery.testing.app.Main' 
 
 dependencies {
-    implementation project(':kontent-delivery')
+    implementation project(':delivery')
     testCompile("junit:junit:4.12")
 }
