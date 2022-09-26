@@ -9,4 +9,4 @@
 
 rootProject.name = 'kontent-java-packages'
 
-include 'test-gradle-console-app', 'delivery-sdk', 'sample-app-spring-boot', 'delivery-generators', ':sample-app-android', 'sample-app-android-kotlin'
+include 'test-gradle-console-app', 'delivery-sdk', 'sample-app-spring-boot', 'delivery-sdk-generators', ':sample-app-android', 'sample-app-android-kotlin'

@@ -38,7 +38,7 @@ ext.pomConfig = {
         developer {
             id 'ondrejch'
             name 'Ondrej Chrastina'
-            email 'ondrej.chrastina@kentico.com'
+            email 'ondrej.chrastina@kontent.ai'
         }
     }
     licenses {
@@ -58,8 +58,8 @@ ext.pomConfig = {
         url 'https://github.com/Kentico/kontent-java-packages/issues'
     }
     organization {
-        name 'com.github.kentico'
-        url 'https://github.com/Kentico'
+        name 'ai.kontent'
+        url 'https://kontent.ai'
     }
 }
 

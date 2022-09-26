@@ -49,7 +49,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+        classpath('com.github.kentico:delivery-sdk-generators:latest.release')
     }
 }
 

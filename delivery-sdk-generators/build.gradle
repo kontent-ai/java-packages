@@ -52,7 +52,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 def packageSummary = 'Kontent.ai model generator.'
 def packageDescription = 'Generators producing strongly-typed models based on content types in a Kontent.ai project.'
-def repoArtifactId = 'delivery-generators'
+def repoArtifactId = 'delivery-sdk-generators'
 
 
 publishing {
