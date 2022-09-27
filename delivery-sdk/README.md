@@ -55,7 +55,7 @@ To create an instance of the class, you need to provide a [project ID](https://d
 DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");  
 ```  
 
-You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](./src/main/java/kentico/kontent/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
+You can also provide the project ID and other parameters by passing the [`DeliveryOptions`](./src/main/java/kontent/ai/delivery/DeliveryOptions.java) object to the class constructor. The `DeliveryOptions` object can be used to set the following parameters:
 
 - `setPreviewApiKey(String)` – sets the [Delivery Preview API key](https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview).
 - `setProductionApiKey(String)` - sets the [Delivery Client key for secured access](https://docs.kontent.ai/reference/delivery-api#tag/Secure-access).

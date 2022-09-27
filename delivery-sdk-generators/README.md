@@ -5,8 +5,9 @@
 [![Javadocs](https://javadoc.io/badge/ai.kontent/delivery-sdk-generators.svg)](https://javadoc.io/doc/ai.kontent/delivery-sdk-generators)
 [![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk-generators)](https://oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk-generators)
 
-[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com/Kentico/Home/discussions)
-[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kentico-kontent)
+[![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kontent-ai)
+[![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com//Home/discussions)
+
 
 This tool generates strongly-typed models based on Content Types in a Kontent.ai project. The models are supposed to be used together with the [Kontent.ai Delivery SDK for Java](../deliver-sdky/README.md). Please read the [documentation](</wiki/Working-with-Strongly-Typed-Models-(aka-Code-First-Approach)#customizing-the-strong-type-binding-logic>) to see all benefits of this approach.
 
@@ -65,7 +66,7 @@ task generateModels {
 
         CodeGenerator generator = new CodeGenerator(
             options.getProjectId(),
-            'com.kentico.kontent.test.springapp.models',
+            'ai.kontent.test.springapp.models',
             file('src/main/java')
         );
         List<JavaFile> sources = generator.generateSources(client);
