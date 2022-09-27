@@ -66,7 +66,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
                     Assert.assertEquals(3, trackingHeaderValueParts.length);
                     Assert.assertEquals("maven.org", trackingHeaderValueParts[0]);
-                    Assert.assertEquals("com.github.kentico:delivery-sdk", trackingHeaderValueParts[1]);
+                    Assert.assertEquals("ai.kontent:delivery-sdk", trackingHeaderValueParts[1]);
                     Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
 
                     response.setEntity(
@@ -101,7 +101,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     String[] trackingHeaderValueParts = request.getHeaders("X-KC-SDKID")[0].getValue().split(";");
                     Assert.assertEquals(3, trackingHeaderValueParts.length);
                     Assert.assertEquals("maven.org", trackingHeaderValueParts[0]);
-                    Assert.assertEquals("com.github.kentico:delivery-sdk", trackingHeaderValueParts[1]);
+                    Assert.assertEquals("ai.kontent:delivery-sdk", trackingHeaderValueParts[1]);
                     Assert.assertTrue("Tracking header version value does not comply with semver definition.", trackingHeaderValueParts[2].matches(SEMVER_REGEX));
 
                     Assert.assertEquals(headers.get(0).getValue(), request.getHeaders(headers.get(0).getName())[0].getValue());
