@@ -257,7 +257,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     response.setStatusCode(404);
                     response.setEntity(
                             new InputStreamEntity(
-                                    this.getClass().getResourceAsStream("SampleKenticoError.json")
+                                    this.getClass().getResourceAsStream("SampleKontentError.json")
                             )
                     );
                     sentErrorCount[0] = sentErrorCount[0] + 1;
@@ -274,12 +274,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
             client.getItem("error")
                     .toCompletableFuture()
                     .get();
-            Assert.fail("Expected KenticoErrorException");
+            Assert.fail("Expected KontentErrorException");
         } catch (ExecutionException e) {
-            Assert.assertTrue(e.getCause() instanceof KenticoErrorException);
-            KenticoErrorException error = (KenticoErrorException) e.getCause();
+            Assert.assertTrue(e.getCause() instanceof KontentErrorException);
+            KontentErrorException error = (KontentErrorException) e.getCause();
             Assert.assertEquals("The requested content item 'error' was not found.", error.getMessage());
-            Assert.assertEquals("The requested content item 'error' was not found.", error.getKenticoError().getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", error.getKontentError().getMessage());
         }
         Assert.assertEquals(1, sentErrorCount[0]);
     }
@@ -706,12 +706,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
     public void testCacheWriteOnceReadMany() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
-        final AtomicInteger kenticoGets = new AtomicInteger(0);
+        final AtomicInteger kontentGets = new AtomicInteger(0);
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
-                    kenticoGets.incrementAndGet();
+                    kontentGets.incrementAndGet();
                     response.setEntity(
                             new InputStreamEntity(
                                     this.getClass().getResourceAsStream("SampleContentItem.json")
@@ -733,7 +733,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     .get());
         }
 
-        Assert.assertEquals(1, kenticoGets.get());
+        Assert.assertEquals(1, kontentGets.get());
         Assert.assertEquals(1, testCache.puts.get());
         Assert.assertEquals(nrOfTimesToRetrieveItem, testCache.queries.get());
         Assert.assertEquals(nrOfTimesToRetrieveItem - 1, testCache.hits.get());
@@ -745,12 +745,12 @@ public class DeliveryClientTest extends LocalServerTestBase {
     public void testCacheRepopulationAfterInvalidation() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
-        final AtomicInteger kenticoGets = new AtomicInteger(0);
+        final AtomicInteger kontentGets = new AtomicInteger(0);
 
         this.serverBootstrap.registerHandler(
                 String.format("/%s/%s", projectId, "items/on_roasts"),
                 (request, response, context) -> {
-                    kenticoGets.incrementAndGet();
+                    kontentGets.incrementAndGet();
                     response.setEntity(
                             new InputStreamEntity(
                                     this.getClass().getResourceAsStream("SampleContentItem.json")
@@ -771,7 +771,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
         testCache.invalidate(new SimpleInMemoryCacheManager.CacheTag("origins_of_arabica_bourbon", "en-US"));
 
         Assert.assertNotNull(client.getItem("on_roasts").toCompletableFuture().get());
-        Assert.assertEquals(2, kenticoGets.get());
+        Assert.assertEquals(2, kontentGets.get());
         Assert.assertEquals(2, testCache.puts.get());
         Assert.assertEquals(3, testCache.queries.get());
     }
@@ -1244,7 +1244,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
 
     @Test
     @SuppressWarnings("all")
-    public void testKenticoException() throws Exception {
+    public void testKontentException() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
@@ -1253,7 +1253,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     response.setStatusCode(404);
                     response.setEntity(
                             new InputStreamEntity(
-                                    this.getClass().getResourceAsStream("SampleKenticoError.json")
+                                    this.getClass().getResourceAsStream("SampleKontentError.json")
                             )
                     );
                 });
@@ -1267,19 +1267,19 @@ public class DeliveryClientTest extends LocalServerTestBase {
             ContentItemResponse item = client.getItem("error")
                     .toCompletableFuture()
                     .get();
-            Assert.fail("Expected KenticoErrorException");
+            Assert.fail("Expected KontentErrorException");
         } catch (ExecutionException e) {
-            Assert.assertTrue(e.getCause() instanceof KenticoErrorException);
-            KenticoErrorException kenticoErrorException = (KenticoErrorException) e.getCause();
-            Assert.assertEquals("The requested content item 'error' was not found.", kenticoErrorException.getMessage());
-            Assert.assertEquals("The requested content item 'error' was not found.", kenticoErrorException.getKenticoError().getMessage());
+            Assert.assertTrue(e.getCause() instanceof KontentErrorException);
+            KontentErrorException kontentErrorException = (KontentErrorException) e.getCause();
+            Assert.assertEquals("The requested content item 'error' was not found.", kontentErrorException.getMessage());
+            Assert.assertEquals("The requested content item 'error' was not found.", kontentErrorException.getKontentError().getMessage());
         }
     }
 
 
     @Test
     @SuppressWarnings("all")
-    public void testKentico500Exception() throws Exception {
+    public void testKontent500Exception() throws Exception {
         String projectId = "02a70003-e864-464e-b62c-e0ede97deb8c";
 
         this.serverBootstrap.registerHandler(
@@ -1297,10 +1297,10 @@ public class DeliveryClientTest extends LocalServerTestBase {
                     .get();
             Assert.fail("Expected IOException");
         } catch (ExecutionException e) {
-            Assert.assertTrue(e.getCause() instanceof KenticoRetryException);
-            Assert.assertTrue(e.getCause().getCause() instanceof KenticoIOException);
+            Assert.assertTrue(e.getCause() instanceof KontentRetryException);
+            Assert.assertTrue(e.getCause().getCause() instanceof KontentIOException);
             Assert.assertEquals("Retry attempty reached max retry attempts (3) ", e.getCause().getMessage());
-            Assert.assertEquals("Kentico API retry status returned: 500 (one of [408, 429, 500, 502, 503, 504])", e.getCause().getCause().getMessage());
+            Assert.assertEquals("Kontent.ai API retry status returned: 500 (one of [408, 429, 500, 502, 503, 504])", e.getCause().getCause().getMessage());
         }
     }
 

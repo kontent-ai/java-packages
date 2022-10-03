@@ -23,7 +23,7 @@ This application demonstrates loading data from Kontent using Java SDK in Kotlin
 
 ### Data loading using Kotlin coroutines
 
-The data from Kontent is fetched using the [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). The `CompletionStage` returned from the Java SDK is using `org.jetbrains.kotlinx:kotlinx-coroutines-jdk8` package to integrate with Kotlin coroutines API. The `org.jetbrains.kotlinx:kotlinx-coroutines-android` package is used to provide a simple API to synchronize the coroutines and Android lifecycle. This allows to easily synchronize IO and UI operations with proper thread. Take a look at [`ArticlesActivity::onCreate` method](./src/main/java/kentico/kontent/delivery/sample/dancinggoat/app/articles/ArticlesActivity.kt#L25) to see the actual implementation.
+The data from Kontent is fetched using the [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). The `CompletionStage` returned from the Java SDK is using `org.jetbrains.kotlinx:kotlinx-coroutines-jdk8` package to integrate with Kotlin coroutines API. The `org.jetbrains.kotlinx:kotlinx-coroutines-android` package is used to provide a simple API to synchronize the coroutines and Android lifecycle. This allows to easily synchronize IO and UI operations with proper thread. Take a look at [`ArticlesActivity::onCreate` method](./src/main/java/kontent/ai/delivery/sample/dancinggoat/app/articles/ArticlesActivity.kt#L25) to see the actual implementation.
 
 ```kotlin
 override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,5 +48,3 @@ private suspend fun loadArticles(): MutableList<Article> {
     return client.getItems(Article::class.java, params).await();
 }
 ```
-
-![Analytics](https://kentico-ga-beacon.azurewebsites.net/api/UA-69014260-4/Kentico/kontent-java-packages/sample-app-android-kotlin?pixel)

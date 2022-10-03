@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2019
+ * Copyright (c) 2022 Kontent s.r.o.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,38 +25,24 @@
 package kontent.ai.delivery;
 
 /**
- * Thrown to indicate failure of a Kentico request.
- *
- * @see KenticoError
+ * Thrown when retry attempts are is thrown when executing against the Kontent API.  Generally means
+ * connectivity problems with Kontent.ai.
  */
-public class KenticoErrorException extends RuntimeException implements KenticoException {
+public class KontentRetryException extends RuntimeException implements KontentException {
 
-    private final KenticoError kenticoError;
-    private boolean shouldRetry;
+    private final int maxRetryAttempts;
 
-    /**
-     * Thrown to indicate failure of a Kentico request
-     *
-     * @param kenticoError The original KenticoError
-     */
-    public KenticoErrorException(KenticoError kenticoError, boolean shouldRetry) {
-        super(kenticoError.getMessage());
-        this.kenticoError = kenticoError;
-        this.shouldRetry = shouldRetry;
+    KontentRetryException(int maxRetryAttempts) {
+        super(String.format("Retry attempty reached max retry attempts (%d) ", maxRetryAttempts));
+        this.maxRetryAttempts = maxRetryAttempts;
     }
 
-    /**
-     * Returns the original error provided by Kentico.  Useful for debugging.
-     *
-     * @return The original KenticoError
-     * @see KenticoError
-     */
-    public KenticoError getKenticoError() {
-        return kenticoError;
+    public int getMaxRetryAttempts() {
+        return maxRetryAttempts;
     }
 
     @Override
     public boolean shouldRetry() {
-        return this.shouldRetry;
+        return false;
     }
 }

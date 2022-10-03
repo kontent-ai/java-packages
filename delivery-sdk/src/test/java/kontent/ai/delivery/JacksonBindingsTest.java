@@ -453,18 +453,18 @@ public class JacksonBindingsTest {
     }
 
     @Test
-    public void testKenticoErrorDeserialization() throws IOException {
-        KenticoError kenticoError = objectMapper.readValue(
-                this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
-        KenticoError kenticoError2 = objectMapper.readValue(
-                this.getClass().getResource("SampleKenticoError.json"), KenticoError.class);
-        Assert.assertNotNull("object failed deserialization", kenticoError);
-        Assert.assertNotNull(kenticoError.toString());
-        Assert.assertEquals(kenticoError, kenticoError2);
-        Assert.assertEquals(kenticoError.hashCode(), kenticoError2.hashCode());
-        Assert.assertEquals("The requested content item 'error' was not found.", kenticoError.getMessage());
-        Assert.assertEquals("HyufT6wUgEc=", kenticoError.getRequestId());
-        Assert.assertEquals(100, kenticoError.getErrorCode());
-        Assert.assertEquals(0, kenticoError.getSpecificCode());
+    public void testKontentErrorDeserialization() throws IOException {
+        KontentError kontentError = objectMapper.readValue(
+                this.getClass().getResource("SampleKontentError.json"), KontentError.class);
+        KontentError kontentError2 = objectMapper.readValue(
+                this.getClass().getResource("SampleKontentError.json"), KontentError.class);
+        Assert.assertNotNull("object failed deserialization", kontentError);
+        Assert.assertNotNull(kontentError.toString());
+        Assert.assertEquals(kontentError, kontentError2);
+        Assert.assertEquals(kontentError.hashCode(), kontentError2.hashCode());
+        Assert.assertEquals("The requested content item 'error' was not found.", kontentError.getMessage());
+        Assert.assertEquals("HyufT6wUgEc=", kontentError.getRequestId());
+        Assert.assertEquals(100, kontentError.getErrorCode());
+        Assert.assertEquals(0, kontentError.getSpecificCode());
     }
 }

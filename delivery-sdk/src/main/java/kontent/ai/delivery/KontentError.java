@@ -27,7 +27,7 @@ package kontent.ai.delivery;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Kentico error response
+ * Kontent.ai error response
  * <p>
  * Kontent returns standard HTTP status codes to indicate success or failure of a request. In general, codes in
  * the 2xx range indicate a successful request, codes in the 4xx range indicate errors caused by an incorrect input
@@ -46,19 +46,19 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class KenticoError implements java.io.Serializable {
+public class KontentError implements java.io.Serializable {
 
     /**
-     * Returns the error message provided by Kentico detailing the error.
+     * Returns the error message provided by Kontent.ai detailing the error.
      *
      * @param message   Sets the message of this.
-     * @return          The error message from Kentico.
+     * @return          The error message from Kontent.ai.
      */
     @JsonProperty("message")
     String message;
 
     /**
-     * Returns a unique ID that can be provided to Kentico for support in relation to the error.
+     * Returns a unique ID that can be provided to Kontent.ai for support in relation to the error.
      *
      * @param requestId Sets the request ID of this.
      * @return          The unique ID for this error
@@ -67,7 +67,7 @@ public class KenticoError implements java.io.Serializable {
     String requestId;
 
     /**
-     * Returns the HTTP error code returned by Kentico.
+     * Returns the HTTP error code returned by Kontent.ai.
      * <table>
      * <caption>HTTP error codes</caption>
      * <tr><td>400 - Bad Request</td><td>The request was not understood. Check for a missing required parameter, or an
@@ -86,10 +86,10 @@ public class KenticoError implements java.io.Serializable {
     int errorCode;
 
     /**
-     * Returns the specific code returned by the Kentico error response.
+     * Returns the specific code returned by the Kontent.ai error response.
      *
      * @param specificCode  Sets the specific code of this.
-     * @return              The specific code returned by the Kentico error response.
+     * @return              The specific code returned by the Kontent.ai error response.
      */
     @JsonProperty("specific_code")
     int specificCode;

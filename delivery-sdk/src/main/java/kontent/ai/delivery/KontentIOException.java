@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2020
+ * Copyright (c) 2019
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,25 +24,28 @@
 
 package kontent.ai.delivery;
 
+import java.io.IOException;
+
 /**
- * Thrown when retry attempts are is thrown when executing against the Kontent API.  Generally means
- * connectivity problems with Kentico.
+ * Thrown when an {@link IOException} is thrown when executing against the Kontent API.  Generally means
+ * connectivity problems with Kontent.ai of problem parsing {@link KontentError} from body.
  */
-public class KenticoRetryException extends RuntimeException implements KenticoException {
+public class KontentIOException extends RuntimeException implements KontentException {
 
-    private final int maxRetryAttempts;
+    private boolean shouldRetry;
 
-    KenticoRetryException(int maxRetryAttempts) {
-        super(String.format("Retry attempty reached max retry attempts (%d) ", maxRetryAttempts));
-        this.maxRetryAttempts = maxRetryAttempts;
+    KontentIOException(String message, boolean shouldRetry) {
+        super(message);
+        this.shouldRetry = shouldRetry;
     }
 
-    public int getMaxRetryAttempts() {
-        return maxRetryAttempts;
+    KontentIOException(IOException cause, boolean shouldRetry) {
+        super(cause);
+        this.shouldRetry = shouldRetry;
     }
 
     @Override
     public boolean shouldRetry() {
-        return false;
+        return this.shouldRetry;
     }
 }

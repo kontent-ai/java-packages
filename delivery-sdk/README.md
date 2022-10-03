@@ -285,11 +285,11 @@ You need to instantiate the Delivery client with the constructor that disables t
 DeliveryClient client = new DeliveryClient(new DeliveryOptions(AppConfig.KONTENT_PROJECT_ID), null);  
 ```  
 
-See it [used in a sample app](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java)).
+See it [used in a sample app](../sample-app-android/src/main/java/kontent/ai/delivery_android_sample/data/source/DeliveryClientProvider.java)).
 
 ### 2. Register strongly-typed models
 
-Android applications must register the models using the `registerType` method. See a usage example in [DeliveryClientProvider.java](../sample-app-android/src/main/java/com/github/kentico/delivery_android_sample/data/source/DeliveryClientProvider.java).
+Android applications must register the models using the `registerType` method. See a usage example in [DeliveryClientProvider.java](../sample-app-android/src/main/java/kontent/ai/delivery_android_sample/data/source/DeliveryClientProvider.java).
 
 You can still use the [model generator](../delivery-sdk-generators/README.md) for generating the models.
 

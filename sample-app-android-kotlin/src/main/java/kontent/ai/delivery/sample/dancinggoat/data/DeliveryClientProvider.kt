@@ -1,14 +1,14 @@
-package kentico.kontent.delivery.sample.dancinggoat.data
+package kontent.ai.delivery.sample.dancinggoat.data
 
 import kontent.ai.delivery.DeliveryClient
 import kontent.ai.delivery.DeliveryOptions
 import kontent.ai.delivery.Header
-import kentico.kontent.delivery.sample.dancinggoat.models.Article
+import kontent.ai.delivery.sample.dancinggoat.models.Article
 
 object DeliveryClientProvider {
-    // https://github.com/Kentico/Home/wiki/Guidelines-for-Kontent-related-tools#analytics
+    // https://github.com/kontent-ai/kontent-ai.github.io/blob/main/docs/articles/Guidelines-for-Kontent.ai-related-tools.md
     private const val TRACKING_HEADER_NAME = "X-KC-SOURCE"
-    private const val TRACKING_HEADER_VALUE = "kentico.kontent.delivery.sample.dancinggoat.android.kotlin;1.0.0"
+    private const val TRACKING_HEADER_VALUE = "kontent.ai.delivery.sample.dancinggoat.android.kotlin;2.0.0"
 
     private var instance: DeliveryClient? = null
 

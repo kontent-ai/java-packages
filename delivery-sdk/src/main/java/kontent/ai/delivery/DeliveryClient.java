@@ -414,7 +414,7 @@ public class DeliveryClient {
 
 
         if (skipCache) {
-            return retrieveFromKentico(request, url, tClass, 0);
+            return retrieveFromKontent(request, url, tClass, 0);
         } else {
             return cacheManager.get(url).thenApply(jsonNode -> {
                 try {
@@ -423,20 +423,20 @@ public class DeliveryClient {
                     }
                     return objectMapper.treeToValue(jsonNode, tClass);
                 } catch (JsonProcessingException e) {
-                    log.error("JsonProcessingException parsing Kentico object: {}", e.toString());
+                    log.error("JsonProcessingException parsing Kontent.ai object: {}", e.toString());
                 }
                 return null;
             }).thenCompose(result -> {
                 if (result != null) {
                     return CompletableFuture.completedFuture(result);
                 } else {
-                    return retrieveFromKentico(request, url, tClass, 0);
+                    return retrieveFromKontent(request, url, tClass, 0);
                 }
             });
         }
     }
 
-    private <T> CompletionStage<T> retrieveFromKentico(Request request, final String url, Class<T> tClass, int retryTurn) {
+    private <T> CompletionStage<T> retrieveFromKontent(Request request, final String url, Class<T> tClass, int retryTurn) {
         return send(request)
                 .thenApply(this::logResponseInfo)
                 .thenApply(this::handleErrorIfNecessary)
@@ -471,8 +471,8 @@ public class DeliveryClient {
                     if (error instanceof CompletionException) {
                         Throwable cause = error.getCause();
 
-                        // Don't retry when when not KenticoException or not set to retry
-                        boolean retry = cause instanceof KenticoException && ((KenticoException) cause).shouldRetry();
+                        // Don't retry when when not KontentException or not set to retry
+                        boolean retry = cause instanceof KontentException && ((KontentException) cause).shouldRetry();
 
                         if (!retry) {
                             throw (CompletionException) error;
@@ -480,7 +480,7 @@ public class DeliveryClient {
                     }
 
                     if (counter.incrementAndGet() > deliveryOptions.getRetryAttempts()) {
-                        KenticoRetryException ex = new KenticoRetryException(deliveryOptions.getRetryAttempts());
+                        KontentRetryException ex = new KontentRetryException(deliveryOptions.getRetryAttempts());
                         ex.initCause(error.getCause());
                         throw ex;
                     }
@@ -494,15 +494,15 @@ public class DeliveryClient {
                         return CompletableFuture.supplyAsync(
                                 () -> {
                                     try {
-                                        return retrieveFromKentico(request, url, tClass, counter.get())
+                                        return retrieveFromKontent(request, url, tClass, counter.get())
                                                 .toCompletableFuture().get();
                                     } catch (InterruptedException e) {
                                         log.error(String.format("InterruptedException have been raised on retial no. %d", counter.get()));
                                         throw new CompletionException(e);
                                     } catch (ExecutionException e) {
                                         log.error(String.format("ExecutionException have been raised on retrial no. %d", counter.get()));
-                                        if (e.getCause() instanceof KenticoRetryException) {
-                                            KenticoRetryException exception = new KenticoRetryException(((KenticoRetryException) e.getCause()).getMaxRetryAttempts());
+                                        if (e.getCause() instanceof KontentRetryException) {
+                                            KontentRetryException exception = new KontentRetryException(((KontentRetryException) e.getCause()).getMaxRetryAttempts());
                                             exception.initCause(error.getCause());
                                             throw exception;
                                         }
@@ -518,8 +518,8 @@ public class DeliveryClient {
                         throw new CompletionException(e);
                     } catch (ExecutionException e) {
                         log.error("ExecutionException have been raised for timeout");
-                        if (e.getCause() instanceof KenticoRetryException) {
-                            KenticoRetryException exception = new KenticoRetryException(((KenticoRetryException) e.getCause()).getMaxRetryAttempts());
+                        if (e.getCause() instanceof KontentRetryException) {
+                            KontentRetryException exception = new KontentRetryException(((KontentRetryException) e.getCause()).getMaxRetryAttempts());
                             exception.initCause(error.getCause());
                             throw exception;
                         }
@@ -529,33 +529,33 @@ public class DeliveryClient {
                 });
     }
 
-    private Response handleErrorIfNecessary(Response response) throws KenticoIOException, KenticoErrorException {
+    private Response handleErrorIfNecessary(Response response) throws KontentIOException, KontentErrorException {
         final int status = response.code();
         if (RETRY_STATUSES.contains(status)) {
-            log.error("Kentico API retry status returned: {} (one of {})", status, RETRY_STATUSES.toString());
+            log.error("Kontent.ai API retry status returned: {} (one of {})", status, RETRY_STATUSES.toString());
             try {
-                KenticoError kenticoError = objectMapper.readValue(response.body().bytes(), KenticoError.class);
-                throw new KenticoErrorException(kenticoError, true);
+                KontentError kontentError = objectMapper.readValue(response.body().bytes(), KontentError.class);
+                throw new KontentErrorException(kontentError, true);
             } catch (IOException e) {
                 log.error("IOException when trying to parse the error response body: {}", e.toString());
-                throw new KenticoIOException(String.format("Kentico API retry status returned: %d (one of %s)", status, RETRY_STATUSES.toString()), true);
+                throw new KontentIOException(String.format("Kontent.ai API retry status returned: %d (one of %s)", status, RETRY_STATUSES.toString()), true);
             }
         } else if (status >= 500) {
-            log.error("Kentico API server error, status: {}", status);
+            log.error("Kontent.ai API server error, status: {}", status);
             log.info("Request URL: ", response.request().url().toString());
             String message =
                     String.format(
-                            "Unknown error with Kentico API.  Kentico is likely suffering site issues.  Status: %s",
+                            "Unknown error with Kontent.ai API.  Kontent.ai is likely suffering site issues.  Status: %s",
                             status);
-            throw new CompletionException(new KenticoIOException(message, false));
+            throw new CompletionException(new KontentIOException(message, false));
         } else if (status >= 400) {
-            log.error("Kentico API server error, status: {}", status);
+            log.error("Kontent.ai API server error, status: {}", status);
             try {
-                KenticoError kenticoError = objectMapper.readValue(response.body().bytes(), KenticoError.class);
-                throw new CompletionException(new KenticoErrorException(kenticoError, false));
+                KontentError kontentError = objectMapper.readValue(response.body().bytes(), KontentError.class);
+                throw new CompletionException(new KontentErrorException(kontentError, false));
             } catch (IOException e) {
-                log.error("IOException connecting to Kentico: {}", e.toString());
-                throw new CompletionException(new KenticoIOException(e, false));
+                log.error("IOException connecting to Kontent.ai: {}", e.toString());
+                throw new CompletionException(new KontentIOException(e, false));
             }
         }
 

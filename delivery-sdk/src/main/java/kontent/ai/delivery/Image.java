@@ -64,7 +64,7 @@ public class Image {
      * Absolute URL for the image
      *
      * @param url   Sets the url of this
-     * @return      An absolute URL image hosted by Kentico
+     * @return      An absolute URL image hosted by Kontent.ai
      */
     @JsonProperty("url")
     String url;

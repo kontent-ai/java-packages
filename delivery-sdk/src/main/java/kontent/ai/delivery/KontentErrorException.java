@@ -24,24 +24,35 @@
 
 package kontent.ai.delivery;
 
-import java.io.IOException;
-
 /**
- * Thrown when an {@link IOException} is thrown when executing against the Kontent API.  Generally means
- * connectivity problems with Kentico of problem parsing {@link KenticoError} from body.
+ * Thrown to indicate failure of a Kontent.ai request.
+ *
+ * @see KontentError
  */
-public class KenticoIOException extends RuntimeException implements KenticoException {
+public class KontentErrorException extends RuntimeException implements KontentException {
 
+    private final KontentError kontentError;
     private boolean shouldRetry;
 
-    KenticoIOException(String message, boolean shouldRetry) {
-        super(message);
+    /**
+     * Thrown to indicate failure of a Kontent.ai request
+     *
+     * @param kontentError The original KontentError
+     */
+    public KontentErrorException(KontentError kontentError, boolean shouldRetry) {
+        super(kontentError.getMessage());
+        this.kontentError = kontentError;
         this.shouldRetry = shouldRetry;
     }
 
-    KenticoIOException(IOException cause, boolean shouldRetry) {
-        super(cause);
-        this.shouldRetry = shouldRetry;
+    /**
+     * Returns the original error provided by Kontent.ai. Useful for debugging.
+     *
+     * @return The original KontentError
+     * @see KontentError
+     */
+    public KontentError getKontentError() {
+        return kontentError;
     }
 
     @Override

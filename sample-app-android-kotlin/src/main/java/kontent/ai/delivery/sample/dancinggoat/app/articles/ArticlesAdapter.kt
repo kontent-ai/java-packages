@@ -1,4 +1,4 @@
-package kentico.kontent.delivery.sample.dancinggoat.app.articles
+package kontent.ai.delivery.sample.dancinggoat.app.articles
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -8,8 +8,8 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
-import kentico.kontent.delivery.sample.dancinggoat.R
-import kentico.kontent.delivery.sample.dancinggoat.models.Article
+import kontent.ai.delivery.sample.dancinggoat.R
+import kontent.ai.delivery.sample.dancinggoat.models.Article
 import java.time.format.DateTimeFormatter
 
 class ArticlesAdapter(private val context: Context,

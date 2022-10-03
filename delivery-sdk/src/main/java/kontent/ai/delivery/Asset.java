@@ -112,7 +112,7 @@ public class Asset {
     /**
      * Absolute URL for the asset
      *
-     * @return URL for the asset, hosted by Kentico
+     * @return URL for the asset, hosted by Kontent.ai
      */
     public String getUrl() {
         return url;

@@ -1,5 +1,5 @@
 package kontent.ai.delivery;
 
-public interface KenticoException {
+public interface KontentException {
     boolean shouldRetry();
 }

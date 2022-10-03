@@ -602,8 +602,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent">More on Localization</a>
-     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent#section-language-fallbacks">
+     * @see             <a href="https://kontent.ai/learn/tutorials/manage-kontent-ai/projects/set-up-languages/">More on Localization</a>
+     * @see             <a href=https://kontent.ai/learn/tutorials/manage-kontent-ai/projects/set-up-languages/#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(String language) {
@@ -620,8 +620,8 @@ public class DeliveryParameterBuilder {
      *
      * @param language  The language variant to return.
      * @return          This DeliveryParameterBuilder with the added operator.
-     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent">More on Localization</a>
-     * @see             <a href="https://docs.kontent.ai/tutorials/set-up-projects/set-up-languages/localization-in-kentico-kontent#section-language-fallbacks">
+     * @see             <a href="https://kontent.ai/learn/tutorials/manage-kontent-ai/projects/set-up-languages/">More on Localization</a>
+     * @see             <a href="https://kontent.ai/learn/tutorials/manage-kontent-ai/projects/set-up-languages/#section-language-fallbacks">
      *                  Language fallbacks</a>
      */
     public DeliveryParameterBuilder language(Locale language) {
