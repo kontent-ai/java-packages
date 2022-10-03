@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![Javadocs](https://javadoc.io/badge/ai.kontent/delivery-sdk-generators.svg)](https://javadoc.io/doc/ai.kontent/delivery-sdk-generators)
-[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk-generators)](https://oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk-generators)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk-generators)](https://s01.oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk-generators)
 
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kontent-ai)
 [![GitHub Discussions](https://img.shields.io/badge/GitHub-Discussions-FE7A16.svg?style=popout&logo=github)](https://github.com//Home/discussions)

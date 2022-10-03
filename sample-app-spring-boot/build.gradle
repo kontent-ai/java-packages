@@ -1,14 +1,16 @@
 import com.squareup.javapoet.JavaFile
-import kentico.kontent.delivery.DeliveryClient
-import kentico.kontent.delivery.DeliveryOptions
-import kentico.kontent.delivery.generators.CodeGenerator
+import kontent.ai.delivery.DeliveryClient
+import kontent.ai.delivery.DeliveryOptions
+import kontent.ai.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
+        // TODO change after final release
         mavenCentral()
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
-        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+        classpath('ai.kontent:delivery-sdk-generators:latest.integration')
     }
 }
 
@@ -35,7 +37,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    compile project(':delivery-sdk')
+    implementation project(':delivery-sdk')
 }
 
 test {

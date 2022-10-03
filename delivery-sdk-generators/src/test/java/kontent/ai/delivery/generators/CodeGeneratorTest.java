@@ -47,34 +47,38 @@ public class CodeGeneratorTest extends LocalServerTestBase {
         File outputDir = temporaryFolder.newFolder();
         Assert.assertTrue(outputDir.exists() && outputDir.isDirectory());
         CodeGenerator codeGenerator =
-                new CodeGenerator(projectId,"com.dancinggoat.models", outputDir);
+                new CodeGenerator(projectId,"kontent.ai.delivery.generators", outputDir);
         List<JavaFile> sources = codeGenerator.generateSources(client);
         codeGenerator.writeSources(sources);
 
         File[] toplevel = outputDir.listFiles();
         Assert.assertEquals(1, toplevel.length);
-        File com = toplevel[0];
-        Assert.assertEquals("com", com.getName());
-        File[] secondlevel = com.listFiles();
+        File kontent = toplevel[0];
+        Assert.assertEquals("kontent", kontent.getName());
+        File[] secondlevel = kontent.listFiles();
         Assert.assertEquals(1, secondlevel.length);
-        File dancinggoat = secondlevel[0];
-        Assert.assertEquals("dancinggoat", dancinggoat.getName());
-        File[] thirdlevel = dancinggoat.listFiles();
+        File ai = secondlevel[0];
+        Assert.assertEquals("ai", ai.getName());
+        File[] thirdlevel = ai.listFiles();
         Assert.assertEquals(1, thirdlevel.length);
-        File models = thirdlevel[0];
-        Assert.assertEquals("models", models.getName());
-        List<String> files = Arrays.asList(models.list());
+        File delivery = thirdlevel[0];
+        Assert.assertEquals("delivery", delivery.getName());
+        File[] forthlevel = delivery.listFiles();
+        Assert.assertEquals(1, forthlevel.length);
+        File generators = forthlevel[0];
+        Assert.assertEquals("generators", generators.getName());
+        List<String> files = Arrays.asList(generators.list());
         Assert.assertEquals(2, files.size());
         Assert.assertTrue(files.contains("Article.java"));
         Assert.assertTrue(files.contains("Brewer.java"));
 
         Assert.assertEquals(
                 readResource("Article.java"),
-                readFile(new File(outputDir, "com/dancinggoat/models/Article.java"))
+                readFile(new File(outputDir, "kontent/ai/delivery/generators/Article.java"))
         );
         Assert.assertEquals(
                 readResource("Brewer.java"),
-                readFile(new File(outputDir, "com/dancinggoat/models/Brewer.java"))
+                readFile(new File(outputDir, "kontent/ai/delivery/generators/Brewer.java"))
         );
     }
 

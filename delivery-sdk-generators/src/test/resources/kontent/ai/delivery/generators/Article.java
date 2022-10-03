@@ -1,4 +1,4 @@
-package com.dancinggoat.models;
+package kontent.ai.delivery.generators;
 
 import java.lang.String;
 import java.time.ZonedDateTime;

@@ -4,7 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 [![javadoc](https://javadoc.io/badge2/ai.kontent/delivery-sdk/javadoc.svg)](https://javadoc.io/doc/ai.kontent/delivery-sdk)
-[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk)](https://oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk/)
+[![Maven Central](https://img.shields.io/maven-central/v/ai.kontent/delivery-sdk)](https://s01.oss.sonatype.org/content/groups/public/ai/kontent/delivery-sdk/)
 
 [![Stack Overflow](https://img.shields.io/badge/Stack%20Overflow-ASK%20NOW-FE7A16.svg?logo=stackoverflow&logoColor=white)](https://stackoverflow.com/tags/kontent-ai)
 [![Discord](https://img.shields.io/discord/821885171984891914?color=%237289DA&label=Kontent.ai%20Discord&logo=discord)](https://discord.gg/SKCxwPtevJ)
