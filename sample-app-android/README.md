@@ -23,7 +23,7 @@ This application demonstrates it is possible to load data from Kontent using Jav
 
 ### Data loading using RxJava
 
-All the data loaded from Kontent is using [RxJava](https://github.com/ReactiveX/RxJava) approach. Basically, the `CompletionStage` returned from Kontent Java SDK is wrapped to the `Observable`. This allows to easily synchronize IO and UI operation with proper thread. Take a look i.e. to [`ArticlesKontentSource#getArticles` method](./src/main/java/com/github/kentico/delivery_android_sample/data/source/articles/ArticlesKontentSource.java#L40) to see the actual implementation using `io.reactivex.rxjava3:rxjava` and `io.reactivex.rxjava3:rxandroid` packages.
+All the data loaded from Kontent is using [RxJava](https://github.com/ReactiveX/RxJava) approach. Basically, the `CompletionStage` returned from Kontent Java SDK is wrapped to the `Observable`. This allows to easily synchronize IO and UI operation with proper thread. Take a look i.e. to [`ArticlesKontentSource#getArticles` method](src/main/java/kontent/ai/data/source/articles/ArticlesKontentSource.java#L40) to see the actual implementation using `io.reactivex.rxjava3:rxjava` and `io.reactivex.rxjava3:rxandroid` packages.
 
 ```java
 Observable.fromCompletionStage(client.getItems(Article.class))

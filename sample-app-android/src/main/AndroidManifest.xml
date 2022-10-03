@@ -9,7 +9,7 @@
   ~  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.github.kentico.delivery_android_sample">
+          package="kontent.ai.delivery_android_sample">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
@@ -19,43 +19,43 @@
                  android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true"
                  android:theme="@style/AppTheme">
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/config_google_API_key"/>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.articles.ArticlesActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.articles.ArticlesActivity"
                   android:label="@string/app_main_activity_title" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.cafes.CafesActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.cafes.CafesActivity"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.article_detail.ArticleDetailActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.article_detail.ArticleDetailActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:parentActivityName="com.github.kentico.delivery_android_sample.app.articles.ArticlesActivity">
+                  android:parentActivityName="kontent.ai.delivery_android_sample.app.articles.ArticlesActivity">
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.cafe_detail.CafeDetailActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.cafe_detail.CafeDetailActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:parentActivityName="com.github.kentico.delivery_android_sample.app.cafes.CafesActivity">
+                  android:parentActivityName="kontent.ai.delivery_android_sample.app.cafes.CafesActivity">
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.coffees.CoffeesActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.coffees.CoffeesActivity"
                   android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity android:name="com.github.kentico.delivery_android_sample.app.coffee_detail.CoffeeDetailActivity"
+        <activity android:name="kontent.ai.delivery_android_sample.app.coffee_detail.CoffeeDetailActivity"
                   android:theme="@style/AppTheme.NoActionBar"
-                  android:parentActivityName="com.github.kentico.delivery_android_sample.app.coffees.CoffeesActivity">
+                  android:parentActivityName="kontent.ai.delivery_android_sample.app.coffees.CoffeesActivity">
         </activity>
         <uses-library
                 android:name="org.apache.http.legacy"
                 android:required="false"/>
 
         <!--        <service-->
-        <!--            android:name="com.github.kentico.delivery_android_sample.app.notifications.DGFirebaseMessagingService">-->
+        <!--            android:name="kontent.ai.delivery_android_sample.app.notifications.DGFirebaseMessagingService">-->
         <!--            <intent-filter>-->
         <!--                <action android:name="com.google.firebase.MESSAGING_EVENT"/>-->
         <!--            </intent-filter>-->
         <!--        </service>-->
         <!--        <service-->
-        <!--            android:name="com.github.kentico.delivery_android_sample.app.notifications.DGFirebaseInstanceIDService">-->
+        <!--            android:name="kontent.ai.delivery_android_sample.app.notifications.DGFirebaseInstanceIDService">-->
         <!--            <intent-filter>-->
         <!--                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>-->
         <!--            </intent-filter>-->
