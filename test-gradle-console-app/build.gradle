@@ -6,9 +6,9 @@ plugins {
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
-mainClassName = 'kentico.kontent.delivery.testing.app.Main' 
+mainClassName = 'kontent.ai.delivery.testing.app.Main'
 
 dependencies {
     implementation project(':delivery-sdk')
-    testCompile("junit:junit:4.12")
+    testImplementation("junit:junit:4.12")
 }
