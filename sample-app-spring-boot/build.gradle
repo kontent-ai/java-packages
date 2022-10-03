@@ -53,7 +53,7 @@ task generateModels {
 
         CodeGenerator generator = new CodeGenerator(
                 options.getProjectId(),
-                'kentico.kontent.delivery.sample.dancinggoat.models',
+                'kontent.ai.delivery.sample.dancinggoat.models',
                 file('src/main/java')
         );
         List<JavaFile> sources = generator.generateSources(client);

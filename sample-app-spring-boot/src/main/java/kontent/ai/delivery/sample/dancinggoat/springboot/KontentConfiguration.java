@@ -16,9 +16,9 @@ import java.util.Map;
 @Configuration
 public class KontentConfiguration {
 
-    // https://github.com/Kentico/Home/wiki/Guidelines-for-Kontent-related-tools#analytics
+    // https://github.com/kontent-ai/kontent-ai.github.io/blob/main/docs/articles/Guidelines-for-Kontent.ai-related-tools.md
     private static final String TRACKING_HEADER_NAME = "X-KC-SOURCE";
-    private static final String TRACKING_HEADER_VALUE = "kentico.kontent.delivery.sample.dancinggoat.java.springboot;1.0.0";
+    private static final String TRACKING_HEADER_VALUE = "kontent.ai.delivery.sample.dancinggoat.java.springboot;2.0.0";
 
     @Bean
     public DeliveryClient deliveryClient() {
@@ -32,7 +32,7 @@ public class KontentConfiguration {
                         .build()
         );
 
-        client.scanClasspathForMappings("kentico.kontent.delivery.sample.dancinggoat.models");
+        client.scanClasspathForMappings("kontent.ai.delivery.sample.dancinggoat.models");
 
         client.registerInlineContentItemsResolver(new InlineContentItemsResolver<Tweet>() {
             @Override
