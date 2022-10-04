@@ -75,4 +75,4 @@ in [Kontent.ai Delivery Java SDK](/delivery-sdk#readme).
 1. Release the Closed repository
 1. Increase the patch version and append `-SNAPSHOT` in the bottom of `/build.gradle` file (i.e. `4.4.1-SNAPSHOT`).
 
-> 💡 This is just an abbreviated description of the publishing process. If you want to see the detailed publishing description, checkout the [wiki page "Publishing process"](https://github.com/kontent-ai/java-packages/wiki/Release-process).
+> 💡 This is just an abbreviated description of the publishing process. If you want to see the detailed publishing description, checkout the [wiki page "Publishing process"](./docs/Release-process.md).

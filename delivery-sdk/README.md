@@ -213,7 +213,7 @@ For text elements, you can use the `getString` method.
 articleItem.getString("body_copy")  
 ```  
 
-The Rich text element can contain links to other content items within your project. See [Resolving links to content items](https://github.com/kontent-ai/java-packages/wiki/Resolving-links-to-content-items) for more details.
+The Rich text element can contain links to other content items within your project. See [Resolving links to content items](./../docs/Resolving-links-to-content-items.md) for more details.
 
 ### Asset
 

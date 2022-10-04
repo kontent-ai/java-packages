@@ -1,13 +1,12 @@
 # Changes in v4 -> v5
 
-* Place for templates is by default
+* Thymeleaf default template location changed
   * `kontent/ai/templates/`, `META-INF/kontent/ai/templates/` - you need to move your templates, use custom path configuration
 * Namespaces of the packages we changed from `kentico.kontent.delivery.*` to `kontent.ai.delivery.*`
-
-TODO
-* Migrate Sample apps
-    * Springboot sample needs to have model generator released first 
-* Migrate wiki
+* Prefix for Kontent.ai exceptions has been changed from `Kentico` to `Kontent`: 
+  * `KontentError`, `KontentErrorException`, `KontentException`, `KontentIOException`, and `KontentRetryException`
+* Android Sample apps changed the application id prefix to "kontent.ai.*"
+* Packages are signed by the new PGP key with id `A5992A24`
 
 # Changes in v3 -> v4
 
