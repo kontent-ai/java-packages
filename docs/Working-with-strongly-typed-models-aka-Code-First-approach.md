@@ -19,7 +19,7 @@
 
 ## Strongly-typed models
 
-Besides the [basic methods](https://github.com/Kentico/delivery-sdk-java#basic-querying) for retrieving content items, the `DeliveryClient` supports fetching of strongly-typed models.
+Besides the [basic methods](../delivery-sdk/README.md#basic-querying) for retrieving content items, the `DeliveryClient` supports fetching of strongly-typed models.
 
 ```java
 // Basic retrieval
@@ -74,7 +74,7 @@ public class Article {
 
 #### Typing Rich text
 
-For Rich text elements, use `String` to receive HTML code resolved using string-based resolver as outlined in [Rendering  content items in Rich text](https://github.com/Kentico/delivery-sdk-java/wiki/Rendering-content-items-in-Rich-text).
+For Rich text elements, use `String` to receive HTML code resolved using string-based resolver as outlined in [Rendering  content items in Rich text](./Rich-text-resolution.md).
 
 ### Naming the properties
 

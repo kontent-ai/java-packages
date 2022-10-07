@@ -2,7 +2,7 @@
 
 You could use `org.apache.http.localserver.LocalServerTestBase` to create a mock server. And then configure the client to use server's generate URL as the base URL.
 
-A showcase of the configuration could be found in [~/kontent-delivery/src/test/java/kentico/kontent/delivery/DeliveryClientTest.java](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/src/test/java/kentico/kontent/delivery/DeliveryClientTest.java#L287-L326)
+A showcase of the configuration could be found in [DeliveryClientTest.java](../delivery-sdk/src/test/java/kontent/ai/delivery/DeliveryClientTest.java)
 
 ```java
 this.serverBootstrap.registerHandler(

@@ -5,7 +5,7 @@ This page describes the possibility to resolve rich text elements.
 _Prerequisites_
 
 - [Generate models using Model Generator](https://github.com/kontent-ai/java-packages/tree/master/kontent-delivery-generators#readme-task)
-- Register models using [`scanClasspathForMappings`, or `registerType`](https://github.com/kontent-ai/java-packages/tree/master/kontent-delivery/src/main/java/kentico/kontent/delivery/DeliveryClient.java).
+- Register models using [`scanClasspathForMappings`, or `registerType`](../delivery-sdk/src/main/java/kontent/ai/delivery/DeliveryClient.java).
 
 ## Type-based string resolution resolution
 
@@ -31,7 +31,7 @@ client.registerInlineContentItemsResolver(new InlineContentItemsResolver<Tweet>(
 
 [**😉START with the example😉**](https://github.com/kontent-ai/java-packages/tree/master/sample-app-spring-boot#automatic-rich-text-component-resolution)
 
-Create Thymeleaf templates to the resources to specific places ([currently "kentico/templates/", "META-INF/kentico/templates/", "kentico/kontent/templates/", "META-INF/kentico/kontent/templates/"](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/src/main/java/kentico/kontent/delivery/template/ViewResolverConfiguration.java)), with name `<ITEM_TYPE_CODENAME>.html` suffix - as for [hosting_video](https://github.com/kontent-ai/java-packages/blob/master/sample-app-spring-boot/src/main/resources/kentico/kontent/templates/hosted_video.html).
+Create Thymeleaf templates to the resources to specific places ([currently `kontent/ai/templates/`, `META-INF/kontent/ai/templates/`](../delivery-sdk/src/main/java/kontent/ai/delivery/template/ViewResolverConfiguration.java)), with name `<ITEM_TYPE_CODENAME>.html` suffix - as for [hosting_video](../sample-app-spring-boot/src/main/resources/kontent/ai/templates/hosted_video.html).
 
 > Location customizable by extending the default Template engine.
 
@@ -51,7 +51,7 @@ DeliveryClient client = new DeliveryClient(
 
 To completely customize the template configuration, it is possible to create your own implementation of `TemplateEngineConfig` (and `TemplateEngine`)
 
-> In the following example, it is possible i.e. to use the default implementation of [`TemplateEngineConfig`](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/src/main/java/kentico/kontent/delivery/template/TemplateEngineConfig.java) and [`TemplateEngine`](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/src/main/java/kentico/kontent/delivery/template/TemplateEngine.java) and i.e. add "Default fallback resolver" for all other types that are not registered via `registerInlineContentItemsResolver`.
+> In the following example, it is possible i.e. to use the default implementation of [`TemplateEngineConfig`](../delivery-sdk/src/main/java/kontent/ai/delivery/template/TemplateEngineConfig.java) and [`TemplateEngine`](../delivery-sdk/src/main/java/kontent/ai/delivery/template/TemplateEngine.java) and i.e. add "Default fallback resolver" for all other types that are not registered via `registerInlineContentItemsResolver`.
 
 ```java
 class CustomTemplateEngine implements  TemplateEngine {

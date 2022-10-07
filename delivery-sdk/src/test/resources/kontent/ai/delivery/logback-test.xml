@@ -32,6 +32,6 @@
         </encoder>
     </appender>
 
-    <logger name="kentico.kontent.delivery" level="DEBUG" additivity="false"/>
+    <logger name="kontent.ai.delivery" level="DEBUG" additivity="false"/>
 
 </configuration>

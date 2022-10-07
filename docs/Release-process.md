@@ -66,7 +66,7 @@ If you define tag name without "-SNAPSHOT" suffix i.e. `5.0.0` the artifact will
 ### Manual Release
 
 1. Copy the `local.properties.template` file in this directory to `local.properties` (which will be ignored by Git)).
-1. Set each variable on `local.properties` from the password manager, or contact @Kentico/developer-relations team to get them.
+1. Set each variable on `local.properties` from the password manager, or contact @kontent-ai/developer-relations team to get them.
 1. Set the version you want to publish at the bottom of [`build.gradle`](./build.gradle).
 1. (Optional - to run tests, etc.) Build the solution `./gradlew build`.
 1. Run `./gradlew publish`.
@@ -104,5 +104,5 @@ If you define tag name without "-SNAPSHOT" suffix i.e. `5.0.0` the artifact will
 
 🎉Hooray - you have published a new version. 🚀 You could check it on:
 
-- <https://repo1.maven.org/maven2/com/github/kentico/kontent-delivery/>
-- <https://repo1.maven.org/maven2/com/github/kentico/kontent-delivery-generators/>
+- <https://repo1.maven.org/maven2/ai/kontent/delivery-sdk/>
+- <https://repo1.maven.org/maven2/ai/kontent/delivery-sdk-generators/>

@@ -2,7 +2,7 @@
 
 You can use Spring `@Configuration` and `@Bean` data annotation to register the Kontent Delivery client and then used `@Autowired` when you need to use it
 
-The approach is showcased on [Spring Boot sample application](https://github.com/kontent-ai/java-packages/tree/master/sample-app-spring-boot) - the code part is in [~/sample-app-spring-boot/src/main/java/kentico/kontent/delivery/sample/dancinggoat/springboot/KontentConfiguration.java file](https://github.com/kontent-ai/java-packages/blob/master/sample-app-spring-boot/src/main/java/kentico/kontent/delivery/sample/dancinggoat/springboot/KontentConfiguration.java).
+The approach is showcased on [Spring Boot sample application](../sample-app-spring-boot) - the code part is in [KontentConfiguration.java file](../delivery-sdk/src/main/java/kontent/ai/delivery/template/ViewResolverConfiguration.java).
 
 You can see there you can register recovers as well.
 The template is simple.
