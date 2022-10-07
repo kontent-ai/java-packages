@@ -2,16 +2,18 @@
 
 <!-- TOC -->
 
-1. [Strongly-typed models](#strongly-typed-models)
-2. [Defining a model](#defining-a-model)
-    1. [Typing the properties](#typing-the-properties)
-        1. [Typing simple elements](#typing-simple-elements)
-        2. [Typing linked content items](#typing-linked-content-items)
-    2. [Naming the properties](#naming-the-properties)
-    3. [Examples](#examples)
-3. [Retrieving content items](#retrieving-content-items)
-    1. [Casting to strong types](#casting-to-strong-types)
-4. [Adding support for runtime type resolution](#adding-support-for-runtime-type-resolution)
+- [Contents](#contents)
+- [Strongly-typed models](#strongly-typed-models)
+- [Defining a model](#defining-a-model)
+  - [Typing the properties](#typing-the-properties)
+    - [Typing simple elements](#typing-simple-elements)
+    - [Typing linked content items](#typing-linked-content-items)
+    - [Typing Rich text](#typing-rich-text)
+  - [Naming the properties](#naming-the-properties)
+  - [Examples](#examples)
+- [Retrieving content items](#retrieving-content-items)
+  - [Casting to strong types](#casting-to-strong-types)
+- [Adding support for runtime type resolution](#adding-support-for-runtime-type-resolution)
 
 <!-- /TOC -->
 
@@ -45,10 +47,10 @@ The models are simple [JavaBean POJO](https://en.wikipedia.org/wiki/Plain_old_Ja
 
 Here are the data types you can use for different content type elements:
 
-- Built-in Java types such as `String`, `ZonedDateTime`, `Double` and their nullable equivalents for simple elements like [Number or Text](https://developer.kenticocloud.com/docs/content-structure).
-- `List<com.kenticocloud.delivery.Option>` for Multiple choice elements
-- `List<com.kenticocloud.delivery.Asset>` for Assets elements
-- `List<com.kenticocloud.delivery.Taxonomy>` for Taxonomy elements
+- Built-in Java types such as `String`, `ZonedDateTime`, `Double` and their nullable equivalents for simple elements like Number or Text.
+- `List<kontent.ai.delivery.Option>` for Multiple choice elements
+- `List<kontent.ai.delivery.Asset>` for Assets elements
+- `List<kontent.ai.deliveryTaxonomy>` for Taxonomy elements
 
 #### Typing linked content items
 
@@ -96,7 +98,7 @@ ContentItem arabicaBourbonOrigin;
 
 ### Examples
 
-You can find a sample model at <https://github.com/Kentico/delivery-sdk-java/blob/master/src/test/java/com/kenticocloud/delivery/ArticleItem.java>
+You can find a sample model at [ArticleItem.java](../delivery-sdk/src/test/java/kontent/ai/delivery/ArticleItem.java)
 
 ## Retrieving content items
 
