@@ -1,3 +1,6 @@
+# Place the directory for your Android SDK it might be something like: "C\:\\Users\\<UserName>\\AppData\\Local\\Android\\Sdk" on windows
+sdk.dir=
+
 # https://docs.gradle.org/6.3/userguide/signing_plugin.html#sec:in-memory-keys
 signingKeyId=A5992A24
 signingPassword=
