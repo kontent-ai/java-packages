@@ -86,7 +86,8 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 
 ### Previewing unpublished content
 
-To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent project has its own Preview API key.
+To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent.ai project has its own Preview API key.
+
 
 ```java
 // Note: Within a single project, we recommend that you work with only
