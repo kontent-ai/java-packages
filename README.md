@@ -25,7 +25,8 @@ If you wish to find out more about the project specification. Check out the [Pro
 **Required:**
 
 - Java 8 SDK (Oracle & OpenJDK both tested and supported)
-- [Android SDK](https://developer.android.com/studio#downloads) for the sample application (minimally version 28) - command line tools would be sufficient
+- [Android SDK](https://developer.android.com/studio#downloads) for the sample application (minimal version 28) - command line tools would be sufficient
+
 
 ### Build and Test
 
