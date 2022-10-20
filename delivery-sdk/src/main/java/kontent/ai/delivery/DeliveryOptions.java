@@ -34,13 +34,13 @@ import java.util.List;
  *
  * @see DeliveryClient
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Authentication">
- *      Kontent API reference - Authentication</a>
+ *      Kontent.ai API reference - Authentication</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api">
- *      Kontent API reference - Delivery API</a>
+ *      Kontent.ai API reference - Delivery API</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#tag/Secure-access">
- *      Kontent API reference - Secure access</a>
+ *      Kontent.ai API reference - Secure access</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#tag/Secure-access">
- *      Kontent API reference - Securing public access</a>
+ *      Kontent.ai API reference - Securing public access</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor
@@ -58,7 +58,7 @@ public class DeliveryOptions {
      * @return                      The value of the pstring used as the production endpoint to
      *                              Kontent.
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *                          Kontent API reference - Production vs. preview</a>
+     *                          Kontent.ai API reference - Production vs. preview</a>
      * @see                         java.util.Formatter
      */
     @Builder.Default
@@ -73,31 +73,31 @@ public class DeliveryOptions {
      * @param previewEndpoint   New value for the productionEndpoint in this DeliveryOptions instance.
      * @return                  The value of the string used as the preview endpoint to Kontent.
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *                          Kontent API reference - Production vs. preview</a>
+     *                          Kontent.ai API reference - Production vs. preview</a>
      * @see                     java.util.Formatter
      */
     @Builder.Default
     String previewEndpoint = "https://preview-deliver.kontent.ai";
 
     /**
-     * The Project ID associated with your Kontent account.  Must be in the format of an {@link java.util.UUID}.
+     * The Project ID associated with your Kontent.ai account.  Must be in the format of an {@link java.util.UUID}.
      *
-     * @param projectId The Project ID associated with your Kontent account.  Must be in the format of an
+     * @param projectId The Project ID associated with your Kontent.ai account.  Must be in the format of an
      *                  {@link java.util.UUID}.
      * @return          The Project identifier set in this DeliveryOptions instance.
      * @see             <a href="https://docs.kontent.ai/reference/delivery-api">
-     *                  Kontent API reference - Delivery API</a>
+     *                  Kontent.ai API reference - Delivery API</a>
      */
     String projectId;
 
     /**
-     * The Production API key (Secured access API key) configured with your Kontent account.
+     * The Production API key (Secured access API key) configured with your Kontent.ai account.
      * 
      *
      * @param productionApiKey  Sets the value of the production API key (Secured access API key) in this DeliveryOptions instance.
      * @return                  The value of the production API key in this DeliveryOptions instance.
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *                          Kontent API reference - Production vs. preview</a>
+     *                          Kontent.ai API reference - Production vs. preview</a>
      * @see                     <a href="https://docs.kontent.ai/reference/delivery-api#tag/Secure-access">
      *                          Secure access</a>
      */
@@ -105,13 +105,13 @@ public class DeliveryOptions {
     String productionApiKey = null;
 
     /**
-     * The Preview API key configured with your Kontent account.
+     * The Preview API key configured with your Kontent.ai account.
      *
      * @return  The value of the preview API key in this DeliveryOptions instance.
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *          Kontent API reference - Production vs. preview</a>
+     *          Kontent.ai API reference - Production vs. preview</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Authentication">
-     *          Kontent API reference - Authentication</a>
+     *          Kontent.ai API reference - Authentication</a>
      */
     String previewApiKey;
 
@@ -123,7 +123,7 @@ public class DeliveryOptions {
      * @return              Whether this DeliveryOptions instance is set to use the preview API instead of the
      *                      production API.
      * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *                      Kontent API reference - Production vs. preview</a>
+     *                      Kontent.ai API reference - Production vs. preview</a>
      */
     @Builder.Default
     boolean usePreviewApi = false;
@@ -166,9 +166,9 @@ public class DeliveryOptions {
     List<Header> customHeaders = null;
 
     /**
-     * Constructs a setting instance of {@link DeliveryOptions} using your Kontent Project identifier.
+     * Constructs a setting instance of {@link DeliveryOptions} using your Kontent.ai Project identifier.
      *
-     * @param projectId The Project ID associated with your Kontent account.  Must be in the format of an
+     * @param projectId The Project ID associated with your Kontent.ai account.  Must be in the format of an
      *                  {@link java.util.UUID}.
      */
     public DeliveryOptions(String projectId) {
@@ -177,12 +177,12 @@ public class DeliveryOptions {
     }
 
     /**
-     * Constructs a settings instance of {@link DeliveryOptions} using your Kontent Project identifier and using
+     * Constructs a settings instance of {@link DeliveryOptions} using your Kontent.ai Project identifier and using
      * the preview API.
      *
-     * @param projectId     The Project ID associated with your Kontent account.  Must be in the format of an
+     * @param projectId     The Project ID associated with your Kontent.ai account.  Must be in the format of an
      *                      {@link java.util.UUID}.
-     * @param previewApiKey The Preview API key configured with your Kontent account.
+     * @param previewApiKey The Preview API key configured with your Kontent.ai account.
      */
     public DeliveryOptions(String projectId, String previewApiKey) {
         this(projectId);
@@ -191,14 +191,14 @@ public class DeliveryOptions {
     }
 
     /**
-     * The Preview API key configured with your Kontent account.
+     * The Preview API key configured with your Kontent.ai account.
      *
      * @param previewApiKey Sets the value of the preview API key in this DeliveryOptions instance.  If not null,
      *                      automatically sets {@link #setUsePreviewApi(boolean)} to 'true'.
      * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#section/Production-vs.-Preview">
-     *                      Kontent API reference - Production vs. preview</a>
+     *                      Kontent.ai API reference - Production vs. preview</a>
      * @see                 <a href="https://docs.kontent.ai/reference/delivery-api#section/Authentication">
-     *                      Kontent API reference - Authentication</a>
+     *                      Kontent.ai API reference - Authentication</a>
      */
     public void setPreviewApiKey(String previewApiKey) {
         this.previewApiKey = previewApiKey;

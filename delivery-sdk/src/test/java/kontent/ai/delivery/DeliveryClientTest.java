@@ -1462,7 +1462,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
             DeliveryClient client = new DeliveryClient(deliveryOptions);
             Assert.fail("Expected IllegalArgumentException due to null Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kontent project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kontent.ai Project identifier is not specified.", e.getMessage());
         }
     }
 
@@ -1475,7 +1475,7 @@ public class DeliveryClientTest extends LocalServerTestBase {
             DeliveryClient client = new DeliveryClient(deliveryOptions);
             Assert.fail("Expected IllegalArgumentException due to empty Project Id");
         } catch (IllegalArgumentException e) {
-            Assert.assertEquals("Kontent project identifier is not specified.", e.getMessage());
+            Assert.assertEquals("Kontent.ai Project identifier is not specified.", e.getMessage());
         }
     }
 

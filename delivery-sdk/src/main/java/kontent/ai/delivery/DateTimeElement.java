@@ -33,9 +33,9 @@ import java.time.ZonedDateTime;
  *
  * @see Asset
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Date-and-time-element">
- *      Kontent API reference - Date time</a>
+ *      Kontent.ai API reference - Date time</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      Kontent API reference - Content item object</a>
+ *      Kontent.ai API reference - Content item object</a>
  */
 @lombok.Getter
 @lombok.Setter

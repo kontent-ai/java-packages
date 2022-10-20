@@ -35,9 +35,9 @@ import java.util.Map;
  * {@link DeliveryClient#getItem(String, List)}.
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      Kontent API reference - Content item object</a>
+ *      Kontent.ai API reference - Content item object</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
- *      Kontent API reference - View a content item</a>
+ *      Kontent.ai API reference - View a content item</a>
  * @see ContentItem
  * @see DeliveryClient#getItem(String)
  * @see DeliveryClient#getItem(String, List)
@@ -54,9 +54,9 @@ public class ContentItemResponse implements LinkedItemProvider {
      * The {@link ContentItem} returned by this ContentItemResponse.
      *
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
-     *          Kontent API reference - Content item object</a>
+     *          Kontent.ai API reference - Content item object</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *          Kontent API reference - View a content item</a>
+     *          Kontent.ai API reference - View a content item</a>
      * @return  The {@link ContentItem} of this ContentItemResponse.
      */
     @JsonProperty("item")
@@ -66,11 +66,11 @@ public class ContentItemResponse implements LinkedItemProvider {
      * A map of content items used in linked item and Rich text elements.
      *
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
-     *          Kontent API reference - Linked items</a>
+     *          Kontent.ai API reference - Linked items</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
-     *          Kontent API reference - Content item object</a>
+     *          Kontent.ai API reference - Content item object</a>
      * @see     <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-item">
-     *          Kontent API reference - View a content item</a>
+     *          Kontent.ai API reference - View a content item</a>
      * @return  The linked {@link ContentItem}s referenced in this response.
      */
     @JsonProperty("modular_content")

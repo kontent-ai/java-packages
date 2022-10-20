@@ -35,7 +35,7 @@ import java.util.Map;
  * Object model description of a single content item object.
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      Kontent API reference - Content item object</a>
+ *      Kontent.ai API reference - Content item object</a>
  */
 @lombok.Data
 @lombok.NoArgsConstructor
@@ -57,7 +57,7 @@ public class ContentItem {
     /**
      * Content type elements in the content item.  These are keyed by the codename of the element.
      * <p>
-     * Note: The order of the {@link Element} objects might not match the order in the Kontent UI.
+     * Note: The order of the {@link Element} objects might not match the order in the Kontent.ai UI.
      *
      * @return Map of this ContentItem's {@link Element} objects.
      */
@@ -73,7 +73,7 @@ public class ContentItem {
     /**
      * Content type elements in the content item.  These are keyed by the codename of the element.
      * <p>
-     * Note: The order of the {@link Element} objects might not match the order in the Kontent UI.
+     * Note: The order of the {@link Element} objects might not match the order in the Kontent.ai UI.
      *
      * @param elements New value for this ContentItem's {@link Element} objects.
      */

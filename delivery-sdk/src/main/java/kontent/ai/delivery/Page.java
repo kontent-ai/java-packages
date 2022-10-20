@@ -27,7 +27,7 @@ package kontent.ai.delivery;
 import java.util.List;
 
 /**
- * Represents a page of results from the Kontent API.
+ * Represents a page of results from the Kontent.ai API.
  *
  * @param <T> The type of results.
  */

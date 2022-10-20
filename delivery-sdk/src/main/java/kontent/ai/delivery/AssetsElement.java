@@ -32,9 +32,9 @@ import java.util.List;
  * Object model for Assets elements.
  *
  * @see Asset
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Asset-element">Kontent API reference - Asset</a>
+ * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Asset-element">Kontent.ai API reference - Asset</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
- *      Kontent API reference - Content item object</a>
+ *      Kontent.ai API reference - Content item object</a>
  */
 @lombok.Getter
 @lombok.Setter

@@ -33,9 +33,9 @@ import java.util.List;
  * {@link DeliveryClient#getTypes(List)}.
  *
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/list-taxonomy-groups">
- *      Kontent API reference - List taxonomy groups</a>
+ *      Kontent.ai API reference - List taxonomy groups</a>
  * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Taxonomy-group-object">
- *      Kontent API reference - Taxonomy group model</a>
+ *      Kontent.ai API reference - Taxonomy group model</a>
  * @see ContentType
  * @see DeliveryClient#getTypes()
  * @see DeliveryClient#getTypes(List)

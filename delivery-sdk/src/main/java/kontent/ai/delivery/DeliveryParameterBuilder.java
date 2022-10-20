@@ -220,7 +220,7 @@ import java.util.Locale;
  *
  * @see <a href=
  *      "https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
- *      Kontent API reference - Listing response</a>
+ *      Kontent.ai API reference - Listing response</a>
  */
 public class DeliveryParameterBuilder {
     static final String LANGUAGE = "language";

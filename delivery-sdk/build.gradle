@@ -63,8 +63,8 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-def packageSummary = 'Kontent Delivery SDK client.'
-def packageDescription = 'Java client around Kontent Delivery REST API.'
+def packageSummary = 'Kontent.ai Delivery SDK client.'
+def packageDescription = 'Java client around Kontent.ai Delivery REST API.'
 def repoArtifactId = 'delivery-sdk'
 
 publishing {

@@ -27,7 +27,7 @@ package kontent.ai.delivery;
 import java.io.IOException;
 
 /**
- * Thrown when an {@link IOException} is thrown when executing against the Kontent API.  Generally means
+ * Thrown when an {@link IOException} is thrown when executing against the Kontent.ai API.  Generally means
  * connectivity problems with Kontent.ai of problem parsing {@link KontentError} from body.
  */
 public class KontentIOException extends RuntimeException implements KontentException {

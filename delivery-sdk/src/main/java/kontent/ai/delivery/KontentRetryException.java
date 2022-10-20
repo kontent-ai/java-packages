@@ -25,7 +25,7 @@
 package kontent.ai.delivery;
 
 /**
- * Thrown when retry attempts are is thrown when executing against the Kontent API.  Generally means
+ * Thrown when retry attempts are is thrown when executing against the Kontent.ai API.  Generally means
  * connectivity problems with Kontent.ai.
  */
 public class KontentRetryException extends RuntimeException implements KontentException {

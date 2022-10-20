@@ -1,6 +1,6 @@
 # Spring Boot and DI to register delivery client
 
-You can use Spring `@Configuration` and `@Bean` data annotation to register the Kontent Delivery client and then used `@Autowired` when you need to use it
+You can use Spring `@Configuration` and `@Bean` data annotation to register the Kontent.ai Deliver client and then used `@Autowired` when you need to use it
 
 The approach is showcased on [Spring Boot sample application](../sample-app-spring-boot) - the code part is in [KontentConfiguration.java file](../delivery-sdk/src/main/java/kontent/ai/delivery/template/ViewResolverConfiguration.java).
 
