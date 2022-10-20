@@ -5,7 +5,6 @@ import kontent.ai.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
-        // TODO change after final release
         mavenCentral()
         maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
     }

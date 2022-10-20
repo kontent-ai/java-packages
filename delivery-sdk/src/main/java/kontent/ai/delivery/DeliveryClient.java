@@ -42,7 +42,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 
-// TODO: add JavaDoc
+/**
+ * Executes requests against the Kontent.ai Delivery API.
+ */
 
 @Slf4j
 public class DeliveryClient {

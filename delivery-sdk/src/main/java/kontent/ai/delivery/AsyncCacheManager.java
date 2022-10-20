@@ -29,12 +29,31 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import java.util.concurrent.CompletionStage;
 
-// TODO: JavaDoc
+import org.thymeleaf.cache.ICacheManager;
+
+/**
+ * Cache responses against the Kontent.ai Delivery API.
+ * 
+ * @see AsyncCacheManager
+ * @see DeliveryClient#setCacheManager(AsyncCacheManager)
+ */
 public interface AsyncCacheManager {
 
-    // TODO: JavaDoc
+    /**
+     * Returns the cached data or fetches the data and caches it before returning.
+     * 
+     * @param url URL for retrieving data.
+     * @return Returned data.
+     */
     CompletionStage<JsonNode> get(final String url);
 
-    // TODO: JavaDoc
+    /**
+     * Put the data to cache.
+     * 
+     * @param url URL for retrieving the data.
+     * @param jsonNode Plain data to cache.
+     * @param containedContentItems Strongly typed data.
+     * @return Status of the operation.
+     */
     CompletionStage put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);
 }
