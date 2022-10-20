@@ -35,7 +35,6 @@ dependencies {
 ```xml  
 <dependency>
   <groupId>ai.kontent</groupId>
-  
   <artifactId>delivery-sdk</artifactId> 
   <version>[5.0.0,)</version> 
   <type>pom</type>
