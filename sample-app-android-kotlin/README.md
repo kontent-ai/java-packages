@@ -2,7 +2,7 @@
 
 The showcase of the [Android](https://www.android.com/) application written in Kotlin using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for data fetching from Kontent.
 
-![Application walkthrough](./adroid-app-showcase.gif)
+![Application walkthrough](./android-app-showcase.gif)
 
 ## Get started
 

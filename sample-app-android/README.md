@@ -2,7 +2,7 @@
 
 The showcase of the [Android](https://www.android.com/) application displaying data from Kontent.
 
-![Application walkthrough](./adroid-app-showcase.gif)
+![Application walkthrough](./android-app-showcase.gif)
 
 ## Get started
 
