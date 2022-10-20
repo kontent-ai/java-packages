@@ -1,26 +1,20 @@
 @font-face {
-  font-family: 'PT Serif';
-  font-style: normal;
-  font-weight: 700;
-  src: local('PT Serif Bold'), local('PTSerif-Bold'), url(../Fonts/PTSerif-Bold.woff) format('woff');
-}
-@font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-style: normal;
   font-weight: 300;
-  src: local('Source Sans Pro Light'), local('SourceSansPro-Light'), url(../Fonts/SourceSansPro-Light.woff) format('woff');
+  src: local('Work Sans Light'), local('WorkSans-Light'), url(../Fonts/WorkSans-Light.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-style: normal;
   font-weight: 400;
-  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(../Fonts/SourceSansPro-Regular.woff) format('woff');
+  src: local('Work Sans'), local('WorkSans-Regular'), url(../Fonts/WorkSans-Regular.ttf) format('truetype');
 }
 @font-face {
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-style: normal;
   font-weight: 700;
-  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(../Fonts/SourceSansPro-Bold.woff) format('woff');
+  src: local('Work Sans Bold'), local('WorkSans-Bold'), url(../Fonts/WorkSans-Bold.ttf) format('truetype');
 }
 @font-face {
   font-family: 'Core-icons';
@@ -233,7 +227,7 @@ th {
 }
 /*# Typography #*/
 body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   font-weight: 400;
   font-size: 16px;
   line-height: 1.4;
@@ -297,7 +291,7 @@ h3,
 .h1,
 .h2,
 .h3 {
-  font-family: 'PT Serif', serif;
+  font-family: 'Work Sans', sans-serif;
   line-height: 1.4;
   color: inherit;
   margin-bottom: 0.7rem;
@@ -316,7 +310,7 @@ h3,
 }
 h4,
 .h4 {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   font-weight: 700;
   font-size: 1.375rem;
   margin-bottom: 0.7rem;
@@ -325,7 +319,7 @@ h4,
 }
 h5,
 .h5 {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   font-weight: 300;
   font-size: 1.375rem;
   margin-bottom: 0.7rem;
@@ -337,7 +331,7 @@ p {
   margin-bottom: 0.7rem;
 }
 .lead-paragraph {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   font-weight: 300;
   margin-bottom: 20px;
   font-size: 1.375rem;
@@ -1412,7 +1406,7 @@ ul.dropdown-items-list.dropdown-desktop-visible a {
   text-align: center;
   font-size: 1rem;
   font-weight: normal;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
   z-index: 1;
   position: absolute;
   display: block;
@@ -1428,7 +1422,7 @@ ul.dropdown-items-list.dropdown-desktop-visible a {
   display: block;
   float: right !important;
   margin-left: 1rem;
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-style: normal;
   font-weight: 400;
   border: 2px solid #08768C;
@@ -1476,7 +1470,7 @@ ul.dropdown-items-list.dropdown-desktop-visible a {
   text-align: center;
   font-size: 1rem;
   font-weight: normal;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: 'Work Sans', sans-serif;
 }
 .featured-product .product-tile {
   margin: 0 -2px -2px 0;
@@ -1575,7 +1569,7 @@ ul.dropdown-items-list.dropdown-desktop-visible a {
   color: #BBBBBB;
 }
 .product-detail .option-category-name {
-  font-family: "Source Sans Pro";
+  font-family: "Work Sans";
   font-size: 1.375rem;
   font-weight: 400;
 }
@@ -1602,7 +1596,7 @@ ul.dropdown-items-list.dropdown-desktop-visible a {
   padding: 0;
   text-align: left;
   font-weight: bold;
-  font-family: 'PT Serif', serif;
+  font-family: 'Work Sans', sans-serif;
   line-height: 1.4;
   color: inherit;
   font-size: 1.375rem;
@@ -1688,7 +1682,7 @@ dd.product-price--retail {
   display: block;
   float: left !important;
   margin-left: 1rem;
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-style: normal;
   font-weight: 400;
 }
@@ -2016,7 +2010,7 @@ dd.product-price--retail {
   background-color: #b24143;
   color: #FFF;
   font-size: 1.375rem;
-  font-family: 'pt serif';
+  font-family: 'Work Sans', sans-serif;
   line-height: 1.4em;
 }
 /*# Shopping cart preview #*/
@@ -5799,7 +5793,7 @@ footer {
   display: inline-block;
   font-size: 1rem;
   text-transform: uppercase;
-  font-family: 'Source Sans Pro';
+  font-family: 'Work Sans';
   font-weight: normal;
 }
 @media (max-width: 1111px) {
@@ -5913,7 +5907,7 @@ footer {
   text-transform: uppercase;
   color: #FFFFFF;
   background-color: #B24143;
-  font-family: "Source Sans Pro";
+  font-family: "Work Sans";
   font-weight: normal;
   font-size: 1.375rem;
   padding: 1rem;
