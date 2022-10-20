@@ -15,7 +15,7 @@
 * Place for templates is by default
   * `kentico/templates/`, `META-INF/kentico/templates/`, `kentico/kontent/templates/`, `META-INF/kentico/kontent/templates/` (last two are new)
 * Retry codes are now set statically in DeliveryClient: `408, 429, 500, 502, 503, 504`
-  * If the retry response is not parsable to KenticoError.class - retry is not performed - https://docs.kontent.ai/reference/delivery-api#section/Errors/Resolving-errors
+  * If the retry response is not parsable to KenticoError.class - retry is not performed - https://kontent.ai/learn/reference/delivery-api#section/Errors/Resolving-errors
 * Accessing linked items element data was simplified
   * from
   

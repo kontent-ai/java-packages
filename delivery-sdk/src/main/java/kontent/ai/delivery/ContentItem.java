@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Object model description of a single content item object.
  *
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Content-item-object">
  *      Kontent.ai API reference - Content item object</a>
  */
 @lombok.Data

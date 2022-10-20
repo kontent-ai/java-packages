@@ -33,9 +33,9 @@ import java.util.Map;
  * <p>
  * Also serves as the response from an invocation of {@link DeliveryClient#getType(String)}.
  *
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-type-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Content-type-object">
  *      Kontent.ai API reference - Content type object</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#operation/retrieve-a-content-type">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#operation/retrieve-a-content-type">
  *      Kontent.ai API reference - View a content type</a>
  */
 @lombok.Data

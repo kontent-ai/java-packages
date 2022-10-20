@@ -32,9 +32,9 @@ import java.time.ZonedDateTime;
  * Object model for Date &amp; time elements.
  *
  * @see Asset
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Date-and-time-element">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Date-and-time-element">
  *      Kontent.ai API reference - Date time</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Content-item-object">
  *      Kontent.ai API reference - Content item object</a>
  */
 @lombok.Getter

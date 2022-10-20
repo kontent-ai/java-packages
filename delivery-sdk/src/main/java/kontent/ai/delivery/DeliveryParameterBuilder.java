@@ -70,7 +70,7 @@ import java.util.Locale;
  * 'system_type' is not part of any other parameter in the request already.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content">Filtering
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content">Filtering
  * Operators</a>
  * <p>
  * When retrieving a list of content items from your project with
@@ -86,7 +86,7 @@ import java.util.Locale;
  * {@link #projection(String...)}.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-by-system-values">Filtering
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-by-system-values">Filtering
  * by system
  * values</a>
  * <p>
@@ -99,7 +99,7 @@ import java.util.Locale;
  * {@code .filterEquals("system.type", "article"} as a query operator.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-by-element-values">Filtering
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-by-element-values">Filtering
  * by element
  * values</a>
  * <p>
@@ -111,7 +111,7 @@ import java.util.Locale;
  * a query operator.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">Filtering
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">Filtering
  * operators</a>
  * <p>
  * You can use the following filtering operators both with the system attributes
@@ -133,7 +133,7 @@ import java.util.Locale;
  * </ul>
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">Arrays
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">Arrays
  * vs. simple types</a>
  * <p>
  * You can use the {@link #filterContains(String, String)},
@@ -150,7 +150,7 @@ import java.util.Locale;
  * strings or numbers.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">Comparing
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">Comparing
  * values</a>
  * <p>
  * The filtering operators {@link #filterLessThan(String, String)},
@@ -190,7 +190,7 @@ import java.util.Locale;
  * {@link Pagination} object.
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#tag/Projection">Projection</a>
+ * "https://kontent.ai/learn/reference/delivery-api#tag/Projection">Projection</a>
  * <p>
  * Choose which parts of content to retrieve with the
  * {@link #projection(String...)} operator.
@@ -200,7 +200,7 @@ import java.util.Locale;
  * {@code .projection("title", "summary", "related_articles")}
  * <p>
  * <a href=
- * "https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">Linked
+ * "https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">Linked
  * items</a>
  * <p>
  * Content items might reference linked items using the {@link LinkedItem}.
@@ -219,7 +219,7 @@ import java.util.Locale;
  * Note: When retrieving content items, linked items cannot be filtered.
  *
  * @see <a href=
- *      "https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">
+ *      "https://kontent.ai/learn/reference/delivery-api#operation/list-content-items">
  *      Kontent.ai API reference - Listing response</a>
  */
 public class DeliveryParameterBuilder {
@@ -266,7 +266,7 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterEquals(String attribute, String value) {
@@ -283,7 +283,7 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterNotEquals(
@@ -302,7 +302,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterEmpty(String attribute) {
@@ -319,7 +319,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterNotEmpty(String attribute) {
@@ -337,10 +337,10 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">
      *      More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThan(
@@ -360,10 +360,10 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">
      *      More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterLessThanEquals(
@@ -385,10 +385,10 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">
      *      More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThan(
@@ -408,10 +408,10 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">
      *      More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterGreaterThanEquals(
@@ -434,10 +434,10 @@ public class DeliveryParameterBuilder {
      * @param upper     The upper bound value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/comparing-values">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/comparing-values">
      *      More in Comparing values.</a>
      */
     public DeliveryParameterBuilder filterRange(
@@ -460,7 +460,7 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(String attribute, String... values) {
@@ -480,7 +480,7 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterIn(
@@ -496,7 +496,7 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterNotIn(
@@ -518,7 +518,7 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      */
     public DeliveryParameterBuilder filterNotIn(
@@ -534,10 +534,10 @@ public class DeliveryParameterBuilder {
      * @param value     The value.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *      More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterContains(
@@ -558,10 +558,10 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *      More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(
@@ -584,10 +584,10 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *      More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAny(
@@ -603,10 +603,10 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *      More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(
@@ -628,10 +628,10 @@ public class DeliveryParameterBuilder {
      * @param values    The values.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/filtering-operators">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/filtering-operators">
      *      More in Filtering operators.</a>
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Filtering-content/arrays-vs-simple-types">
      *      More in Arrays vs. simple types.</a>
      */
     public DeliveryParameterBuilder filterAll(
@@ -648,7 +648,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute to sort on.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
+     *      "https://kontent.ai/learn/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
      *      More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByAsc(String attribute) {
@@ -667,7 +667,7 @@ public class DeliveryParameterBuilder {
      * @param attribute The attribute to sort on.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
+     *      "https://kontent.ai/learn/tutorials/develop-apps/get-content/getting-content?tech=rest#a-ordering-content-items">
      *      More on Content Ordering</a>
      */
     public DeliveryParameterBuilder orderByDesc(String attribute) {
@@ -693,7 +693,7 @@ public class DeliveryParameterBuilder {
      * @see Pagination
      * @see Page
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#operation/list-content-items">More
+     *      "https://kontent.ai/learn/reference/delivery-api#operation/list-content-items">More
      *      on Paging</a>
      */
     public DeliveryParameterBuilder page(Integer skip, Integer limit) {
@@ -717,7 +717,7 @@ public class DeliveryParameterBuilder {
      * @param elements The elements to retrieve.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#tag/Projection">More on
+     *      "https://kontent.ai/learn/reference/delivery-api#tag/Projection">More on
      *      Projection</a>
      */
     public DeliveryParameterBuilder projection(String... elements) {
@@ -734,7 +734,7 @@ public class DeliveryParameterBuilder {
      * @param depth The number of levels of depth to return.
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+     *      "https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">
      *      More on Linked items</a>
      */
     public DeliveryParameterBuilder linkedItemsDepth(Integer depth) {
@@ -749,7 +749,7 @@ public class DeliveryParameterBuilder {
      *
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">More
+     *      "https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">More
      *      on Linked items</a>
      */
     public DeliveryParameterBuilder excludeLinkedItems() {
@@ -823,7 +823,7 @@ public class DeliveryParameterBuilder {
      *
      * @return This DeliveryParameterBuilder with the added operator.
      * @see <a href=
-     *      "https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">Content
+     *      "https://kontent.ai/learn/reference/delivery-api#section/Content-item-object">Content
      *      items</a>
      */
     public DeliveryParameterBuilder includeTotalCount() {

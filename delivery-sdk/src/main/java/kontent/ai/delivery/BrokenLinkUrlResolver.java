@@ -42,9 +42,9 @@ package kontent.ai.delivery;
  *
  * @see RichTextElementConverter
  * @see RichTextElement
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">
  *      Kontent.ai API reference - Link to a content item</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Rich-text-element/links-single-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Rich-text-element/links-single-object">
  *      Kontent.ai API reference - Rich text links</a>
  */
 @FunctionalInterface

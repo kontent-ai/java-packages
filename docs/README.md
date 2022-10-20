@@ -21,8 +21,8 @@ Welcome to the Kontent.ai Delivery Java packages documentation.
 
 ## Documentation
 
-- [Kontent.ai Docs](https://docs.kontent.ai/)
-- [API Reference](https://docs.kontent.ai/reference/)
+- [Kontent.ai Docs](https://kontent.ai/learn/)
+- [API Reference](https://kontent.ai/learn/reference/)
 
 ## Product roadmap
 

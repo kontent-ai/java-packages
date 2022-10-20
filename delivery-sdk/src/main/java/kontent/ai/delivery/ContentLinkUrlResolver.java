@@ -40,9 +40,9 @@ package kontent.ai.delivery;
  * deliveryClient.setContentLinkUrlResolver(link -> String.format("/%s/%s", link.getType(), link.getUrlSlug()));
  * }</pre>
  *
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">
  *      Kontent.ai API reference - Link to a content item</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Rich-text-element/links-single-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Rich-text-element/links-single-object">
  *      Kontent.ai API reference - Rich text links</a>
  * @see Link
  * @see RichTextElementConverter

@@ -39,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * <p>
  * If you cannot identify and resolve an issue with your API call, you can contact us with the response status and the
  * unique error ID. Hint: use the chat button in the bottom right corner of
- * <a href="https://docs.kontent.ai/reference">this page</a>.
+ * <a href="https://kontent.ai/learn/reference">this page</a>.
  */
 @lombok.Getter
 @lombok.Setter

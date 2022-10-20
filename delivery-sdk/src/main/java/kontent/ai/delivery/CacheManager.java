@@ -44,7 +44,7 @@ import java.util.List;
  * By default, if no CacheManager is provided, the DeliveryClient will use it's default, which just passes through.
  *
  * @see DeliveryClient#setCacheManager(CacheManager)
- * @see <a href="https://docs.kontent.ai/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates">
+ * @see <a href="https://kontent.ai/learn/tutorials/develop-apps/integrate/using-webhooks-for-automatic-updates">
  *      Kontent.ai API reference - Webhooks and notifications</a>
  */
 public interface CacheManager {

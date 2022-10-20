@@ -86,9 +86,9 @@ import java.lang.annotation.Target;
  * @see ElementMapping
  * @see LinkedItem
  * @see StronglyTypedContentItemConverter
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Content-item-object">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Content-item-object">
  *      Kontent.ai API reference - Content item object</a>
- * @see <a href="https://docs.kontent.ai/reference/delivery-api#section/Linked-items-element">
+ * @see <a href="https://kontent.ai/learn/reference/delivery-api#section/Linked-items-element">
  *      Kontent.ai API reference - Linked items</a>
  */
 @Target({ElementType.TYPE, ElementType.FIELD})

@@ -12,7 +12,7 @@
 
 ## Content links
 
-[Rich text elements](https://docs.kontent.ai/tutorials/develop-apps/get-content/dealing-with-structure-in-rich-text) in Kontent.ai can contain links to other content items. For example, if you run a blog, these content item links might represent hyperlinks to other blog posts or your contact page.
+[Rich text elements](https://kontent.ai/learn/tutorials/develop-apps/get-content/dealing-with-structure-in-rich-text) in Kontent.ai can contain links to other content items. For example, if you run a blog, these content item links might represent hyperlinks to other blog posts or your contact page.
 
 Without adjusting your project, any link in a Rich text element that points to a content item will contain an empty value.
 
