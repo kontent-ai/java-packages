@@ -11,6 +11,7 @@ import org.springframework.boot.json.JsonParserFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
+import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -21,6 +22,11 @@ public class KontentConfiguration {
     // https://github.com/kontent-ai/kontent-ai.github.io/blob/main/docs/articles/Guidelines-for-Kontent.ai-related-tools.md
     private static final String TRACKING_HEADER_NAME = "X-KC-SOURCE";
     private static final String TRACKING_HEADER_VALUE = "kontent.ai.delivery.sample.dancinggoat.java.springboot;2.0.0";
+
+    @Bean
+    public Java8TimeDialect java8TimeDialect() {
+        return new Java8TimeDialect();
+    }
 
     @Bean
     public DeliveryClient deliveryClient() {

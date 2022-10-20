@@ -15,7 +15,7 @@
         </div>
         <div class="col-md-12 col-lg-6">
             <div class="article-tile-date"
-                 th:text="${model.mainArticle.getPostDate()}"/>
+                 th:text="${#temporals.format(model.mainArticle.getPostDate(), 'yyyy-MM-dd')}"/>
             <div class="article-tile-content">
                 <h2>
                     <a th:href="${'/articles/' + model.mainArticle.getUrlPattern() }"
