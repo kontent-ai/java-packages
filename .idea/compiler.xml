@@ -3,28 +3,30 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
+      <profile name="Gradle Imported" enabled="true">
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.16/6dc192c7f93ec1853f70d59d8a6dcf94eb42866/lombok-1.18.16.jar" />
+        </processorPath>
+        <module name="kontent-java-packages.delivery-sdk.test" />
+        <module name="kontent-java-packages.delivery-sdk-generators.test" />
+        <module name="kontent-java-packages.delivery-sdk-generators.main" />
+        <module name="kontent-java-packages.delivery-sdk.main" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.8">
       <module name="kontent-java-packages.kontent-delivery-generators-core.main" target="1.8" />
       <module name="kontent-java-packages.kontent-delivery-generators-core.test" target="1.8" />
       <module name="kontent-java-packages.kontent-delivery-generators-gradle.main" target="1.8" />
       <module name="kontent-java-packages.kontent-delivery-generators-gradle.test" target="1.8" />
       <module name="kontent-java-packages.kontent-delivery-generators-groovy.main" target="1.8" />
       <module name="kontent-java-packages.kontent-delivery-generators-groovy.test" target="1.8" />
-      <module name="kontent-java-packages.kontent-delivery-generators.main" target="1.8" />
-      <module name="kontent-java-packages.kontent-delivery-generators.test" target="1.8" />
-      <module name="kontent-java-packages.kontent-delivery.main" target="1.8" />
-      <module name="kontent-java-packages.kontent-delivery.test" target="1.8" />
       <module name="kontent-java-packages.main" target="1.8" />
       <module name="kontent-java-packages.sample-app-models.main" target="1.8" />
       <module name="kontent-java-packages.sample-app-models.test" target="1.8" />
-      <module name="kontent-java-packages.sample-app-spring-boot.main" target="1.8" />
-      <module name="kontent-java-packages.sample-app-spring-boot.test" target="1.8" />
       <module name="kontent-java-packages.test" target="1.8" />
       <module name="kontent-java-packages.test-app.main" target="1.8" />
       <module name="kontent-java-packages.test-app.test" target="1.8" />
-      <module name="kontent-java-packages.test-gradle-console-app.main" target="1.8" />
-      <module name="kontent-java-packages.test-gradle-console-app.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

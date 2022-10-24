@@ -1,14 +1,15 @@
 import com.squareup.javapoet.JavaFile
-import kentico.kontent.delivery.DeliveryClient
-import kentico.kontent.delivery.DeliveryOptions
-import kentico.kontent.delivery.generators.CodeGenerator
+import kontent.ai.delivery.DeliveryClient
+import kontent.ai.delivery.DeliveryOptions
+import kontent.ai.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
         mavenCentral()
+        maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
-        classpath('com.github.kentico:kontent-delivery-generators:latest.release')
+        classpath('ai.kontent:delivery-sdk-generators:latest.integration')
     }
 }
 
@@ -35,7 +36,7 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    compile project(':kontent-delivery')
+    implementation project(':delivery-sdk')
 }
 
 test {
@@ -51,7 +52,7 @@ task generateModels {
 
         CodeGenerator generator = new CodeGenerator(
                 options.getProjectId(),
-                'kentico.kontent.delivery.sample.dancinggoat.models',
+                'kontent.ai.delivery.sample.dancinggoat.models',
                 file('src/main/java')
         );
         List<JavaFile> sources = generator.generateSources(client);
