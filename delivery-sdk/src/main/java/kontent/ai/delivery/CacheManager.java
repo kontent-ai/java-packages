@@ -50,7 +50,7 @@ import java.util.List;
 public interface CacheManager {
 
     /**
-     * Retrieve an earlier cached response from the KontentDelivery API.
+     * Retrieve an earlier cached response from the Kontent.ai Delivery API.
      *
      * @param url The url that would be used to retrieve the response from Kontent.ai Delivery API.
      * @return JsonNode response or null if no value is available in the cache for the given url.
@@ -58,10 +58,10 @@ public interface CacheManager {
     JsonNode get(final String url);
 
     /**
-     * Cache a response from the KontentDelivery API.
+     * Cache a response from the Kontent.ai Delivery API.
      *
      * @param url the URL that was used to retrieve the response from the Kontent.ai Delivery API.
-     * @param jsonNode the JsonNode created from the response from the Kontent.ai Deliver API.
+     * @param jsonNode the JsonNode created from the response from the Kontent.ai Delivery API.
      * @param containedContentItems (null allowed) can be used to inspect the original contents of the JsonNode and allow for precise cache invalidation (if implemented).
      */
     void put(final String url, JsonNode jsonNode, List<ContentItem> containedContentItems);

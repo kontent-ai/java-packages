@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Generates java source files using the Kontent Type listing endpoint in the Delivery API
+ * Generates java source files using the Kontent.ai Type listing endpoint in the Delivery API
  */
 public class CodeGenerator {
 
