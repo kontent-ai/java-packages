@@ -12,6 +12,8 @@ Welcome to the Kontent.ai Delivery Java packages documentation.
   - [Working with strongly typed models (aka Code First approach.md)](./Working-with-strongly-typed-models-aka-Code-First-approach.md)
 - **Unit testing**
   - [Faking responses](./Faking-responses.md)
+- **For Maintainers**
+  - [Release process](./Release-process.md)
 
 ---
 
