@@ -74,7 +74,7 @@ allprojects {
 def repoGroupIdVal = 'ai.kontent';
 
 subprojects {
-    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '5.0.0-SNAPSHOT'
+    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '5.1.0-SNAPSHOT'
     ext.repoGroupId = repoGroupIdVal
     group = repoGroupIdVal
     ext.repositoryHost = 'maven.org'
