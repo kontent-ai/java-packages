@@ -41,9 +41,9 @@ Add to your `build.gradle`
 
 ```groovy
 import com.squareup.javapoet.JavaFile
-import DeliveryClient
-import DeliveryOptions
-import CodeGenerator
+import kontent.ai.delivery.DeliveryClient
+import kontent.ai.delivery.DeliveryOptions
+import kontent.ai.delivery.generators.CodeGenerator
 
 buildscript {
     repositories {
