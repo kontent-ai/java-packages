@@ -28,6 +28,7 @@ import kontent.ai.delivery_android_sample.R;
 import kontent.ai.delivery_android_sample.app.articles.ArticlesActivity;
 import kontent.ai.delivery_android_sample.app.cafes.CafesActivity;
 import kontent.ai.delivery_android_sample.app.coffees.CoffeesActivity;
+import kontent.ai.delivery_android_sample.data.source.DeliveryClientProvider;
 import kontent.ai.delivery_android_sample.util.NetworkHelper;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -80,6 +81,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         // init android networking
         // TODO: seems like this is not required after all, verify and remove if possible
         //AndroidNetworking.initialize(getApplicationContext());
+
+        String customProjectId = getIntent().getStringExtra("KontentProjectId");
+        String customPreviewAPiKey = getIntent().getStringExtra("KontentPreviewApiKey");
+
+        if(customProjectId != null)
+        {
+            DeliveryClientProvider.resetClient(customProjectId, customPreviewAPiKey);
+        }
 
         // Init network helper
         this.networkHelper = NetworkHelper.getInstance();
