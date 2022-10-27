@@ -4,10 +4,10 @@
 
 ## Credentials
 
-> If you want to publish the new version, you need to have credentials for [Nexus Repository Manager](https://s01.oss.sonatype.org/) as well as GPG key information for signing the artifacts. All of these are stored in the password manager under the DevRelExp folder.
+> If you want to publish the new version, you need to have credentials for [Nexus Repository Manager](https://s01.oss.sonatype.org/) as well as GPG key information for signing the artifacts. All of these are stored in the password manager under the `Shared-DevRelExp` folder.
 
-- _Development > DevRelExp > Sonatype_service_account_ - id:328 - [Nexus Repository Manager](https://s01.oss.sonatype.org/) credentials
-- _Development > DevRelExp > Kontent.ai Master GPG_JAVA_SDK_MAVEN_ - id:1617 - GPG key used for artifacts signing
+- _Shared-DevRelExp > Sonatype_service_account_ - [Nexus Repository Manager](https://s01.oss.sonatype.org/) credentials
+- _Shared-DevRelExp > Kontent.ai  Master GPG_JAVA_SDK_MAVEN_ - GPG key used for artifacts signing
 
 There are 5 keys for successful publishing and they can be provided via `local.properties` file, or via environment variables. This code is at the beginning of `/build.gradle` file.
 
