@@ -1,7 +1,20 @@
+import com.squareup.javapoet.JavaFile
+import kontent.ai.delivery.DeliveryClient
+import kontent.ai.delivery.DeliveryOptions
+import kontent.ai.delivery.generators.CodeGenerator
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath('ai.kontent:delivery-sdk-generators:latest.release')
+    }
+}
+
 plugins {
     id 'org.jetbrains.kotlin.multiplatform' version '1.3.61'
 }
-
 
 repositories {
     google()
@@ -41,7 +54,7 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
 
-    implementation project(':delivery-sdk')
+    implementation 'ai.kontent:delivery-sdk:latest.release'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.3.9'
 
@@ -65,5 +78,25 @@ kotlin {
                 implementation kotlin('test-annotations-common')
             }
         }
+    }
+}
+
+// showcase task
+task generateModels {
+    doLast {
+
+        // The most complex solution, you could configure the client as you want
+        // i.e. set preview API key
+        DeliveryOptions options = new DeliveryOptions();
+        options.setProjectId("3df7d191-c096-01aa-e99e-1c3ce15ca8cc");
+        DeliveryClient client = new DeliveryClient(options);
+
+        CodeGenerator generator = new CodeGenerator(
+            options.getProjectId(),
+            'kontent.ai.sample.android.kotlin.models',
+            file('src/main/java')
+        );
+        List<JavaFile> sources = generator.generateSources(client);
+        generator.writeSources(sources);
     }
 }

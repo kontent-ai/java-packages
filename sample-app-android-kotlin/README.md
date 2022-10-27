@@ -2,8 +2,6 @@
 
 The showcase of the [Android](https://www.android.com/) application written in Kotlin using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for data fetching from Kontent.
 
-![Application walkthrough](./android-app-showcase.gif)
-
 ## Get started
 
 First, [build the whole monorepo](../README.md#Build-and-Test), and then you could install the app from:
@@ -19,7 +17,7 @@ Application is showcasing a simple listing screen with `Article` content type.
 
 This application demonstrates loading data from Kontent.ai using Java SDK in Kotlin application using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview). It is not meant to be used as a boilerplate.
 
->⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly. First is to [disable template engine integration when instantiating the client](../kontent-delivery/README.md#1-initialize-the-delivery-client-for-android-development) and the second is to [avoid using `scanClasspathForMappings` method](../kontent-delivery/README.md#2-register-strongly-typed-models).
+>⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly. First is to [disable template engine integration when instantiating the client](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/README.md#1-initialize-the-delivery-client-for-android-development) and the second is to [avoid using `scanClasspathForMappings` method](https://github.com/kontent-ai/java-packages/blob/master/kontent-delivery/README.md#2-register-strongly-typed-models).
 
 ### Data loading using Kotlin coroutines
 

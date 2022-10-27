@@ -10,7 +10,7 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#b24143</color>
+    <color name="colorPrimary">#4cbd89</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorPrimaryLight">#FFFFFF</color>
     <color name="colorAccent">#08768c</color>

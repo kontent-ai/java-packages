@@ -2,7 +2,7 @@
 sdk.dir=
 
 # https://docs.gradle.org/6.3/userguide/signing_plugin.html#sec:in-memory-keys
-signingKeyId=A5992A24
+signingKeyId=
 signingPassword=
 # Starts with -----BEGIN PGP PRIVATE KEY BLOCK-----\n\n... - no apostrophes wrapping: ""
 signingKey=
