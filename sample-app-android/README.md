@@ -33,3 +33,48 @@ Observable.fromCompletionStage(client.getItems(Article.class))
           // ...
         });
 ```
+
+### Using Appetize
+
+The application is preset to be able to consume data from different project (with the same scheme as in sample project). This feature is used for showcasing the application using [Appetize](https://appetize.io) service.
+
+To be able to consume the external configuration, the app checks whether the [Appetize Playback option - params](https://docs.appetize.io/core-features/playback-options) where provided and if so, it will reinitialize the client with specific project ID (and preview API key if provided).
+
+The decision logic is stored in `BaseActivity.java#onCreate` method.
+
+If you want to then use the Appetize you can create an Appetize iframe and provide `KontentProjectId` (and `KontentPreviewApiKey` if you what to use unpublished content) like this:
+
+```js
+  const queryParams = new URLSearchParams(window.location.search);
+
+    if (!queryParams.has("projectId")) {
+        console.error(`ProjectId parameter is not set in Content Type's preview URL`);
+    }
+
+    // contract defined by app's Kontent.ai client, user defaults, and Appetize's param API
+    const appetizeParams = {
+        KontentProjectId: queryParams.get("projectId"),
+    };
+
+    // if URL's got preview API key, add it to appetize params too
+    if (queryParams.has("previewApiKey")) {
+        appetizeParams.KontentPreviewApiKey = queryParams.get("previewApiKey")
+    }
+
+    // we want to pass projectId and API key params to appetize
+    const appetizeParamsStringifiedEncoded = encodeURIComponent(JSON.stringify(appetizeParams));
+    const appetizeUrl = `https://appetize.io/embed/<YOUR APP ID FROM APPETIZE>?device=pixel4&orientation=portrait&screenOnly=true&xdocMsg=true&params=${appetizeParamsStringifiedEncoded}`;
+
+    const appetizeIframe = document.createElement("iframe");
+    appetizeIframe.setAttribute("id", "appetize-iframe");
+    appetizeIframe.setAttribute("src", appetizeUrl);
+    appetizeIframe.setAttribute("height", "609");
+    appetizeIframe.setAttribute("width", "277");
+    appetizeIframe.setAttribute("scrolling", "no");
+    appetizeIframe.setAttribute("title", "iOS Preview Content");
+    appetizeIframe.setAttribute("sandbox", "allow-scripts allow-same-origin");
+
+    // and inject the iframe to DOM
+    const appetizeContainer = document.getElementById("appetize-container");
+    appetizeContainer.appendChild(appetizeIframe);
+```
