@@ -19,18 +19,18 @@ public class DeliveryClientProvider {
 
     public static DeliveryClient getClient() {
         if (INSTANCE == null) {
-            DeliveryClient client = resetClient(AppConfig.KONTENT_PROJECT_ID);
+            DeliveryClient client = initializeClient(AppConfig.KONTENT_PROJECT_ID);
             INSTANCE = client;
         }
         return INSTANCE;
     }
 
-    private static DeliveryClient resetClient(String previewAPiKey) {
-        return resetClient(previewAPiKey, null);
+    private static DeliveryClient initializeClient(String projectId) {
+        return initializeClient(projectId, null);
     }
 
 
-    public static DeliveryClient resetClient(String projectId, String previewAPiKey) {
+    public static DeliveryClient initializeClient(String projectId, String previewAPiKey) {
         DeliveryOptions.DeliveryOptionsBuilder optionsBuilder = DeliveryOptions
                 .builder()
                 .projectId(projectId)

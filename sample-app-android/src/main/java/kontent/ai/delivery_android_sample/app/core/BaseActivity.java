@@ -87,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if(customProjectId != null)
         {
-            DeliveryClientProvider.resetClient(customProjectId, customPreviewAPiKey);
+            DeliveryClientProvider.initializeClient(customProjectId, customPreviewAPiKey);
         }
 
         // Init network helper
