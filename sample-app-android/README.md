@@ -42,7 +42,9 @@ To be able to consume the external configuration, the app checks whether the [Ap
 
 The decision logic is stored in `BaseActivity.java#onCreate` method.
 
-If you want to use the Appetize you can create an Appetize iframe and provide `KontentProjectId` (and `KontentPreviewApiKey` if you want to use unpublished content) like this:
+#### Embed your app to HTML using Appetize
+
+If you want [embed your application to a website using Appetize](https://docs.appetize.io/core-features/embed-your-app) you can create an `iframe` via JavaScript to provide `KontentProjectId` (and `KontentPreviewApiKey` if you want to use unpublished content) paramters.
 
 ```js
   const queryParams = new URLSearchParams(window.location.search);
