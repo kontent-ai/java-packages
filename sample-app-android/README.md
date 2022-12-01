@@ -44,7 +44,7 @@ The decision logic is stored in `BaseActivity.java#onCreate` method.
 
 #### Embed your app to HTML using Appetize
 
-If you want [embed your application to a website using Appetize](https://docs.appetize.io/core-features/embed-your-app) you can create an `iframe` via JavaScript to provide `KontentProjectId` (and `KontentPreviewApiKey` if you want to use unpublished content) paramters.
+If you want [embed your application to a website using Appetize](https://docs.appetize.io/core-features/embed-your-app) you can create an `iframe` via JavaScript to provide `KontentProjectId` (and `KontentPreviewApiKey` if you want to use unpublished content) parameters.
 
 ```js
   const queryParams = new URLSearchParams(window.location.search);
