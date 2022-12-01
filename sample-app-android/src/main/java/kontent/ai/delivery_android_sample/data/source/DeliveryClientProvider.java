@@ -19,21 +19,40 @@ public class DeliveryClientProvider {
 
     public static DeliveryClient getClient() {
         if (INSTANCE == null) {
-            DeliveryClient client = new DeliveryClient(
-                    DeliveryOptions
-                            .builder()
-                            .projectId(AppConfig.KONTENT_PROJECT_ID)
-                            .customHeaders(Arrays.asList(
-                                    new Header(TRACKING_HEADER_NAME, TRACKING_HEADER_VALUE)
-                            ))
-                            .build(),
-                    null
-            );
-            client.registerType(Article.class);
-            client.registerType(Cafe.class);
-            client.registerType(Coffee.class);
+            DeliveryClient client = initializeClient(AppConfig.KONTENT_PROJECT_ID);
             INSTANCE = client;
         }
+        return INSTANCE;
+    }
+
+    private static DeliveryClient initializeClient(String projectId) {
+        return initializeClient(projectId, null);
+    }
+
+
+    public static DeliveryClient initializeClient(String projectId, String previewAPiKey) {
+        DeliveryOptions.DeliveryOptionsBuilder optionsBuilder = DeliveryOptions
+                .builder()
+                .projectId(projectId)
+                .customHeaders(Arrays.asList(
+                        new Header(TRACKING_HEADER_NAME, TRACKING_HEADER_VALUE)
+                ));
+
+        if (previewAPiKey != null) {
+            optionsBuilder = optionsBuilder
+                    .previewApiKey(previewAPiKey)
+                    .usePreviewApi(true);
+        }
+
+        DeliveryClient client = new DeliveryClient(
+                optionsBuilder.build(),
+                null
+        );
+
+        client.registerType(Article.class);
+        client.registerType(Cafe.class);
+        client.registerType(Coffee.class);
+        INSTANCE = client;
         return INSTANCE;
     }
 }
