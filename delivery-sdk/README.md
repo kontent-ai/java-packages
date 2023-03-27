@@ -298,6 +298,8 @@ You can still use the [model generator](../delivery-sdk-generators/README.md) fo
 
 ## Further information
 
+To see more detailed information, check out the [Kontent.ai Java packages documentation section](/docs/README.md).
+
 For more developer resources, visit the [Kontent.ai Learn portal](https://kontent.ai/learn).
 
 ### Showcase

@@ -15,6 +15,7 @@ Monorepo with Java Kontent.ai packages.
 |   [Kontent.ai Sample Gradle Console app](/test-gradle-console-app#readme)   | Simple Java console application showcasing how to load data from Kontent.ai.                                                                                                                                   |                                                                     [source](/test-gradle-console-app/README.md)                                                                     |
 |     [Kontent.ai Sample Android app (Java)](/sample-app-android#readme)      | Showcase of the [Android](https://www.android.com/) application written in Java using [RxJava](https://github.com/ReactiveX/RxJava) for data fetching from Kontent.ai.                                         |                                                                       [source](/sample-app-android/README.md)                                                                        |
 | [Kontent.ai Sample Android app (Kotlin)](/sample-app-android-kotlin#readme) | Showcase of the [Android](https://www.android.com/) application written in Kotlin using [Kotlin Coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for data fetching from Kontent.ai. |                                                                    [source](/sample-app-android-kotlin/README.md)                                                                    |
+| [Kontent.ai Java packages docs](/docs#readme) | Documentation for Kontent.ai Java packages |[source](/docs/README.md)|
 
 ## Development
 
@@ -26,7 +27,6 @@ If you wish to find out more about the project specification. Check out the [Pro
 
 - Java 8 SDK (Oracle & OpenJDK both tested and supported)
 - [Android SDK](https://developer.android.com/studio#downloads) for the sample application (minimal version 28) - command line tools would be sufficient
-
 
 ### Build and Test
 
