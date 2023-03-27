@@ -47,7 +47,6 @@ dependencies {
 
 The `DeliveryClient` class is the main class of the SDK. Using this class, you can retrieve content from your Kontent.ai projects.
 
-
 To create an instance of the class, you need to provide a [project ID](https://kontent.ai/learn/tutorials/develop-apps/get-content/getting-content#a-getting-content-items).
 
 ```java  
@@ -86,7 +85,6 @@ Once you create a `DeliveryClient`, you can start querying your project reposito
 ### Previewing unpublished content
 
 To retrieve unpublished content, you need to create a `DeliveryClient` with both Project ID and Preview API key (You could also configure Preview API key in `DeliveryOptions` described above). Each Kontent.ai project has its own Preview API key.
-
 
 ```java
 // Note: Within a single project, we recommend that you work with only
@@ -150,7 +148,7 @@ CompletionsStage<ContentItemsListingResponse> response = client.getItems(
     .includeTotalCount()
     .build()
 )
-``` 
+```
 
 ## Response structure
 
@@ -250,7 +248,7 @@ for (Option option : element.getOptions()) {
     item.setValue(option.getCodename());
     item.setSelected("semi_dry".equals(option.getCodename()));
 }
-``` 
+```
 
 ### Linked items
 
@@ -270,8 +268,8 @@ String customElementValue = ((CustomElement) articleItem.getElements().get("colo
 
 To use this SDK for [Android](https://developer.android.com/) development, you can use any approach compatible with [Java CompletionStage API](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletionStage.html). Most common is to use [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines-overview.html) for Android applications written in Kotlin and [Java RX](https://github.com/ReactiveX/RxJava) for Android applications written in Java. Both of these approaches are showcased in this repository:
 
-* [Android Java sample application](../sample-app-android#readme)
-* [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
+- [Android Java sample application](../sample-app-android#readme)
+- [Android Kotlin Java Sample application](../sample-app-android-kotlin#readme)
 
 ⚠ There are two Android-specific rules you need to follow in order for the Delivery SDK to work correctly.
 
