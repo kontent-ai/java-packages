@@ -13,7 +13,7 @@ The Kontent.ai Delivery Java SDK is a client library used for retrieving content
 
 ## Get started
 
-You can use the SDK in the form of a Apache Maven package from [Maven Central](https://repo.maven.apache.org/maven2/ai/kontent/delivery/) - so you need to point your Maven to `mavenCentral`
+You can use the SDK in the form of a Apache Maven package from [Maven Central](https://repo.maven.apache.org/maven2/ai/kontent/delivery-sdk/) - so you need to point your Maven to `mavenCentral`
 
 ### Gradle
 
