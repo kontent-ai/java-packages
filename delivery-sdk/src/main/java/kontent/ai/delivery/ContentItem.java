@@ -27,6 +27,7 @@ package kontent.ai.delivery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +44,7 @@ import java.util.Map;
 @lombok.Builder
 @lombok.EqualsAndHashCode(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
 @lombok.ToString(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
-public class ContentItem {
+public class ContentItem implements Serializable {
 
     /**
      * {@link System} attributes of the content item.
