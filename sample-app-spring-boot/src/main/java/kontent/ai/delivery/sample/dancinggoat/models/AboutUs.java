@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.Asset;
@@ -16,30 +17,33 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("about_us")
-public class AboutUs {
-  @ElementMapping("metadata__og_description")
-  String metadataOgDescription;
-
-  @ElementMapping("metadata__meta_title")
-  String metadataMetaTitle;
-
-  @ElementMapping("metadata__og_title")
-  String metadataOgTitle;
-
-  @ElementMapping("metadata__meta_description")
-  String metadataMetaDescription;
-
-  @ElementMapping("metadata__twitter_site")
-  String metadataTwitterSite;
+public class AboutUs implements Serializable {
+  @ContentItemMapping("facts")
+  List<ContentItem> facts;
 
   @ElementMapping("url_pattern")
   String urlPattern;
 
-  @ElementMapping("metadata__twitter_image")
-  List<Asset> metadataTwitterImage;
-
   @ElementMapping("sitemap")
   List<Taxonomy> sitemap;
+
+  @ElementMapping("metadata__meta_title")
+  String metadataMetaTitle;
+
+  @ElementMapping("metadata__meta_description")
+  String metadataMetaDescription;
+
+  @ElementMapping("metadata__og_title")
+  String metadataOgTitle;
+
+  @ElementMapping("metadata__og_description")
+  String metadataOgDescription;
+
+  @ElementMapping("metadata__og_image")
+  List<Asset> metadataOgImage;
+
+  @ElementMapping("metadata__twitter_site")
+  String metadataTwitterSite;
 
   @ElementMapping("metadata__twitter_creator")
   String metadataTwitterCreator;
@@ -50,52 +54,17 @@ public class AboutUs {
   @ElementMapping("metadata__twitter_description")
   String metadataTwitterDescription;
 
-  @ElementMapping("metadata__og_image")
-  List<Asset> metadataOgImage;
-
-  @ContentItemMapping("facts")
-  List<ContentItem> facts;
+  @ElementMapping("metadata__twitter_image")
+  List<Asset> metadataTwitterImage;
 
   System system;
 
-  public String getMetadataOgDescription() {
-    return metadataOgDescription;
+  public List<ContentItem> getFacts() {
+    return facts;
   }
 
-  public void setMetadataOgDescription(String metadataOgDescription) {
-    this.metadataOgDescription = metadataOgDescription;
-  }
-
-  public String getMetadataMetaTitle() {
-    return metadataMetaTitle;
-  }
-
-  public void setMetadataMetaTitle(String metadataMetaTitle) {
-    this.metadataMetaTitle = metadataMetaTitle;
-  }
-
-  public String getMetadataOgTitle() {
-    return metadataOgTitle;
-  }
-
-  public void setMetadataOgTitle(String metadataOgTitle) {
-    this.metadataOgTitle = metadataOgTitle;
-  }
-
-  public String getMetadataMetaDescription() {
-    return metadataMetaDescription;
-  }
-
-  public void setMetadataMetaDescription(String metadataMetaDescription) {
-    this.metadataMetaDescription = metadataMetaDescription;
-  }
-
-  public String getMetadataTwitterSite() {
-    return metadataTwitterSite;
-  }
-
-  public void setMetadataTwitterSite(String metadataTwitterSite) {
-    this.metadataTwitterSite = metadataTwitterSite;
+  public void setFacts(List<ContentItem> facts) {
+    this.facts = facts;
   }
 
   public String getUrlPattern() {
@@ -106,20 +75,60 @@ public class AboutUs {
     this.urlPattern = urlPattern;
   }
 
-  public List<Asset> getMetadataTwitterImage() {
-    return metadataTwitterImage;
-  }
-
-  public void setMetadataTwitterImage(List<Asset> metadataTwitterImage) {
-    this.metadataTwitterImage = metadataTwitterImage;
-  }
-
   public List<Taxonomy> getSitemap() {
     return sitemap;
   }
 
   public void setSitemap(List<Taxonomy> sitemap) {
     this.sitemap = sitemap;
+  }
+
+  public String getMetadataMetaTitle() {
+    return metadataMetaTitle;
+  }
+
+  public void setMetadataMetaTitle(String metadataMetaTitle) {
+    this.metadataMetaTitle = metadataMetaTitle;
+  }
+
+  public String getMetadataMetaDescription() {
+    return metadataMetaDescription;
+  }
+
+  public void setMetadataMetaDescription(String metadataMetaDescription) {
+    this.metadataMetaDescription = metadataMetaDescription;
+  }
+
+  public String getMetadataOgTitle() {
+    return metadataOgTitle;
+  }
+
+  public void setMetadataOgTitle(String metadataOgTitle) {
+    this.metadataOgTitle = metadataOgTitle;
+  }
+
+  public String getMetadataOgDescription() {
+    return metadataOgDescription;
+  }
+
+  public void setMetadataOgDescription(String metadataOgDescription) {
+    this.metadataOgDescription = metadataOgDescription;
+  }
+
+  public List<Asset> getMetadataOgImage() {
+    return metadataOgImage;
+  }
+
+  public void setMetadataOgImage(List<Asset> metadataOgImage) {
+    this.metadataOgImage = metadataOgImage;
+  }
+
+  public String getMetadataTwitterSite() {
+    return metadataTwitterSite;
+  }
+
+  public void setMetadataTwitterSite(String metadataTwitterSite) {
+    this.metadataTwitterSite = metadataTwitterSite;
   }
 
   public String getMetadataTwitterCreator() {
@@ -146,20 +155,12 @@ public class AboutUs {
     this.metadataTwitterDescription = metadataTwitterDescription;
   }
 
-  public List<Asset> getMetadataOgImage() {
-    return metadataOgImage;
+  public List<Asset> getMetadataTwitterImage() {
+    return metadataTwitterImage;
   }
 
-  public void setMetadataOgImage(List<Asset> metadataOgImage) {
-    this.metadataOgImage = metadataOgImage;
-  }
-
-  public List<ContentItem> getFacts() {
-    return facts;
-  }
-
-  public void setFacts(List<ContentItem> facts) {
-    this.facts = facts;
+  public void setMetadataTwitterImage(List<Asset> metadataTwitterImage) {
+    this.metadataTwitterImage = metadataTwitterImage;
   }
 
   public System getSystem() {

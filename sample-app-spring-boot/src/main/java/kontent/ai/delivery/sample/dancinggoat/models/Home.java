@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.Asset;
@@ -16,27 +17,12 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("home")
-public class Home {
-  @ElementMapping("metadata__og_description")
-  String metadataOgDescription;
-
-  @ElementMapping("metadata__meta_title")
-  String metadataMetaTitle;
-
-  @ElementMapping("metadata__og_title")
-  String metadataOgTitle;
-
-  @ContentItemMapping("articles")
-  List<ContentItem> articles;
-
+public class Home implements Serializable {
   @ContentItemMapping("hero_unit")
   List<ContentItem> heroUnit;
 
-  @ElementMapping("metadata__meta_description")
-  String metadataMetaDescription;
-
-  @ElementMapping("metadata__twitter_site")
-  String metadataTwitterSite;
+  @ContentItemMapping("articles")
+  List<ContentItem> articles;
 
   @ContentItemMapping("our_story")
   List<ContentItem> ourStory;
@@ -44,8 +30,32 @@ public class Home {
   @ContentItemMapping("cafes")
   List<ContentItem> cafes;
 
-  @ElementMapping("metadata__twitter_image")
-  List<Asset> metadataTwitterImage;
+  @ElementMapping("contact")
+  String contact;
+
+  @ElementMapping("url_pattern")
+  String urlPattern;
+
+  @ElementMapping("sitemap")
+  List<Taxonomy> sitemap;
+
+  @ElementMapping("metadata__meta_title")
+  String metadataMetaTitle;
+
+  @ElementMapping("metadata__meta_description")
+  String metadataMetaDescription;
+
+  @ElementMapping("metadata__og_title")
+  String metadataOgTitle;
+
+  @ElementMapping("metadata__og_description")
+  String metadataOgDescription;
+
+  @ElementMapping("metadata__og_image")
+  List<Asset> metadataOgImage;
+
+  @ElementMapping("metadata__twitter_site")
+  String metadataTwitterSite;
 
   @ElementMapping("metadata__twitter_creator")
   String metadataTwitterCreator;
@@ -56,51 +66,10 @@ public class Home {
   @ElementMapping("metadata__twitter_description")
   String metadataTwitterDescription;
 
-  @ElementMapping("metadata__og_image")
-  List<Asset> metadataOgImage;
-
-  @ElementMapping("url_pattern")
-  String urlPattern;
-
-  @ElementMapping("sitemap")
-  List<Taxonomy> sitemap;
-
-  @ElementMapping("contact")
-  String contact;
+  @ElementMapping("metadata__twitter_image")
+  List<Asset> metadataTwitterImage;
 
   System system;
-
-  public String getMetadataOgDescription() {
-    return metadataOgDescription;
-  }
-
-  public void setMetadataOgDescription(String metadataOgDescription) {
-    this.metadataOgDescription = metadataOgDescription;
-  }
-
-  public String getMetadataMetaTitle() {
-    return metadataMetaTitle;
-  }
-
-  public void setMetadataMetaTitle(String metadataMetaTitle) {
-    this.metadataMetaTitle = metadataMetaTitle;
-  }
-
-  public String getMetadataOgTitle() {
-    return metadataOgTitle;
-  }
-
-  public void setMetadataOgTitle(String metadataOgTitle) {
-    this.metadataOgTitle = metadataOgTitle;
-  }
-
-  public List<ContentItem> getArticles() {
-    return articles;
-  }
-
-  public void setArticles(List<ContentItem> articles) {
-    this.articles = articles;
-  }
 
   public List<ContentItem> getHeroUnit() {
     return heroUnit;
@@ -110,20 +79,12 @@ public class Home {
     this.heroUnit = heroUnit;
   }
 
-  public String getMetadataMetaDescription() {
-    return metadataMetaDescription;
+  public List<ContentItem> getArticles() {
+    return articles;
   }
 
-  public void setMetadataMetaDescription(String metadataMetaDescription) {
-    this.metadataMetaDescription = metadataMetaDescription;
-  }
-
-  public String getMetadataTwitterSite() {
-    return metadataTwitterSite;
-  }
-
-  public void setMetadataTwitterSite(String metadataTwitterSite) {
-    this.metadataTwitterSite = metadataTwitterSite;
+  public void setArticles(List<ContentItem> articles) {
+    this.articles = articles;
   }
 
   public List<ContentItem> getOurStory() {
@@ -142,12 +103,76 @@ public class Home {
     this.cafes = cafes;
   }
 
-  public List<Asset> getMetadataTwitterImage() {
-    return metadataTwitterImage;
+  public String getContact() {
+    return contact;
   }
 
-  public void setMetadataTwitterImage(List<Asset> metadataTwitterImage) {
-    this.metadataTwitterImage = metadataTwitterImage;
+  public void setContact(String contact) {
+    this.contact = contact;
+  }
+
+  public String getUrlPattern() {
+    return urlPattern;
+  }
+
+  public void setUrlPattern(String urlPattern) {
+    this.urlPattern = urlPattern;
+  }
+
+  public List<Taxonomy> getSitemap() {
+    return sitemap;
+  }
+
+  public void setSitemap(List<Taxonomy> sitemap) {
+    this.sitemap = sitemap;
+  }
+
+  public String getMetadataMetaTitle() {
+    return metadataMetaTitle;
+  }
+
+  public void setMetadataMetaTitle(String metadataMetaTitle) {
+    this.metadataMetaTitle = metadataMetaTitle;
+  }
+
+  public String getMetadataMetaDescription() {
+    return metadataMetaDescription;
+  }
+
+  public void setMetadataMetaDescription(String metadataMetaDescription) {
+    this.metadataMetaDescription = metadataMetaDescription;
+  }
+
+  public String getMetadataOgTitle() {
+    return metadataOgTitle;
+  }
+
+  public void setMetadataOgTitle(String metadataOgTitle) {
+    this.metadataOgTitle = metadataOgTitle;
+  }
+
+  public String getMetadataOgDescription() {
+    return metadataOgDescription;
+  }
+
+  public void setMetadataOgDescription(String metadataOgDescription) {
+    this.metadataOgDescription = metadataOgDescription;
+  }
+
+  public List<Asset> getMetadataOgImage() {
+    return metadataOgImage;
+  }
+
+  public void setMetadataOgImage(List<Asset> metadataOgImage) {
+    this.metadataOgImage = metadataOgImage;
+  }
+
+  public String getMetadataTwitterSite() {
+    return metadataTwitterSite;
+  }
+
+  public void setMetadataTwitterSite(String metadataTwitterSite) {
+    this.metadataTwitterSite = metadataTwitterSite;
   }
 
   public String getMetadataTwitterCreator() {
@@ -174,36 +199,12 @@ public class Home {
     this.metadataTwitterDescription = metadataTwitterDescription;
   }
 
-  public List<Asset> getMetadataOgImage() {
-    return metadataOgImage;
+  public List<Asset> getMetadataTwitterImage() {
+    return metadataTwitterImage;
   }
 
-  public void setMetadataOgImage(List<Asset> metadataOgImage) {
-    this.metadataOgImage = metadataOgImage;
-  }
-
-  public String getUrlPattern() {
-    return urlPattern;
-  }
-
-  public void setUrlPattern(String urlPattern) {
-    this.urlPattern = urlPattern;
-  }
-
-  public List<Taxonomy> getSitemap() {
-    return sitemap;
-  }
-
-  public void setSitemap(List<Taxonomy> sitemap) {
-    this.sitemap = sitemap;
-  }
-
-  public String getContact() {
-    return contact;
-  }
-
-  public void setContact(String contact) {
-    this.contact = contact;
+  public void setMetadataTwitterImage(List<Asset> metadataTwitterImage) {
+    this.metadataTwitterImage = metadataTwitterImage;
   }
 
   public System getSystem() {

@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.Asset;
@@ -15,10 +16,7 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("hero_unit")
-public class HeroUnit {
-  @ElementMapping("sitemap")
-  List<Taxonomy> sitemap;
-
+public class HeroUnit implements Serializable {
   @ElementMapping("title")
   String title;
 
@@ -28,15 +26,10 @@ public class HeroUnit {
   @ElementMapping("marketing_message")
   String marketingMessage;
 
+  @ElementMapping("sitemap")
+  List<Taxonomy> sitemap;
+
   System system;
-
-  public List<Taxonomy> getSitemap() {
-    return sitemap;
-  }
-
-  public void setSitemap(List<Taxonomy> sitemap) {
-    this.sitemap = sitemap;
-  }
 
   public String getTitle() {
     return title;
@@ -60,6 +53,14 @@ public class HeroUnit {
 
   public void setMarketingMessage(String marketingMessage) {
     this.marketingMessage = marketingMessage;
+  }
+
+  public List<Taxonomy> getSitemap() {
+    return sitemap;
+  }
+
+  public void setSitemap(List<Taxonomy> sitemap) {
+    this.sitemap = sitemap;
   }
 
   public System getSystem() {
