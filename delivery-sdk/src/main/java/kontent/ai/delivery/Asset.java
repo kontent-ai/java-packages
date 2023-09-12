@@ -39,7 +39,7 @@ import java.io.Serializable;
 @lombok.Builder
 @lombok.Getter
 @lombok.Setter
-public class Asset implements Serializable {
+public class Asset {
 
     @JsonProperty("name")
     String name;

@@ -36,7 +36,7 @@ import java.io.Serializable;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Option implements Serializable {
+public class Option {
 
     /**
      * The display name of the option

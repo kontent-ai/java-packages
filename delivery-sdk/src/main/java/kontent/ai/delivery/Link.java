@@ -40,7 +40,7 @@ import java.io.Serializable;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Link implements Serializable {
+public class Link {
 
     /**
      * Content type of the content item

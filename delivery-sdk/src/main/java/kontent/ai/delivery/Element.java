@@ -56,7 +56,7 @@ import java.util.List;
 @lombok.ToString(exclude = "parent")
 @lombok.EqualsAndHashCode(exclude = "parent")
 @lombok.NoArgsConstructor
-public abstract class Element<T> implements Serializable {
+public abstract class Element<T> {
 
     /**
      * Type of the element

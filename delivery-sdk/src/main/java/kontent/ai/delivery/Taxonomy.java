@@ -37,7 +37,7 @@ import java.util.List;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Taxonomy implements Serializable {
+public class Taxonomy {
 
     /**
      * The display name of the taxonomy

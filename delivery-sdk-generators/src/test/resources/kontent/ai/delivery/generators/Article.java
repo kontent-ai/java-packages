@@ -1,6 +1,5 @@
 package kontent.ai.delivery.generators;
 
-import java.io.Serializable;
 import java.lang.String;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -18,7 +17,7 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("article")
-public class Article implements Serializable {
+public class Article {
   @ElementMapping("personas")
   List<Taxonomy> personas;
 

@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 @Configuration
-public class KontentConfiguration implements Serializable {
+public class KontentConfiguration {
 
     // https://github.com/kontent-ai/kontent-ai.github.io/blob/main/docs/articles/Guidelines-for-Kontent.ai-related-tools.md
     private static final String TRACKING_HEADER_NAME = "X-KC-SOURCE";

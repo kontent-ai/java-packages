@@ -49,7 +49,7 @@ import java.util.Map;
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-public class ContentItemResponse implements LinkedItemProvider, Serializable {
+public class ContentItemResponse implements LinkedItemProvider {
 
     /**
      * The {@link ContentItem} returned by this ContentItemResponse.

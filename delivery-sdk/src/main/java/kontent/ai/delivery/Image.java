@@ -40,7 +40,7 @@ import java.io.Serializable;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Image implements Serializable {
+public class Image {
 
     /**
      * ID of the image

@@ -1,6 +1,5 @@
 package kontent.ai.delivery.generators;
 
-import java.io.Serializable;
 import java.lang.Double;
 import java.lang.String;
 import java.util.List;
@@ -18,7 +17,7 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("brewer")
-public class Brewer implements Serializable {
+public class Brewer {
   @ElementMapping("product_name")
   String productName;
 

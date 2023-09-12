@@ -38,7 +38,7 @@ import java.lang.reflect.*;
 import java.util.*;
 
 @lombok.extern.slf4j.Slf4j
-public class StronglyTypedContentItemConverter implements Serializable {
+public class StronglyTypedContentItemConverter {
 
     private HashMap<String, String> contentTypeToClassNameMapping = new HashMap<>();
     private HashMap<String, String> classNameToContentTypeMapping = new HashMap<>();

@@ -44,7 +44,7 @@ import java.util.Map;
 @lombok.Builder
 @lombok.EqualsAndHashCode(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
 @lombok.ToString(exclude = {"linkedItemProvider", "stronglyTypedContentItemConverter"})
-public class ContentItem implements Serializable {
+public class ContentItem {
 
     /**
      * {@link System} attributes of the content item.
