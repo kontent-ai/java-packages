@@ -29,6 +29,8 @@ public class TestController implements Serializable {
 
         ContentItem item = testService.fetchContentByCodeName("on_roasts", deliveryClient);
 
-        return new ResponseEntity<>(item.getString("title"), HttpStatus.OK);
+        ContentItem item2 = testService.fetchContentByCodeName("about_us", deliveryClient);
+
+        return new ResponseEntity<>(item.getString("title") + " " + item2.getString("metadata__og_title"), HttpStatus.OK);
     }
 }
