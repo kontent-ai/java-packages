@@ -27,6 +27,7 @@ package kontent.ai.delivery;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,7 @@ import java.util.Map;
 @lombok.NoArgsConstructor
 @lombok.AllArgsConstructor
 @lombok.Builder
-public class ContentItemResponse implements LinkedItemProvider {
+public class ContentItemResponse implements LinkedItemProvider, Serializable {
 
     /**
      * The {@link ContentItem} returned by this ContentItemResponse.

@@ -33,11 +33,12 @@ import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
 
 @lombok.extern.slf4j.Slf4j
-public class StronglyTypedContentItemConverter {
+public class StronglyTypedContentItemConverter implements Serializable {
 
     private HashMap<String, String> contentTypeToClassNameMapping = new HashMap<>();
     private HashMap<String, String> classNameToContentTypeMapping = new HashMap<>();

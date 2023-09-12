@@ -26,6 +26,8 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Object model for Link elements
  * <p>
@@ -38,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Link {
+public class Link implements Serializable {
 
     /**
      * Content type of the content item

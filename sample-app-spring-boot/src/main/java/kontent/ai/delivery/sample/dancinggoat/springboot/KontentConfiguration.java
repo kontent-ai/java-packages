@@ -13,11 +13,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Map;
 
 @Configuration
-public class KontentConfiguration {
+public class KontentConfiguration implements Serializable {
 
     // https://github.com/kontent-ai/kontent-ai.github.io/blob/main/docs/articles/Guidelines-for-Kontent.ai-related-tools.md
     private static final String TRACKING_HEADER_NAME = "X-KC-SOURCE";

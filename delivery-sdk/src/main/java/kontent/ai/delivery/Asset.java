@@ -26,6 +26,8 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Object model for Asset elements
  */
@@ -37,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.Builder
 @lombok.Getter
 @lombok.Setter
-public class Asset {
+public class Asset implements Serializable {
 
     @JsonProperty("name")
     String name;

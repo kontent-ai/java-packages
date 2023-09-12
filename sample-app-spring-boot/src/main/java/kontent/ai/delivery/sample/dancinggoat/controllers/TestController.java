@@ -12,11 +12,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.io.Serializable;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 @Controller
-public class TestController {
+public class TestController implements Serializable {
     @Autowired
     DeliveryClient deliveryClient;
 
@@ -26,7 +27,7 @@ public class TestController {
     @GetMapping("/test")
     ResponseEntity<String>  getTest(Model model) throws ExecutionException, InterruptedException {
 
-        ContentItem item = testService.fetchContentByCodeName("on_roasts");
+        ContentItem item = testService.fetchContentByCodeName("on_roasts", deliveryClient);
 
         return new ResponseEntity<>(item.getString("title"), HttpStatus.OK);
     }

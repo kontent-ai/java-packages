@@ -26,6 +26,7 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -36,7 +37,7 @@ import java.util.List;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Taxonomy {
+public class Taxonomy implements Serializable {
 
     /**
      * The display name of the taxonomy

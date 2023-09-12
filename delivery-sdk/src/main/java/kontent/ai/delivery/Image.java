@@ -26,6 +26,8 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Object model for Image elements
  * <p>
@@ -38,7 +40,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Image {
+public class Image implements Serializable {
 
     /**
      * ID of the image

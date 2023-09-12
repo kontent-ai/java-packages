@@ -26,6 +26,8 @@ package kontent.ai.delivery;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Object model for option values in a {@link MultipleChoiceElement}
  */
@@ -34,7 +36,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @lombok.ToString
 @lombok.EqualsAndHashCode
 @lombok.NoArgsConstructor
-public class Option {
+public class Option implements Serializable {
 
     /**
      * The display name of the option

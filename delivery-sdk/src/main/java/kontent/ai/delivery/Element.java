@@ -29,6 +29,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -55,7 +56,7 @@ import java.util.List;
 @lombok.ToString(exclude = "parent")
 @lombok.EqualsAndHashCode(exclude = "parent")
 @lombok.NoArgsConstructor
-public abstract class Element<T> {
+public abstract class Element<T> implements Serializable {
 
     /**
      * Type of the element

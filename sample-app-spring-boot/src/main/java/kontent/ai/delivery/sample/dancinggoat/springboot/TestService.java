@@ -2,18 +2,16 @@ package kontent.ai.delivery.sample.dancinggoat.springboot;
 
 import kontent.ai.delivery.ContentItem;
 import kontent.ai.delivery.DeliveryClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
-@Component
-public class TestService {
+import java.io.Serializable;
 
-    @Autowired
-    DeliveryClient deliveryClient;
+@Component
+public class TestService implements Serializable {
 
     @Cacheable(cacheNames = "test", key = "#contentName") //, key = "#contentName"
-    public ContentItem fetchContentByCodeName(String contentName) {
+    public ContentItem fetchContentByCodeName(String contentName, DeliveryClient deliveryClient) {
         try {
             simulateSlowService();
             ContentItem contentItem = deliveryClient.getItem(contentName, ContentItem.class).toCompletableFuture().get();
