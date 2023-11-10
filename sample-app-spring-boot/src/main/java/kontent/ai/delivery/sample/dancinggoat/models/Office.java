@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.ContentItemMapping;
@@ -14,74 +15,50 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("office")
-public class Office {
-  @ElementMapping("state")
-  String state;
-
-  @ElementMapping("email")
-  String email;
-
-  @ElementMapping("phone")
-  String phone;
-
-  @ElementMapping("country")
-  String country;
-
-  @ElementMapping("sitemap")
-  List<Taxonomy> sitemap;
-
-  @ElementMapping("city")
-  String city;
-
+public class Office implements Serializable {
   @ElementMapping("name")
   String name;
-
-  @ElementMapping("zip_code")
-  String zipCode;
 
   @ElementMapping("street")
   String street;
 
+  @ElementMapping("city")
+  String city;
+
+  @ElementMapping("country")
+  String country;
+
+  @ElementMapping("state")
+  String state;
+
+  @ElementMapping("zip_code")
+  String zipCode;
+
+  @ElementMapping("phone")
+  String phone;
+
+  @ElementMapping("email")
+  String email;
+
+  @ElementMapping("sitemap")
+  List<Taxonomy> sitemap;
+
   System system;
 
-  public String getState() {
-    return state;
+  public String getName() {
+    return name;
   }
 
-  public void setState(String state) {
-    this.state = state;
+  public void setName(String name) {
+    this.name = name;
   }
 
-  public String getEmail() {
-    return email;
+  public String getStreet() {
+    return street;
   }
 
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getPhone() {
-    return phone;
-  }
-
-  public void setPhone(String phone) {
-    this.phone = phone;
-  }
-
-  public String getCountry() {
-    return country;
-  }
-
-  public void setCountry(String country) {
-    this.country = country;
-  }
-
-  public List<Taxonomy> getSitemap() {
-    return sitemap;
-  }
-
-  public void setSitemap(List<Taxonomy> sitemap) {
-    this.sitemap = sitemap;
+  public void setStreet(String street) {
+    this.street = street;
   }
 
   public String getCity() {
@@ -92,12 +69,20 @@ public class Office {
     this.city = city;
   }
 
-  public String getName() {
-    return name;
+  public String getCountry() {
+    return country;
   }
 
-  public void setName(String name) {
-    this.name = name;
+  public void setCountry(String country) {
+    this.country = country;
+  }
+
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state;
   }
 
   public String getZipCode() {
@@ -108,12 +93,28 @@ public class Office {
     this.zipCode = zipCode;
   }
 
-  public String getStreet() {
-    return street;
+  public String getPhone() {
+    return phone;
   }
 
-  public void setStreet(String street) {
-    this.street = street;
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public List<Taxonomy> getSitemap() {
+    return sitemap;
+  }
+
+  public void setSitemap(List<Taxonomy> sitemap) {
+    this.sitemap = sitemap;
   }
 
   public System getSystem() {

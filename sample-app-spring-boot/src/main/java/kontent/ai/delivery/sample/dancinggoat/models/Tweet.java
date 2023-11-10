@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.ContentItemMapping;
@@ -14,7 +15,7 @@ import kontent.ai.delivery.System;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("tweet")
-public class Tweet {
+public class Tweet implements Serializable {
   @ElementMapping("tweet_link")
   String tweetLink;
 

@@ -21,11 +21,24 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CodeGeneratorTest extends LocalServerTestBase {
 
     @Rule
     public TemporaryFolder temporaryFolder = new TemporaryFolder();
+
+    // @Test
+    // public void testTrial() throws ExecutionException, InterruptedException, IOException {
+    //     DeliveryClient client = new DeliveryClient("975bf280-fd91-488c-994c-2f04416e5ee3");
+
+    //     File outputDir = new File("C:\\tmp\\models");
+    //     Assert.assertTrue(outputDir.exists() && outputDir.isDirectory());
+    //     CodeGenerator codeGenerator =
+    //             new CodeGenerator("975bf280-fd91-488c-994c-2f04416e5ee3","kontent.ai.delivery.sample.dancinggoat.models", outputDir);
+    //     List<JavaFile> sources = codeGenerator.generateSources(client);
+    //     codeGenerator.writeSources(sources);
+    // }
 
     @Test
     public void testGenerator() throws Exception {

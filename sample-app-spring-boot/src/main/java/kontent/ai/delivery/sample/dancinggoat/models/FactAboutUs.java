@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.Asset;
@@ -15,28 +16,20 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("fact_about_us")
-public class FactAboutUs {
-  @ElementMapping("description")
-  String description;
-
+public class FactAboutUs implements Serializable {
   @ElementMapping("title")
   String title;
 
-  @ElementMapping("sitemap")
-  List<Taxonomy> sitemap;
+  @ElementMapping("description")
+  String description;
 
   @ElementMapping("image")
   List<Asset> image;
 
+  @ElementMapping("sitemap")
+  List<Taxonomy> sitemap;
+
   System system;
-
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
 
   public String getTitle() {
     return title;
@@ -46,12 +39,12 @@ public class FactAboutUs {
     this.title = title;
   }
 
-  public List<Taxonomy> getSitemap() {
-    return sitemap;
+  public String getDescription() {
+    return description;
   }
 
-  public void setSitemap(List<Taxonomy> sitemap) {
-    this.sitemap = sitemap;
+  public void setDescription(String description) {
+    this.description = description;
   }
 
   public List<Asset> getImage() {
@@ -60,6 +53,14 @@ public class FactAboutUs {
 
   public void setImage(List<Asset> image) {
     this.image = image;
+  }
+
+  public List<Taxonomy> getSitemap() {
+    return sitemap;
+  }
+
+  public void setSitemap(List<Taxonomy> sitemap) {
+    this.sitemap = sitemap;
   }
 
   public System getSystem() {

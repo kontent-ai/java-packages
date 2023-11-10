@@ -31,7 +31,7 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class NameValuePair implements Serializable {
+public class NameValuePair {
     private String name;
     private String value;
 }

@@ -1,5 +1,6 @@
 package kontent.ai.delivery.sample.dancinggoat.models;
 
+import java.io.Serializable;
 import java.lang.String;
 import java.util.List;
 import kontent.ai.delivery.Asset;
@@ -15,24 +16,15 @@ import kontent.ai.delivery.Taxonomy;
  * For further modifications of the class, create a separate file and extend this class.
  */
 @ContentItemMapping("cafe")
-public class Cafe {
-  @ElementMapping("phone")
-  String phone;
+public class Cafe implements Serializable {
+  @ElementMapping("street")
+  String street;
 
   @ElementMapping("city")
   String city;
 
-  @ElementMapping("photo")
-  List<Asset> photo;
-
-  @ElementMapping("email")
-  String email;
-
   @ElementMapping("country")
   String country;
-
-  @ElementMapping("street")
-  String street;
 
   @ElementMapping("state")
   String state;
@@ -40,17 +32,26 @@ public class Cafe {
   @ElementMapping("zip_code")
   String zipCode;
 
+  @ElementMapping("phone")
+  String phone;
+
+  @ElementMapping("email")
+  String email;
+
+  @ElementMapping("photo")
+  List<Asset> photo;
+
   @ElementMapping("sitemap")
   List<Taxonomy> sitemap;
 
   System system;
 
-  public String getPhone() {
-    return phone;
+  public String getStreet() {
+    return street;
   }
 
-  public void setPhone(String phone) {
-    this.phone = phone;
+  public void setStreet(String street) {
+    this.street = street;
   }
 
   public String getCity() {
@@ -61,36 +62,12 @@ public class Cafe {
     this.city = city;
   }
 
-  public List<Asset> getPhoto() {
-    return photo;
-  }
-
-  public void setPhoto(List<Asset> photo) {
-    this.photo = photo;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
   public String getCountry() {
     return country;
   }
 
   public void setCountry(String country) {
     this.country = country;
-  }
-
-  public String getStreet() {
-    return street;
-  }
-
-  public void setStreet(String street) {
-    this.street = street;
   }
 
   public String getState() {
@@ -107,6 +84,30 @@ public class Cafe {
 
   public void setZipCode(String zipCode) {
     this.zipCode = zipCode;
+  }
+
+  public String getPhone() {
+    return phone;
+  }
+
+  public void setPhone(String phone) {
+    this.phone = phone;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public List<Asset> getPhoto() {
+    return photo;
+  }
+
+  public void setPhoto(List<Asset> photo) {
+    this.photo = photo;
   }
 
   public List<Taxonomy> getSitemap() {

@@ -8,6 +8,7 @@ import kontent.ai.delivery.System;
 import javax.lang.model.element.Modifier;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Generates java source files using the Kontent.ai Type listing endpoint in the Delivery API
+ * Generates java source files using the Kontent.ai Type listing endpoint in the
+ * Delivery API
  */
 public class CodeGenerator {
 
@@ -29,16 +31,18 @@ public class CodeGenerator {
 
     /**
      * Constructs the CodeGenerator
-     * @param projectId the project id from your Kontent.ai account
+     * 
+     * @param projectId   the project id from your Kontent.ai account
      * @param packageName the package to place the generated models under
-     * @param outputDir the source root to place the generated models
-     * @throws UnsupportedOperationException when a there is a problem with the outputDir
+     * @param outputDir   the source root to place the generated models
+     * @throws UnsupportedOperationException when a there is a problem with the
+     *                                       outputDir
      */
     public CodeGenerator(String projectId, String packageName, File outputDir) {
         this.projectId = projectId;
         this.packageName = packageName;
         this.outputDir = outputDir;
-        if (!outputDir.exists() && !outputDir.mkdirs()){
+        if (!outputDir.exists() && !outputDir.mkdirs()) {
             throw new UnsupportedOperationException(
                     String.format("Unable to create directory %s", outputDir.getAbsolutePath()));
         }
@@ -49,32 +53,45 @@ public class CodeGenerator {
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kontent.ai account
+     * Returns a list of specifications of the sources representing the types in
+     * your Kontent.ai account
+     * 
      * @return A list of specifications
-     * @throws ExecutionException when a problem occurs communicating with the Kontent.ai API
-     * @throws InterruptedException when a problem occurs communicating with the Kontent.ai API
+     * @throws ExecutionException   when a problem occurs communicating with the
+     *                              Kontent.ai API
+     * @throws InterruptedException when a problem occurs communicating with the
+     *                              Kontent.ai API
      */
     public List<JavaFile> generateSources() throws ExecutionException, InterruptedException {
         return generateSources(new DeliveryClient(projectId));
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kontent.ai account.
-     * The provided {@link DeliveryClient} param is useful for testing, however in most environments, the default
+     * Returns a list of specifications of the sources representing the types in
+     * your Kontent.ai account.
+     * The provided {@link DeliveryClient} param is useful for testing, however in
+     * most environments, the default
      * {@link #generateSources()} method should suffice.
+     * 
      * @param client A DeliveryClient instance to use to generate the sources.
      * @return A list of specifications
-     * @throws ExecutionException when a problem occurs communicating with the Kontent.ai API
-     * @throws InterruptedException when a problem occurs communicating with the Kontent.ai API
+     * @throws ExecutionException   when a problem occurs communicating with the
+     *                              Kontent.ai API
+     * @throws InterruptedException when a problem occurs communicating with the
+     *                              Kontent.ai API
      */
     public List<JavaFile> generateSources(DeliveryClient client) throws ExecutionException, InterruptedException {
         return generateSources(client.getTypes().toCompletableFuture().get().getTypes());
     }
 
     /**
-     * Returns a list of specifications of the sources representing the types in your Kontent.ai account.
-     * The provided List of {@link ContentType} param is useful for testing, however in most environments, the default
-     * {@link #generateSources()} method should generally be the only method invoking this.
+     * Returns a list of specifications of the sources representing the types in
+     * your Kontent.ai account.
+     * The provided List of {@link ContentType} param is useful for testing, however
+     * in most environments, the default
+     * {@link #generateSources()} method should generally be the only method
+     * invoking this.
+     * 
      * @param types A List of ContentType to generate the sources from
      * @return A list of specifications
      */
@@ -87,9 +104,12 @@ public class CodeGenerator {
     }
 
     /**
-     * Returns a specification of the source representing this type in your Kontent.ai account.
-     * Invoking this directly may be useful for testing, however in most environments, the default
+     * Returns a specification of the source representing this type in your
+     * Kontent.ai account.
+     * Invoking this directly may be useful for testing, however in most
+     * environments, the default
      * {@link #generateSources()} method should suffice.
+     * 
      * @param type A ContentType to generate the source from
      * @return A specification
      */
@@ -100,113 +120,109 @@ public class CodeGenerator {
 
         for (Map.Entry<String, Element> element : type.getElements().entrySet()) {
             TypeName typeName = null;
-            //Get the TypeName
+            // Get the TypeName
             switch (element.getValue().getType()) {
-                case "text" :
-                case "rich_text" :
-                case "url_slug" :
-                case "custom" :
+                case "text":
+                case "rich_text":
+                case "url_slug":
+                case "custom":
                     typeName = ClassName.get(String.class);
                     break;
-                case "number" :
+                case "number":
                     typeName = ClassName.get(Double.class);
                     break;
-                case "multiple_choice" :
+                case "multiple_choice":
                     typeName = ParameterizedTypeName.get(
                             ClassName.get(JAVA_UTIL_PACKAGE, "List"),
                             ClassName.get(DELIVERY_PACKAGE, "Option"));
                     break;
-                case "date_time" :
+                case "date_time":
                     typeName = ClassName.get(ZonedDateTime.class);
                     break;
-                case "asset" :
+                case "asset":
                     typeName = ParameterizedTypeName.get(
                             ClassName.get(JAVA_UTIL_PACKAGE, "List"),
                             ClassName.get(DELIVERY_PACKAGE, "Asset"));
                     break;
-                case "modular_content" :
+                case "modular_content":
                     typeName = ParameterizedTypeName.get(
                             ClassName.get(JAVA_UTIL_PACKAGE, "List"),
                             ClassName.get(DELIVERY_PACKAGE, "ContentItem"));
                     break;
-                case "taxonomy" :
+                case "taxonomy":
                     typeName = ParameterizedTypeName.get(
                             ClassName.get(JAVA_UTIL_PACKAGE, "List"),
                             ClassName.get(DELIVERY_PACKAGE, "Taxonomy"));
                     break;
-                default :
+                default:
                     break;
             }
             if (typeName != null) {
-                //Add the field
+                // Add the field
                 String fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, element.getKey());
-                Class annoClass = element.getValue().getType() == "modular_content" ?
-                        ContentItemMapping.class : ElementMapping.class;
+                Class annoClass = element.getValue().getType() == "modular_content" ? ContentItemMapping.class
+                        : ElementMapping.class;
                 fieldSpecs.add(
                         FieldSpec.builder(typeName, fieldName)
                                 .addAnnotation(
                                         AnnotationSpec.builder(annoClass)
                                                 .addMember("value", "$S", element.getKey())
                                                 .build())
-                                .build()
-                );
-                //Add the getter
+                                .build());
+                // Add the getter
                 String getterName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "get_" + element.getKey());
                 methodSpecs.add(
                         MethodSpec.methodBuilder(getterName)
                                 .addModifiers(Modifier.PUBLIC)
                                 .returns(typeName)
                                 .addStatement("return $N", fieldName)
-                                .build()
-                );
-                //Add the setter
+                                .build());
+                // Add the setter
                 String setterName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, "set_" + element.getKey());
                 methodSpecs.add(
                         MethodSpec.methodBuilder(setterName)
                                 .addModifiers(Modifier.PUBLIC)
                                 .addParameter(typeName, fieldName)
                                 .addStatement("this.$N = $N", fieldName, fieldName)
-                                .build()
-                );
+                                .build());
             }
         }
 
-        //Add the System element
+        // Add the System element
         fieldSpecs.add(FieldSpec.builder(ClassName.get(System.class), SYSTEM).build());
         methodSpecs.add(
                 MethodSpec.methodBuilder("getSystem")
                         .addModifiers(Modifier.PUBLIC)
                         .returns(ClassName.get(System.class))
                         .addStatement("return $N", SYSTEM)
-                        .build()
-        );
+                        .build());
         methodSpecs.add(
                 MethodSpec.methodBuilder("setSystem")
                         .addModifiers(Modifier.PUBLIC)
                         .addParameter(ClassName.get(System.class), SYSTEM)
                         .addStatement("this.$N = $N", SYSTEM, SYSTEM)
-                        .build()
-        );
+                        .build());
 
-        //Create the class
+        // Create the class
         TypeSpec.Builder typeSpecBuilder = TypeSpec
                 .classBuilder(CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, type.getSystem().getCodename()))
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc("This code was generated by a " +
                         "<a href=\"https://github.com/kontent-ai/java-packages/tree/master/delivery-sdk-generators\">delivery-sdk-generators tool</a>\n")
                 .addJavadoc("\n")
-                .addJavadoc("Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.\n")
+                .addJavadoc(
+                        "Changes to this file may cause incorrect behavior and will be lost if the code is regenerated.\n")
                 .addJavadoc("For further modifications of the class, create a separate file and extend this class.\n")
                 .addAnnotation(AnnotationSpec.builder(ContentItemMapping.class)
                         .addMember("value", "$S", type.getSystem().getCodename())
                         .build());
 
-        //Add the fields
+        // Add the fields
         for (FieldSpec fieldSpec : fieldSpecs) {
             typeSpecBuilder.addField(fieldSpec);
         }
 
-        //Add the methods
+        // Add the methods
         for (MethodSpec methodSpec : methodSpecs) {
             typeSpecBuilder.addMethod(methodSpec);
         }
@@ -217,12 +233,16 @@ public class CodeGenerator {
     }
 
     /**
-     * Writes the provided specifications to the outputDir provided in the constructor.  This is generally called
-     * after a call to {@link #generateSources()}, but is separated in case you need to make modifications to your
+     * Writes the provided specifications to the outputDir provided in the
+     * constructor. This is generally called
+     * after a call to {@link #generateSources()}, but is separated in case you need
+     * to make modifications to your
      * specifications before writing.
+     * 
      * @param sources A list of specifications
-     * @throws IOException when a problem occurs writing the source files, note some source may have been written when
-     * this is thrown
+     * @throws IOException when a problem occurs writing the source files, note some
+     *                     source may have been written when
+     *                     this is thrown
      */
     public void writeSources(List<JavaFile> sources) throws IOException {
         for (JavaFile source : sources) {
@@ -231,9 +251,12 @@ public class CodeGenerator {
     }
 
     /**
-     * Writes the provided specification to the outputDir provided in the constructor.  This is generally called
-     * after a call to {@link #generateSources()}, but is separated in case you need to make modifications to your
+     * Writes the provided specification to the outputDir provided in the
+     * constructor. This is generally called
+     * after a call to {@link #generateSources()}, but is separated in case you need
+     * to make modifications to your
      * specification before writing.
+     * 
      * @param source A specification
      * @throws IOException when a problem occurs writing the source files
      */
@@ -241,4 +264,3 @@ public class CodeGenerator {
         source.writeTo(outputDir);
     }
 }
-
