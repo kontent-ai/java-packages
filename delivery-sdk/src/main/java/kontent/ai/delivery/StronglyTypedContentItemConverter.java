@@ -24,10 +24,10 @@
 
 package kontent.ai.delivery;
 
-import com.madrobot.beans.BeanInfo;
-import com.madrobot.beans.IntrospectionException;
-import com.madrobot.beans.Introspector;
-import com.madrobot.beans.PropertyDescriptor;
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ClassInfoList;
 import io.github.classgraph.ScanResult;
@@ -337,7 +337,7 @@ public class StronglyTypedContentItemConverter {
         try {
             beanInfo = Introspector.getBeanInfo(bean.getClass());
         } catch (IntrospectionException e) {
-            log.debug("IntrospectionException from com.madrobot.beans for object {} with field {} is null", bean, field);
+            log.debug("IntrospectionException for object {} with field {} is null", bean, field);
             return null;
         }
         PropertyDescriptor[] properties = beanInfo.getPropertyDescriptors();
