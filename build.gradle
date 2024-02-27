@@ -68,6 +68,7 @@ allprojects {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url 'https://s01.oss.sonatype.org/content/repositories/snapshots' }
+        maven { url 'https://maven.repository.redhat.com/ga/' }
     }
 }
 

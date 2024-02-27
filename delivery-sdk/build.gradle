@@ -16,10 +16,12 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.0")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.12.0")
 
+    implementation('com.googlecode:openbeans:1.0')
     implementation("io.github.classgraph:classgraph:4.8.90")
 
     implementation("com.squareup.okhttp3:okhttp:4.9.0")
 
+    // compile files('./libs/openbeans-1.0.jar')
     compileOnly("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
     testImplementation("org.thymeleaf:thymeleaf:3.0.11.RELEASE")
 
