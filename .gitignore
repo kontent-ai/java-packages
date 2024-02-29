@@ -105,6 +105,7 @@ modules.xml
 
 # Package Files #
 *.jar
+!/delivery-sdk/libs/openbeans-1.0.jar
 *.war
 *.nar
 *.ear
