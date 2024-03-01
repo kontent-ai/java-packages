@@ -57,6 +57,22 @@ If you wish to find out more about the project specification. Check out the [Pro
 
   > The command will build whole solution and run all tests in this monorepo.
 
+### Dependency verification
+
+Due to security reasons the [verifications of dependencies checksums]('https://docs.gradle.org/6.3/userguide/dependency_verification.html') is enabled in this repository. When you update the dependency on some libray you might need to update `gradle/verification-metadata.xml`. 
+
+To let gradle obtain checksum and rewrite them to gradle/verification-metadata.xml` you can use command:
+
+``` bash
+gradle --write-verification-metadata sha256 help 
+```
+
+However, we recommend to use the command with switch option `--dry-run` to create a copy of the file and check the results before:
+
+``` bash
+gradle --write-verification-metadata sha256 help --dry-run
+```
+
 #### :bulb: Next steps
 
 The ideal next step is to test out the [Kontent.ai Sample Spring Boot app](/sample-app-spring-boot#readme) or load the
