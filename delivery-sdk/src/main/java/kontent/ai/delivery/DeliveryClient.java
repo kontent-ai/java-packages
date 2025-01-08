@@ -584,7 +584,7 @@ public class DeliveryClient {
 
     private Request buildNewRequest(String url) {
         Request.Builder requestBuilder = new Request.Builder().url(url);
-        requestBuilder.header(HEADER_ACCEPT, "applications/json");
+        requestBuilder.header(HEADER_ACCEPT, "application/json");
         requestBuilder.header(HEADER_X_KC_SDK_ID, sdkId);
 
         if (deliveryOptions.getProductionApiKey() != null) {
