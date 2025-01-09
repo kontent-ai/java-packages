@@ -6,8 +6,8 @@
       <trusted-artifacts>
          <trust file=".*-javadoc[.]jar" regex="true"/>
          <trust file=".*-sources[.]jar" regex="true"/>
-         <trust group="ai.kontent" name="delivery-sdk" version="[0-9]+.[0-9]+.[0-9]+-SNAPSHOT" regex="true"/>
-         <trust group="ai.kontent" name="delivery-sdk-generators" version="[0-9]+.[0-9]+.[0-9]+-SNAPSHOT" regex="true"/>
+         <trust group="ai.kontent" name="delivery-sdk" version="[0-9]+.[0-9]+.[0-9]+(-SNAPSHOT)?" regex="true"/>
+         <trust group="ai.kontent" name="delivery-sdk-generators" version="[0-9]+.[0-9]+.[0-9]+(-SNAPSHOT)?" regex="true"/>
          <trust group="com.android.tools.build"/>
       </trusted-artifacts>
    </configuration>

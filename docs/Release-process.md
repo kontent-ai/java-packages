@@ -15,11 +15,14 @@ There are 5 keys for successful publishing and they can be provided via `local.p
 
 | Key                 | local.properties property name | environment variable name |
 | ------------------- | :----------------------------: | :-----------------------: |
-| Nexus User Name     |        `nexusUsername`         |     `NEXUS_USERNAME`      |
-| Nexus Password      |        `nexusPassword`         |     `NEXUS_PASSWORD`      |
+| Ossrh Username      |        `ossrhUsername`         |     `OSSRH_USERNAME`      |
+| Ossrh password      |        `ossrhPassword`         |     `OSSRH_PASSWORD`      |
 | GPG Key ID          |         `signingKeyId`         |     `SIGNING_KEY_ID`      |
 | GPG Private Key     |          `signingKey`          |       `SIGNING_KEY`       |
 | GPG Password Phrase |       `signingPassword`        |    `SIGNING_PASSWORD`     |
+
+> [!NOTE]
+> If GPG keys are outdated, you need to generate them using GnuGP. Don't forget to publish the public key to repository (e.g. keys.ubuntu.com) so the Sonatype can verify the public key.
 
 ## Plugins
 
