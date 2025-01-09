@@ -23,8 +23,8 @@ if (propertiesFile.exists()) {
     properties.load(propertiesFile.newDataInputStream())
 }
 
-ext.nexusUsername = properties.getProperty('nexusUsername') != null ? properties.getProperty('nexusUsername') : System.getenv('NEXUS_USERNAME');
-ext.nexusPassword = properties.getProperty('nexusPassword') != null ? properties.getProperty('nexusPassword') : System.getenv('NEXUS_PASSWORD');
+ext.ossrhUsername = properties.getProperty('ossrhUsername') != null ? properties.getProperty('ossrhUsername') : System.getenv('OSSRH_USERNAME');
+ext.ossrhPassword = properties.getProperty('ossrhPassword') != null ? properties.getProperty('ossrhPassword') : System.getenv('OSSRH_PASSWORD');
 
 ext.signingKeyId = properties.getProperty('signingKeyId') != null ? properties.getProperty('signingKeyId') : System.getenv('SIGNING_KEY_ID');
 ext.signingKey = properties.getProperty('signingKey') != null ? properties.getProperty('signingKey') : System.getenv('SIGNING_KEY');
@@ -74,7 +74,7 @@ allprojects {
 def repoGroupIdVal = 'ai.kontent';
 
 subprojects {
-    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '5.1.0-SNAPSHOT'
+    version = System.getenv('RELEASE_TAG') != null && !System.getenv('RELEASE_TAG').isEmpty() ? System.getenv('RELEASE_TAG') : '5.1.2'
     ext.repoGroupId = repoGroupIdVal
     group = repoGroupIdVal
     ext.repositoryHost = 'maven.org'
