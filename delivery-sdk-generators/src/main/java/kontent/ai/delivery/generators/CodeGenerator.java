@@ -140,7 +140,7 @@ public class CodeGenerator {
             if (typeName != null) {
                 //Add the field
                 String fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, element.getKey());
-                Class annoClass = element.getValue().getType() == "modular_content" ?
+                Class annoClass = element.getValue().getType().equals("modular_content") ?
                         ContentItemMapping.class : ElementMapping.class;
                 fieldSpecs.add(
                         FieldSpec.builder(typeName, fieldName)
